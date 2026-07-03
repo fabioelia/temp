@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aircode"
+version = "0.1.0"
+description = "Offline, codebase-aware coding assistant for Apple Silicon (small local model + BM25 retrieval)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []  # zero third-party deps by design — stdlib only
+
+[project.scripts]
+aircode = "aircode.cli:main"
+
+[tool.setuptools]
+packages = ["aircode"]
