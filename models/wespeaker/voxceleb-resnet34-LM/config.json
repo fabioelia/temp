@@ -1,0 +1,12 @@
+{
+  "model_type": "wespeaker-resnet",
+  "architectures": [
+    "WeSpeakerResNet"
+  ],
+  "hidden_size": 256,
+  "num_mel_bins": 80,
+  "sampling_rate": 16000,
+  "_name_or_path": "wespeaker/voxceleb-resnet34-LM",
+  "_source": "WeSpeaker voxceleb_resnet34_LM (https://github.com/wenet-e2e/wespeaker), ONNX file from the sherpa-onnx 'speaker-recongition-models' release; tensors renamed for Transformers.js",
+  "transformers_version": "4.x"
+}
