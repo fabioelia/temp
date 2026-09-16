@@ -4,7 +4,7 @@
 
 A single self-contained HTML page that transcribes audio or video **in the browser** and tags every line with the voice that said it.
 
-- **Transcription:** OpenAI Whisper (ONNX) via [Transformers.js](https://github.com/huggingface/transformers.js), running on WebGPU when available or WebAssembly otherwise.
+- **Transcription:** OpenAI Whisper (ONNX) via [Transformers.js](https://github.com/huggingface/transformers.js), running on WebGPU when available or WebAssembly otherwise. Quality presets: **Best** (Whisper large-v3-turbo, the default, ≈1.4 GB one-time download, WebGPU strongly recommended), **Balanced** (Whisper small) and **Fast** (Whisper base), or any custom Whisper ONNX repo. Model ids are tried in order, so the word-timestamp variant of turbo is used when available and the plain model otherwise.
 - **Who spoke when:** pyannote `segmentation-3.0` finds speech and speaker changes; WeSpeaker ResNet34 voice embeddings are clustered into global speakers (the same recipe as the pyannote 3.x pipeline).
 - **Names, not "Speaker 1":** enroll known voices once (from a file, the microphone, or straight from a finished transcript) and matching speakers are named automatically next time. Rename, merge and reassign lines by clicking a speaker chip.
 - **Word-level alignment** (with Whisper models exported with attention outputs), click-to-seek, live playback highlighting, and TXT / SRT / VTT / JSON export.

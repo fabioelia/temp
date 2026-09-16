@@ -167,7 +167,15 @@
     <section class="block">
       <h2>2 · Models</h2>
       <label class="check"><input type="checkbox" id="doTranscribe" checked> Transcribe speech (Whisper)</label>
-      <label class="row"><span>Whisper model</span><input type="text" id="asrModel" list="asrModels" spellcheck="false"></label>
+      <label class="row"><span>Quality</span>
+        <select id="quality">
+          <option value="best">Best (large-v3-turbo)</option>
+          <option value="balanced">Balanced (small)</option>
+          <option value="fast">Fast (base)</option>
+          <option value="custom">Custom model…</option>
+        </select></label>
+      <div class="hint" id="qualityHint"></div>
+      <label class="row"><span>Whisper model</span><input type="text" id="asrModel" list="asrModels" spellcheck="false" title="One or more model ids, comma-separated, tried in order"></label>
       <datalist id="asrModels"></datalist>
       <div class="hint" id="asrModelHint"></div>
       <label class="row"><span>Compute</span>
@@ -622,15 +630,28 @@ async function load(payload, id) {
     const key = JSON.stringify(cfg);
     if (!asr || asr.key !== key) {
       if (asr) { try { await asr.pipe.dispose(); } catch (e) {} asr = null; }
-      status(id, `Loading ${cfg.model}`);
-      const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : [cfg.device];
-      const dtypes = cfg.device === 'webgpu' ? [cfg.dtype, cfg.fallbackDtype] : [cfg.dtype];
-      const r = await withFallback(id, devices, dtypes, (device, dtype) =>
-        T.pipeline('automatic-speech-recognition', cfg.model, { device, dtype, progress_callback }));
-      asr = { key, pipe: r.obj, device: r.device, dtype: r.dtype };
-      log(id, `Whisper ready on ${r.device} (${typeof r.dtype === 'string' ? r.dtype : JSON.stringify(r.dtype)}).`);
+      const candidates = (cfg.candidates || []).filter((c) => c && c.model);
+      if (!candidates.length) throw new Error('No transcription model configured.');
+      const failures = [];
+      for (const cand of candidates) {
+        status(id, `Loading ${cand.model}`);
+        try {
+          const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : [cfg.device];
+          const dtypes = cfg.device === 'webgpu' ? [cand.dtype, cand.fallbackDtype] : [cand.dtype];
+          const r = await withFallback(id, devices, dtypes, (device, dtype) =>
+            T.pipeline('automatic-speech-recognition', cand.model, { device, dtype, progress_callback }));
+          asr = { key, pipe: r.obj, device: r.device, dtype: r.dtype, modelId: cand.model };
+          log(id, `${cand.model} ready on ${r.device} (${typeof r.dtype === 'string' ? r.dtype : JSON.stringify(r.dtype)}).`);
+          break;
+        } catch (e) {
+          const msg = (e && e.message) || String(e);
+          failures.push(`${cand.model}: ${msg}`);
+          log(id, `Could not load ${cand.model} (${msg})` + (cand !== candidates[candidates.length - 1] ? '; trying the next transcription model.' : '.'));
+        }
+      }
+      if (!asr) throw new Error('No transcription model could be loaded.\n' + failures.join('\n'));
     }
-    out.asr = { device: asr.device };
+    out.asr = { device: asr.device, model: asr.modelId };
   }
   if (payload.diar) {
     const cfg = payload.diar;
@@ -723,7 +744,8 @@ async function transcribe(audio, opts, id) {
   const T = TF;
   const pipe = asr.pipe;
   const gc = pipe.model.generation_config || {};
-  const multilingual = gc.is_multilingual === true || !!gc.lang_to_id || !/\.en($|[_-])/i.test(opts.model);
+  const modelId = asr.modelId || opts.model || '';
+  const multilingual = gc.is_multilingual === true || !!gc.lang_to_id || !/\.en($|[_-])/i.test(modelId);
   const chunk_length_s = 30, stride_length_s = 5;
   const window = chunk_length_s * SR, stride = stride_length_s * SR, jump = window - 2 * stride;
   const nChunks = audio.length > window ? 1 + Math.ceil((audio.length - window) / jump) : 1;
@@ -747,7 +769,7 @@ async function transcribe(audio, opts, id) {
     if (opts.language && opts.language !== 'auto') genOpts.language = opts.language;
     if (opts.task) genOpts.task = opts.task;
   } else if (opts.language && opts.language !== 'auto' && opts.language !== 'en') {
-    log(id, `${opts.model} is English-only; the language setting is ignored.`);
+    log(id, `${modelId} is English-only; the language setting is ignored.`);
   }
   let wordLevel = !!opts.wordTimestamps;
   let out;
@@ -764,7 +786,7 @@ async function transcribe(audio, opts, id) {
   } finally {
     pipe.model.generate = origGenerate;
   }
-  return { text: out.text || '', items: normalizeItems(out.chunks), wordLevel, multilingual };
+  return { text: out.text || '', items: normalizeItems(out.chunks), wordLevel, multilingual, model: modelId };
 }
 
 async function diarizeLocal(audio, opts, id) {
@@ -879,6 +901,14 @@ const EMB_PRESETS = [
 ];
 function embPreset(id) { return EMB_PRESETS.find((p) => p.match.test(id || '')) || { label: id || '?', threshold: 0.70, matchThreshold: 0.50 }; }
 function shortModel(id) { return (id || '').split('/').pop(); }
+// Quality presets: the model field lists ids tried in order (first that downloads wins).
+const QUALITY_PRESETS = {
+  best: { label: 'Best · Whisper large-v3-turbo · ≈1.4 GB (WebGPU) / ≈0.8 GB (CPU) · multilingual', models: ['onnx-community/whisper-large-v3-turbo_timestamped', 'onnx-community/whisper-large-v3-turbo'] },
+  balanced: { label: 'Balanced · Whisper small · ≈250 MB · multilingual', models: ['Xenova/whisper-small'] },
+  fast: { label: 'Fast · Whisper base · ≈75 MB · multilingual', models: ['Xenova/whisper-base'] },
+};
+const DEFAULT_QUALITY = 'best';
+const LEGACY_ASR_DEFAULT = 'Xenova/whisper-tiny.en';
 const ASR_PRESETS = [
   { id: 'Xenova/whisper-tiny.en', label: 'Whisper tiny.en · English · ≈40 MB · fastest' },
   { id: 'Xenova/whisper-tiny', label: 'Whisper tiny · multilingual · ≈40 MB' },
@@ -899,7 +929,7 @@ const SR = 16000;
 // ---------- DOM ----------
 const $ = (id) => document.getElementById(id);
 const els = {};
-['dropzone', 'fileInput', 'mediaInfo', 'playerWrap', 'doTranscribe', 'asrModel', 'asrModels', 'asrModelHint', 'device', 'dtype', 'language', 'task', 'wordTs', 'gpuHint',
+['dropzone', 'fileInput', 'mediaInfo', 'playerWrap', 'doTranscribe', 'quality', 'qualityHint', 'asrModel', 'asrModels', 'asrModelHint', 'device', 'dtype', 'language', 'task', 'wordTs', 'gpuHint',
  'doDiarize', 'numSpeakers', 'clusterThreshold', 'clusterThresholdVal', 'matchThreshold', 'matchThresholdVal', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'localModelPath', 'libUrl', 'ortWasmPath',
  'voiceList', 'voiceName', 'voiceFileBtn', 'voiceFile', 'recordBtn', 'voiceStatus', 'exportVoices', 'importVoicesBtn', 'importVoices',
  'runBtn', 'cancelBtn', 'reclusterBtn', 'stage', 'progressText', 'progressBar', 'downloads', 'livePreview', 'error', 'log',
@@ -976,7 +1006,7 @@ function baseName() { return (state.file?.name || 'transcript').replace(/\.[^.]+
 function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch (e) { return {}; } }
 function saveSettings() {
   const s = {};
-  for (const id of ['asrModel', 'device', 'dtype', 'language', 'task', 'numSpeakers', 'clusterThreshold', 'matchThreshold', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'localModelPath', 'libUrl', 'ortWasmPath']) s[id] = els[id].value;
+  for (const id of ['quality', 'asrModel', 'device', 'dtype', 'language', 'task', 'numSpeakers', 'clusterThreshold', 'matchThreshold', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'localModelPath', 'libUrl', 'ortWasmPath']) s[id] = els[id].value;
   for (const id of ['wordTs', 'doTranscribe', 'doDiarize', 'follow']) s[id] = els[id].checked;
   s.embPresetFor = state.embPresetFor || null;
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
@@ -998,7 +1028,8 @@ function initControls() {
   for (const [code, name] of LANGUAGES) els.language.append(el('option', { value: code }, name));
   els.numSpeakers.append(el('option', { value: 'auto' }, 'Auto-detect'));
   for (let i = 1; i <= 12; i++) els.numSpeakers.append(el('option', { value: String(i) }, `Exactly ${i}`));
-  els.asrModel.value = ASR_PRESETS[0].id;
+  els.quality.value = DEFAULT_QUALITY;
+  els.asrModel.value = QUALITY_PRESETS[DEFAULT_QUALITY].models.join(', ');
   els.segModel.value = DEFAULT_SEG_MODEL;
   els.embModel.value = DEFAULT_EMB_MODELS.join(', ');
   els.libUrl.value = TRANSFORMERS_URL;
@@ -1011,14 +1042,24 @@ function initControls() {
   }
   // Settings saved by an earlier version pointed at a single (now gated) embedding repo; move them to the current list.
   if (els.embModel.value.trim() === LEGACY_EMB_MODEL) els.embModel.value = DEFAULT_EMB_MODELS.join(', ');
+  // Earlier versions defaulted to tiny.en with no quality setting; the default is now the Best preset.
+  if (!s.quality || (els.asrModel.value.trim() === LEGACY_ASR_DEFAULT && s.quality !== 'custom')) { els.quality.value = DEFAULT_QUALITY; els.asrModel.value = QUALITY_PRESETS[DEFAULT_QUALITY].models.join(', '); }
+  if (!QUALITY_PRESETS[els.quality.value] && els.quality.value !== 'custom') els.quality.value = DEFAULT_QUALITY;
   if (!els.localModelPath.value.trim() && LOCAL_MODEL_PATH) els.localModelPath.value = LOCAL_MODEL_PATH;
   const sync = () => {
     els.clusterThresholdVal.textContent = Number(els.clusterThreshold.value).toFixed(2);
     els.matchThresholdVal.textContent = Number(els.matchThreshold.value).toFixed(2);
-    const preset = ASR_PRESETS.find((p) => p.id === els.asrModel.value.trim());
-    els.asrModelHint.textContent = preset ? preset.label : (els.asrModel.value.trim() ? 'Custom model id (must be a Transformers.js-compatible Whisper ONNX repo).' : '');
+    const ids = asrModelIds();
+    const preset = ids.length === 1 ? ASR_PRESETS.find((p) => p.id === ids[0]) : null;
+    els.asrModelHint.textContent = preset ? preset.label : (ids.length > 1 ? `${ids.length} models, tried in order: ${ids.map(shortModel).join(' → ')}` : (ids.length ? 'Custom model id (must be a Transformers.js-compatible Whisper ONNX repo).' : ''));
+    const q = QUALITY_PRESETS[els.quality.value];
+    els.qualityHint.textContent = q ? q.label : 'Type any Transformers.js-compatible Whisper model id(s) below.';
+    if (els.quality.value === 'best' && gpu.checked && !gpu.available) els.qualityHint.textContent += ' No WebGPU here: this model runs on the CPU and can take several times the audio duration; Balanced or Fast are much quicker.';
     els.reclusterBtn.disabled = !(state.result && state.result.hasDiarization) || state.running;
   };
+  els.quality.addEventListener('change', () => { const q = QUALITY_PRESETS[els.quality.value]; if (q) els.asrModel.value = q.models.join(', '); sync(); saveSettings(); });
+  els.asrModel.addEventListener('input', () => { const q = QUALITY_PRESETS[els.quality.value]; if (q && els.asrModel.value.trim() !== q.models.join(', ')) els.quality.value = 'custom'; });
+  state.syncControls = sync;
   document.querySelectorAll('.controls input, .controls select').forEach((n) => {
     n.addEventListener('input', sync);
     n.addEventListener('change', () => { sync(); saveSettings(); });
@@ -1035,6 +1076,7 @@ async function detectGPU() {
     }
   } catch (e) { /* no webgpu */ }
   gpu.checked = true;
+  if (state.syncControls) state.syncControls();
   els.gpuHint.textContent = gpu.available
     ? `WebGPU available${gpu.fp16 ? ' (fp16 shaders supported)' : ''} — large models run many times faster than on CPU.`
     : 'WebGPU not available in this browser; models run on WebAssembly (CPU). Use tiny/base models for reasonable speed, or try Chrome/Edge 113+.';
@@ -1171,15 +1213,19 @@ function renderDownloads() {
 }
 
 // ---------- configuration ----------
+function asrModelIds() { return els.asrModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean); }
 function readConfig() {
   const device = els.device.value === 'auto' ? (gpu.available ? 'webgpu' : 'wasm') : els.device.value;
-  const model = els.asrModel.value.trim() || ASR_PRESETS[0].id;
-  const preset = ASR_PRESETS.find((p) => p.id === model);
+  const ids = asrModelIds();
+  const models = ids.length ? ids : QUALITY_PRESETS[DEFAULT_QUALITY].models.slice();
+  const model = models[0];
   const sel = els.dtype.value;
-  let dtype;
-  if (sel !== 'auto') dtype = sel;
-  else if (device === 'webgpu') dtype = (preset && preset.big) || /large|turbo/i.test(model) ? { encoder_model: gpu.fp16 ? 'fp16' : 'fp32', decoder_model_merged: 'q4' } : 'fp32';
-  else dtype = 'q8';
+  const dtypeFor = (id) => {
+    if (sel !== 'auto') return sel;
+    if (device === 'webgpu') return /large|turbo|medium/i.test(id) ? { encoder_model: gpu.fp16 ? 'fp16' : 'fp32', decoder_model_merged: 'q4' } : 'fp32';
+    return 'q8';
+  };
+  const candidates = models.map((id) => ({ model: id, dtype: dtypeFor(id), fallbackDtype: 'q8' }));
   const diarDevice = els.diarDevice.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
   const ns = els.numSpeakers.value;
   return {
@@ -1187,7 +1233,7 @@ function readConfig() {
     ortWasmPath: els.ortWasmPath.value.trim(),
     transcribe: els.doTranscribe.checked,
     diarize: els.doDiarize.checked,
-    asr: { model, device, dtype, fallbackDtype: 'q8' },
+    asr: { device, candidates },
     diar: {
       segModel: els.segModel.value.trim() || DEFAULT_SEG_MODEL,
       embModels: (els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean).length ? els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean) : DEFAULT_EMB_MODELS.slice()),
@@ -1208,6 +1254,7 @@ async function run() {
   const cfg = readConfig();
   if (!cfg.transcribe && !cfg.diarize) { showError('Enable transcription and/or speaker identification first.'); return; }
   state.running = true; showError(''); previewText = ''; els.livePreview.textContent = ''; downloads.clear(); renderDownloads();
+  if (cfg.transcribe && cfg.asr.device === 'wasm' && /large|turbo|medium/i.test(cfg.asr.candidates[0].model)) logLine('WebGPU is not available, so a large Whisper model will run on the CPU. This works but can take several times the audio duration; switch Quality to Balanced or Fast if it is too slow.', 'warn');
   els.runBtn.disabled = true; els.cancelBtn.disabled = false; els.reclusterBtn.disabled = true;
   const t0 = performance.now();
   try {
@@ -1453,7 +1500,7 @@ function renderStats() {
   const r = state.result; if (!r) { els.stats.textContent = ''; return; }
   const words = r.turns.reduce((a, t) => a + (t.words ? t.words.length : t.text.split(/\s+/).filter(Boolean).length), 0);
   const parts = [`Duration ${fmtTime(r.duration)}`, `${r.speakers.length} speaker${r.speakers.length === 1 ? '' : 's'}`, `${r.turns.length} turns`, `${words.toLocaleString()} ${r.wordLevel ? 'words (word-level timing)' : 'words (segment timing)'}`];
-  if (r.compute?.asr) parts.push(`Whisper on ${r.compute.asr.device}`);
+  if (r.compute?.asr) parts.push(`${shortModel(r.compute.asr.model) || 'Whisper'} on ${r.compute.asr.device}`);
   if (r.compute?.diar) parts.push(`voices: ${shortModel(r.embModel) || 'n/a'} on ${r.compute.diar.device}`);
   els.stats.textContent = parts.join(' · ');
 }
