@@ -1,0 +1,1596 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speaker Transcriber</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2730%27 fill=%27%235b9cff%27/%3E%3Crect x=%2716%27 y=%2726%27 width=%276%27 height=%2712%27 rx=%273%27 fill=%27white%27/%3E%3Crect x=%2729%27 y=%2716%27 width=%276%27 height=%2732%27 rx=%273%27 fill=%27white%27/%3E%3Crect x=%2742%27 y=%2722%27 width=%276%27 height=%2720%27 rx=%273%27 fill=%27white%27/%3E%3C/svg%3E">
+<meta name="description" content="Transcribe audio or video in your browser and tag every line with the voice that said it. Whisper + pyannote + WeSpeaker running on WebAssembly / WebGPU. No server, no upload.">
+<style>
+  :root {
+    --bg: #0f1216; --panel: #171b21; --panel-2: #1e242c; --border: #2a323d; --text: #e6e9ee;
+    --muted: #8b95a5; --accent: #5b9cff; --accent-2: #3ddc97; --danger: #ff6b6b; --warn: #ffb454;
+    --radius: 10px; --shadow: 0 8px 30px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f3f5f8; --panel: #ffffff; --panel-2: #eef1f5; --border: #d7dde6; --text: #1b2330;
+      --muted: #5d6879; --shadow: 0 8px 30px rgba(20,30,50,.12);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1216; --panel: #171b21; --panel-2: #1e242c; --border: #2a323d; --text: #e6e9ee; --muted: #8b95a5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+  }
+  a { color: var(--accent); }
+  header {
+    padding: 18px 24px 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 20px; margin: 0; letter-spacing: .2px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  main.layout {
+    display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 18px; padding: 18px 24px 40px;
+  }
+  @media (max-width: 1000px) { main.layout { grid-template-columns: 1fr; padding: 14px 16px 40px; } header { padding: 14px 16px 8px; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
+  .controls { display: flex; flex-direction: column; gap: 14px; padding: 16px; align-self: start; }
+  .results { padding: 16px; min-height: 60vh; display: flex; flex-direction: column; gap: 14px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 8px; }
+  section.block { display: flex; flex-direction: column; gap: 8px; }
+  label.row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  label.row > span:first-child { white-space: nowrap; }
+  label.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); cursor: pointer; }
+  input[type="text"], input[type="number"], select, textarea {
+    width: 100%; background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 9px; font: inherit; font-size: 13px; min-width: 0;
+  }
+  input[type="range"] { width: 100%; accent-color: var(--accent); }
+  textarea { resize: vertical; line-height: 1.45; }
+  button {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; font: inherit; font-size: 13px; cursor: pointer; transition: background .12s, border-color .12s;
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.primary:hover:not(:disabled) { filter: brightness(1.08); }
+  button.danger { color: var(--danger); }
+  button.small { padding: 4px 8px; font-size: 12px; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hint { font-size: 12px; color: var(--muted); }
+  .dropzone {
+    border: 2px dashed var(--border); border-radius: var(--radius); padding: 22px 14px; text-align: center; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .dropzone:hover, .dropzone.drag { border-color: var(--accent); background: rgba(91,156,255,.06); }
+  .dropzone strong { display: block; margin-bottom: 4px; }
+  .dropzone input { display: none; }
+  .media-info { font-size: 13px; color: var(--muted); word-break: break-word; }
+  #playerWrap audio, #playerWrap video { width: 100%; border-radius: 8px; background: #000; max-height: 260px; }
+  details { border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; }
+  details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+  details[open] summary { margin-bottom: 8px; }
+  .progress { height: 8px; background: var(--panel-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+  .progress > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .2s; }
+  .progress.indeterminate > div { width: 40%; animation: slide 1.2s ease-in-out infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+  .status-line { font-size: 13px; display: flex; justify-content: space-between; gap: 8px; }
+  .status-line .stage { font-weight: 600; }
+  #downloads { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); max-height: 140px; overflow: auto; }
+  #downloads .dl { display: grid; grid-template-columns: 1fr 52px; gap: 6px; }
+  #downloads .dl .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #livePreview { font-size: 12px; color: var(--muted); font-style: italic; max-height: 60px; overflow: hidden; white-space: pre-wrap; }
+  #log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; max-height: 220px; overflow: auto; color: var(--muted); }
+  .error { color: var(--danger); font-size: 13px; white-space: pre-wrap; }
+  .warn { color: var(--warn); }
+  /* voices library */
+  .voice-list { display: flex; flex-direction: column; gap: 6px; }
+  .voice { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; }
+  .voice .vname { flex: 1; font-weight: 600; }
+  .voice .vmeta { color: var(--muted); font-size: 12px; }
+  .rec-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--danger); animation: blink 1s infinite; margin-right: 6px; }
+  @keyframes blink { 50% { opacity: .2; } }
+  /* results */
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .toolbar .spacer { flex: 1; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 6px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    border: 1px solid var(--border); background: var(--panel-2); cursor: pointer; color: var(--text);
+  }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--spk, #888); flex: none; }
+  .chip .meta { font-weight: 400; color: var(--muted); font-size: 12px; }
+  .chip:hover { border-color: var(--spk, var(--accent)); }
+  canvas#timeline { width: 100%; height: 72px; display: block; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); cursor: pointer; }
+  .transcript { display: flex; flex-direction: column; gap: 10px; }
+  .turn { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 10px; padding: 8px 10px; border-radius: 8px; border-left: 4px solid var(--spk, #888); background: var(--panel-2); }
+  @media (max-width: 600px) { .turn { grid-template-columns: 1fr; gap: 4px; } }
+  .turn.active { outline: 2px solid var(--spk, var(--accent)); outline-offset: -2px; }
+  .turn .head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .turn .head .chip { max-width: 100%; }
+  .turn .head .chip span.name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .turn .time { font-size: 12px; color: var(--muted); cursor: pointer; font-variant-numeric: tabular-nums; }
+  .turn .time:hover { color: var(--accent); }
+  .turn .text { white-space: pre-wrap; word-wrap: break-word; }
+  .turn .text .w { cursor: pointer; border-radius: 3px; }
+  .turn .text .w:hover { background: rgba(91,156,255,.18); }
+  .turn .text .w.current { background: var(--spk, var(--accent)); color: #fff; }
+  .turn .tools { display: flex; gap: 4px; margin-top: 4px; }
+  .turn .tools button { padding: 2px 7px; font-size: 11px; color: var(--muted); }
+  .turn textarea { width: 100%; min-height: 70px; }
+  .empty { color: var(--muted); text-align: center; padding: 40px 10px; border: 1px dashed var(--border); border-radius: var(--radius); }
+  .empty ol { text-align: left; display: inline-block; margin: 8px 0 0; padding-left: 20px; }
+  /* popover */
+  .popover {
+    position: absolute; z-index: 20; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px; width: 300px;
+    box-shadow: var(--shadow); display: none; flex-direction: column; gap: 8px; font-size: 13px;
+  }
+  .popover.open { display: flex; }
+  .popover h4 { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .popover .row2 { display: flex; gap: 6px; }
+  .popover .row2 > * { flex: 1; }
+  .popover .cand { display: flex; justify-content: space-between; gap: 8px; padding: 4px 6px; border-radius: 6px; cursor: pointer; }
+  .popover .cand:hover { background: var(--panel-2); }
+  .popover .cand .sim { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .badge { font-size: 11px; padding: 1px 6px; border-radius: 999px; background: rgba(61,220,151,.15); color: var(--accent-2); font-weight: 600; }
+  .kbd { font: 12px ui-monospace, Menlo, monospace; background: var(--panel-2); border: 1px solid var(--border); border-radius: 4px; padding: 0 5px; }
+  .stats { font-size: 12px; color: var(--muted); }
+  .footer-note { font-size: 12px; color: var(--muted); padding: 0 24px 24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Speaker Transcriber</h1>
+  <span class="sub">Transcribe audio or video in your browser and tag every line with the voice that said it. Nothing leaves your machine except model downloads.</span>
+</header>
+
+<main class="layout">
+  <aside class="panel controls">
+    <section class="block">
+      <h2>1 · Media</h2>
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose an audio or video file">
+        <strong>Drop an audio or video file here</strong>
+        <span class="hint">or click to browse · mp3, wav, m4a, ogg, flac, mp4, webm, mov …</span>
+        <input type="file" id="fileInput" accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.mp4,.m4v,.webm,.mov,.mkv">
+      </div>
+      <div class="media-info" id="mediaInfo">No file loaded.</div>
+      <div id="playerWrap"></div>
+    </section>
+
+    <section class="block">
+      <h2>2 · Models</h2>
+      <label class="check"><input type="checkbox" id="doTranscribe" checked> Transcribe speech (Whisper)</label>
+      <label class="row"><span>Whisper model</span><input type="text" id="asrModel" list="asrModels" spellcheck="false"></label>
+      <datalist id="asrModels"></datalist>
+      <div class="hint" id="asrModelHint"></div>
+      <label class="row"><span>Compute</span>
+        <select id="device">
+          <option value="auto">Auto (WebGPU if available)</option>
+          <option value="webgpu">WebGPU</option>
+          <option value="wasm">WebAssembly (CPU)</option>
+        </select></label>
+      <label class="row"><span>Precision</span>
+        <select id="dtype">
+          <option value="auto">Auto (recommended)</option>
+          <option value="fp32">fp32</option>
+          <option value="fp16">fp16</option>
+          <option value="q8">q8 (int8)</option>
+          <option value="q4">q4</option>
+          <option value="q4f16">q4f16</option>
+        </select></label>
+      <label class="row"><span>Language</span><select id="language"></select></label>
+      <label class="row"><span>Task</span>
+        <select id="task">
+          <option value="transcribe">Transcribe</option>
+          <option value="translate">Translate to English</option>
+        </select></label>
+      <label class="check"><input type="checkbox" id="wordTs" checked> Word-level timestamps (better speaker alignment)</label>
+      <div class="hint" id="gpuHint"></div>
+    </section>
+
+    <section class="block">
+      <h2>3 · Speaker identification</h2>
+      <label class="check"><input type="checkbox" id="doDiarize" checked> Identify who is speaking (diarization)</label>
+      <label class="row"><span>Speakers</span>
+        <select id="numSpeakers"></select></label>
+      <label class="row"><span>Split sensitivity</span>
+        <div><input type="range" id="clusterThreshold" min="0.40" max="1.00" step="0.01" value="0.70"> <div class="hint">Threshold <b id="clusterThresholdVal">0.70</b> · lower = more distinct speakers, higher = fewer</div></div></label>
+      <label class="row"><span>Name matching</span>
+        <div><input type="range" id="matchThreshold" min="0.20" max="0.90" step="0.01" value="0.50"> <div class="hint">Min similarity <b id="matchThresholdVal">0.50</b> to auto-name a speaker from your known voices</div></div></label>
+      <details>
+        <summary>Advanced</summary>
+        <label class="row"><span>Segmentation</span><input type="text" id="segModel" spellcheck="false"></label>
+        <label class="row"><span>Embeddings</span><input type="text" id="embModel" spellcheck="false"></label>
+        <label class="row"><span>Speaker compute</span>
+          <select id="diarDevice">
+            <option value="auto">Auto</option>
+            <option value="wasm">WebAssembly only</option>
+          </select></label>
+        <label class="row"><span>Window (s)</span><input type="number" id="windowSec" min="5" max="30" step="1" value="10"></label>
+        <label class="row"><span>Library URL</span><input type="text" id="libUrl" spellcheck="false"></label>
+        <div class="hint">Models are fetched from the Hugging Face Hub and cached by your browser. Any Whisper ONNX repo that works with Transformers.js can be typed above.</div>
+      </details>
+    </section>
+
+    <section class="block">
+      <h2>4 · Known voices</h2>
+      <div class="hint">Enroll a voice once and matching speakers are named automatically in future transcripts. Stored only in this browser.</div>
+      <div class="voice-list" id="voiceList"></div>
+      <input type="text" id="voiceName" placeholder="Name (e.g. Alice)">
+      <div class="btn-row">
+        <button id="voiceFileBtn">Add from audio file…</button>
+        <input type="file" id="voiceFile" accept="audio/*,video/*" style="display:none">
+        <button id="recordBtn">Record from mic</button>
+      </div>
+      <div class="hint" id="voiceStatus"></div>
+      <div class="btn-row">
+        <button class="small" id="exportVoices">Export library</button>
+        <button class="small" id="importVoicesBtn">Import library</button>
+        <input type="file" id="importVoices" accept="application/json,.json" style="display:none">
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>5 · Run</h2>
+      <div class="btn-row">
+        <button class="primary" id="runBtn" disabled>Transcribe &amp; identify speakers</button>
+        <button id="cancelBtn" disabled>Cancel</button>
+        <button id="reclusterBtn" disabled title="Re-group speakers with the current speaker settings without re-running the models">Re-group speakers</button>
+      </div>
+      <div class="status-line"><span class="stage" id="stage">Idle</span><span id="progressText"></span></div>
+      <div class="progress" id="progressBar"><div></div></div>
+      <div id="downloads"></div>
+      <div id="livePreview"></div>
+      <div class="error" id="error"></div>
+      <details><summary>Log</summary><div id="log"></div></details>
+    </section>
+  </aside>
+
+  <section class="panel results">
+    <div class="toolbar">
+      <div class="legend" id="speakerLegend"></div>
+      <span class="spacer"></span>
+      <label class="check"><input type="checkbox" id="follow" checked> Follow playback</label>
+      <button class="small" id="copyBtn" disabled>Copy</button>
+      <button class="small" id="exportTxt" disabled>TXT</button>
+      <button class="small" id="exportSrt" disabled>SRT</button>
+      <button class="small" id="exportVtt" disabled>VTT</button>
+      <button class="small" id="exportJson" disabled>JSON</button>
+    </div>
+    <canvas id="timeline" height="72"></canvas>
+    <div class="stats" id="stats"></div>
+    <div class="transcript" id="transcript">
+      <div class="empty">
+        <strong>Nothing transcribed yet.</strong>
+        <ol>
+          <li>Drop an audio or video file on the left.</li>
+          <li>Pick a Whisper model (tiny is fastest, small is more accurate).</li>
+          <li>Optionally enroll known voices so speakers get real names.</li>
+          <li>Run. Then click a speaker chip to rename, merge or reassign.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="popover" id="popover"></div>
+<div class="footer-note">Runs entirely client-side with <a href="https://github.com/huggingface/transformers.js" target="_blank" rel="noopener">Transformers.js</a> (ONNX Runtime Web). Speech recognition: OpenAI Whisper. Speaker segmentation: pyannote/segmentation-3.0. Voice embeddings: WeSpeaker ResNet34. First run downloads the models (tens to hundreds of MB); later runs use the browser cache.</div>
+
+<!-- ============================================================
+     Worker source. Runs in a dedicated module worker created from a Blob
+     so the whole app stays in one file. Everything between LIB START and
+     LIB END is dependency-free and unit-testable.
+     ============================================================ -->
+<script type="text/plain" id="worker-src">
+'use strict';
+const SR = 16000;
+
+// ===== LIB START =====
+// pyannote/segmentation-3.0 outputs "powerset" classes: index -> set of active local speakers.
+const POWERSET = [[], [0], [1], [2], [0, 1], [0, 2], [1, 2]];
+
+function decodePowerset(logits, numFrames, numClasses) {
+  const act = [new Uint8Array(numFrames), new Uint8Array(numFrames), new Uint8Array(numFrames)];
+  for (let f = 0; f < numFrames; f++) {
+    const off = f * numClasses;
+    let best = 0, bestV = -Infinity;
+    for (let c = 0; c < numClasses; c++) {
+      const v = logits[off + c];
+      if (v > bestV) { bestV = v; best = c; }
+    }
+    const spk = POWERSET[best] || [];
+    for (const s of spk) act[s][f] = 1;
+  }
+  return act;
+}
+
+// Runs of 1s in mask[f0..f1) -> time segments. Frame i spans [t0 + i*frameDur, t0 + (i+1)*frameDur).
+function maskToSegments(mask, f0, f1, frameDur, t0) {
+  const segs = [];
+  let start = -1;
+  for (let i = f0; i <= f1; i++) {
+    const on = i < f1 && mask[i];
+    if (on && start < 0) start = i;
+    else if (!on && start >= 0) { segs.push({ start: t0 + start * frameDur, end: t0 + i * frameDur }); start = -1; }
+  }
+  return segs;
+}
+
+function padTo(arr, len) { const out = new Float32Array(Math.max(len, arr.length)); out.set(arr); return out; }
+
+function unit(v) {
+  let s = 0;
+  for (let i = 0; i < v.length; i++) s += v[i] * v[i];
+  s = Math.sqrt(s) || 1;
+  const out = new Float32Array(v.length);
+  for (let i = 0; i < v.length; i++) out[i] = v[i] / s;
+  return out;
+}
+function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
+function cosine(a, b) { return dot(unit(a), unit(b)); }
+
+// Agglomerative clustering, centroid linkage on unit-normalised embeddings
+// (Euclidean distance between centroids, as in pyannote.audio 3.x).
+function clusterEmbeddings(vecs, { threshold = 0.7, numSpeakers = null, minClusterSize = 1 } = {}) {
+  const n = vecs.length;
+  if (n === 0) return { labels: [], centroids: [] };
+  const dim = vecs[0].length;
+  const X = vecs.map(unit);
+  const sums = X.map((v) => Float64Array.from(v));
+  const sizes = new Int32Array(n).fill(1);
+  const alive = new Uint8Array(n).fill(1);
+  const parent = Int32Array.from({ length: n }, (_, i) => i);
+  const centroidDist = (i, j) => {
+    let s = 0;
+    const si = sizes[i], sj = sizes[j], a = sums[i], b = sums[j];
+    for (let d = 0; d < dim; d++) { const x = a[d] / si - b[d] / sj; s += x * x; }
+    return Math.sqrt(s);
+  };
+  const D = new Float64Array(n * n);
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) D[i * n + j] = centroidDist(i, j);
+  let count = n;
+  const target = numSpeakers ? Math.max(1, Math.min(numSpeakers, n)) : 1;
+  while (count > target) {
+    let bi = -1, bj = -1, bd = Infinity;
+    for (let i = 0; i < n; i++) {
+      if (!alive[i]) continue;
+      const row = i * n;
+      for (let j = i + 1; j < n; j++) {
+        if (!alive[j]) continue;
+        const d = D[row + j];
+        if (d < bd) { bd = d; bi = i; bj = j; }
+      }
+    }
+    if (bi < 0) break;
+    if (!numSpeakers && bd >= threshold) break;
+    const a = sums[bi], b = sums[bj];
+    for (let d = 0; d < dim; d++) a[d] += b[d];
+    sizes[bi] += sizes[bj];
+    alive[bj] = 0; parent[bj] = bi; count--;
+    for (let k = 0; k < n; k++) {
+      if (!alive[k] || k === bi) continue;
+      const lo = Math.min(bi, k), hi = Math.max(bi, k);
+      D[lo * n + hi] = centroidDist(bi, k);
+    }
+  }
+  const root = (i) => { while (parent[i] !== i) i = parent[i]; return i; };
+  let labels = X.map((_, i) => root(i));
+
+  // Members of tiny clusters are re-assigned to the closest large cluster (auto mode only).
+  if (!numSpeakers && minClusterSize > 1) {
+    const ids = [...new Set(labels)];
+    let large = ids.filter((c) => sizes[c] >= minClusterSize);
+    if (large.length === 0) large = [ids.reduce((a, b) => (sizes[a] >= sizes[b] ? a : b))];
+    if (large.length < ids.length) {
+      const cents = large.map((c) => unit(Float32Array.from(sums[c], (x) => x / sizes[c])));
+      labels = labels.map((c, i) => {
+        if (large.includes(c)) return c;
+        let best = 0, bestS = -Infinity;
+        for (let k = 0; k < large.length; k++) { const s = dot(X[i], cents[k]); if (s > bestS) { bestS = s; best = k; } }
+        return large[best];
+      });
+    }
+  }
+  // Compact labels to 0..K-1 in order of first appearance and compute final centroids.
+  const map = new Map();
+  const compact = labels.map((c) => { if (!map.has(c)) map.set(c, map.size); return map.get(c); });
+  const K = map.size;
+  const acc = Array.from({ length: K }, () => new Float64Array(dim));
+  const cnt = new Int32Array(K);
+  compact.forEach((c, i) => { cnt[c]++; const v = X[i]; for (let d = 0; d < dim; d++) acc[c][d] += v[d]; });
+  const centroids = acc.map((a, c) => unit(Float32Array.from(a, (x) => x / cnt[c])));
+  return { labels: compact, centroids };
+}
+
+// Merge overlapping / nearly-adjacent segments (sorted by start).
+function mergeSegments(segs, gap = 0.3) {
+  const out = [];
+  for (const s of [...segs].sort((a, b) => a.start - b.start)) {
+    const last = out[out.length - 1];
+    if (last && s.start - last.end <= gap) last.end = Math.max(last.end, s.end);
+    else out.push({ start: s.start, end: s.end });
+  }
+  return out;
+}
+
+// Group local (window, speaker) entries into global speakers.
+function clusterEntries(entries, { threshold = 0.7, numSpeakers = null, mergeGap = 0.3, minSegDur = 0.1 } = {}) {
+  const withVec = entries.filter((e) => e.vec);
+  const n = withVec.length;
+  const minClusterSize = n < 8 ? 1 : Math.max(2, Math.min(4, Math.round(n / 30)));
+  const { labels } = clusterEmbeddings(withVec.map((e) => e.vec), { threshold, numSpeakers, minClusterSize });
+  withVec.forEach((e, i) => { e.label = labels[i]; });
+  for (const e of entries) {
+    if (e.vec) continue;
+    // No embedding (too short): borrow the label of the closest labelled entry in time.
+    let best = -1, bestD = Infinity;
+    const s0 = e.segs[0].start, e0 = e.segs[e.segs.length - 1].end;
+    for (const o of withVec) {
+      const os = o.segs[0].start, oe = o.segs[o.segs.length - 1].end;
+      const d = os > e0 ? os - e0 : s0 > oe ? s0 - oe : 0;
+      if (d < bestD) { bestD = d; best = o.label; }
+    }
+    e.label = bestD <= 2.0 ? best : -1;
+  }
+  const byLabel = new Map();
+  for (const e of entries) {
+    if (e.label == null || e.label < 0) continue;
+    if (!byLabel.has(e.label)) byLabel.set(e.label, { segs: [], vecs: [] });
+    const g = byLabel.get(e.label);
+    g.segs.push(...e.segs);
+    if (e.vec) g.vecs.push(e.vec);
+  }
+  let speakers = [];
+  for (const [label, g] of byLabel) {
+    const merged = mergeSegments(g.segs, mergeGap).filter((s) => s.end - s.start >= minSegDur);
+    if (!merged.length) continue;
+    const dim = g.vecs[0]?.length || 0;
+    const acc = new Float64Array(dim);
+    for (const v of g.vecs) for (let d = 0; d < dim; d++) acc[d] += v[d];
+    speakers.push({
+      label,
+      segs: merged,
+      duration: merged.reduce((a, s) => a + s.end - s.start, 0),
+      firstStart: merged[0].start,
+      centroid: dim ? Array.from(unit(Float32Array.from(acc, (x) => x / g.vecs.length))) : null,
+    });
+  }
+  speakers.sort((a, b) => a.firstStart - b.firstStart);
+  const segments = [];
+  speakers = speakers.map((s, id) => {
+    for (const seg of s.segs) segments.push({ speaker: id, start: seg.start, end: seg.end });
+    return { id, duration: s.duration, firstStart: s.firstStart, centroid: s.centroid };
+  });
+  segments.sort((a, b) => a.start - b.start);
+  return { segments, speakers };
+}
+
+// Assign each transcript item (word or Whisper segment) to the speaker with the largest overlap.
+// Robust to slightly non-monotonic timestamps: candidate segments are found by binary search.
+function assignSpeakers(items, segments, { maxSnap = 1.0 } = {}) {
+  const out = new Array(items.length).fill(-1);
+  if (!segments.length) return out;
+  const segs = [...segments].sort((a, b) => a.start - b.start);
+  let maxLen = 0;
+  for (const sg of segs) maxLen = Math.max(maxLen, sg.end - sg.start);
+  const lowerBound = (t) => { let lo = 0, hi = segs.length; while (lo < hi) { const mid = (lo + hi) >> 1; if (segs[mid].start < t) lo = mid + 1; else hi = mid; } return lo; };
+  let prev = -1;
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const s = it.start, e = Math.max(it.end ?? s, s + 0.01);
+    const overlap = new Map();
+    let near = -1, nearD = Infinity;
+    for (let q = lowerBound(s - maxSnap - maxLen); q < segs.length && segs[q].start <= e + maxSnap; q++) {
+      const sg = segs[q];
+      if (sg.end < s - maxSnap) continue;
+      const ov = Math.min(e, sg.end) - Math.max(s, sg.start);
+      if (ov > 0) overlap.set(sg.speaker, (overlap.get(sg.speaker) || 0) + ov);
+      else {
+        const d = sg.start > e ? sg.start - e : s - sg.end;
+        if (d < nearD) { nearD = d; near = sg.speaker; }
+      }
+    }
+    let spk = -1;
+    if (overlap.size) {
+      let bestV = -1;
+      for (const [k, v] of overlap) {
+        if (v > bestV + 1e-6 || (Math.abs(v - bestV) <= 1e-6 && k === prev)) { bestV = v; spk = k; }
+      }
+    } else if (near >= 0 && nearD <= maxSnap) spk = near;
+    else spk = prev;
+    out[i] = spk; prev = spk;
+  }
+  // Leading items before any speech get the first real speaker.
+  const first = out.find((x) => x >= 0);
+  if (first !== undefined) for (let i = 0; i < out.length && out[i] < 0; i++) out[i] = first;
+  return out;
+}
+
+// Consecutive items by the same speaker become one "turn".
+function buildTurns(items, speakerOf, { maxGap = 3.0, maxChars = 700 } = {}) {
+  const turns = [];
+  let cur = null;
+  items.forEach((it, i) => {
+    const spk = speakerOf[i];
+    const breakLong = cur && cur.text.length > maxChars && /[.!?。！？]\s*$/.test(cur.text);
+    if (!cur || spk !== cur.speaker || it.start - cur.end > maxGap || breakLong) {
+      cur = { speaker: spk, start: it.start, end: it.end, words: [], text: '' };
+      turns.push(cur);
+    }
+    cur.words.push({ text: it.text, start: it.start, end: it.end });
+    cur.end = Math.max(cur.end, it.end);
+    cur.text += it.text;
+  });
+  for (const t of turns) t.text = t.text.replace(/\s+/g, ' ').trim();
+  return turns;
+}
+
+// Whisper may emit a null end timestamp for the last item of a chunk.
+function normalizeItems(chunks) {
+  const items = [];
+  for (const c of chunks || []) {
+    const [s, e] = c.timestamp || [0, null];
+    if (typeof c.text !== 'string' || !c.text.trim()) continue;
+    items.push({ text: c.text, start: Number(s) || 0, end: e == null ? null : Number(e) });
+  }
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].end == null || items[i].end < items[i].start) {
+      const next = items[i + 1];
+      items[i].end = next ? Math.max(items[i].start, Math.min(next.start, items[i].start + 5)) : items[i].start + Math.min(5, Math.max(0.5, items[i].text.length * 0.06));
+    }
+  }
+  return items;
+}
+// ===== LIB END =====
+
+let TF = null, TF_URL = null;
+let asr = null, seg = null, emb = null;
+let cache = null;
+
+const post = (msg, transfer) => self.postMessage(msg, transfer || []);
+const status = (id, message) => post({ id, type: 'status', message });
+const log = (id, message) => post({ id, type: 'log', message });
+const progress = (id, stage, value, message) => post({ id, type: 'progress', stage, value, message });
+
+self.onmessage = async (ev) => {
+  const { id, type, payload } = ev.data || {};
+  try {
+    let result;
+    switch (type) {
+      case 'ping': result = 'pong'; break;
+      case 'load': result = await load(payload, id); break;
+      case 'run': result = await run(payload, id); break;
+      case 'embed': result = await embedSample(payload, id); break;
+      case 'recluster': result = recluster(payload); break;
+      case 'lib': result = await lib(payload.libUrl).then(() => true); break;
+      default: throw new Error('Unknown message type: ' + type);
+    }
+    post({ id, type: 'done', result });
+  } catch (e) {
+    post({ id, type: 'error', message: (e && e.message) || String(e), stack: e && e.stack });
+  }
+};
+
+async function lib(url) {
+  if (TF && TF_URL === url) return TF;
+  const mod = await import(url);
+  const env = mod.env;
+  env.allowLocalModels = false;
+  env.allowRemoteModels = true;
+  try {
+    if (typeof caches === 'undefined') env.useBrowserCache = false;
+    else await caches.open('transformers-cache');
+  } catch (e) { env.useBrowserCache = false; }
+  TF = mod; TF_URL = url;
+  asr = seg = emb = null;
+  return mod;
+}
+
+async function withFallback(id, devices, dtypes, factory) {
+  let lastErr = null;
+  for (let i = 0; i < devices.length; i++) {
+    try {
+      const obj = await factory(devices[i], dtypes[i]);
+      return { obj, device: devices[i], dtype: dtypes[i] };
+    } catch (e) {
+      lastErr = e;
+      if (i < devices.length - 1) log(id, `Loading on ${devices[i]} failed (${(e && e.message) || e}); retrying on ${devices[i + 1]}.`);
+    }
+  }
+  throw lastErr;
+}
+
+async function load(payload, id) {
+  const T = await lib(payload.libUrl);
+  const progress_callback = (p) => post({ id, type: 'download', ...p });
+  const out = {};
+  if (payload.asr) {
+    const cfg = payload.asr;
+    const key = JSON.stringify(cfg);
+    if (!asr || asr.key !== key) {
+      if (asr) { try { await asr.pipe.dispose(); } catch (e) {} asr = null; }
+      status(id, `Loading ${cfg.model}`);
+      const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : [cfg.device];
+      const dtypes = cfg.device === 'webgpu' ? [cfg.dtype, cfg.fallbackDtype] : [cfg.dtype];
+      const r = await withFallback(id, devices, dtypes, (device, dtype) =>
+        T.pipeline('automatic-speech-recognition', cfg.model, { device, dtype, progress_callback }));
+      asr = { key, pipe: r.obj, device: r.device, dtype: r.dtype };
+      log(id, `Whisper ready on ${r.device} (${typeof r.dtype === 'string' ? r.dtype : JSON.stringify(r.dtype)}).`);
+    }
+    out.asr = { device: asr.device };
+  }
+  if (payload.diar) {
+    const cfg = payload.diar;
+    const segKey = JSON.stringify([cfg.segModel]);
+    if (!seg || seg.key !== segKey) {
+      if (seg) { try { await seg.model.dispose(); } catch (e) {} seg = null; }
+      status(id, `Loading ${cfg.segModel}`);
+      const processor = await T.AutoProcessor.from_pretrained(cfg.segModel, { progress_callback });
+      const model = await T.AutoModelForAudioFrameClassification.from_pretrained(cfg.segModel, { device: 'wasm', dtype: 'fp32', progress_callback });
+      seg = { key: segKey, processor, model };
+      log(id, 'Speaker segmentation model ready (wasm, fp32).');
+    }
+    const embKey = JSON.stringify([cfg.embModel, cfg.device]);
+    if (!emb || emb.key !== embKey) {
+      if (emb) { try { await emb.model.dispose(); } catch (e) {} emb = null; }
+      status(id, `Loading ${cfg.embModel}`);
+      const processor = await T.AutoProcessor.from_pretrained(cfg.embModel, { progress_callback });
+      const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm'];
+      const r = await withFallback(id, devices, devices.map(() => 'fp32'), (device, dtype) =>
+        T.AutoModel.from_pretrained(cfg.embModel, { device, dtype, progress_callback }));
+      emb = { key: embKey, processor, model: r.obj, device: r.device };
+      log(id, `Voice embedding model ready on ${r.device}.`);
+      // Warm up once so the first real embedding does not pay session start-up costs.
+      try { await embed(new Float32Array(SR)); } catch (e) { log(id, 'Embedding warm-up failed: ' + ((e && e.message) || e)); }
+    }
+    out.diar = { device: emb.device };
+  }
+  return out;
+}
+
+async function embed(samples) {
+  const inputs = await emb.processor(samples);
+  const out = await emb.model(inputs);
+  const t = out.embeddings || out.last_hidden_state || out[Object.keys(out)[0]];
+  let data = t.data;
+  if (t.dims.length === 3) {
+    const [, n, d] = t.dims;
+    const m = new Float32Array(d);
+    for (let i = 0; i < n; i++) for (let j = 0; j < d; j++) m[j] += data[i * d + j] / n;
+    data = m;
+  }
+  return unit(Float32Array.from(data));
+}
+
+async function embedSample({ audio }, id) {
+  if (!emb) throw new Error('Embedding model is not loaded');
+  const maxLen = 60 * SR;
+  const a = audio.length > maxLen ? audio.subarray(0, maxLen) : audio;
+  status(id, 'Computing voice embedding');
+  // Average embeddings over 10 s windows so long samples are not dominated by one stretch.
+  const win = 10 * SR, vecs = [];
+  for (let s = 0; s < a.length; s += win) {
+    const part = a.subarray(s, Math.min(a.length, s + win));
+    if (part.length < SR / 2 && vecs.length) break;
+    vecs.push(await embed(part.length < SR ? padTo(part, SR) : part.slice()));
+  }
+  const acc = new Float64Array(vecs[0].length);
+  for (const v of vecs) for (let d = 0; d < acc.length; d++) acc[d] += v[d];
+  return Array.from(unit(Float32Array.from(acc)));
+}
+
+async function transcribe(audio, opts, id) {
+  const T = TF;
+  const pipe = asr.pipe;
+  const gc = pipe.model.generation_config || {};
+  const multilingual = gc.is_multilingual === true || !!gc.lang_to_id || !/\.en($|[_-])/i.test(opts.model);
+  const chunk_length_s = 30, stride_length_s = 5;
+  const window = chunk_length_s * SR, stride = stride_length_s * SR, jump = window - 2 * stride;
+  const nChunks = audio.length > window ? 1 + Math.ceil((audio.length - window) / jump) : 1;
+  let done = 0;
+  const origGenerate = pipe.model.generate;
+  pipe.model.generate = async function (...args) {
+    progress(id, 'transcribe', done / nChunks, `Transcribing chunk ${done + 1} of ${nChunks}`);
+    const r = await origGenerate.apply(this, args);
+    done++;
+    progress(id, 'transcribe', done / nChunks, `Transcribed chunk ${done} of ${nChunks}`);
+    return r;
+  };
+  const feConfig = pipe.processor.feature_extractor.config;
+  const time_precision = feConfig.chunk_length / pipe.model.config.max_source_positions;
+  const streamer = new T.WhisperTextStreamer(pipe.tokenizer, {
+    time_precision,
+    callback_function: (text) => post({ id, type: 'partial', text }),
+  });
+  const genOpts = { chunk_length_s, stride_length_s, return_timestamps: opts.wordTimestamps ? 'word' : true, streamer };
+  if (multilingual) {
+    if (opts.language && opts.language !== 'auto') genOpts.language = opts.language;
+    if (opts.task) genOpts.task = opts.task;
+  } else if (opts.language && opts.language !== 'auto' && opts.language !== 'en') {
+    log(id, `${opts.model} is English-only; the language setting is ignored.`);
+  }
+  let wordLevel = !!opts.wordTimestamps;
+  let out;
+  try {
+    out = await pipe(audio, genOpts);
+  } catch (e) {
+    const msg = (e && e.message) || String(e);
+    if (wordLevel && /alignment_heads|output_attentions|token_timestamps|cross_attentions|attentions/i.test(msg)) {
+      log(id, 'Word-level timestamps are not available for this model; falling back to segment timestamps. (' + msg + ')');
+      wordLevel = false; done = 0;
+      genOpts.return_timestamps = true;
+      out = await pipe(audio, genOpts);
+    } else throw e;
+  } finally {
+    pipe.model.generate = origGenerate;
+  }
+  return { text: out.text || '', items: normalizeItems(out.chunks), wordLevel, multilingual };
+}
+
+async function diarizeLocal(audio, opts, id) {
+  const N = audio.length;
+  const WIN = Math.round(Math.max(5, Math.min(30, opts.windowSec || 10)) * SR);
+  const PAD = SR; // 1 s of context on each side of every window
+  const nWin = Math.max(1, Math.ceil(N / WIN));
+  const entries = [];
+  const minSeg = 0.2, minAlone = 0.5;
+  for (let w = 0; w < nWin; w++) {
+    progress(id, 'diarize', w / nWin, `Analysing voices: window ${w + 1} of ${nWin}`);
+    const s = w * WIN, e = Math.min(N, s + WIN);
+    const ps = Math.max(0, s - PAD), pe = Math.min(N, e + PAD);
+    let chunk = audio.slice(ps, pe);
+    if (chunk.length < 2 * SR) chunk = padTo(chunk, 2 * SR);
+    const inputs = await seg.processor(chunk);
+    const { logits } = await seg.model(inputs);
+    const [, T, C] = logits.dims;
+    const frameDur = chunk.length / T / SR;
+    const act = decodePowerset(logits.data, T, C);
+    const t0 = ps / SR;
+    const f0 = Math.max(0, Math.ceil((s - ps) / SR / frameDur - 0.5));
+    const f1 = Math.min(T, Math.ceil((e - ps) / SR / frameDur - 0.5));
+    for (let k = 0; k < 3; k++) {
+      const mask = act[k], o1 = act[(k + 1) % 3], o2 = act[(k + 2) % 3];
+      let total = 0, aloneCount = 0;
+      const alone = new Uint8Array(T);
+      for (let i = f0; i < f1; i++) {
+        if (!mask[i]) continue;
+        total++;
+        if (!o1[i] && !o2[i]) { alone[i] = 1; aloneCount++; }
+      }
+      if (total * frameDur < minSeg) continue;
+      const segs = maskToSegments(mask, f0, f1, frameDur, t0);
+      const useMask = aloneCount * frameDur >= minAlone ? alone : mask;
+      // Concatenate the samples where this speaker is active for the embedding model.
+      const pieces = maskToSegments(useMask, f0, f1, frameDur, 0);
+      let len = 0;
+      const ranges = pieces.map((p) => {
+        const a = Math.max(0, Math.round(p.start * SR)), b = Math.min(pe - ps, Math.round(p.end * SR));
+        len += Math.max(0, b - a);
+        return [a, b];
+      });
+      let vec = null;
+      if (len >= minSeg * SR) {
+        const buf = new Float32Array(Math.max(len, SR));
+        let off = 0;
+        for (const [a, b] of ranges) { buf.set(chunk.subarray(a, b), off); off += b - a; }
+        vec = await embed(buf);
+      }
+      entries.push({ w, k, segs, dur: total * frameDur, vec });
+    }
+  }
+  progress(id, 'diarize', 1, `Analysed ${nWin} windows`);
+  return { entries };
+}
+
+function finalize(c, opts) {
+  let segments = [], speakers = [];
+  if (c.entries) {
+    const r = clusterEntries(c.entries, { threshold: opts.threshold, numSpeakers: opts.numSpeakers });
+    segments = r.segments; speakers = r.speakers;
+  }
+  const items = c.transcript ? c.transcript.items : [];
+  let speakerOf;
+  if (c.entries) speakerOf = assignSpeakers(items, segments);
+  else { speakerOf = items.map(() => 0); if (items.length) speakers = [{ id: 0, duration: c.N / SR, firstStart: 0, centroid: null }]; }
+  const turns = buildTurns(items, speakerOf);
+  return {
+    duration: c.N / SR,
+    text: c.transcript ? c.transcript.text : '',
+    wordLevel: c.transcript ? c.transcript.wordLevel : false,
+    turns, segments, speakers,
+    stats: { items: items.length, windows: c.entries ? new Set(c.entries.map((e) => e.w)).size : 0, embeddings: c.entries ? c.entries.filter((e) => e.vec).length : 0 },
+  };
+}
+
+async function run({ audio, opts }, id) {
+  if (!(audio instanceof Float32Array)) audio = new Float32Array(audio);
+  let transcript = null, entries = null;
+  if (opts.transcribe) { status(id, 'Transcribing'); transcript = await transcribe(audio, opts, id); }
+  if (opts.diarize) { status(id, 'Identifying speakers'); entries = (await diarizeLocal(audio, opts, id)).entries; }
+  cache = { N: audio.length, transcript, entries, opts };
+  status(id, 'Grouping speakers');
+  return finalize(cache, opts);
+}
+
+function recluster(payload) {
+  if (!cache || !cache.entries) throw new Error('Nothing to re-group yet: run speaker identification first.');
+  const opts = { ...cache.opts, ...payload };
+  cache.opts = opts;
+  return finalize(cache, opts);
+}
+</script>
+
+<script>
+(() => {
+'use strict';
+
+// ---------- constants ----------
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0/dist/transformers.min.js';
+const DEFAULT_SEG_MODEL = 'onnx-community/pyannote-segmentation-3.0';
+const DEFAULT_EMB_MODEL = 'Xenova/wespeaker-voxceleb-resnet34-LM';
+const ASR_PRESETS = [
+  { id: 'Xenova/whisper-tiny.en', label: 'Whisper tiny.en · English · ≈40 MB · fastest' },
+  { id: 'Xenova/whisper-tiny', label: 'Whisper tiny · multilingual · ≈40 MB' },
+  { id: 'Xenova/whisper-base.en', label: 'Whisper base.en · English · ≈75 MB' },
+  { id: 'Xenova/whisper-base', label: 'Whisper base · multilingual · ≈75 MB' },
+  { id: 'Xenova/whisper-small.en', label: 'Whisper small.en · English · ≈250 MB · good accuracy' },
+  { id: 'Xenova/whisper-small', label: 'Whisper small · multilingual · ≈250 MB' },
+  { id: 'Xenova/whisper-medium.en', label: 'Whisper medium.en · English · ≈770 MB · slow without WebGPU' },
+  { id: 'onnx-community/whisper-large-v3-turbo_timestamped', label: 'Whisper large-v3-turbo · multilingual · ≈1.3 GB · WebGPU recommended', big: true },
+  { id: 'onnx-community/whisper-large-v3-turbo', label: 'Whisper large-v3-turbo (segment timestamps only) · ≈1.3 GB · WebGPU', big: true },
+];
+const LANGUAGES = [['auto', 'Auto-detect'], ['en', 'English'], ['es', 'Spanish'], ['fr', 'French'], ['de', 'German'], ['it', 'Italian'], ['pt', 'Portuguese'], ['nl', 'Dutch'], ['ru', 'Russian'], ['uk', 'Ukrainian'], ['pl', 'Polish'], ['cs', 'Czech'], ['sv', 'Swedish'], ['da', 'Danish'], ['no', 'Norwegian'], ['fi', 'Finnish'], ['tr', 'Turkish'], ['el', 'Greek'], ['he', 'Hebrew'], ['ar', 'Arabic'], ['fa', 'Persian'], ['hi', 'Hindi'], ['bn', 'Bengali'], ['ta', 'Tamil'], ['ur', 'Urdu'], ['id', 'Indonesian'], ['ms', 'Malay'], ['vi', 'Vietnamese'], ['th', 'Thai'], ['zh', 'Chinese'], ['ja', 'Japanese'], ['ko', 'Korean'], ['ro', 'Romanian'], ['hu', 'Hungarian'], ['ca', 'Catalan'], ['sw', 'Swahili']];
+const PALETTE = ['#5b9cff', '#3ddc97', '#ffb454', '#ff6b9d', '#b28dff', '#ffd166', '#4cc9f0', '#f4978e', '#8ac926', '#ff924c', '#9d4edd', '#06d6a0'];
+const VOICES_KEY = 'speakerTranscriber.voices.v1';
+const SETTINGS_KEY = 'speakerTranscriber.settings.v1';
+const SR = 16000;
+
+// ---------- DOM ----------
+const $ = (id) => document.getElementById(id);
+const els = {};
+['dropzone', 'fileInput', 'mediaInfo', 'playerWrap', 'doTranscribe', 'asrModel', 'asrModels', 'asrModelHint', 'device', 'dtype', 'language', 'task', 'wordTs', 'gpuHint',
+ 'doDiarize', 'numSpeakers', 'clusterThreshold', 'clusterThresholdVal', 'matchThreshold', 'matchThresholdVal', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'libUrl',
+ 'voiceList', 'voiceName', 'voiceFileBtn', 'voiceFile', 'recordBtn', 'voiceStatus', 'exportVoices', 'importVoicesBtn', 'importVoices',
+ 'runBtn', 'cancelBtn', 'reclusterBtn', 'stage', 'progressText', 'progressBar', 'downloads', 'livePreview', 'error', 'log',
+ 'speakerLegend', 'follow', 'copyBtn', 'exportTxt', 'exportSrt', 'exportVtt', 'exportJson', 'timeline', 'stats', 'transcript', 'popover'].forEach((id) => { els[id] = $(id); });
+
+function el(tag, props = {}, children = []) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (v == null) continue;
+    if (k === 'class') node.className = v;
+    else if (k === 'style') node.style.cssText = v;
+    else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'value') node.value = v;
+    else node.setAttribute(k, v);
+  }
+  for (const c of Array.isArray(children) ? children : [children]) {
+    if (c == null) continue;
+    node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+  return node;
+}
+
+// ---------- state ----------
+const state = {
+  file: null, fileURL: null, audio: null, duration: 0, decodeInfo: null,
+  result: null, voices: [], running: false, nextSpeakerId: 0,
+};
+const gpu = { available: false, fp16: false, checked: false };
+let engine = null;
+let player = null;
+let recorder = null;
+let previewText = '';
+const downloads = new Map();
+
+// ---------- helpers ----------
+const pad2 = (n) => String(n).padStart(2, '0');
+function fmtTime(s) {
+  s = Math.max(0, s || 0);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = Math.floor(s % 60);
+  return h ? `${h}:${pad2(m)}:${pad2(sec)}` : `${m}:${pad2(sec)}`;
+}
+function fmtStamp(s, sep) {
+  s = Math.max(0, s || 0);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = Math.floor(s % 60), ms = Math.round((s - Math.floor(s)) * 1000);
+  return `${pad2(h)}:${pad2(m)}:${pad2(sec)}${sep}${String(ms).padStart(3, '0')}`;
+}
+function fmtBytes(b) { return b > 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b > 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.round(b / 1e3) + ' kB'; }
+function unit(v) { let s = 0; for (const x of v) s += x * x; s = Math.sqrt(s) || 1; return Float32Array.from(v, (x) => x / s); }
+function cosine(a, b) { const x = unit(a), y = unit(b); let s = 0; for (let i = 0; i < x.length; i++) s += x[i] * y[i]; return s; }
+function logLine(msg, cls) {
+  const t = new Date().toLocaleTimeString();
+  const line = el('div', { class: cls || '' }, `[${t}] ${msg}`);
+  els.log.append(line);
+  while (els.log.childElementCount > 400) els.log.firstChild.remove();
+  els.log.scrollTop = els.log.scrollHeight;
+}
+function showError(msg) { els.error.textContent = msg || ''; if (msg) logLine(msg, 'error'); }
+function setStage(text) { els.stage.textContent = text; }
+function setProgress(value, text) {
+  els.progressBar.classList.toggle('indeterminate', value == null);
+  els.progressBar.firstElementChild.style.width = value == null ? '' : `${Math.round(Math.max(0, Math.min(1, value)) * 100)}%`;
+  els.progressText.textContent = text || '';
+}
+function download(filename, text, mime) {
+  const blob = new Blob([text], { type: mime || 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: filename });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+function baseName() { return (state.file?.name || 'transcript').replace(/\.[^.]+$/, ''); }
+
+// ---------- settings ----------
+function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch (e) { return {}; } }
+function saveSettings() {
+  const s = {};
+  for (const id of ['asrModel', 'device', 'dtype', 'language', 'task', 'numSpeakers', 'clusterThreshold', 'matchThreshold', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'libUrl']) s[id] = els[id].value;
+  for (const id of ['wordTs', 'doTranscribe', 'doDiarize', 'follow']) s[id] = els[id].checked;
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
+}
+function initControls() {
+  for (const p of ASR_PRESETS) els.asrModels.append(el('option', { value: p.id }, p.label));
+  for (const [code, name] of LANGUAGES) els.language.append(el('option', { value: code }, name));
+  els.numSpeakers.append(el('option', { value: 'auto' }, 'Auto-detect'));
+  for (let i = 1; i <= 12; i++) els.numSpeakers.append(el('option', { value: String(i) }, `Exactly ${i}`));
+  els.asrModel.value = ASR_PRESETS[0].id;
+  els.segModel.value = DEFAULT_SEG_MODEL;
+  els.embModel.value = DEFAULT_EMB_MODEL;
+  els.libUrl.value = TRANSFORMERS_URL;
+  const s = loadSettings();
+  for (const [k, v] of Object.entries(s)) {
+    if (!els[k]) continue;
+    if (typeof v === 'boolean') els[k].checked = v; else if (v != null && v !== '') els[k].value = v;
+  }
+  const sync = () => {
+    els.clusterThresholdVal.textContent = Number(els.clusterThreshold.value).toFixed(2);
+    els.matchThresholdVal.textContent = Number(els.matchThreshold.value).toFixed(2);
+    const preset = ASR_PRESETS.find((p) => p.id === els.asrModel.value.trim());
+    els.asrModelHint.textContent = preset ? preset.label : (els.asrModel.value.trim() ? 'Custom model id (must be a Transformers.js-compatible Whisper ONNX repo).' : '');
+    els.reclusterBtn.disabled = !(state.result && state.result.hasDiarization) || state.running;
+  };
+  document.querySelectorAll('.controls input, .controls select').forEach((n) => {
+    n.addEventListener('input', sync);
+    n.addEventListener('change', () => { sync(); saveSettings(); });
+  });
+  els.follow.addEventListener('change', saveSettings);
+  els.matchThreshold.addEventListener('change', () => { if (state.result) { matchVoices(); renderAll(); } });
+  sync();
+}
+async function detectGPU() {
+  try {
+    if (navigator.gpu) {
+      const adapter = await navigator.gpu.requestAdapter();
+      if (adapter) { gpu.available = true; gpu.fp16 = adapter.features.has('shader-f16'); }
+    }
+  } catch (e) { /* no webgpu */ }
+  gpu.checked = true;
+  els.gpuHint.textContent = gpu.available
+    ? `WebGPU available${gpu.fp16 ? ' (fp16 shaders supported)' : ''} — large models run many times faster than on CPU.`
+    : 'WebGPU not available in this browser; models run on WebAssembly (CPU). Use tiny/base models for reasonable speed, or try Chrome/Edge 113+.';
+}
+
+// ---------- audio decoding ----------
+async function decodeFile(file, onStage) {
+  onStage?.('Reading file');
+  const buf = await file.arrayBuffer();
+  onStage?.('Decoding audio');
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctx = new Ctx();
+  let decoded;
+  try {
+    decoded = await new Promise((resolve, reject) => {
+      const p = ctx.decodeAudioData(buf, resolve, reject);
+      if (p && p.then) p.then(resolve, reject);
+    });
+  } finally { try { ctx.close(); } catch (e) {} }
+  const n = decoded.length, ch = decoded.numberOfChannels;
+  let mono;
+  if (ch === 1) mono = decoded.getChannelData(0);
+  else {
+    mono = new Float32Array(n);
+    for (let c = 0; c < ch; c++) { const d = decoded.getChannelData(c); for (let i = 0; i < n; i++) mono[i] += d[i] / ch; }
+  }
+  const info = { duration: decoded.duration, sampleRate: decoded.sampleRate, channels: ch };
+  if (decoded.sampleRate === SR) return { audio: mono.slice(), ...info };
+  onStage?.('Resampling to 16 kHz');
+  const len = Math.ceil(decoded.duration * SR);
+  const off = new OfflineAudioContext(1, len, SR);
+  const b = off.createBuffer(1, n, decoded.sampleRate);
+  b.copyToChannel(mono, 0);
+  const src = off.createBufferSource();
+  src.buffer = b; src.connect(off.destination); src.start(0);
+  const rendered = await off.startRendering();
+  return { audio: rendered.getChannelData(0).slice(), ...info };
+}
+
+async function loadFile(file) {
+  if (!file) return;
+  showError('');
+  state.file = file; state.audio = null; state.duration = 0;
+  if (state.fileURL) URL.revokeObjectURL(state.fileURL);
+  state.fileURL = URL.createObjectURL(file);
+  els.mediaInfo.textContent = `${file.name} · ${fmtBytes(file.size)} · decoding…`;
+  els.playerWrap.textContent = '';
+  const isVideo = /^video\//.test(file.type) || /\.(mp4|m4v|webm|mov|mkv)$/i.test(file.name);
+  player = el(isVideo ? 'video' : 'audio', { controls: '', preload: 'metadata', src: state.fileURL });
+  player.addEventListener('timeupdate', onTimeUpdate);
+  player.addEventListener('play', startPlayheadLoop);
+  player.addEventListener('seeked', onTimeUpdate);
+  els.playerWrap.append(player);
+  els.runBtn.disabled = true;
+  try {
+    const r = await decodeFile(file, setStage);
+    state.audio = r.audio; state.duration = r.audio.length / SR; state.decodeInfo = r;
+    els.mediaInfo.textContent = `${file.name} · ${fmtBytes(file.size)} · ${fmtTime(r.duration)} · ${r.channels} ch @ ${r.sampleRate} Hz → mono 16 kHz`;
+    setStage('Ready'); setProgress(0, '');
+    logLine(`Decoded ${file.name}: ${r.duration.toFixed(1)} s`);
+    els.runBtn.disabled = state.running;
+    if (r.duration > 3 * 3600) logLine('Very long file: expect high memory use. Splitting into parts of about an hour is recommended.', 'warn');
+  } catch (e) {
+    setStage('Idle');
+    showError(`Could not decode "${file.name}": ${e?.message || e}. The browser could not read this container/codec. Try converting to MP3, WAV, M4A (AAC) or MP4 (H.264/AAC).`);
+  }
+}
+
+// ---------- worker engine ----------
+class Engine {
+  constructor() {
+    const src = document.getElementById('worker-src').textContent;
+    this.url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+    this.worker = new Worker(this.url, { type: 'module' });
+    this.pending = new Map(); this.seq = 0;
+    this.worker.onmessage = (ev) => this.onMessage(ev.data);
+    this.worker.onerror = (ev) => {
+      const err = new Error(ev.message || 'Worker failed');
+      logLine('Worker error: ' + err.message, 'error');
+      for (const p of this.pending.values()) p.reject(err);
+      this.pending.clear();
+    };
+  }
+  request(type, payload, transfer, onEvent) {
+    const id = ++this.seq;
+    return new Promise((resolve, reject) => {
+      this.pending.set(id, { resolve, reject, onEvent });
+      this.worker.postMessage({ id, type, payload }, transfer || []);
+    });
+  }
+  onMessage(m) {
+    const p = this.pending.get(m.id);
+    if (!p) return;
+    if (m.type === 'done') { this.pending.delete(m.id); p.resolve(m.result); }
+    else if (m.type === 'error') { this.pending.delete(m.id); const e = new Error(m.message); e.stack = m.stack || e.stack; p.reject(e); }
+    else p.onEvent?.(m);
+  }
+  terminate() {
+    this.worker.terminate(); URL.revokeObjectURL(this.url);
+    const err = new Error('Cancelled');
+    for (const p of this.pending.values()) p.reject(err);
+    this.pending.clear();
+  }
+}
+function getEngine() {
+  if (!engine) { engine = new Engine(); logLine('Worker started.'); }
+  return engine;
+}
+function onWorkerEvent(m) {
+  switch (m.type) {
+    case 'status': setStage(m.message); setProgress(null, ''); break;
+    case 'progress': setProgress(m.value, m.message); break;
+    case 'partial': previewText = (previewText + m.text).slice(-320); els.livePreview.textContent = '…' + previewText; break;
+    case 'log': logLine(m.message); break;
+    case 'download': onDownload(m); break;
+  }
+}
+function onDownload(m) {
+  if (!m.file) return;
+  const key = `${m.name || ''}/${m.file}`;
+  if (m.status === 'progress') downloads.set(key, { loaded: m.loaded, total: m.total, progress: m.progress });
+  else if (m.status === 'initiate' || m.status === 'download') downloads.set(key, { loaded: 0, total: 0, progress: 0 });
+  else if (m.status === 'done') downloads.delete(key);
+  renderDownloads();
+}
+function renderDownloads() {
+  els.downloads.textContent = '';
+  if (!downloads.size) return;
+  els.downloads.append(el('div', {}, 'Fetching model files (cached by the browser after the first run):'));
+  for (const [key, d] of downloads) {
+    const pct = d.total ? `${Math.round(d.loaded / d.total * 100)}%` : '…';
+    els.downloads.append(el('div', { class: 'dl' }, [el('span', { class: 'name', title: key }, key.split('/').slice(-2).join('/') + (d.total ? ` (${fmtBytes(d.total)})` : '')), el('span', {}, pct)]));
+  }
+}
+
+// ---------- configuration ----------
+function readConfig() {
+  const device = els.device.value === 'auto' ? (gpu.available ? 'webgpu' : 'wasm') : els.device.value;
+  const model = els.asrModel.value.trim() || ASR_PRESETS[0].id;
+  const preset = ASR_PRESETS.find((p) => p.id === model);
+  const sel = els.dtype.value;
+  let dtype;
+  if (sel !== 'auto') dtype = sel;
+  else if (device === 'webgpu') dtype = (preset && preset.big) || /large|turbo/i.test(model) ? { encoder_model: gpu.fp16 ? 'fp16' : 'fp32', decoder_model_merged: 'q4' } : 'fp32';
+  else dtype = 'q8';
+  const diarDevice = els.diarDevice.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
+  const ns = els.numSpeakers.value;
+  return {
+    libUrl: els.libUrl.value.trim() || TRANSFORMERS_URL,
+    transcribe: els.doTranscribe.checked,
+    diarize: els.doDiarize.checked,
+    asr: { model, device, dtype, fallbackDtype: 'q8' },
+    diar: { segModel: els.segModel.value.trim() || DEFAULT_SEG_MODEL, embModel: els.embModel.value.trim() || DEFAULT_EMB_MODEL, device: diarDevice },
+    opts: {
+      model, language: els.language.value, task: els.task.value, wordTimestamps: els.wordTs.checked,
+      numSpeakers: ns === 'auto' ? null : Number(ns), threshold: Number(els.clusterThreshold.value),
+      windowSec: Number(els.windowSec.value) || 10,
+    },
+  };
+}
+
+// ---------- run ----------
+async function run() {
+  if (!state.audio || state.running) return;
+  const cfg = readConfig();
+  if (!cfg.transcribe && !cfg.diarize) { showError('Enable transcription and/or speaker identification first.'); return; }
+  state.running = true; showError(''); previewText = ''; els.livePreview.textContent = ''; downloads.clear(); renderDownloads();
+  els.runBtn.disabled = true; els.cancelBtn.disabled = false; els.reclusterBtn.disabled = true;
+  const t0 = performance.now();
+  try {
+    const eng = getEngine();
+    setStage('Loading models'); setProgress(null, 'First run downloads the models; later runs use the browser cache.');
+    const loaded = await eng.request('load', { libUrl: cfg.libUrl, asr: cfg.transcribe ? cfg.asr : null, diar: cfg.diarize ? cfg.diar : null }, null, onWorkerEvent);
+    downloads.clear(); renderDownloads();
+    const copy = state.audio.slice();
+    const res = await eng.request('run', { audio: copy, opts: { ...cfg.opts, transcribe: cfg.transcribe, diarize: cfg.diarize } }, [copy.buffer], onWorkerEvent);
+    res.hasDiarization = cfg.diarize;
+    res.compute = loaded;
+    applyResult(res);
+    const secs = ((performance.now() - t0) / 1000).toFixed(1);
+    setStage('Done'); setProgress(1, `${secs} s`);
+    logLine(`Finished in ${secs} s: ${res.turns.length} turns, ${res.speakers.length} speaker(s).`);
+  } catch (e) {
+    if (e.message === 'Cancelled') { setStage('Cancelled'); setProgress(0, ''); }
+    else { setStage('Failed'); setProgress(0, ''); showError(friendlyError(e)); console.error(e); }
+  } finally {
+    state.running = false; els.livePreview.textContent = '';
+    els.runBtn.disabled = !state.audio; els.cancelBtn.disabled = true;
+    els.reclusterBtn.disabled = !(state.result && state.result.hasDiarization && engine);
+  }
+}
+function friendlyError(e) {
+  const m = e?.message || String(e);
+  if (/Failed to fetch|NetworkError|dynamically imported module|import\(\)|Load failed/i.test(m)) return `Could not download the library or model files (${m}). Check your internet connection and that cdn.jsdelivr.net and huggingface.co are reachable.`;
+  if (/Unauthorized|401|403|gated/i.test(m)) return `The model repository refused the download (${m}). Pick another model id.`;
+  if (/404|Could not locate file/i.test(m)) return `A model file was not found (${m}). The repo may not provide the selected precision — try Precision: auto or fp32/q8.`;
+  if (/memory|allocation failed|OOM/i.test(m)) return `Out of memory (${m}). Try a smaller model, a lower precision, or a shorter file.`;
+  return m;
+}
+function cancel() {
+  if (!engine) return;
+  engine.terminate(); engine = null;
+  logLine('Cancelled; worker terminated (models will be re-loaded from cache next time).', 'warn');
+}
+async function recluster() {
+  if (!engine || !state.result || !state.result.hasDiarization || state.running) return;
+  const cfg = readConfig();
+  state.running = true; els.reclusterBtn.disabled = true; els.runBtn.disabled = true; showError('');
+  try {
+    setStage('Re-grouping speakers'); setProgress(null, '');
+    const res = await engine.request('recluster', { numSpeakers: cfg.opts.numSpeakers, threshold: cfg.opts.threshold }, null, onWorkerEvent);
+    res.hasDiarization = true; res.compute = state.result.compute;
+    applyResult(res);
+    setStage('Done'); setProgress(1, '');
+    logLine(`Re-grouped into ${res.speakers.length} speaker(s).`);
+  } catch (e) { setStage('Failed'); setProgress(0, ''); showError(friendlyError(e)); }
+  finally { state.running = false; els.runBtn.disabled = !state.audio; els.reclusterBtn.disabled = false; }
+}
+
+// ---------- result model ----------
+function applyResult(res) {
+  const speakers = (res.speakers || []).map((s, i) => ({
+    id: s.id, name: `Speaker ${i + 1}`, color: PALETTE[i % PALETTE.length], centroid: s.centroid ? Float32Array.from(s.centroid) : null,
+    duration: s.duration || 0, match: null, manual: false,
+  }));
+  state.nextSpeakerId = speakers.reduce((m, s) => Math.max(m, s.id + 1), 0);
+  state.result = {
+    duration: res.duration, wordLevel: !!res.wordLevel, text: res.text || '', hasDiarization: !!res.hasDiarization, compute: res.compute || null, stats: res.stats || {},
+    speakers, segments: res.segments || [],
+    turns: (res.turns || []).map((t) => ({ speaker: t.speaker, start: t.start, end: t.end, text: t.text, words: t.words || null, edited: false })),
+  };
+  matchVoices();
+  renderAll();
+  for (const id of ['copyBtn', 'exportTxt', 'exportSrt', 'exportVtt', 'exportJson']) els[id].disabled = false;
+}
+function speakerById(id) {
+  return state.result?.speakers.find((s) => s.id === id) || { id: -1, name: 'Unknown', color: '#8b95a5', centroid: null };
+}
+function matchVoices() {
+  const r = state.result; if (!r) return;
+  const threshold = Number(els.matchThreshold.value);
+  const pairs = [];
+  for (const s of r.speakers) {
+    if (!s.centroid) continue;
+    for (const v of state.voices) pairs.push({ s, v, sim: cosine(s.centroid, v.vec) });
+  }
+  pairs.sort((a, b) => b.sim - a.sim);
+  const usedS = new Set(), usedV = new Set();
+  for (const s of r.speakers) if (!s.manual) { s.match = null; s.name = `Speaker ${r.speakers.indexOf(s) + 1}`; } else usedS.add(s.id);
+  for (const p of pairs) {
+    if (p.sim < threshold) break;
+    if (usedS.has(p.s.id) || usedV.has(p.v.id)) continue;
+    p.s.name = p.v.name; p.s.match = { name: p.v.name, sim: p.sim };
+    usedS.add(p.s.id); usedV.add(p.v.id);
+  }
+}
+function renameSpeaker(id, name) {
+  const s = speakerById(id); name = (name || '').trim();
+  if (s.id < 0 || !name) return;
+  s.name = name; s.manual = true; s.match = null;
+  renderAll();
+}
+function coalesceTurns() {
+  const r = state.result; const out = [];
+  for (const t of r.turns) {
+    const last = out[out.length - 1];
+    if (last && last.speaker === t.speaker && t.start - last.end <= 3.0) {
+      last.end = Math.max(last.end, t.end);
+      last.text = `${last.text} ${t.text}`.trim();
+      last.words = last.words && t.words ? last.words.concat(t.words) : null;
+      last.edited = last.edited || t.edited;
+    } else out.push(t);
+  }
+  r.turns = out;
+}
+function mergeSpeaker(from, into) {
+  const r = state.result; if (from === into) return;
+  for (const t of r.turns) if (t.speaker === from) t.speaker = into;
+  for (const sg of r.segments) if (sg.speaker === from) sg.speaker = into;
+  r.speakers = r.speakers.filter((s) => s.id !== from);
+  coalesceTurns(); renderAll();
+}
+function reassignTurn(idx, into) {
+  const r = state.result; const t = r.turns[idx]; if (!t) return;
+  if (into === 'new') {
+    const id = state.nextSpeakerId++;
+    r.speakers.push({ id, name: `Speaker ${r.speakers.length + 1}`, color: PALETTE[r.speakers.length % PALETTE.length], centroid: null, duration: 0, match: null, manual: false });
+    into = id;
+  }
+  t.speaker = into;
+  coalesceTurns(); renderAll();
+}
+
+// ---------- voices library ----------
+function loadVoices() { try { state.voices = JSON.parse(localStorage.getItem(VOICES_KEY)) || []; } catch (e) { state.voices = []; } }
+function persistVoices() { try { localStorage.setItem(VOICES_KEY, JSON.stringify(state.voices)); } catch (e) { els.voiceStatus.textContent = 'Could not save to browser storage: ' + e.message; } }
+function upsertVoice(name, vec) {
+  name = name.trim();
+  const v = Array.from(unit(vec));
+  const existing = state.voices.find((x) => x.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    const n = existing.count || 1;
+    existing.vec = Array.from(unit(existing.vec.map((x, i) => x * n + v[i])));
+    existing.count = n + 1; existing.updated = Date.now();
+  } else state.voices.push({ id: Math.random().toString(36).slice(2, 10), name, vec: v, count: 1, updated: Date.now() });
+  persistVoices(); renderVoices();
+  if (state.result) { matchVoices(); renderAll(); }
+}
+function renderVoices() {
+  els.voiceList.textContent = '';
+  if (!state.voices.length) { els.voiceList.append(el('div', { class: 'hint' }, 'No known voices yet.')); return; }
+  for (const v of state.voices) {
+    els.voiceList.append(el('div', { class: 'voice' }, [
+      el('span', { class: 'vname' }, v.name),
+      el('span', { class: 'vmeta' }, `${v.count || 1} sample${(v.count || 1) > 1 ? 's' : ''}`),
+      el('button', { class: 'small danger', title: 'Remove', onClick: () => { state.voices = state.voices.filter((x) => x !== v); persistVoices(); renderVoices(); if (state.result) { matchVoices(); renderAll(); } } }, '✕'),
+    ]));
+  }
+}
+async function ensureEmbeddingModel() {
+  const cfg = readConfig();
+  const eng = getEngine();
+  await eng.request('load', { libUrl: cfg.libUrl, diar: cfg.diar }, null, onWorkerEvent);
+}
+async function enrollFromBlob(blob, name) {
+  name = (name || els.voiceName.value || '').trim();
+  if (!name) { els.voiceStatus.textContent = 'Type a name for this voice first.'; els.voiceName.focus(); return; }
+  try {
+    els.voiceStatus.textContent = 'Decoding sample…';
+    const r = await decodeFile(blob instanceof File ? blob : new File([blob], 'sample', { type: blob.type }));
+    if (r.audio.length < SR / 2) throw new Error('sample is too short (need at least 1–2 seconds of speech)');
+    els.voiceStatus.textContent = 'Loading voice model…';
+    await ensureEmbeddingModel();
+    els.voiceStatus.textContent = 'Computing voice signature…';
+    const vec = await engine.request('embed', { audio: r.audio }, [r.audio.buffer], onWorkerEvent);
+    upsertVoice(name, vec);
+    els.voiceStatus.textContent = `Saved "${name}" (${r.duration.toFixed(1)} s of audio).`;
+    els.voiceName.value = '';
+    setStage('Ready'); setProgress(0, '');
+  } catch (e) { els.voiceStatus.textContent = 'Could not enroll voice: ' + friendlyError(e); }
+}
+async function toggleRecord() {
+  if (recorder) { recorder.stop(); return; }
+  if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') { els.voiceStatus.textContent = 'Microphone recording is not supported here (needs https or localhost).'; return; }
+  const name = els.voiceName.value.trim();
+  if (!name) { els.voiceStatus.textContent = 'Type a name for this voice first.'; els.voiceName.focus(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const rec = new MediaRecorder(stream);
+    const chunks = [];
+    rec.ondataavailable = (e) => { if (e.data.size) chunks.push(e.data); };
+    rec.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop());
+      recorder = null; els.recordBtn.textContent = 'Record from mic';
+      enrollFromBlob(new Blob(chunks, { type: rec.mimeType || 'audio/webm' }), name);
+    };
+    rec.start(); recorder = rec;
+    els.recordBtn.innerHTML = '<span class="rec-dot"></span>Stop recording';
+    els.voiceStatus.textContent = 'Recording… speak naturally for 5–15 seconds, then click stop (auto-stops after 20 s).';
+    setTimeout(() => { if (rec.state === 'recording') rec.stop(); }, 20000);
+  } catch (e) { els.voiceStatus.textContent = 'Microphone error: ' + (e.message || e); }
+}
+function exportVoices() {
+  download('known-voices.json', JSON.stringify({ format: 'speaker-transcriber-voices', version: 1, voices: state.voices }, null, 2), 'application/json');
+}
+async function importVoices(file) {
+  try {
+    const data = JSON.parse(await file.text());
+    const list = Array.isArray(data) ? data : data.voices;
+    if (!Array.isArray(list)) throw new Error('not a voice library file');
+    let n = 0;
+    for (const v of list) if (v && typeof v.name === 'string' && Array.isArray(v.vec) && v.vec.length > 8) { upsertVoice(v.name, Float32Array.from(v.vec)); n++; }
+    els.voiceStatus.textContent = `Imported ${n} voice(s).`;
+  } catch (e) { els.voiceStatus.textContent = 'Import failed: ' + (e.message || e); }
+}
+
+// ---------- rendering ----------
+let turnEls = [];
+function renderAll() { renderLegend(); renderTranscript(); renderTimeline(); renderStats(); els.reclusterBtn.disabled = !(state.result && state.result.hasDiarization && engine) || state.running; }
+function speakerChip(spk, onClick) {
+  const chip = el('button', { class: 'chip', style: `--spk:${spk.color}`, title: 'Rename, merge, reassign or save this voice', onClick });
+  chip.append(el('span', { class: 'dot' }), el('span', { class: 'name' }, spk.name));
+  if (spk.match) chip.append(el('span', { class: 'badge', title: `Matched a known voice with similarity ${spk.match.sim.toFixed(2)}` }, spk.match.sim.toFixed(2)));
+  return chip;
+}
+function renderLegend() {
+  els.speakerLegend.textContent = '';
+  const r = state.result; if (!r) return;
+  for (const s of r.speakers) {
+    const dur = r.turns.filter((t) => t.speaker === s.id).reduce((a, t) => a + (t.end - t.start), 0) || s.duration;
+    const chip = speakerChip(s, (ev) => openPopover(ev.currentTarget, s.id, null));
+    chip.append(el('span', { class: 'meta' }, fmtTime(dur)));
+    els.speakerLegend.append(chip);
+  }
+}
+function renderStats() {
+  const r = state.result; if (!r) { els.stats.textContent = ''; return; }
+  const words = r.turns.reduce((a, t) => a + (t.words ? t.words.length : t.text.split(/\s+/).filter(Boolean).length), 0);
+  const parts = [`Duration ${fmtTime(r.duration)}`, `${r.speakers.length} speaker${r.speakers.length === 1 ? '' : 's'}`, `${r.turns.length} turns`, `${words.toLocaleString()} ${r.wordLevel ? 'words (word-level timing)' : 'words (segment timing)'}`];
+  if (r.compute?.asr) parts.push(`Whisper on ${r.compute.asr.device}`);
+  if (r.compute?.diar) parts.push(`voices on ${r.compute.diar.device}`);
+  els.stats.textContent = parts.join(' · ');
+}
+function renderTranscript() {
+  const root = els.transcript; root.textContent = ''; turnEls = [];
+  const r = state.result;
+  if (!r || !r.turns.length) {
+    root.append(el('div', { class: 'empty' }, r ? (r.hasDiarization && r.segments.length ? 'Speakers were identified but no speech was transcribed (transcription disabled or no recognisable words). See the timeline above.' : 'No speech detected.') : 'Nothing transcribed yet.'));
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  r.turns.forEach((t, idx) => {
+    const spk = speakerById(t.speaker);
+    const div = el('div', { class: 'turn', 'data-idx': idx, style: `--spk:${spk.color}` });
+    const head = el('div', { class: 'head' });
+    head.append(speakerChip(spk, (ev) => openPopover(ev.currentTarget, spk.id, idx)));
+    head.append(el('span', { class: 'time', title: 'Jump to this moment', onClick: () => seek(t.start) }, `${fmtTime(t.start)} – ${fmtTime(t.end)}`));
+    head.append(el('div', { class: 'tools' }, [el('button', { onClick: () => editTurn(idx) }, t.edited ? 'Edit (edited)' : 'Edit')]));
+    const text = el('div', { class: 'text' });
+    if (t.words) for (const w of t.words) text.append(el('span', { class: 'w', 'data-s': w.start, 'data-e': w.end, onClick: () => seek(w.start) }, w.text));
+    else text.textContent = t.text;
+    div.append(head, text);
+    frag.append(div); turnEls.push(div);
+  });
+  root.append(frag);
+}
+function editTurn(idx) {
+  const t = state.result.turns[idx]; const div = turnEls[idx]; if (!t || !div) return;
+  const textEl = div.querySelector('.text');
+  const ta = el('textarea', { value: t.text });
+  const save = () => { const v = ta.value.trim(); if (v !== t.text) { t.text = v; t.words = null; t.edited = true; } renderTranscript(); };
+  ta.addEventListener('keydown', (e) => { if (e.key === 'Escape') { renderTranscript(); } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) save(); });
+  ta.addEventListener('blur', save);
+  textEl.replaceWith(ta); ta.focus();
+}
+function renderTimeline() {
+  const c = els.timeline; const dpr = window.devicePixelRatio || 1;
+  const W = c.clientWidth || 600, H = 72;
+  if (c.width !== Math.round(W * dpr) || c.height !== Math.round(H * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+  const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+  const r = state.result; if (!r) return;
+  const dur = Math.max(r.duration, 0.001);
+  const rows = Math.max(1, r.speakers.length); const top = 6, rowH = (H - 12) / rows;
+  const rowOf = new Map(r.speakers.map((s, i) => [s.id, i]));
+  const source = r.turns.length ? r.turns : r.segments;
+  for (const item of source) {
+    const row = rowOf.get(item.speaker); if (row == null) continue;
+    ctx.fillStyle = speakerById(item.speaker).color;
+    const x = item.start / dur * W, w = Math.max(1.5, (item.end - item.start) / dur * W);
+    ctx.fillRect(x, top + row * rowH + 1, w, Math.max(2, rowH - 2));
+  }
+  const t = player ? player.currentTime : 0;
+  ctx.fillStyle = getComputedStyle(document.body).color; ctx.globalAlpha = 0.85;
+  ctx.fillRect(t / dur * W - 0.75, 0, 1.5, H); ctx.globalAlpha = 1;
+}
+
+// ---------- playback sync ----------
+let rafId = 0, activeTurn = -1, activeWordEl = null;
+function seek(t) { if (!player) return; player.currentTime = Math.max(0, t); if (player.paused) player.play().catch(() => {}); }
+function startPlayheadLoop() {
+  cancelAnimationFrame(rafId);
+  const loop = () => { renderTimeline(); if (player && !player.paused && !player.ended) rafId = requestAnimationFrame(loop); };
+  rafId = requestAnimationFrame(loop);
+}
+function onTimeUpdate() {
+  const r = state.result; if (!r || !player) return;
+  const t = player.currentTime;
+  let idx = -1;
+  for (let i = 0; i < r.turns.length; i++) { if (r.turns[i].start <= t + 0.05) idx = i; else break; }
+  if (idx >= 0 && t > r.turns[idx].end + 1.0) idx = -1;
+  if (idx !== activeTurn) {
+    if (activeTurn >= 0 && turnEls[activeTurn]) turnEls[activeTurn].classList.remove('active');
+    activeTurn = idx;
+    if (idx >= 0 && turnEls[idx]) { turnEls[idx].classList.add('active'); if (els.follow.checked) turnEls[idx].scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+  }
+  let wordEl = null;
+  if (idx >= 0 && turnEls[idx]) {
+    for (const w of turnEls[idx].querySelectorAll('.w')) { if (Number(w.dataset.s) <= t && t < Number(w.dataset.e) + 0.05) { wordEl = w; break; } }
+  }
+  if (wordEl !== activeWordEl) { activeWordEl?.classList.remove('current'); wordEl?.classList.add('current'); activeWordEl = wordEl; }
+  if (player.paused) renderTimeline();
+}
+
+// ---------- popover ----------
+function closePopover() { els.popover.classList.remove('open'); els.popover.textContent = ''; }
+function openPopover(anchor, speakerId, turnIdx) {
+  const pop = els.popover; pop.textContent = '';
+  const r = state.result; const spk = speakerById(speakerId);
+  const others = r.speakers.filter((s) => s.id !== speakerId);
+  pop.append(el('h4', {}, turnIdx == null ? 'Speaker' : 'This line'));
+  if (spk.id >= 0) {
+    const nameInput = el('input', { type: 'text', value: spk.name, placeholder: 'Speaker name' });
+    const apply = el('button', { class: 'primary small', onClick: () => { renameSpeaker(speakerId, nameInput.value); closePopover(); } }, 'Rename');
+    nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') apply.click(); });
+    pop.append(el('div', { class: 'row2' }, [nameInput, apply]));
+    if (spk.centroid && state.voices.length) {
+      pop.append(el('h4', {}, 'Closest known voices'));
+      const cands = state.voices.map((v) => ({ v, sim: cosine(spk.centroid, v.vec) })).sort((a, b) => b.sim - a.sim).slice(0, 5);
+      for (const c of cands) pop.append(el('div', { class: 'cand', title: 'Use this name', onClick: () => { renameSpeaker(speakerId, c.v.name); closePopover(); } }, [el('span', {}, c.v.name), el('span', { class: 'sim' }, c.sim.toFixed(2))]));
+    }
+  }
+  if (turnIdx != null) {
+    pop.append(el('h4', {}, 'Move this line to'));
+    const sel = el('select', {});
+    for (const s of others) sel.append(el('option', { value: String(s.id) }, s.name));
+    sel.append(el('option', { value: 'new' }, '+ New speaker'));
+    pop.append(el('div', { class: 'row2' }, [sel, el('button', { class: 'small', onClick: () => { reassignTurn(turnIdx, sel.value === 'new' ? 'new' : Number(sel.value)); closePopover(); } }, 'Move')]));
+  }
+  if (spk.id >= 0 && others.length) {
+    pop.append(el('h4', {}, `Merge "${spk.name}" into`));
+    const sel = el('select', {});
+    for (const s of others) sel.append(el('option', { value: String(s.id) }, s.name));
+    pop.append(el('div', { class: 'row2' }, [sel, el('button', { class: 'small', onClick: () => { mergeSpeaker(speakerId, Number(sel.value)); closePopover(); } }, 'Merge')]));
+  }
+  if (spk.id >= 0 && spk.centroid) {
+    pop.append(el('button', { class: 'small', onClick: () => {
+      const name = prompt('Save this voice as:', spk.name);
+      if (name && name.trim()) { upsertVoice(name, spk.centroid); if (!spk.manual) renameSpeaker(speakerId, name.trim()); }
+      closePopover();
+    } }, 'Save voice to known voices'));
+  }
+  pop.classList.add('open');
+  const rect = anchor.getBoundingClientRect();
+  const width = pop.offsetWidth || 300;
+  const left = Math.max(8, Math.min(window.scrollX + rect.left, window.scrollX + window.innerWidth - width - 8));
+  pop.style.left = `${left}px`; pop.style.top = `${window.scrollY + rect.bottom + 6}px`;
+  pop.querySelector('input')?.focus();
+}
+document.addEventListener('pointerdown', (e) => { if (els.popover.classList.contains('open') && !els.popover.contains(e.target) && !e.target.closest('.chip')) closePopover(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePopover(); });
+
+// ---------- exports ----------
+function turnName(t) { return speakerById(t.speaker).name; }
+function toTxt() {
+  const r = state.result; if (!r) return '';
+  return r.turns.map((t) => `[${fmtTime(t.start)}] ${turnName(t)}: ${t.text}`).join('\n');
+}
+function makeCues({ maxDur = 7, maxChars = 84 } = {}) {
+  const r = state.result; const cues = [];
+  for (const t of r.turns) {
+    const name = turnName(t);
+    if (t.words && t.words.length) {
+      let cur = null;
+      for (const w of t.words) {
+        const wt = w.text;
+        if (!cur || (cur.text.length + wt.length > maxChars && cur.text.trim()) || (w.end - cur.start > maxDur && cur.text.trim())) {
+          cur = { start: w.start, end: w.end, text: '', name }; cues.push(cur);
+        }
+        cur.text += wt; cur.end = Math.max(cur.end, w.end);
+      }
+    } else {
+      const text = t.text; const total = Math.max(text.length, 1); const pieces = [];
+      let buf = '';
+      for (const part of text.split(/(?<=[.!?。！？])\s+/)) {
+        if (buf && buf.length + part.length + 1 > maxChars) { pieces.push(buf); buf = part; } else buf = buf ? `${buf} ${part}` : part;
+      }
+      if (buf) pieces.push(buf);
+      let pos = 0;
+      for (const p of pieces) {
+        const s = t.start + (t.end - t.start) * (pos / total); pos += p.length + 1;
+        const e = t.start + (t.end - t.start) * Math.min(1, pos / total);
+        cues.push({ start: s, end: Math.max(e, s + 0.5), text: p, name });
+      }
+    }
+  }
+  for (const c of cues) { c.text = c.text.replace(/\s+/g, ' ').trim(); }
+  return cues.filter((c) => c.text);
+}
+function toSrt() {
+  return makeCues().map((c, i) => `${i + 1}\n${fmtStamp(c.start, ',')} --> ${fmtStamp(c.end, ',')}\n${c.name}: ${c.text}\n`).join('\n');
+}
+function toVtt() {
+  return 'WEBVTT\n\n' + makeCues().map((c) => `${fmtStamp(c.start, '.')} --> ${fmtStamp(c.end, '.')}\n<v ${c.name.replace(/[<>]/g, '')}>${c.text}\n`).join('\n');
+}
+function toJson() {
+  const r = state.result;
+  return JSON.stringify({
+    file: state.file?.name || null, duration: r.duration, wordLevelTimestamps: r.wordLevel,
+    speakers: r.speakers.map((s) => ({ id: s.id, name: s.name, matchedKnownVoice: s.match, voiceSignature: s.centroid ? Array.from(s.centroid, (x) => Number(x.toFixed(5))) : null })),
+    turns: r.turns.map((t) => ({ speaker: t.speaker, name: turnName(t), start: t.start, end: t.end, text: t.text, words: t.words, edited: t.edited })),
+    segments: r.segments,
+  }, null, 2);
+}
+
+// ---------- wiring ----------
+function wire() {
+  els.dropzone.addEventListener('click', () => els.fileInput.click());
+  els.dropzone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); els.fileInput.click(); } });
+  els.fileInput.addEventListener('change', () => loadFile(els.fileInput.files[0]));
+  for (const evt of ['dragenter', 'dragover']) els.dropzone.addEventListener(evt, (e) => { e.preventDefault(); els.dropzone.classList.add('drag'); });
+  for (const evt of ['dragleave', 'drop']) els.dropzone.addEventListener(evt, (e) => { e.preventDefault(); els.dropzone.classList.remove('drag'); });
+  els.dropzone.addEventListener('drop', (e) => loadFile(e.dataTransfer.files[0]));
+  document.addEventListener('dragover', (e) => e.preventDefault());
+  document.addEventListener('drop', (e) => { e.preventDefault(); if (e.target.closest('.dropzone')) return; const f = e.dataTransfer.files[0]; if (f && /^(audio|video)\//.test(f.type)) loadFile(f); });
+  els.runBtn.addEventListener('click', run);
+  els.cancelBtn.addEventListener('click', cancel);
+  els.reclusterBtn.addEventListener('click', recluster);
+  els.voiceFileBtn.addEventListener('click', () => { if (!els.voiceName.value.trim()) { els.voiceStatus.textContent = 'Type a name for this voice first.'; els.voiceName.focus(); return; } els.voiceFile.click(); });
+  els.voiceFile.addEventListener('change', () => { const f = els.voiceFile.files[0]; els.voiceFile.value = ''; if (f) enrollFromBlob(f); });
+  els.recordBtn.addEventListener('click', toggleRecord);
+  els.exportVoices.addEventListener('click', exportVoices);
+  els.importVoicesBtn.addEventListener('click', () => els.importVoices.click());
+  els.importVoices.addEventListener('change', () => { const f = els.importVoices.files[0]; els.importVoices.value = ''; if (f) importVoices(f); });
+  els.copyBtn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(toTxt()); els.copyBtn.textContent = 'Copied'; setTimeout(() => { els.copyBtn.textContent = 'Copy'; }, 1500); } catch (e) { showError('Clipboard not available: ' + e.message); } });
+  els.exportTxt.addEventListener('click', () => download(`${baseName()}.txt`, toTxt(), 'text/plain'));
+  els.exportSrt.addEventListener('click', () => download(`${baseName()}.srt`, toSrt(), 'application/x-subrip'));
+  els.exportVtt.addEventListener('click', () => download(`${baseName()}.vtt`, toVtt(), 'text/vtt'));
+  els.exportJson.addEventListener('click', () => download(`${baseName()}.json`, toJson(), 'application/json'));
+  els.timeline.addEventListener('click', (e) => { if (!state.result || !player) return; const rect = els.timeline.getBoundingClientRect(); seek((e.clientX - rect.left) / rect.width * state.result.duration); });
+  window.addEventListener('resize', () => renderTimeline());
+  if (typeof Worker === 'undefined') showError('This browser does not support Web Workers.');
+}
+
+initControls(); loadVoices(); renderVoices(); wire(); detectGPU();
+if (location.protocol === 'file:') logLine('Opened from a local file: model downloads still work, but the browser may not cache them between sessions. Serving the page over http(s) enables caching.', 'warn');
+
+// Debug / automation hooks (used by the test-suite; harmless otherwise).
+window.__app = { state, els, applyResult, decodeFile, loadFile, readConfig, toTxt, toSrt, toVtt, toJson, makeCues, renameSpeaker, mergeSpeaker, reassignTurn, upsertVoice, matchVoices, getEngine: () => engine, Engine, run, recluster };
+})();
+</script>
+</body>
+</html>
