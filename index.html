@@ -207,15 +207,17 @@
       <details>
         <summary>Advanced</summary>
         <label class="row"><span>Segmentation</span><input type="text" id="segModel" spellcheck="false"></label>
-        <label class="row"><span>Embeddings</span><input type="text" id="embModel" spellcheck="false"></label>
+        <label class="row"><span>Embeddings</span><input type="text" id="embModel" spellcheck="false" title="Comma-separated list, tried in order until one downloads"></label>
         <label class="row"><span>Speaker compute</span>
           <select id="diarDevice">
             <option value="auto">Auto</option>
             <option value="wasm">WebAssembly only</option>
           </select></label>
         <label class="row"><span>Window (s)</span><input type="number" id="windowSec" min="5" max="30" step="1" value="10"></label>
+        <label class="row"><span>Self-hosted models</span><input type="text" id="localModelPath" spellcheck="false" placeholder="https://…/models/ (optional)" title="Base URL of a folder laid out like <base>/<owner>/<model>/{config.json, preprocessor_config.json, onnx/model.onnx}; tried before the Hub for the embedding models"></label>
         <label class="row"><span>Library URL</span><input type="text" id="libUrl" spellcheck="false"></label>
-        <div class="hint">Models are fetched from the Hugging Face Hub and cached by your browser. Any Whisper ONNX repo that works with Transformers.js can be typed above.</div>
+        <label class="row"><span>ONNX Runtime WASM</span><input type="text" id="ortWasmPath" spellcheck="false" placeholder="https://…/dist/ (optional)" title="Folder containing ort-wasm-simd-threaded.*.mjs/.wasm; leave empty to use the jsDelivr CDN"></label>
+        <div class="hint">Models are fetched from the Hugging Face Hub and cached by your browser. Any Whisper ONNX repo that works with Transformers.js can be typed above. The embeddings field is a comma-separated list tried in order; each id is first looked up under the self-hosted URL, then on the Hub (gated, private or missing repos are skipped). Voice signatures only match across runs made with the same embedding model.</div>
       </details>
     </section>
 
@@ -608,6 +610,11 @@ async function withFallback(id, devices, dtypes, factory) {
 
 async function load(payload, id) {
   const T = await lib(payload.libUrl);
+  if (payload.ortWasmPath && /^https?:/i.test(payload.ortWasmPath)) {
+    const base = payload.ortWasmPath.replace(/\/?$/, '/');
+    const suffix = T.env.backends.onnx.wasm.wasmPaths && T.env.backends.onnx.wasm.wasmPaths.mjs && /\.jsep\./.test(T.env.backends.onnx.wasm.wasmPaths.mjs) ? '.jsep' : '.asyncify';
+    T.env.backends.onnx.wasm.wasmPaths = { mjs: `${base}ort-wasm-simd-threaded${suffix}.mjs`, wasm: `${base}ort-wasm-simd-threaded${suffix}.wasm` };
+  }
   const progress_callback = (p) => post({ id, type: 'download', ...p });
   const out = {};
   if (payload.asr) {
@@ -628,7 +635,7 @@ async function load(payload, id) {
   if (payload.diar) {
     const cfg = payload.diar;
     const segKey = JSON.stringify([cfg.segModel]);
-    if (!seg || seg.key !== segKey) {
+    if (!cfg.skipSeg && (!seg || seg.key !== segKey)) {
       if (seg) { try { await seg.model.dispose(); } catch (e) {} seg = null; }
       status(id, `Loading ${cfg.segModel}`);
       const processor = await T.AutoProcessor.from_pretrained(cfg.segModel, { progress_callback });
@@ -636,20 +643,47 @@ async function load(payload, id) {
       seg = { key: segKey, processor, model };
       log(id, 'Speaker segmentation model ready (wasm, fp32).');
     }
-    const embKey = JSON.stringify([cfg.embModel, cfg.device]);
+    const candidates = (cfg.embModels || []).filter(Boolean);
+    if (!candidates.length) throw new Error('No voice embedding model configured.');
+    const embKey = JSON.stringify([candidates, cfg.device, cfg.localModelPath || null]);
     if (!emb || emb.key !== embKey) {
       if (emb) { try { await emb.model.dispose(); } catch (e) {} emb = null; }
-      status(id, `Loading ${cfg.embModel}`);
-      const processor = await T.AutoProcessor.from_pretrained(cfg.embModel, { progress_callback });
-      const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm'];
-      const r = await withFallback(id, devices, devices.map(() => 'fp32'), (device, dtype) =>
-        T.AutoModel.from_pretrained(cfg.embModel, { device, dtype, progress_callback }));
-      emb = { key: embKey, processor, model: r.obj, device: r.device };
-      log(id, `Voice embedding model ready on ${r.device}.`);
+      const failures = [];
+      // Self-hosted overlay: files under <localModelPath>/<model id>/ are tried before the Hub.
+      const useLocal = !!cfg.localModelPath && /^https?:/i.test(cfg.localModelPath);
+      if (useLocal) { T.env.allowLocalModels = true; T.env.localModelPath = cfg.localModelPath.replace(/\/?$/, '/'); }
+      try {
+      for (const modelId of candidates) {
+        status(id, `Loading ${modelId}`);
+        try {
+          const processor = await T.AutoProcessor.from_pretrained(modelId, { progress_callback });
+          const isXVector = /wavlm|unispeech|xvector|-sv$/i.test(modelId);
+          const devices = cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm'];
+          const dtypes = devices.map((d) => (isXVector && d === 'wasm' ? 'q8' : 'fp32'));
+          const classes = isXVector && T.AutoModelForXVector ? [T.AutoModelForXVector, T.AutoModel] : [T.AutoModel];
+          const r = await withFallback(id, devices, dtypes, async (device, dtype) => {
+            let lastErr = null;
+            for (const cls of classes) {
+              try { return await cls.from_pretrained(modelId, { device, dtype, progress_callback }); }
+              catch (e) { lastErr = e; if (!/Unsupported model type|not supported/i.test(String((e && e.message) || e))) throw e; }
+            }
+            throw lastErr;
+          });
+          emb = { key: embKey, processor, model: r.obj, device: r.device, modelId };
+          log(id, `Voice embedding model ${modelId} ready on ${r.device} (${r.dtype}).`);
+          break;
+        } catch (e) {
+          const msg = (e && e.message) || String(e);
+          failures.push(`${modelId}: ${msg}`);
+          log(id, `Could not load ${modelId} (${msg})` + (modelId !== candidates[candidates.length - 1] ? '; trying the next embedding model.' : '.'));
+        }
+      }
+      } finally { T.env.allowLocalModels = false; }
+      if (!emb) throw new Error('No voice embedding model could be loaded.\n' + failures.join('\n'));
       // Warm up once so the first real embedding does not pay session start-up costs.
       try { await embed(new Float32Array(SR)); } catch (e) { log(id, 'Embedding warm-up failed: ' + ((e && e.message) || e)); }
     }
-    out.diar = { device: emb.device };
+    out.diar = { device: emb.device, embModel: emb.modelId };
   }
   return out;
 }
@@ -682,7 +716,7 @@ async function embedSample({ audio }, id) {
   }
   const acc = new Float64Array(vecs[0].length);
   for (const v of vecs) for (let d = 0; d < acc.length; d++) acc[d] += v[d];
-  return Array.from(unit(Float32Array.from(acc)));
+  return { vec: Array.from(unit(Float32Array.from(acc))), model: emb.modelId };
 }
 
 async function transcribe(audio, opts, id) {
@@ -833,7 +867,18 @@ function recluster(payload) {
 // ---------- constants ----------
 const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0/dist/transformers.min.js';
 const DEFAULT_SEG_MODEL = 'onnx-community/pyannote-segmentation-3.0';
-const DEFAULT_EMB_MODEL = 'Xenova/wespeaker-voxceleb-resnet34-LM';
+// Tried in order; the first one that can be downloaded wins. The first entry is served from this
+// site's own models/ folder when present (see LOCAL_MODEL_PATH), the rest come from the Hugging Face Hub.
+const DEFAULT_EMB_MODELS = ['wespeaker/voxceleb-resnet34-LM', 'onnx-community/wespeaker-voxceleb-resnet34-LM', 'Xenova/wespeaker-voxceleb-resnet34-LM', 'Xenova/wavlm-base-plus-sv'];
+const LOCAL_MODEL_PATH = /^https?:$/.test(location.protocol) ? new URL('models/', location.href).href : '';
+const LEGACY_EMB_MODEL = 'Xenova/wespeaker-voxceleb-resnet34-LM';
+// Similarity scales differ between embedding models, so thresholds are per model family.
+const EMB_PRESETS = [
+  { match: /wespeaker/i, label: 'WeSpeaker ResNet34', threshold: 0.70, matchThreshold: 0.50 },
+  { match: /wavlm|unispeech/i, label: 'WavLM x-vector', threshold: 0.53, matchThreshold: 0.86 },
+];
+function embPreset(id) { return EMB_PRESETS.find((p) => p.match.test(id || '')) || { label: id || '?', threshold: 0.70, matchThreshold: 0.50 }; }
+function shortModel(id) { return (id || '').split('/').pop(); }
 const ASR_PRESETS = [
   { id: 'Xenova/whisper-tiny.en', label: 'Whisper tiny.en · English · ≈40 MB · fastest' },
   { id: 'Xenova/whisper-tiny', label: 'Whisper tiny · multilingual · ≈40 MB' },
@@ -855,7 +900,7 @@ const SR = 16000;
 const $ = (id) => document.getElementById(id);
 const els = {};
 ['dropzone', 'fileInput', 'mediaInfo', 'playerWrap', 'doTranscribe', 'asrModel', 'asrModels', 'asrModelHint', 'device', 'dtype', 'language', 'task', 'wordTs', 'gpuHint',
- 'doDiarize', 'numSpeakers', 'clusterThreshold', 'clusterThresholdVal', 'matchThreshold', 'matchThresholdVal', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'libUrl',
+ 'doDiarize', 'numSpeakers', 'clusterThreshold', 'clusterThresholdVal', 'matchThreshold', 'matchThresholdVal', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'localModelPath', 'libUrl', 'ortWasmPath',
  'voiceList', 'voiceName', 'voiceFileBtn', 'voiceFile', 'recordBtn', 'voiceStatus', 'exportVoices', 'importVoicesBtn', 'importVoices',
  'runBtn', 'cancelBtn', 'reclusterBtn', 'stage', 'progressText', 'progressBar', 'downloads', 'livePreview', 'error', 'log',
  'speakerLegend', 'follow', 'copyBtn', 'exportTxt', 'exportSrt', 'exportVtt', 'exportJson', 'timeline', 'stats', 'transcript', 'popover'].forEach((id) => { els[id] = $(id); });
@@ -880,7 +925,7 @@ function el(tag, props = {}, children = []) {
 // ---------- state ----------
 const state = {
   file: null, fileURL: null, audio: null, duration: 0, decodeInfo: null,
-  result: null, voices: [], running: false, nextSpeakerId: 0,
+  result: null, voices: [], running: false, nextSpeakerId: 0, embPresetFor: null,
 };
 const gpu = { available: false, fp16: false, checked: false };
 let engine = null;
@@ -931,9 +976,22 @@ function baseName() { return (state.file?.name || 'transcript').replace(/\.[^.]+
 function loadSettings() { try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch (e) { return {}; } }
 function saveSettings() {
   const s = {};
-  for (const id of ['asrModel', 'device', 'dtype', 'language', 'task', 'numSpeakers', 'clusterThreshold', 'matchThreshold', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'libUrl']) s[id] = els[id].value;
+  for (const id of ['asrModel', 'device', 'dtype', 'language', 'task', 'numSpeakers', 'clusterThreshold', 'matchThreshold', 'segModel', 'embModel', 'diarDevice', 'windowSec', 'localModelPath', 'libUrl', 'ortWasmPath']) s[id] = els[id].value;
   for (const id of ['wordTs', 'doTranscribe', 'doDiarize', 'follow']) s[id] = els[id].checked;
+  s.embPresetFor = state.embPresetFor || null;
   try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
+}
+// When a different embedding model gets loaded, move the thresholds to that model's defaults.
+function applyEmbPreset(modelId) {
+  if (!modelId || state.embPresetFor === modelId) return;
+  const p = embPreset(modelId);
+  els.clusterThreshold.value = p.threshold.toFixed(2);
+  els.matchThreshold.value = p.matchThreshold.toFixed(2);
+  els.clusterThresholdVal.textContent = p.threshold.toFixed(2);
+  els.matchThresholdVal.textContent = p.matchThreshold.toFixed(2);
+  state.embPresetFor = modelId;
+  saveSettings();
+  logLine(`Voice embeddings: ${modelId}. Split threshold set to ${p.threshold.toFixed(2)} and name-match threshold to ${p.matchThreshold.toFixed(2)} (${p.label} defaults).`);
 }
 function initControls() {
   for (const p of ASR_PRESETS) els.asrModels.append(el('option', { value: p.id }, p.label));
@@ -942,9 +1000,11 @@ function initControls() {
   for (let i = 1; i <= 12; i++) els.numSpeakers.append(el('option', { value: String(i) }, `Exactly ${i}`));
   els.asrModel.value = ASR_PRESETS[0].id;
   els.segModel.value = DEFAULT_SEG_MODEL;
-  els.embModel.value = DEFAULT_EMB_MODEL;
+  els.embModel.value = DEFAULT_EMB_MODELS.join(', ');
   els.libUrl.value = TRANSFORMERS_URL;
+  els.localModelPath.value = LOCAL_MODEL_PATH;
   const s = loadSettings();
+  state.embPresetFor = s.embPresetFor || null;
   for (const [k, v] of Object.entries(s)) {
     if (!els[k]) continue;
     if (typeof v === 'boolean') els[k].checked = v; else if (v != null && v !== '') els[k].value = v;
@@ -1121,10 +1181,16 @@ function readConfig() {
   const ns = els.numSpeakers.value;
   return {
     libUrl: els.libUrl.value.trim() || TRANSFORMERS_URL,
+    ortWasmPath: els.ortWasmPath.value.trim(),
     transcribe: els.doTranscribe.checked,
     diarize: els.doDiarize.checked,
     asr: { model, device, dtype, fallbackDtype: 'q8' },
-    diar: { segModel: els.segModel.value.trim() || DEFAULT_SEG_MODEL, embModel: els.embModel.value.trim() || DEFAULT_EMB_MODEL, device: diarDevice },
+    diar: {
+      segModel: els.segModel.value.trim() || DEFAULT_SEG_MODEL,
+      embModels: (els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean).length ? els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean) : DEFAULT_EMB_MODELS.slice()),
+      device: diarDevice,
+      localModelPath: els.localModelPath.value.trim(),
+    },
     opts: {
       model, language: els.language.value, task: els.task.value, wordTimestamps: els.wordTs.checked,
       numSpeakers: ns === 'auto' ? null : Number(ns), threshold: Number(els.clusterThreshold.value),
@@ -1144,10 +1210,12 @@ async function run() {
   try {
     const eng = getEngine();
     setStage('Loading models'); setProgress(null, 'First run downloads the models; later runs use the browser cache.');
-    const loaded = await eng.request('load', { libUrl: cfg.libUrl, asr: cfg.transcribe ? cfg.asr : null, diar: cfg.diarize ? cfg.diar : null }, null, onWorkerEvent);
+    const loaded = await eng.request('load', { libUrl: cfg.libUrl, ortWasmPath: cfg.ortWasmPath, asr: cfg.transcribe ? cfg.asr : null, diar: cfg.diarize ? cfg.diar : null }, null, onWorkerEvent);
     downloads.clear(); renderDownloads();
+    if (loaded.diar) applyEmbPreset(loaded.diar.embModel);
+    const opts = readConfig().opts; // thresholds may have been moved to the loaded model's defaults
     const copy = state.audio.slice();
-    const res = await eng.request('run', { audio: copy, opts: { ...cfg.opts, transcribe: cfg.transcribe, diarize: cfg.diarize } }, [copy.buffer], onWorkerEvent);
+    const res = await eng.request('run', { audio: copy, opts: { ...opts, transcribe: cfg.transcribe, diarize: cfg.diarize } }, [copy.buffer], onWorkerEvent);
     res.hasDiarization = cfg.diarize;
     res.compute = loaded;
     applyResult(res);
@@ -1166,7 +1234,7 @@ async function run() {
 function friendlyError(e) {
   const m = e?.message || String(e);
   if (/Failed to fetch|NetworkError|dynamically imported module|import\(\)|Load failed/i.test(m)) return `Could not download the library or model files (${m}). Check your internet connection and that cdn.jsdelivr.net and huggingface.co are reachable.`;
-  if (/Unauthorized|401|403|gated/i.test(m)) return `The model repository refused the download (${m}). Pick another model id.`;
+  if (/Unauthorized|401|403|gated/i.test(m)) return `A model repository is gated, private or missing (${m}). Pick another model id in the Advanced section.`;
   if (/404|Could not locate file/i.test(m)) return `A model file was not found (${m}). The repo may not provide the selected precision — try Precision: auto or fp32/q8.`;
   if (/memory|allocation failed|OOM/i.test(m)) return `Out of memory (${m}). Try a smaller model, a lower precision, or a shorter file.`;
   return m;
@@ -1200,12 +1268,16 @@ function applyResult(res) {
   state.nextSpeakerId = speakers.reduce((m, s) => Math.max(m, s.id + 1), 0);
   state.result = {
     duration: res.duration, wordLevel: !!res.wordLevel, text: res.text || '', hasDiarization: !!res.hasDiarization, compute: res.compute || null, stats: res.stats || {},
+    embModel: (res.compute && res.compute.diar && res.compute.diar.embModel) || null,
     speakers, segments: res.segments || [],
     turns: (res.turns || []).map((t) => ({ speaker: t.speaker, start: t.start, end: t.end, text: t.text, words: t.words || null, edited: false })),
   };
   matchVoices();
   renderAll();
   for (const id of ['copyBtn', 'exportTxt', 'exportSrt', 'exportVtt', 'exportJson']) els[id].disabled = false;
+}
+function comparableVoices(modelId) {
+  return state.voices.filter((v) => v.vec && (v.model || LEGACY_EMB_MODEL) === (modelId || LEGACY_EMB_MODEL) && (!state.result || v.vec.length === (state.result.speakers.find((s) => s.centroid)?.centroid.length ?? v.vec.length)));
 }
 function speakerById(id) {
   return state.result?.speakers.find((s) => s.id === id) || { id: -1, name: 'Unknown', color: '#8b95a5', centroid: null };
@@ -1214,9 +1286,10 @@ function matchVoices() {
   const r = state.result; if (!r) return;
   const threshold = Number(els.matchThreshold.value);
   const pairs = [];
+  const voices = comparableVoices(r.embModel);
   for (const s of r.speakers) {
     if (!s.centroid) continue;
-    for (const v of state.voices) pairs.push({ s, v, sim: cosine(s.centroid, v.vec) });
+    for (const v of voices) pairs.push({ s, v, sim: cosine(s.centroid, v.vec) });
   }
   pairs.sort((a, b) => b.sim - a.sim);
   const usedS = new Set(), usedV = new Set();
@@ -1266,17 +1339,21 @@ function reassignTurn(idx, into) {
 }
 
 // ---------- voices library ----------
-function loadVoices() { try { state.voices = JSON.parse(localStorage.getItem(VOICES_KEY)) || []; } catch (e) { state.voices = []; } }
+function loadVoices() {
+  try { state.voices = JSON.parse(localStorage.getItem(VOICES_KEY)) || []; } catch (e) { state.voices = []; }
+  for (const v of state.voices) if (!v.model) v.model = LEGACY_EMB_MODEL;
+}
 function persistVoices() { try { localStorage.setItem(VOICES_KEY, JSON.stringify(state.voices)); } catch (e) { els.voiceStatus.textContent = 'Could not save to browser storage: ' + e.message; } }
-function upsertVoice(name, vec) {
+function upsertVoice(name, vec, model) {
   name = name.trim();
+  model = model || (state.result && state.result.embModel) || LEGACY_EMB_MODEL;
   const v = Array.from(unit(vec));
-  const existing = state.voices.find((x) => x.name.toLowerCase() === name.toLowerCase());
+  const existing = state.voices.find((x) => x.name.toLowerCase() === name.toLowerCase() && (x.model || LEGACY_EMB_MODEL) === model && x.vec.length === v.length);
   if (existing) {
     const n = existing.count || 1;
     existing.vec = Array.from(unit(existing.vec.map((x, i) => x * n + v[i])));
     existing.count = n + 1; existing.updated = Date.now();
-  } else state.voices.push({ id: Math.random().toString(36).slice(2, 10), name, vec: v, count: 1, updated: Date.now() });
+  } else state.voices.push({ id: Math.random().toString(36).slice(2, 10), name, vec: v, model, count: 1, updated: Date.now() });
   persistVoices(); renderVoices();
   if (state.result) { matchVoices(); renderAll(); }
 }
@@ -1286,7 +1363,7 @@ function renderVoices() {
   for (const v of state.voices) {
     els.voiceList.append(el('div', { class: 'voice' }, [
       el('span', { class: 'vname' }, v.name),
-      el('span', { class: 'vmeta' }, `${v.count || 1} sample${(v.count || 1) > 1 ? 's' : ''}`),
+      el('span', { class: 'vmeta', title: `Voice signature from ${v.model || LEGACY_EMB_MODEL}` }, `${v.count || 1} sample${(v.count || 1) > 1 ? 's' : ''} · ${embPreset(v.model).label}`),
       el('button', { class: 'small danger', title: 'Remove', onClick: () => { state.voices = state.voices.filter((x) => x !== v); persistVoices(); renderVoices(); if (state.result) { matchVoices(); renderAll(); } } }, '✕'),
     ]));
   }
@@ -1294,7 +1371,9 @@ function renderVoices() {
 async function ensureEmbeddingModel() {
   const cfg = readConfig();
   const eng = getEngine();
-  await eng.request('load', { libUrl: cfg.libUrl, diar: cfg.diar }, null, onWorkerEvent);
+  const loaded = await eng.request('load', { libUrl: cfg.libUrl, ortWasmPath: cfg.ortWasmPath, diar: { ...cfg.diar, skipSeg: true } }, null, onWorkerEvent);
+  if (loaded.diar) applyEmbPreset(loaded.diar.embModel);
+  return loaded.diar;
 }
 async function enrollFromBlob(blob, name) {
   name = (name || els.voiceName.value || '').trim();
@@ -1306,8 +1385,8 @@ async function enrollFromBlob(blob, name) {
     els.voiceStatus.textContent = 'Loading voice model…';
     await ensureEmbeddingModel();
     els.voiceStatus.textContent = 'Computing voice signature…';
-    const vec = await engine.request('embed', { audio: r.audio }, [r.audio.buffer], onWorkerEvent);
-    upsertVoice(name, vec);
+    const { vec, model } = await engine.request('embed', { audio: r.audio }, [r.audio.buffer], onWorkerEvent);
+    upsertVoice(name, vec, model);
     els.voiceStatus.textContent = `Saved "${name}" (${r.duration.toFixed(1)} s of audio).`;
     els.voiceName.value = '';
     setStage('Ready'); setProgress(0, '');
@@ -1343,7 +1422,7 @@ async function importVoices(file) {
     const list = Array.isArray(data) ? data : data.voices;
     if (!Array.isArray(list)) throw new Error('not a voice library file');
     let n = 0;
-    for (const v of list) if (v && typeof v.name === 'string' && Array.isArray(v.vec) && v.vec.length > 8) { upsertVoice(v.name, Float32Array.from(v.vec)); n++; }
+    for (const v of list) if (v && typeof v.name === 'string' && Array.isArray(v.vec) && v.vec.length > 8) { upsertVoice(v.name, Float32Array.from(v.vec), v.model || LEGACY_EMB_MODEL); n++; }
     els.voiceStatus.textContent = `Imported ${n} voice(s).`;
   } catch (e) { els.voiceStatus.textContent = 'Import failed: ' + (e.message || e); }
 }
@@ -1372,7 +1451,7 @@ function renderStats() {
   const words = r.turns.reduce((a, t) => a + (t.words ? t.words.length : t.text.split(/\s+/).filter(Boolean).length), 0);
   const parts = [`Duration ${fmtTime(r.duration)}`, `${r.speakers.length} speaker${r.speakers.length === 1 ? '' : 's'}`, `${r.turns.length} turns`, `${words.toLocaleString()} ${r.wordLevel ? 'words (word-level timing)' : 'words (segment timing)'}`];
   if (r.compute?.asr) parts.push(`Whisper on ${r.compute.asr.device}`);
-  if (r.compute?.diar) parts.push(`voices on ${r.compute.diar.device}`);
+  if (r.compute?.diar) parts.push(`voices: ${shortModel(r.embModel) || 'n/a'} on ${r.compute.diar.device}`);
   els.stats.textContent = parts.join(' · ');
 }
 function renderTranscript() {
@@ -1467,9 +1546,10 @@ function openPopover(anchor, speakerId, turnIdx) {
     const apply = el('button', { class: 'primary small', onClick: () => { renameSpeaker(speakerId, nameInput.value); closePopover(); } }, 'Rename');
     nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') apply.click(); });
     pop.append(el('div', { class: 'row2' }, [nameInput, apply]));
-    if (spk.centroid && state.voices.length) {
+    const comparable = spk.centroid ? comparableVoices(r.embModel) : [];
+    if (comparable.length) {
       pop.append(el('h4', {}, 'Closest known voices'));
-      const cands = state.voices.map((v) => ({ v, sim: cosine(spk.centroid, v.vec) })).sort((a, b) => b.sim - a.sim).slice(0, 5);
+      const cands = comparable.map((v) => ({ v, sim: cosine(spk.centroid, v.vec) })).sort((a, b) => b.sim - a.sim).slice(0, 5);
       for (const c of cands) pop.append(el('div', { class: 'cand', title: 'Use this name', onClick: () => { renameSpeaker(speakerId, c.v.name); closePopover(); } }, [el('span', {}, c.v.name), el('span', { class: 'sim' }, c.sim.toFixed(2))]));
     }
   }
@@ -1489,7 +1569,7 @@ function openPopover(anchor, speakerId, turnIdx) {
   if (spk.id >= 0 && spk.centroid) {
     pop.append(el('button', { class: 'small', onClick: () => {
       const name = prompt('Save this voice as:', spk.name);
-      if (name && name.trim()) { upsertVoice(name, spk.centroid); if (!spk.manual) renameSpeaker(speakerId, name.trim()); }
+      if (name && name.trim()) { upsertVoice(name, spk.centroid, r.embModel); if (!spk.manual) renameSpeaker(speakerId, name.trim()); }
       closePopover();
     } }, 'Save voice to known voices'));
   }

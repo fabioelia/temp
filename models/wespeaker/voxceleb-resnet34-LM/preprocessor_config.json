@@ -1,0 +1,9 @@
+{
+  "feature_extractor_type": "WeSpeakerFeatureExtractor",
+  "sampling_rate": 16000,
+  "num_mel_bins": 80,
+  "fbank_centering_span": null,
+  "min_num_frames": 16,
+  "padding_value": 0.0,
+  "return_attention_mask": false
+}
