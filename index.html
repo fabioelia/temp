@@ -1009,6 +1009,9 @@ function initControls() {
     if (!els[k]) continue;
     if (typeof v === 'boolean') els[k].checked = v; else if (v != null && v !== '') els[k].value = v;
   }
+  // Settings saved by an earlier version pointed at a single (now gated) embedding repo; move them to the current list.
+  if (els.embModel.value.trim() === LEGACY_EMB_MODEL) els.embModel.value = DEFAULT_EMB_MODELS.join(', ');
+  if (!els.localModelPath.value.trim() && LOCAL_MODEL_PATH) els.localModelPath.value = LOCAL_MODEL_PATH;
   const sync = () => {
     els.clusterThresholdVal.textContent = Number(els.clusterThreshold.value).toFixed(2);
     els.matchThresholdVal.textContent = Number(els.matchThreshold.value).toFixed(2);
