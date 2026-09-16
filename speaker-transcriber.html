@@ -209,7 +209,7 @@
       <label class="row"><span>Speakers</span>
         <select id="numSpeakers"></select></label>
       <label class="row"><span>Split sensitivity</span>
-        <div><input type="range" id="clusterThreshold" min="0.40" max="1.00" step="0.01" value="0.70"> <div class="hint">Threshold <b id="clusterThresholdVal">0.70</b> · lower = more distinct speakers, higher = fewer</div></div></label>
+        <div><input type="range" id="clusterThreshold" min="0.40" max="1.00" step="0.01" value="0.70"> <div class="hint">Threshold <b id="clusterThresholdVal">0.70</b> · lower = more distinct speakers, higher = fewer (0.65–0.75 is the useful range)</div></div></label>
       <label class="row"><span>Name matching</span>
         <div><input type="range" id="matchThreshold" min="0.20" max="0.90" step="0.01" value="0.50"> <div class="hint">Min similarity <b id="matchThresholdVal">0.50</b> to auto-name a speaker from your known voices</div></div></label>
       <details>
@@ -347,7 +347,7 @@ function cosine(a, b) { return dot(unit(a), unit(b)); }
 
 // Average-linkage agglomerative clustering on cosine distance (Lance-Williams updates with a
 // nearest-neighbour cache). Stops at `threshold` or, when `numClusters` is given, at that many clusters.
-function averageLinkage(vecs, { threshold = 0.6, numClusters = null } = {}) {
+function averageLinkage(vecs, { threshold = 0.7, numClusters = null } = {}) {
   const n = vecs.length;
   if (n === 0) return [];
   const X = vecs.map(unit);
@@ -396,7 +396,8 @@ function streamToGlobal(region, a, b) {
 
 // Turn sub-window embeddings into global speakers and cut regions wherever the votes change.
 function clusterDiarization(regions, subs, opts = {}) {
-  const { threshold = 0.6, numSpeakers = null, minEmbDur = 1.5, minClusterSize = 2, minRun = 1.0, maxCluster = 1500, mergeGap = 0.3, minSegDur = 0.1, bin = 0.1 } = opts;
+  // Defaults tuned on ground-truth conversations (see README): 2 s sub-windows every 0.5 s, cosine-distance threshold 0.70.
+  const { threshold = 0.7, numSpeakers = null, minEmbDur = 1.0, minClusterSize = 3, minRun = 0.5, maxCluster = 1500, mergeGap = 0.3, minSegDur = 0.1, bin = 0.1 } = opts;
   const withVec = subs.filter((s) => s.vec);
   const dim = withVec.length ? withVec[0].vec.length : 0;
   let clusterable = withVec.filter((s) => s.dur >= minEmbDur);
@@ -988,7 +989,7 @@ const LEGACY_EMB_MODEL = 'Xenova/wespeaker-voxceleb-resnet34-LM';
 // Similarity scales differ between embedding models, so thresholds are per model family.
 const EMB_PRESETS = [
   { match: /wespeaker/i, label: 'WeSpeaker ResNet34', threshold: 0.70, matchThreshold: 0.50 },
-  { match: /wavlm|unispeech/i, label: 'WavLM x-vector', threshold: 0.53, matchThreshold: 0.86 },
+  { match: /wavlm|unispeech/i, label: 'WavLM x-vector', threshold: 0.18, matchThreshold: 0.86 },
 ];
 function embPreset(id) { return EMB_PRESETS.find((p) => p.match.test(id || '')) || { label: id || '?', threshold: 0.70, matchThreshold: 0.50 }; }
 function shortModel(id) { return (id || '').split('/').pop(); }
