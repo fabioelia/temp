@@ -1,0 +1,18 @@
+{
+  "model_type": "pyannote",
+  "architectures": [
+    "PyAnnoteForAudioFrameClassification"
+  ],
+  "num_labels": 7,
+  "id2label": {
+    "0": "NO_SPEECH",
+    "1": "SPEAKER_0",
+    "2": "SPEAKER_1",
+    "3": "SPEAKER_2",
+    "4": "SPEAKER_0+1",
+    "5": "SPEAKER_0+2",
+    "6": "SPEAKER_1+2"
+  },
+  "_name_or_path": "pyannote/segmentation-3.0",
+  "_source": "pyannote/segmentation-3.0 (MIT license), ONNX from the sherpa-onnx 'speaker-segmentation-models' release; tensors renamed for Transformers.js"
+}

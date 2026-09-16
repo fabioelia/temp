@@ -209,12 +209,12 @@
       <label class="row"><span>Speakers</span>
         <select id="numSpeakers"></select></label>
       <label class="row"><span>Split sensitivity</span>
-        <div><input type="range" id="clusterThreshold" min="0.40" max="1.00" step="0.01" value="0.70"> <div class="hint">Threshold <b id="clusterThresholdVal">0.70</b> · lower = more distinct speakers, higher = fewer</div></div></label>
+        <div><input type="range" id="clusterThreshold" min="0.40" max="1.00" step="0.01" value="0.70"> <div class="hint">Threshold <b id="clusterThresholdVal">0.70</b> · lower = more distinct speakers, higher = fewer (0.65–0.75 is the useful range)</div></div></label>
       <label class="row"><span>Name matching</span>
         <div><input type="range" id="matchThreshold" min="0.20" max="0.90" step="0.01" value="0.50"> <div class="hint">Min similarity <b id="matchThresholdVal">0.50</b> to auto-name a speaker from your known voices</div></div></label>
       <details>
         <summary>Advanced</summary>
-        <label class="row"><span>Segmentation</span><input type="text" id="segModel" spellcheck="false"></label>
+        <label class="row"><span>Segmentation</span><input type="text" id="segModel" spellcheck="false" title="Comma-separated list, tried in order"></label>
         <label class="row"><span>Embeddings</span><input type="text" id="embModel" spellcheck="false" title="Comma-separated list, tried in order until one downloads"></label>
         <label class="row"><span>Speaker compute</span>
           <select id="diarDevice">
@@ -345,77 +345,142 @@ function unit(v) {
 function dot(a, b) { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; }
 function cosine(a, b) { return dot(unit(a), unit(b)); }
 
-// Agglomerative clustering, centroid linkage on unit-normalised embeddings
-// (Euclidean distance between centroids, as in pyannote.audio 3.x).
-function clusterEmbeddings(vecs, { threshold = 0.7, numSpeakers = null, minClusterSize = 1 } = {}) {
+// Average-linkage agglomerative clustering on cosine distance (Lance-Williams updates with a
+// nearest-neighbour cache). Stops at `threshold` or, when `numClusters` is given, at that many clusters.
+function averageLinkage(vecs, { threshold = 0.7, numClusters = null } = {}) {
   const n = vecs.length;
-  if (n === 0) return { labels: [], centroids: [] };
-  const dim = vecs[0].length;
+  if (n === 0) return [];
   const X = vecs.map(unit);
-  const sums = X.map((v) => Float64Array.from(v));
-  const sizes = new Int32Array(n).fill(1);
-  const alive = new Uint8Array(n).fill(1);
+  const D = new Float32Array(n * n);
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) { const d = 1 - dot(X[i], X[j]); D[i * n + j] = d; D[j * n + i] = d; }
+  const size = new Int32Array(n).fill(1), alive = new Uint8Array(n).fill(1);
   const parent = Int32Array.from({ length: n }, (_, i) => i);
-  const centroidDist = (i, j) => {
-    let s = 0;
-    const si = sizes[i], sj = sizes[j], a = sums[i], b = sums[j];
-    for (let d = 0; d < dim; d++) { const x = a[d] / si - b[d] / sj; s += x * x; }
-    return Math.sqrt(s);
+  const nn = new Int32Array(n).fill(-1), nnd = new Float32Array(n).fill(Infinity);
+  const refresh = (i) => {
+    let b = -1, bd = Infinity; const row = i * n;
+    for (let k = 0; k < n; k++) { if (!alive[k] || k === i) continue; const d = D[row + k]; if (d < bd) { bd = d; b = k; } }
+    nn[i] = b; nnd[i] = bd;
   };
-  const D = new Float64Array(n * n);
-  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) D[i * n + j] = centroidDist(i, j);
+  for (let i = 0; i < n; i++) refresh(i);
   let count = n;
-  const target = numSpeakers ? Math.max(1, Math.min(numSpeakers, n)) : 1;
+  const target = numClusters ? Math.max(1, Math.min(numClusters, n)) : 1;
   while (count > target) {
-    let bi = -1, bj = -1, bd = Infinity;
-    for (let i = 0; i < n; i++) {
-      if (!alive[i]) continue;
-      const row = i * n;
-      for (let j = i + 1; j < n; j++) {
-        if (!alive[j]) continue;
-        const d = D[row + j];
-        if (d < bd) { bd = d; bi = i; bj = j; }
-      }
-    }
-    if (bi < 0) break;
-    if (!numSpeakers && bd >= threshold) break;
-    const a = sums[bi], b = sums[bj];
-    for (let d = 0; d < dim; d++) a[d] += b[d];
-    sizes[bi] += sizes[bj];
-    alive[bj] = 0; parent[bj] = bi; count--;
+    let bi = -1, bd = Infinity;
+    for (let i = 0; i < n; i++) if (alive[i] && nnd[i] < bd) { bd = nnd[i]; bi = i; }
+    if (bi < 0 || nn[bi] < 0) break;
+    if (!numClusters && bd >= threshold) break;
+    const bj = nn[bi], si = size[bi], sj = size[bj];
     for (let k = 0; k < n; k++) {
-      if (!alive[k] || k === bi) continue;
-      const lo = Math.min(bi, k), hi = Math.max(bi, k);
-      D[lo * n + hi] = centroidDist(bi, k);
+      if (!alive[k] || k === bi || k === bj) continue;
+      const d = (si * D[bi * n + k] + sj * D[bj * n + k]) / (si + sj);
+      D[bi * n + k] = d; D[k * n + bi] = d;
     }
+    size[bi] = si + sj; alive[bj] = 0; parent[bj] = bi; count--;
+    refresh(bi);
+    for (let k = 0; k < n; k++) if (alive[k] && k !== bi && (nn[k] === bi || nn[k] === bj)) refresh(k);
   }
   const root = (i) => { while (parent[i] !== i) i = parent[i]; return i; };
-  let labels = X.map((_, i) => root(i));
-
-  // Members of tiny clusters are re-assigned to the closest large cluster (auto mode only).
-  if (!numSpeakers && minClusterSize > 1) {
-    const ids = [...new Set(labels)];
-    let large = ids.filter((c) => sizes[c] >= minClusterSize);
-    if (large.length === 0) large = [ids.reduce((a, b) => (sizes[a] >= sizes[b] ? a : b))];
-    if (large.length < ids.length) {
-      const cents = large.map((c) => unit(Float32Array.from(sums[c], (x) => x / sizes[c])));
-      labels = labels.map((c, i) => {
-        if (large.includes(c)) return c;
-        let best = 0, bestS = -Infinity;
-        for (let k = 0; k < large.length; k++) { const s = dot(X[i], cents[k]); if (s > bestS) { bestS = s; best = k; } }
-        return large[best];
-      });
-    }
-  }
-  // Compact labels to 0..K-1 in order of first appearance and compute final centroids.
   const map = new Map();
-  const compact = labels.map((c) => { if (!map.has(c)) map.set(c, map.size); return map.get(c); });
-  const K = map.size;
-  const acc = Array.from({ length: K }, () => new Float64Array(dim));
-  const cnt = new Int32Array(K);
-  compact.forEach((c, i) => { cnt[c]++; const v = X[i]; for (let d = 0; d < dim; d++) acc[c][d] += v[d]; });
-  const centroids = acc.map((a, c) => unit(Float32Array.from(a, (x) => x / cnt[c])));
-  return { labels: compact, centroids };
+  return X.map((_, i) => { const r = root(i); if (!map.has(r)) map.set(r, map.size); return map.get(r); });
+}
+
+// Map a range of a region's embedding stream (concatenated active samples) back to global time.
+function streamToGlobal(region, a, b) {
+  const out = [];
+  for (const p of region.pieces) {
+    const oa = Math.max(a, p.sa), ob = Math.min(b, p.sb);
+    if (ob > oa) out.push({ start: p.ga + (oa - p.sa) / SR, end: p.ga + (ob - p.sa) / SR });
+  }
+  return out;
+}
+
+// Turn sub-window embeddings into global speakers and cut regions wherever the votes change.
+function clusterDiarization(regions, subs, opts = {}) {
+  // Defaults tuned on ground-truth conversations (see README): 2 s sub-windows every 0.5 s, cosine-distance threshold 0.70.
+  const { threshold = 0.7, numSpeakers = null, minEmbDur = 1.0, minClusterSize = 3, minRun = 0.5, maxCluster = 1500, mergeGap = 0.3, minSegDur = 0.1, bin = 0.1 } = opts;
+  const withVec = subs.filter((s) => s.vec);
+  const dim = withVec.length ? withVec[0].vec.length : 0;
+  let clusterable = withVec.filter((s) => s.dur >= minEmbDur);
+  if (clusterable.length < 2) clusterable = withVec.filter((s) => s.dur >= Math.min(minEmbDur, 1.0));
+  if (!clusterable.length) clusterable = withVec.slice();
+  if (clusterable.length > maxCluster) { const stride = clusterable.length / maxCluster; clusterable = Array.from({ length: maxCluster }, (_, i) => clusterable[Math.floor(i * stride)]); }
+  const labels = averageLinkage(clusterable.map((s) => s.vec), { threshold, numClusters: numSpeakers });
+  const cent = (members) => { const acc = new Float64Array(dim); for (const m of members) { const v = m.vec; for (let d = 0; d < dim; d++) acc[d] += v[d]; } return unit(Float32Array.from(acc)); };
+  let groups = Array.from({ length: labels.length ? Math.max(...labels) + 1 : 0 }, () => []);
+  clusterable.forEach((s, i) => groups[labels[i]].push(s));
+  if (!numSpeakers && groups.length > 1) { const keep = groups.filter((g) => g.length >= minClusterSize); if (keep.length) groups = keep; }
+  let centroids = groups.map(cent);
+  const assign = () => { for (const s of withVec) { let b = -1, bv = -Infinity; for (let c = 0; c < centroids.length; c++) { const v = dot(s.vec, centroids[c]); if (v > bv) { bv = v; b = c; } } s.label = b; s.sim = bv; } };
+  if (centroids.length) {
+    assign();
+    centroids = centroids.map((c, i) => { const g = withVec.filter((s) => s.label === i); return g.length ? cent(g) : c; });
+    assign();
+  } else for (const s of withVec) s.label = -1;
+
+  // Per region: majority vote per 0.1 s bin of the stream, smooth short runs, map back to time.
+  const byRegion = regions.map(() => []);
+  for (const s of withVec) if (s.label >= 0) byRegion[s.r].push(s);
+  const own = regions.map(() => []);
+  const binSamples = Math.round(bin * SR);
+  regions.forEach((reg, r) => {
+    const list = byRegion[r];
+    if (!list.length || !reg.streamLen) return;
+    const nb = Math.ceil(reg.streamLen / binSamples);
+    const votes = Array.from({ length: nb }, () => new Map());
+    for (const s of list) for (let i = Math.floor(s.s0 / binSamples); i < Math.min(nb, Math.ceil(s.s1 / binSamples)); i++) votes[i].set(s.label, (votes[i].get(s.label) || 0) + 1);
+    const lab = new Int32Array(nb);
+    let prev = -1;
+    for (let i = 0; i < nb; i++) { let b = prev, bv = -1; for (const [k, v] of votes[i]) if (v > bv || (v === bv && k === prev)) { bv = v; b = k; } lab[i] = b; if (b >= 0) prev = b; }
+    for (let i = nb - 1; i >= 0; i--) if (lab[i] < 0) lab[i] = i + 1 < nb ? lab[i + 1] : -1;
+    let runs = [];
+    for (let i = 0; i < nb; i++) { const last = runs[runs.length - 1]; if (last && last.label === lab[i]) last.b = i + 1; else runs.push({ label: lab[i], a: i, b: i + 1 }); }
+    const minBins = Math.max(1, Math.round(minRun / bin));
+    while (runs.length > 1) {
+      let idx = -1, len = Infinity;
+      runs.forEach((ru, i) => { const l = ru.b - ru.a; if (l < minBins && l < len) { len = l; idx = i; } });
+      if (idx < 0) break;
+      const left = runs[idx - 1], right = runs[idx + 1];
+      const into = !left ? right : !right ? left : (left.b - left.a) >= (right.b - right.a) ? left : right;
+      if (into === left) { left.b = runs[idx].b; runs.splice(idx, 1); } else { right.a = runs[idx].a; runs.splice(idx, 1); }
+      // merge neighbours that now share a label
+      for (let i = 0; i + 1 < runs.length; i++) if (runs[i].label === runs[i + 1].label) { runs[i].b = runs[i + 1].b; runs.splice(i + 1, 1); i--; }
+    }
+    for (const ru of runs) if (ru.label >= 0) for (const g of streamToGlobal(reg, ru.a * binSamples, Math.min(reg.streamLen, ru.b * binSamples))) own[r].push({ label: ru.label, start: g.start, end: g.end });
+  });
+  const all = own.flat().sort((a, b) => a.start - b.start);
+  const nearest = (list, start, end) => { let best = null, bd = Infinity; for (const it of list) { const d = it.start > end ? it.start - end : start > it.end ? start - it.end : 0; if (d < bd) { bd = d; best = it; } } return best ? best.label : -1; };
+  // Every active segment of every region gets labels from its own labelled intervals; gaps use the nearest one.
+  const out = [];
+  regions.forEach((reg, r) => {
+    const mine = own[r];
+    for (const sg of reg.segs) {
+      const cuts = new Set([sg.start, sg.end]);
+      for (const it of mine) { if (it.start > sg.start && it.start < sg.end) cuts.add(it.start); if (it.end > sg.start && it.end < sg.end) cuts.add(it.end); }
+      const pts = [...cuts].sort((a, b) => a - b);
+      for (let i = 0; i + 1 < pts.length; i++) {
+        const a = pts[i], b = pts[i + 1], mid = (a + b) / 2;
+        let label = -1;
+        for (const it of mine) if (mid >= it.start && mid <= it.end) { label = it.label; break; }
+        if (label < 0) label = mine.length ? nearest(mine, a, b) : nearest(all, a, b);
+        if (label >= 0) out.push({ speaker: label, start: a, end: b });
+      }
+    }
+  });
+  // Merge per speaker, order speakers by first appearance, compute centroids.
+  const byLabel = new Map();
+  for (const sg of out) { if (!byLabel.has(sg.speaker)) byLabel.set(sg.speaker, []); byLabel.get(sg.speaker).push(sg); }
+  let speakers = [];
+  for (const [label, segs] of byLabel) {
+    const merged = mergeSegments(segs, mergeGap).filter((x) => x.end - x.start >= minSegDur);
+    if (!merged.length) continue;
+    const members = withVec.filter((x) => x.label === label);
+    speakers.push({ label, segs: merged, duration: merged.reduce((acc, x) => acc + x.end - x.start, 0), firstStart: merged[0].start, centroid: members.length ? Array.from(cent(members)) : null });
+  }
+  speakers.sort((a, b) => a.firstStart - b.firstStart);
+  const segments = [];
+  speakers = speakers.map((sp, id) => { for (const seg of sp.segs) segments.push({ speaker: id, start: seg.start, end: seg.end }); return { id, duration: sp.duration, firstStart: sp.firstStart, centroid: sp.centroid }; });
+  segments.sort((a, b) => a.start - b.start);
+  return { segments, speakers };
 }
 
 // Merge overlapping / nearly-adjacent segments (sorted by start).
@@ -655,14 +720,34 @@ async function load(payload, id) {
   }
   if (payload.diar) {
     const cfg = payload.diar;
-    const segKey = JSON.stringify([cfg.segModel]);
+    const useLocal = !!cfg.localModelPath && /^https?:/i.test(cfg.localModelPath);
+    const withOverlay = async (fn) => {
+      if (useLocal) { T.env.allowLocalModels = true; T.env.localModelPath = cfg.localModelPath.replace(/\/?$/, '/'); }
+      try { return await fn(); } finally { T.env.allowLocalModels = false; }
+    };
+    const segCandidates = (cfg.segModels || (cfg.segModel ? [cfg.segModel] : [])).filter(Boolean);
+    const segKey = JSON.stringify([segCandidates, cfg.localModelPath || null]);
     if (!cfg.skipSeg && (!seg || seg.key !== segKey)) {
       if (seg) { try { await seg.model.dispose(); } catch (e) {} seg = null; }
-      status(id, `Loading ${cfg.segModel}`);
-      const processor = await T.AutoProcessor.from_pretrained(cfg.segModel, { progress_callback });
-      const model = await T.AutoModelForAudioFrameClassification.from_pretrained(cfg.segModel, { device: 'wasm', dtype: 'fp32', progress_callback });
-      seg = { key: segKey, processor, model };
-      log(id, 'Speaker segmentation model ready (wasm, fp32).');
+      if (!segCandidates.length) throw new Error('No speaker segmentation model configured.');
+      const failures = [];
+      await withOverlay(async () => {
+        for (const modelId of segCandidates) {
+          status(id, `Loading ${modelId}`);
+          try {
+            const processor = await T.AutoProcessor.from_pretrained(modelId, { progress_callback });
+            const model = await T.AutoModelForAudioFrameClassification.from_pretrained(modelId, { device: 'wasm', dtype: 'fp32', progress_callback });
+            seg = { key: segKey, processor, model, modelId };
+            log(id, `Speaker segmentation model ${modelId} ready (wasm, fp32).`);
+            break;
+          } catch (e) {
+            const msg = (e && e.message) || String(e);
+            failures.push(`${modelId}: ${msg}`);
+            log(id, `Could not load ${modelId} (${msg})` + (modelId !== segCandidates[segCandidates.length - 1] ? '; trying the next segmentation model.' : '.'));
+          }
+        }
+      });
+      if (!seg) throw new Error('No speaker segmentation model could be loaded.\n' + failures.join('\n'));
     }
     const candidates = (cfg.embModels || []).filter(Boolean);
     if (!candidates.length) throw new Error('No voice embedding model configured.');
@@ -671,9 +756,7 @@ async function load(payload, id) {
       if (emb) { try { await emb.model.dispose(); } catch (e) {} emb = null; }
       const failures = [];
       // Self-hosted overlay: files under <localModelPath>/<model id>/ are tried before the Hub.
-      const useLocal = !!cfg.localModelPath && /^https?:/i.test(cfg.localModelPath);
-      if (useLocal) { T.env.allowLocalModels = true; T.env.localModelPath = cfg.localModelPath.replace(/\/?$/, '/'); }
-      try {
+      await withOverlay(async () => {
       for (const modelId of candidates) {
         status(id, `Loading ${modelId}`);
         try {
@@ -699,12 +782,12 @@ async function load(payload, id) {
           log(id, `Could not load ${modelId} (${msg})` + (modelId !== candidates[candidates.length - 1] ? '; trying the next embedding model.' : '.'));
         }
       }
-      } finally { T.env.allowLocalModels = false; }
+      });
       if (!emb) throw new Error('No voice embedding model could be loaded.\n' + failures.join('\n'));
       // Warm up once so the first real embedding does not pay session start-up costs.
       try { await embed(new Float32Array(SR)); } catch (e) { log(id, 'Embedding warm-up failed: ' + ((e && e.message) || e)); }
     }
-    out.diar = { device: emb.device, embModel: emb.modelId };
+    out.diar = { device: emb.device, embModel: emb.modelId, segModel: seg ? seg.modelId : null };
   }
   return out;
 }
@@ -793,9 +876,11 @@ async function diarizeLocal(audio, opts, id) {
   const N = audio.length;
   const WIN = Math.round(Math.max(5, Math.min(30, opts.windowSec || 10)) * SR);
   const PAD = SR; // 1 s of context on each side of every window
+  const SUB = Math.round(Math.max(1, Math.min(5, opts.subSec || 2.0)) * SR);
+  const HOP = Math.round(Math.max(0.25, Math.min(5, opts.hopSec || 0.5)) * SR);
   const nWin = Math.max(1, Math.ceil(N / WIN));
-  const entries = [];
-  const minSeg = 0.2, minAlone = 0.5;
+  const regions = [], subs = [];
+  const minSeg = 0.2, minAlone = 0.5, minStream = 0.5 * SR;
   for (let w = 0; w < nWin; w++) {
     progress(id, 'diarize', w / nWin, `Analysing voices: window ${w + 1} of ${nWin}`);
     const s = w * WIN, e = Math.min(N, s + WIN);
@@ -814,45 +899,47 @@ async function diarizeLocal(audio, opts, id) {
       const mask = act[k], o1 = act[(k + 1) % 3], o2 = act[(k + 2) % 3];
       let total = 0, aloneCount = 0;
       const alone = new Uint8Array(T);
-      for (let i = f0; i < f1; i++) {
-        if (!mask[i]) continue;
-        total++;
-        if (!o1[i] && !o2[i]) { alone[i] = 1; aloneCount++; }
-      }
+      for (let i = f0; i < f1; i++) { if (!mask[i]) continue; total++; if (!o1[i] && !o2[i]) { alone[i] = 1; aloneCount++; } }
       if (total * frameDur < minSeg) continue;
       const segs = maskToSegments(mask, f0, f1, frameDur, t0);
       const useMask = aloneCount * frameDur >= minAlone ? alone : mask;
-      // Concatenate the samples where this speaker is active for the embedding model.
-      const pieces = maskToSegments(useMask, f0, f1, frameDur, 0);
-      let len = 0;
-      const ranges = pieces.map((p) => {
+      // Concatenate this speaker's samples into one stream, remembering where each piece came from.
+      const pieces = []; let len = 0;
+      for (const p of maskToSegments(useMask, f0, f1, frameDur, 0)) {
         const a = Math.max(0, Math.round(p.start * SR)), b = Math.min(pe - ps, Math.round(p.end * SR));
-        len += Math.max(0, b - a);
-        return [a, b];
-      });
-      let vec = null;
-      if (len >= minSeg * SR) {
-        const buf = new Float32Array(Math.max(len, SR));
-        let off = 0;
-        for (const [a, b] of ranges) { buf.set(chunk.subarray(a, b), off); off += b - a; }
-        vec = await embed(buf);
+        if (b <= a) continue;
+        pieces.push({ sa: len, sb: len + (b - a), ga: t0 + a / SR, gb: t0 + b / SR, ca: a, cb: b });
+        len += b - a;
       }
-      entries.push({ w, k, segs, dur: total * frameDur, vec });
+      const r = regions.length;
+      regions.push({ w, k, dur: total * frameDur, segs, pieces: pieces.map(({ sa, sb, ga, gb }) => ({ sa, sb, ga, gb })), streamLen: len });
+      if (len < minStream) continue;
+      const stream = new Float32Array(len);
+      for (const p of pieces) stream.set(chunk.subarray(p.ca, p.cb), p.sa);
+      // Sub-windows of SUB samples every HOP samples (a single one when the stream is short).
+      const starts = [];
+      if (len <= SUB) starts.push(0);
+      else { for (let x = 0; x + SUB <= len; x += HOP) starts.push(x); const lastEnd = starts[starts.length - 1] + SUB; if (len - lastEnd > HOP / 2) starts.push(len - SUB); }
+      for (const s0 of starts) {
+        const s1 = Math.min(len, s0 + SUB);
+        const vec = await embed(padTo(stream.subarray(s0, s1), SR));
+        subs.push({ r, s0, s1, dur: (s1 - s0) / SR, vec });
+      }
     }
   }
-  progress(id, 'diarize', 1, `Analysed ${nWin} windows`);
-  return { entries };
+  progress(id, 'diarize', 1, `Analysed ${nWin} windows, ${subs.length} voice samples`);
+  return { regions, subs };
 }
 
 function finalize(c, opts) {
   let segments = [], speakers = [];
-  if (c.entries) {
-    const r = clusterEntries(c.entries, { threshold: opts.threshold, numSpeakers: opts.numSpeakers });
+  if (c.diar) {
+    const r = clusterDiarization(c.diar.regions, c.diar.subs, { threshold: opts.threshold, numSpeakers: opts.numSpeakers, minEmbDur: opts.minEmbDur, minClusterSize: opts.minClusterSize, minRun: opts.minRun });
     segments = r.segments; speakers = r.speakers;
   }
   const items = c.transcript ? c.transcript.items : [];
   let speakerOf;
-  if (c.entries) speakerOf = assignSpeakers(items, segments);
+  if (c.diar) speakerOf = assignSpeakers(items, segments);
   else { speakerOf = items.map(() => 0); if (items.length) speakers = [{ id: 0, duration: c.N / SR, firstStart: 0, centroid: null }]; }
   const turns = buildTurns(items, speakerOf);
   return {
@@ -860,22 +947,24 @@ function finalize(c, opts) {
     text: c.transcript ? c.transcript.text : '',
     wordLevel: c.transcript ? c.transcript.wordLevel : false,
     turns, segments, speakers,
-    stats: { items: items.length, windows: c.entries ? new Set(c.entries.map((e) => e.w)).size : 0, embeddings: c.entries ? c.entries.filter((e) => e.vec).length : 0 },
+    stats: { items: items.length, windows: c.diar ? new Set(c.diar.regions.map((e) => e.w)).size : 0, embeddings: c.diar ? c.diar.subs.length : 0 },
   };
 }
 
 async function run({ audio, opts }, id) {
   if (!(audio instanceof Float32Array)) audio = new Float32Array(audio);
-  let transcript = null, entries = null;
+  let transcript = null, diar = null;
   if (opts.transcribe) { status(id, 'Transcribing'); transcript = await transcribe(audio, opts, id); }
-  if (opts.diarize) { status(id, 'Identifying speakers'); entries = (await diarizeLocal(audio, opts, id)).entries; }
-  cache = { N: audio.length, transcript, entries, opts };
+  if (opts.diarize) { status(id, 'Identifying speakers'); diar = await diarizeLocal(audio, opts, id); }
+  cache = { N: audio.length, transcript, diar, opts };
   status(id, 'Grouping speakers');
-  return finalize(cache, opts);
+  const result = finalize(cache, opts);
+  if (opts.debug && diar) result.debug = { regions: diar.regions, subs: diar.subs.map((x) => ({ r: x.r, s0: x.s0, s1: x.s1, dur: x.dur, vec: x.vec ? Array.from(x.vec) : null })) };
+  return result;
 }
 
 function recluster(payload) {
-  if (!cache || !cache.entries) throw new Error('Nothing to re-group yet: run speaker identification first.');
+  if (!cache || !cache.diar) throw new Error('Nothing to re-group yet: run speaker identification first.');
   const opts = { ...cache.opts, ...payload };
   cache.opts = opts;
   return finalize(cache, opts);
@@ -888,7 +977,10 @@ function recluster(payload) {
 
 // ---------- constants ----------
 const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0/dist/transformers.min.js';
-const DEFAULT_SEG_MODEL = 'onnx-community/pyannote-segmentation-3.0';
+// Tried in order; the first is served from this site's models/ folder when present.
+const DEFAULT_SEG_MODELS = ['pyannote/segmentation-3.0', 'onnx-community/pyannote-segmentation-3.0'];
+const DEFAULT_SEG_MODEL = DEFAULT_SEG_MODELS.join(', ');
+const LEGACY_SEG_MODEL = 'onnx-community/pyannote-segmentation-3.0';
 // Tried in order; the first one that can be downloaded wins. The first entry is served from this
 // site's own models/ folder when present (see LOCAL_MODEL_PATH), the rest come from the Hugging Face Hub.
 const DEFAULT_EMB_MODELS = ['wespeaker/voxceleb-resnet34-LM', 'onnx-community/wespeaker-voxceleb-resnet34-LM', 'Xenova/wespeaker-voxceleb-resnet34-LM', 'Xenova/wavlm-base-plus-sv'];
@@ -897,7 +989,7 @@ const LEGACY_EMB_MODEL = 'Xenova/wespeaker-voxceleb-resnet34-LM';
 // Similarity scales differ between embedding models, so thresholds are per model family.
 const EMB_PRESETS = [
   { match: /wespeaker/i, label: 'WeSpeaker ResNet34', threshold: 0.70, matchThreshold: 0.50 },
-  { match: /wavlm|unispeech/i, label: 'WavLM x-vector', threshold: 0.53, matchThreshold: 0.86 },
+  { match: /wavlm|unispeech/i, label: 'WavLM x-vector', threshold: 0.18, matchThreshold: 0.86 },
 ];
 function embPreset(id) { return EMB_PRESETS.find((p) => p.match.test(id || '')) || { label: id || '?', threshold: 0.70, matchThreshold: 0.50 }; }
 function shortModel(id) { return (id || '').split('/').pop(); }
@@ -1042,6 +1134,7 @@ function initControls() {
   }
   // Settings saved by an earlier version pointed at a single (now gated) embedding repo; move them to the current list.
   if (els.embModel.value.trim() === LEGACY_EMB_MODEL) els.embModel.value = DEFAULT_EMB_MODELS.join(', ');
+  if (els.segModel.value.trim() === LEGACY_SEG_MODEL) els.segModel.value = DEFAULT_SEG_MODEL;
   // Earlier versions defaulted to tiny.en with no quality setting; the default is now the Best preset.
   if (!s.quality || (els.asrModel.value.trim() === LEGACY_ASR_DEFAULT && s.quality !== 'custom')) { els.quality.value = DEFAULT_QUALITY; els.asrModel.value = QUALITY_PRESETS[DEFAULT_QUALITY].models.join(', '); }
   if (!QUALITY_PRESETS[els.quality.value] && els.quality.value !== 'custom') els.quality.value = DEFAULT_QUALITY;
@@ -1235,7 +1328,7 @@ function readConfig() {
     diarize: els.doDiarize.checked,
     asr: { device, candidates },
     diar: {
-      segModel: els.segModel.value.trim() || DEFAULT_SEG_MODEL,
+      segModels: (els.segModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean).length ? els.segModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean) : DEFAULT_SEG_MODELS.slice()),
       embModels: (els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean).length ? els.embModel.value.split(/[\s,;]+/).map((x) => x.trim()).filter(Boolean) : DEFAULT_EMB_MODELS.slice()),
       device: diarDevice,
       localModelPath: els.localModelPath.value.trim(),

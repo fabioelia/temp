@@ -1,0 +1,10 @@
+{
+  "feature_extractor_type": "PyAnnoteFeatureExtractor",
+  "sampling_rate": 16000,
+  "offset": 721,
+  "step": 270,
+  "num_speakers": 3,
+  "powerset_max_classes": 2,
+  "receptive_field_size": 991,
+  "receptive_field_shift": 270
+}
