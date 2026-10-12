@@ -85,6 +85,14 @@ All in `redesign/concepts/0N-name/`:
    summary with savings and free-shipping progress. Submitting shows an in-page confirmation (never navigates/submits).
 8. One or more **signature page(s)** specific to your concept (see your direction).
 
+Cross-concept principles from the strategy (non-negotiable): a **"For Home | For Business" switch** in the header
+(remember the choice via `GUSA.store`; business mode swaps the primary nav and the primary CTA to "Book a tasting" /
+"Get a proposal"); **Shop by your machine** as a first-class way into the catalog (36 mm capsules, Espresso 70
+Nespresso®-compatible, ESE 44 mm pods, beans & ground for espresso machine/moka, drip); every product card shows
+**Format · Fits · Intensity**; **one intensity scale 1–10** with buckets Mild 1–4 · Balanced 5–7 · Bold 8–10; contact block
+with phone (617) 612-0090, info@lespressousa.com and hours (address: write "Greater Boston, MA" — the street address is
+pending client confirmation).
+
 Global components on every page: header with logo, primary nav (≤ 6 items), search (opens an overlay that searches the
 catalog live), account icon, cart icon with live count, **cart drawer** (line items, qty steppers, subscription badge, savings,
 free-shipping progress bar, checkout button → checkout.html); announcement bar (e.g. "Free shipping on orders $59+ ·

@@ -1,0 +1,1751 @@
+{
+  "generated": "2026-10-12",
+  "legend": {
+    "yes": "✓",
+    "partial": "◐",
+    "no": "✗"
+  },
+  "sites": [
+    {
+      "name": "Lavazza US (+ Lavazza Professional UK, Flavia)",
+      "url": "https://www.lavazzausa.com/en",
+      "type": "Italian roaster - brand DTC + B2B",
+      "highlights": [
+        "Header toggle 'Lavazza for your HOME | BUSINESS' switches whole nav to Food Service / @Work",
+        "Whole-bean PLP has 9 facets: Collection, Format, Intensity, Pack Size, Blend, Aromatic Notes, Preparation, Roast, Color",
+        "PDP: intensity x/10, aromatic notes, roast, composition, origin, preparation tip + barista video, loyalty Beans earned",
+        "Lavazza My Way subscriptions: 25% off, flexible scheduling, free shipping on subs over $50; machine + capsule plan saves up to $130",
+        "'Find your coffee match' quiz tile inserted into the product grid",
+        "My Lavazza Loyalty: 1 Bean per $1, 2x Beans on subscriptions",
+        "Business: advisory, POS tools, Training Center, technical assistance, Food Service Stories, Business Customer Login",
+        "Lavazza Professional UK (lavazzapro.co.uk): 4-step solution finder (environment, headcount, drinks, contact) + workplace coffee calculator",
+        "Weakness: three different intensity scales (x/5, x/10, x/13) on the same homepage; no Open Graph tags"
+      ],
+      "matrixKey": "LAV"
+    },
+    {
+      "name": "illy US",
+      "url": "https://www.illy.com/en-us",
+      "type": "Italian roaster - brand DTC + B2B + franchise",
+      "highlights": [
+        "PLP filters: intensity buckets (Soft 3-4 / Medium 5-6 / Strong 7-9), preparation, format, roast/origin, pack size, 'available on subscription'",
+        "PDP: Flavor Intensity '5 of 9', Selection / How We're Brewing / Suitable For blocks, long-form taste/roast/packaging/prep copy, loyalty hearts earned (+305)",
+        "Subscribe & Save 20% + free shipping on all recurring orders; frequency selector 'Every 4 weeks'; build-your-own 'Coffee Only Subscription'",
+        "illy Lovers loyalty (500 welcome hearts + 20% off), Refer a Friend, Klarna, Apple Pay, PowerReviews",
+        "Professional hub: Cafés, Bakeries, Restaurants, Hotel, Offices, franchise page, Chef Ambassador, reserved-area login",
+        "Store locator with ZIP search and type filters (illy Caffès, illy Shop)",
+        "Brand-as-culture content: illy Art Collection cups, Università del Caffè, B Corp, Ernesto Illy Foundation",
+        "Old-machine collection service when buying a new machine"
+      ],
+      "matrixKey": "ILLY"
+    },
+    {
+      "name": "Segafredo Zanetti US",
+      "url": "https://segafredocoffee.com/",
+      "type": "Italian roaster - US arm (Massimo Zanetti Beverage USA)",
+      "highlights": [
+        "Three Shopify storefronts: consumer, foodservice.segafredocoffee.com, wholesale.segafredocoffee.com (contracted customers, PO number field in cart)",
+        "Consumer nav: Shop | Espresso | Coffee | Single-Serve | Serviceware | Craft (Brewing Manual, Drink Recipes, Essentials)",
+        "PDP: Character + Tasting Notes line, origin story, Judge.me reviews (Vivace: 57 reviews, 4.77), rich Product/Offer/ShippingDetails schema",
+        "Free US shipping $35+; subscriptions always ship free; Shop Pay / Apple Pay / PayPal",
+        "Weakness: segafredo.us is a parked domain; no homepage meta description; franchise (Segafredo Zanetti Espresso) not surfaced on US site"
+      ],
+      "matrixKey": "SEG"
+    },
+    {
+      "name": "Nespresso US + Nespresso Professional US",
+      "url": "https://www.nespresso.com/us/en",
+      "type": "Capsule-system DTC + B2B best practice",
+      "highlights": [
+        "Nav groups: Coffee, Machines, Accessories, Collections, Subscription & Loyalty, Sustainability & Recycling, Store Locator, For Business",
+        "Build-your-bundle, Compare Machines, ReLove refurbished machines, eGift cards, Referral Rewards, member Status & Benefits",
+        "Recycling: order free recycling bags + find a drop-off location",
+        "Nespresso Professional: customer gate (already a customer? yes/no + fast registration), EasyOrder saved orders, Reorder, Express Checkout, My Subscriptions, company profile, after-sales services, 1-800 number",
+        "Pages are almost fully client-rendered (server HTML has no nav or content): SEO and no-JS risk"
+      ],
+      "matrixKey": "NES"
+    },
+    {
+      "name": "Caffè Borbone",
+      "url": "https://www.caffeborbone.com/en-us",
+      "type": "Italian roaster - DTC (Shopify)",
+      "highlights": [
+        "Coffee mega-menu organised by machine system (Nespresso home, Nespresso Pro, Dolce Gusto, A Modo Mio, Lavazza Blue, Bialetti, Caffitaly, Espresso Point, compostable pods)",
+        "Blends named by colour with intensity (Blue 8, Black 10, Red 9, Gold 7, Dek 8, Light 7)",
+        "'The more you buy, the more you save' - up to 20% off multiples of the same SKU; Recharge subscriptions; Klarna; loyalty app with points, tiers and referral",
+        "Weakness: the en-us store charges in USD but its banner reads 'Free shipping in Italy for orders over €40'; thin B2B (one office teaser)"
+      ],
+      "matrixKey": "BOR"
+    },
+    {
+      "name": "Kimbo (kimbo.it + Kimbo UK)",
+      "url": "https://kimbo.it/",
+      "type": "Italian roaster - DTC (Shopify) + UK subsidiary",
+      "highlights": [
+        "Homepage starts with 'scegli il tuo caffè' (choose by format), then 'scegli le tue capsule' by compatible system",
+        "'Che caffè sei?' personality quiz, tasting kits (Kit degustazione), Sapiente specialty sub-brand",
+        "Professional pages for bars/pastry shops and specialty retailers; training courses",
+        "Kimbo UK (kimbo.co.uk) sells barista courses as bookable products (BSA Level 1, VRQ Level 2, Latte Art) and POS material",
+        "Weakness: Italian-only DTC; a 'test-collezione' collection URL is live in production links"
+      ],
+      "matrixKey": "KIM"
+    },
+    {
+      "name": "Caffè Vergnano",
+      "url": "https://www.caffevergnano.com/en/",
+      "type": "Italian roaster - B2B + franchise + DTC (WordPress)",
+      "highlights": [
+        "Top nav: Vergnano World | Business | Products | Riserva Torino | Blog; Business covers Cafes & Restaurants, Open a Caffè Vergnano 1882 Coffee Shop, Academy, Automated Distribution & OCS, Street Coffee",
+        "'Espresso Perfect Serve': branded cup + helical spoon + 'Caffeino' water glass as a partner kit",
+        "Franchise page: concept, 4 pillars (dedicated designer, Made-in-Italy furnishings, dedicated range, ongoing support), brochure form, locator of existing 1882 shops by radius",
+        "Region selector with 17 country sites, several run by distributors (US, Canada via Molisana Imports, UAE via Stree F&B / Babadi)",
+        "Weakness: Italian labels on English pages ('Scarica la brochure'); caffevergnano.us shows raw PHP in its <title>; distributor microsites are brochure-only"
+      ],
+      "matrixKey": "VER"
+    },
+    {
+      "name": "Saquella / Danesi / Caffè Mauro (reviewed, weaker)",
+      "url": "https://www.saquella.it/en/",
+      "type": "Italian roasters - brochure / Italian DTC",
+      "highlights": [
+        "Saquella: clean audience-first nav Retail | Horeca | Vending | Company | Business | Contact (no e-commerce)",
+        "Danesi (danesicaffe.it): 'Ordina dal telefono' block with expert-staff hours; 10% newsletter incentive; /en redirects to an unrelated Italian blog post",
+        "Caffè Mauro (caffemauro.com/en): minimal brand site, shop separated, Italian meta description on the English page"
+      ]
+    },
+    {
+      "name": "Faema Canada",
+      "url": "https://faema.ca/",
+      "type": "Importer / distributor (machines + coffee + service), Toronto",
+      "highlights": [
+        "Header split For Home | For Business | About | Locations | Service | Contact; For Business organised by solution (Coffee, Pizza, Baking, Pasta, Gelato, Juice, Water)",
+        "Commercial leasing page with Econolease: Lease (24-60 mo), Rent-Try-Buy (52 wk, 60% of payments to buyout), Loan; on-page payment calculator with email/print estimate",
+        "Beans vs Capsules calculator (Household / Professional presets, cost per cup, yearly savings, pod waste)",
+        "Service centre: walk-in residential repair, on-site commercial 'We come to you', parts, warranty, refurbishment",
+        "Trust: 'since 1957', customer counter, notable-customer logo wall, North America's largest showroom; LocalBusiness + Product schema",
+        "Weakness: service requests open mailto templates rather than a tracked form; nav spans pizza ovens to gelato (dilutes coffee focus)"
+      ],
+      "matrixKey": "FAE"
+    },
+    {
+      "name": "Whole Latte Love",
+      "url": "https://www.wholelattelove.com/",
+      "type": "US equipment e-commerce",
+      "highlights": [
+        "Deep machine taxonomy (semi-auto, super-auto, prosumer, single vs dual boiler, machine packages, commercial, refurbished)",
+        "'Better Together Pricing' bundler: pair machine + grinder + coffee for exclusive discounts",
+        "Support: Submit a Tech Ticket, part diagrams, machine library, maintenance packages, 1,000+ YouTube videos, weekly livestreams, CoffeeCast virtual demo",
+        "20K+ reviews, coffee subscription 10% off, free shipping $75+"
+      ],
+      "matrixKey": "WLL"
+    },
+    {
+      "name": "Seattle Coffee Gear",
+      "url": "https://www.seattlecoffeegear.com/",
+      "type": "US equipment e-commerce + retail stores",
+      "highlights": [
+        "Top level 'Commercial' section with free consultation offer and commercial support",
+        "Coffee filters: roast, taste profile, brew method incl. 'Superautomatic Friendly', 'European Favorites'",
+        "Subscribe & Save 5%, Bundle & Save, Affirm, free shipping $49+ with cart progress message, 30-day price guarantee",
+        "Repairs & Service, retail stores, classes & events, podcast"
+      ],
+      "matrixKey": "SCG"
+    },
+    {
+      "name": "Chris' Coffee",
+      "url": "https://www.chriscoffee.com/",
+      "type": "Northeast importer of Italian espresso machines + roaster + OCS (Latham, NY)",
+      "highlights": [
+        "B2B 'bean to brew' page: roasting capacity, private-label packaging with low minimums, Organic / Fair Trade / Kosher / SQF certifications",
+        "Equipment loans, rentals and sales; technicians on call 24h; delivery fleet covering a 90-mile radius",
+        "Commercial machine questionnaire; repair form with RMA + Service & Repair Agreement",
+        "Fractional (pre-measured) packs for offices/foodservice, open-box machines, Affirm, phone in header",
+        "Weakness: inconsistent heritage claims on the same page ('over 45 years' vs 'over 50 years')"
+      ],
+      "matrixKey": "CHR"
+    },
+    {
+      "name": "Wake Up Espressomaschinen (Vienna) - a Guglielmo distributor",
+      "url": "https://www.wakeup-espresso.com/",
+      "type": "Distributor of Southern-Italian roasters incl. Guglielmo (Shopify)",
+      "highlights": [
+        "Guglielmo is the first item in the coffee menu; cards carry flavour tags ('schokoladig', 'würzig') and staff picks ('Mario's Favorite')",
+        "5+1 kg deal (pay 5 kg, get 6) and Kaffee-Abo every 30 days / 3 / 6 months, cancel anytime",
+        "Machines tested and grinder pre-dialled before shipping; personal onboarding by phone or WhatsApp video for every machine; in-store training",
+        "Sections for machine service and Gastro & Büro (business)"
+      ],
+      "matrixKey": "WUP"
+    },
+    {
+      "name": "Other Guglielmo distributors abroad",
+      "url": "https://www.caffeguglielmoshop.it/guglielmo-nel-mondo/",
+      "type": "Distributor network listed by Guglielmo S.p.A.",
+      "highlights": [
+        "Czech Republic: caffeguglielmo.cz (Shoptet store, star ratings, free-shipping threshold, 'Beyond Fair Trade' claim, gift sets)",
+        "Switzerland: orizontline.ch (vending/OCS, water systems, rental, repair centre with online repair-status lookup, showroom)",
+        "Canada: mini-italia.ca (Italian food importer); UK listing points to caffeguglielmouk.com (domain does not resolve)",
+        "Parent shop caffeguglielmoshop.it: menu by capsule system, Fidelity Card points, 'Il Pacco da giù' care package, ISO 9001 certificate",
+        "Parent's distributor list gives Guglielmo USA LLC at 266 Calvary St, Waltham MA and guglielmousa.com (redirects to lespressousa.com)"
+      ]
+    },
+    {
+      "name": "Ammirati Coffee / Miscela d'Oro USA (not fetchable)",
+      "url": "https://www.illy.com/en-us/company/store-events/press/press-releases/illy-ammirati",
+      "type": "Northeast Italian-coffee importers",
+      "highlights": [
+        "Ammirati (Pelham, NY): illy distributor for NY metro (2021), Trucillo importer for NY/NJ/CT, La Cimbali machines, service + tech support; site not reachable",
+        "Miscela d'Oro USA (misceladorousa.com): official US importer of the Messina roaster; site behind a Cloudflare challenge"
+      ]
+    },
+    {
+      "name": "Trade Coffee",
+      "url": "https://www.drinktrade.com/",
+      "type": "DTC subscription marketplace",
+      "highlights": [
+        "Quiz (~2 min) covering brew method, milk/sugar, roast and flavour, leading to a 3-bag Discovery Trial (first bag free, free shipping, cancel anytime)",
+        "Proprietary 'Trade Roast Level' scale normalises roast across 55+ roasters",
+        "Post-delivery ratings feed the next match; Trade Credit, Refer a Friend, gifting, corporate gifting"
+      ],
+      "matrixKey": "TRD"
+    },
+    {
+      "name": "Counter Culture Coffee",
+      "url": "https://counterculturecoffee.com/",
+      "type": "Specialty roaster - DTC + wholesale",
+      "highlights": [
+        "Nav includes Wholesale Login, Become a Partner, Store Locator and Maintenance Requests",
+        "Tech request triage: 'I'm a CCC Cafe Partner' / 'I'm a Business (Non-Partner)' / 'I make coffee at home'; installation, calibration, scheduled PM, same-day emergency service",
+        "Training Centers + Counter Intelligence Online learning platform for partners; transparency reports",
+        "Subscribe up to 30% off, office subscriptions, build-your-own bundle, 'Find your Fave' quiz, free shipping $30+"
+      ],
+      "matrixKey": "CCC"
+    },
+    {
+      "name": "Stumptown Coffee Roasters",
+      "url": "https://www.stumptowncoffee.com/",
+      "type": "Specialty roaster - DTC + wholesale",
+      "highlights": [
+        "'Coffee Quiz' is the first item in the top nav; 'Product Finder' module on the homepage",
+        "Wholesale page by segment (Cafes & Restaurants, Office, Hospitality, Grocery, Retail & Events) + proud-partner stories + benefits (training, menu dev, POS/marketing kit, consultation)",
+        "Cart shows 'You are $45 away from free shipping'"
+      ],
+      "matrixKey": "STU"
+    },
+    {
+      "name": "Partners Coffee",
+      "url": "https://www.partnerscoffee.com/",
+      "type": "Specialty roaster - DTC + wholesale + office (Brooklyn)",
+      "highlights": [
+        "Menu groups: Lineup, Company, Wholesale (Learn & Apply, Office Coffee, Log In), Education (Brew School, Brew Guides), Cafes & Retailers (Find Us, Catering)",
+        "Office program: apply, get wholesale pricing + free shipping + login to an Office Coffee ordering portal",
+        "Wholesale: account managers, in-house techs (pre-install, install, PM, discounted service rates), own delivery fleet, education, marketing",
+        "6,100+ reviews (Okendo), Affirm, Shop Pay"
+      ],
+      "matrixKey": "PAR"
+    },
+    {
+      "name": "La Colombe",
+      "url": "https://www.lacolombe.com/",
+      "type": "Specialty roaster - DTC + RTD + wholesale",
+      "highlights": [
+        "Paid membership $44/yr: free shipping with no minimum, 15% member pricing / cashback credits, 20% welcome discount",
+        "Nav: Roasted Coffee (Bundle & Save, Subscriptions, Member Pricing, Bulk Coffee), Draft Latte, Gifts & Sets, Membership, Cafés"
+      ],
+      "matrixKey": "LAC"
+    },
+    {
+      "name": "Blue Bottle (blocked)",
+      "url": "https://bluebottlecoffee.com/us/eng/subscriptions",
+      "type": "Specialty roaster - DTC subscription",
+      "highlights": [
+        "Site returned a Cloudflare block; per official FAQ snippets: change/pause/cancel anytime, email before each shipment so you can skip, free shipping on subscriptions, up to 17% off multi-bag orders"
+      ]
+    }
+  ],
+  "matrix": [
+    {
+      "feature": "Shop by format (beans / ground / capsules / pods)",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "partial",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "yes"
+      }
+    },
+    {
+      "feature": "Shop/filter by machine system or compatibility",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "partial",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "One consistent intensity or roast scale on cards + PDP",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "no",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Tasting notes / flavor profile on PDP",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Blend composition + origin on PDP",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Brew / preparation guidance on PDP (text or video)",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Faceted PLP filters (intensity, roast, notes, size...)",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Product ratings & reviews on PDP",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "no",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Visible case / bulk / quantity-tier pricing",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "yes",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "no",
+        "Counter Culture": "partial",
+        "Stumptown": "yes",
+        "Partners Coffee": "partial",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Bundles, tasting kits or build-a-box",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Coffee quiz / product finder",
+      "category": "Shop & Product",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "no",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Subscribe & save on PDP",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "no",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "no",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Self-serve flexibility (frequency, skip, pause, cancel)",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "no",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "no",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Machine + coffee bundle or machine-and-capsule plan",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "partial",
+        "Counter Culture": "no",
+        "Stumptown": "partial",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Loyalty points / rewards",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "no",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "partial",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Referral program",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "no",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "yes",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Gift cards / gift subscriptions / corporate gifting",
+      "category": "Subscription & Loyalty",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "partial",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Home vs Business split visible in header",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "partial",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Segment landing pages (cafe, restaurant, office, hotel)",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "no",
+        "Counter Culture": "partial",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "yes"
+      }
+    },
+    {
+      "feature": "Solution finder / short qualifying multi-step lead form",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "partial",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Trade login + online reorder portal",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "B2B proof: case studies, client logos, partner quotes",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "partial",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Training / academy for business customers",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "POS / marketing / merchandising support for partners",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "yes",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "no",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "partial",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Franchise or branded-cafe program page",
+      "category": "B2B / Trade",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "no",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "no",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Equipment catalog with transparent prices (or clear quote CTA)",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "no",
+        "Stumptown": "yes",
+        "Partners Coffee": "partial",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Commercial lease / rental / financing program",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "no",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "partial",
+        "Stumptown": "no",
+        "Partners Coffee": "partial",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Consumer financing (Affirm / Klarna / Afterpay)",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "no",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "no",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Online service / repair request (ticket, RMA)",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "partial",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "no",
+        "Partners Coffee": "partial",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Preventive-maintenance or managed-service plans",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "no",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "no",
+        "Partners Coffee": "yes",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Machine registration, manuals, tutorials, parts",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "no",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Water filtration / treatment offer",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "no",
+        "Segafredo US": "no",
+        "Nespresso US": "no",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Refurbished / open-box / take-back / recycling",
+      "category": "Equipment & Service",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "no",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Store / cafe / stockist locator",
+      "category": "Locator & Community",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "no",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Physical showroom, training center or flagship",
+      "category": "Locator & Community",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Classes, events or livestreams",
+      "category": "Locator & Community",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "partial",
+        "Segafredo US": "no",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "no",
+        "Counter Culture": "yes",
+        "Stumptown": "no",
+        "Partners Coffee": "yes",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Deep brand / origin / founder story",
+      "category": "Content & Brand",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Recipes & brew-guide library",
+      "category": "Content & Brand",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Sustainability / certifications page",
+      "category": "Content & Brand",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "no",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "no",
+        "Trade Coffee": "partial",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Video content (how-to, brand film)",
+      "category": "Content & Brand",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "partial",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "partial",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Editorial blog / magazine",
+      "category": "Content & Brand",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Free-shipping threshold shown (ideally cart progress bar)",
+      "category": "Conversion & Trust",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "partial",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Express wallets (Apple Pay / Shop Pay / Google Pay)",
+      "category": "Conversion & Trust",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Phone / chat / human help visible",
+      "category": "Conversion & Trust",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "partial",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Trust proof (heritage, certifications, counters, review counts)",
+      "category": "Conversion & Trust",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "partial",
+        "Guglielmo USA today": "partial"
+      }
+    },
+    {
+      "feature": "Email capture with first-order incentive",
+      "category": "Conversion & Trust",
+      "values": {
+        "Lavazza US": "partial",
+        "illy US": "yes",
+        "Segafredo US": "partial",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "partial",
+        "Kimbo": "partial",
+        "Caffè Vergnano": "no",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "yes",
+        "Counter Culture": "partial",
+        "Stumptown": "partial",
+        "Partners Coffee": "partial",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Homepage meta description",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "no",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Open Graph tags",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "no",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "no",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Structured data (Organization / Product / LocalBusiness)",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "yes",
+        "Nespresso US": "partial",
+        "Caffè Borbone": "yes",
+        "Kimbo": "no",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "partial",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Accessibility statement / alt-text hygiene",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "partial",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "partial",
+        "Seattle Coffee Gear": "partial",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "partial",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "partial",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Modern commerce stack (Shopify, SFCC, AEM or equivalent) and lean front end",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "yes",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "yes",
+        "Kimbo": "yes",
+        "Caffè Vergnano": "partial",
+        "Faema Canada": "yes",
+        "Whole Latte Love": "yes",
+        "Seattle Coffee Gear": "yes",
+        "Chris' Coffee": "yes",
+        "Wake Up Espresso (AT)": "yes",
+        "Trade Coffee": "yes",
+        "Counter Culture": "yes",
+        "Stumptown": "yes",
+        "Partners Coffee": "yes",
+        "La Colombe": "yes",
+        "Guglielmo USA today": "no"
+      }
+    },
+    {
+      "feature": "Localization (languages, regions, currency) done right",
+      "category": "Technical / SEO",
+      "values": {
+        "Lavazza US": "yes",
+        "illy US": "yes",
+        "Segafredo US": "no",
+        "Nespresso US": "yes",
+        "Caffè Borbone": "partial",
+        "Kimbo": "no",
+        "Caffè Vergnano": "yes",
+        "Faema Canada": "partial",
+        "Whole Latte Love": "no",
+        "Seattle Coffee Gear": "no",
+        "Chris' Coffee": "no",
+        "Wake Up Espresso (AT)": "partial",
+        "Trade Coffee": "no",
+        "Counter Culture": "no",
+        "Stumptown": "no",
+        "Partners Coffee": "no",
+        "La Colombe": "no",
+        "Guglielmo USA today": "no"
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "feature": "Home / Business switch in the header with two parallel nav trees",
+      "priority": "Must-have",
+      "rationale": "Lets one site serve both audiences without burying B2B under 'Join Us'.",
+      "benchmark": "Lavazza US toggle; Faema Canada; Nespresso 'For Business'"
+    },
+    {
+      "feature": "'Shop by your machine' selector + compatibility badge on every coffee and machine",
+      "priority": "Must-have",
+      "rationale": "Guglielmo sells 36 mm capsules, 38 mm pods and 44 mm ESE pods; compatibility is the #1 buying question.",
+      "benchmark": "Caffè Borbone system menu; illy 'Suitable For'; Kimbo 'scegli le tue capsule'"
+    },
+    {
+      "feature": "Standard coffee PDP: one intensity scale (1-10), roast, tasting notes, Arabica/Robusta %, origin, best brew methods, cost per cup",
+      "priority": "Must-have",
+      "rationale": "Today blends have 1-2 sentences and no intensity; this is the basic comparison data shoppers expect.",
+      "benchmark": "illy PDP; Lavazza PDP; Segafredo 'Character / Tasting Notes'"
+    },
+    {
+      "feature": "Faceted PLP filters (format, system, intensity, roast, decaf, pack size, home/office/bar)",
+      "priority": "Must-have",
+      "rationale": "87 SKUs across 3+ pod formats cannot be browsed without filters.",
+      "benchmark": "Lavazza 9-facet PLP; illy intensity buckets; Seattle Coffee Gear brew-method filter"
+    },
+    {
+      "feature": "Subscribe & Save on PDP with self-serve frequency, skip, pause, cancel",
+      "priority": "Must-have",
+      "rationale": "Capsules and beans are repeat purchases; there is no subscription today.",
+      "benchmark": "illy 20% + free shipping; Lavazza My Way 25%; Wake Up Kaffee-Abo"
+    },
+    {
+      "feature": "Transparent volume pricing table on PDP (6/12/18 units, case packs)",
+      "priority": "Must-have",
+      "rationale": "Turns the hidden 5-8% plugin discount into a visible reason to buy more.",
+      "benchmark": "Borbone 'more you buy, more you save'; illy Coffee Case Packs; Wake Up 5+1 kg"
+    },
+    {
+      "feature": "Reviews with photos, star ratings in listings and review schema",
+      "priority": "Must-have",
+      "rationale": "Zero reviews today; social proof is standard on every benchmark.",
+      "benchmark": "Segafredo Judge.me + AggregateRating; Partners 6,100+ reviews"
+    },
+    {
+      "feature": "Catalog hygiene: remove 'Order Adjustment', back-in-stock alerts, 'Request a quote' instead of $0",
+      "priority": "Must-have",
+      "rationale": "About 40 of 87 SKUs are out of stock and several machines show $0.",
+      "benchmark": "Lavazza / illy 'Notify me'; Chris' Coffee and Faema commercial quote flows"
+    },
+    {
+      "feature": "B2B solution finder (venue, cups/day, needs, contact) replacing the long inquiry form",
+      "priority": "Must-have",
+      "rationale": "Short qualifying steps convert better and route leads to the right rep.",
+      "benchmark": "Lavazza Professional UK 4-step finder; Chris' Coffee commercial questionnaire"
+    },
+    {
+      "feature": "'Book a tasting / consultation' CTA on every business page",
+      "priority": "Must-have",
+      "rationale": "An importer's strongest B2B hook is tasting the coffee on the client's own machine.",
+      "benchmark": "Vergnano 'Request a consultation'; Seattle Coffee Gear free consultation; Stumptown personalized consultation"
+    },
+    {
+      "feature": "Service request form with triage (partner / business / home), machine, serial, photos",
+      "priority": "Must-have",
+      "rationale": "On-site service is a core revenue line but has no online entry point.",
+      "benchmark": "Counter Culture Tech Request; Whole Latte Love tech ticket; Chris' Coffee RMA"
+    },
+    {
+      "feature": "'Find Guglielmo' map: cafés and restaurants serving it, retailers, distributors",
+      "priority": "Must-have",
+      "rationale": "Replaces the text list of Boston venues and the 3-pin locator with proof of local presence.",
+      "benchmark": "illy store locator with type filters; Vergnano 1882 radius finder"
+    },
+    {
+      "feature": "Real brand story: Calabria 1943, Copanello roastery, L'Espresso USA since 2000, Mimmo Elia",
+      "priority": "Must-have",
+      "rationale": "The story page is 44 words and the claims conflict (60 vs 70 years); heritage is the brand's moat.",
+      "benchmark": "illy history + Università; Wake Up founder story; Chris' Coffee origin story"
+    },
+    {
+      "feature": "Contact & trust essentials: phone, address (Waltham vs Boston to verify), hours, ISO 9001, consistent facts",
+      "priority": "Must-have",
+      "rationale": "The contact page has no phone or address; buyers need a reachable importer.",
+      "benchmark": "Faema contact + LocalBusiness schema; Danesi 'order by phone' block"
+    },
+    {
+      "feature": "Express checkout (Apple Pay, Google Pay, PayPal) + free-shipping threshold with cart progress bar",
+      "priority": "Must-have",
+      "rationale": "Only PayPal plus card today; wallets cut mobile checkout friction.",
+      "benchmark": "Stumptown '$45 away from free shipping'; Seattle Coffee Gear; Segafredo Shop Pay"
+    },
+    {
+      "feature": "Technical SEO baseline: meta descriptions, OG, Product/Organization/LocalBusiness schema, alt text, performance budget",
+      "priority": "Must-have",
+      "rationale": "No meta descriptions, no OG, no schema, ~48 JS + 53 CSS files per page.",
+      "benchmark": "Faema LocalBusiness + Product schema; Segafredo product schema"
+    },
+    {
+      "feature": "Working newsletter signup with first-order incentive (and remove broken shortcode pages)",
+      "priority": "Must-have",
+      "rationale": "Newsletter and refer-a-friend pages show raw shortcodes.",
+      "benchmark": "Chris' Coffee 10% off; illy 20% off + welcome points"
+    },
+    {
+      "feature": "Coffee finder quiz (machine, milk, intensity, flavour, cups/day) that ends in a subscribe CTA",
+      "priority": "Should-have",
+      "rationale": "Guides newcomers through 7-8 blends across 4 formats.",
+      "benchmark": "Lavazza 'Find your coffee match'; Trade quiz; Kimbo 'Che caffè sei?'"
+    },
+    {
+      "feature": "Machine + capsule starter bundles and a machine-with-subscription offer",
+      "priority": "Should-have",
+      "rationale": "Locks in repeat capsule revenue for each home machine sold.",
+      "benchmark": "Lavazza My Way Classy machine plan; Whole Latte Love 'Better Together'; Wake Up machine sets"
+    },
+    {
+      "feature": "Tasting / discovery kit of all blends",
+      "priority": "Should-have",
+      "rationale": "Low-risk first purchase for consumers and offices.",
+      "benchmark": "Kimbo Kit degustazione; Trade Discovery Trial; Wake Up Probiersets"
+    },
+    {
+      "feature": "B2B trade portal: login, one-click reorder, saved orders, PO number, account pricing, invoices",
+      "priority": "Should-have",
+      "rationale": "Wholesale clients reorder the same items; self-service lowers order-taking cost.",
+      "benchmark": "Segafredo contracted wholesale; Nespresso Pro EasyOrder; Partners wholesale portal"
+    },
+    {
+      "feature": "Lease / rent-to-own page with payment calculator + consumer financing on Rocket machines",
+      "priority": "Should-have",
+      "rationale": "Commercial machines are high-ticket; monthly pricing removes 'call for price'.",
+      "benchmark": "Faema Econolease calculator; Chris' Coffee loans/rentals; Seattle Coffee Gear Affirm"
+    },
+    {
+      "feature": "Service plans page (PM tiers, response times, coverage-radius map, water treatment)",
+      "priority": "Should-have",
+      "rationale": "Makes on-site service and water treatment a product, not a footnote.",
+      "benchmark": "Counter Culture scheduled PM; Chris' Coffee 24h techs + 90-mile radius; Partners techs"
+    },
+    {
+      "feature": "Segment pages with case studies, client logos and partner quotes",
+      "priority": "Should-have",
+      "rationale": "The current homepage list of Boston restaurants becomes structured B2B proof.",
+      "benchmark": "Stumptown proud partners; Faema logo wall; Lavazza Food Service Stories"
+    },
+    {
+      "feature": "Guglielmo Point franchise landing page (concept, formats, support, investment range, steps, brochure, map)",
+      "priority": "Should-have",
+      "rationale": "A bare long form gives prospects nothing to evaluate.",
+      "benchmark": "Vergnano 1882 Coffee Shop; illy franchise page"
+    },
+    {
+      "feature": "'Become a distributor / retailer' page with territory map and short application",
+      "priority": "Should-have",
+      "rationale": "Only 3 distributors today (MA, IL, PA); recruitment needs a clear pitch.",
+      "benchmark": "Vergnano distributor page; Guglielmo 'nel mondo' network list"
+    },
+    {
+      "feature": "Brew guides & recipe hub (espresso, moka, capsule, drip, affogato, Brasilena mocktails)",
+      "priority": "Should-have",
+      "rationale": "Feeds SEO and answers 'how do I use this' for each format.",
+      "benchmark": "illy Recipe Guide; Segafredo Brewing Manual; Counter Culture brew guides"
+    },
+    {
+      "feature": "Machine support hub: manuals, descaling videos, parts, registration",
+      "priority": "Should-have",
+      "rationale": "Reduces support calls and sells consumables (Puly cleaners, gaskets).",
+      "benchmark": "illy tutorials + manuals; Nespresso machine care; Whole Latte Love part diagrams"
+    },
+    {
+      "feature": "Office 'beans vs capsules' cost calculator",
+      "priority": "Should-have",
+      "rationale": "Quantifies the office pitch and captures leads.",
+      "benchmark": "Faema Beans vs Capsules calculator; Lavazza Pro workplace calculator"
+    },
+    {
+      "feature": "Loyalty points shown on PDP (2x on subscriptions)",
+      "priority": "Could-have",
+      "rationale": "Rewards repeat buyers and aligns with the parent's Fidelity Card.",
+      "benchmark": "illy Lovers hearts; My Lavazza Beans; Guglielmo Italy Fidelity Card"
+    },
+    {
+      "feature": "Referral program",
+      "priority": "Could-have",
+      "rationale": "Word of mouth is how Italian-American communities discover brands.",
+      "benchmark": "illy Refer a Friend; Nespresso Referral Rewards; Trade"
+    },
+    {
+      "feature": "Barista training and bookable classes for partners and consumers",
+      "priority": "Could-have",
+      "rationale": "Raises drink quality in partner venues and builds community.",
+      "benchmark": "Kimbo UK courses sold online; Counter Culture training centers; Wake Up Einschulungen"
+    },
+    {
+      "feature": "Capsule recycling / machine take-back program",
+      "priority": "Could-have",
+      "rationale": "Answers the sustainability objection to capsules.",
+      "benchmark": "Nespresso recycling bags + drop-off; illy old-machine collection"
+    },
+    {
+      "feature": "Gift cards, gift subscriptions and corporate gifting",
+      "priority": "Could-have",
+      "rationale": "Capsules, cups and Italian sweets make strong holiday gifts.",
+      "benchmark": "Nespresso eGift; Trade corporate gifting; Counter Culture gift subscriptions"
+    },
+    {
+      "feature": "Italian-American care package box (in the spirit of 'Il Pacco da giù')",
+      "priority": "Could-have",
+      "rationale": "A brand-specific gift built on the parent's Calabrian identity.",
+      "benchmark": "caffeguglielmoshop.it 'Il Pacco da giù'"
+    },
+    {
+      "feature": "Video or WhatsApp onboarding for machine buyers and a virtual demo",
+      "priority": "Could-have",
+      "rationale": "Brings the importer's expertise to online machine buyers.",
+      "benchmark": "Wake Up personal onboarding; Whole Latte Love CoffeeCast"
+    },
+    {
+      "feature": "Repair status lookup for service jobs",
+      "priority": "Could-have",
+      "rationale": "Fewer 'where is my machine' calls.",
+      "benchmark": "Orizont Line 'Stato della riparazione'"
+    },
+    {
+      "feature": "Refurbished / open-box machine section",
+      "priority": "Could-have",
+      "rationale": "Sells trade-ins and demo units and gives an entry price point.",
+      "benchmark": "Chris' Coffee open box; Seattle Coffee Gear refurbished; Faema certified renewed"
+    },
+    {
+      "feature": "Perfect-serve partner kit (cup, spoon, Caffeino glass, POS) for cafés",
+      "priority": "Could-have",
+      "rationale": "Makes Guglielmo visible in venues; the Caffeino glass already exists.",
+      "benchmark": "Vergnano Espresso Perfect Serve; Stumptown POS kit"
+    }
+  ]
+}

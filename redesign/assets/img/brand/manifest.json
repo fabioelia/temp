@@ -1,0 +1,517 @@
+[
+  {
+    "file": "logo-guglielmo.svg",
+    "subject": "logo",
+    "description": "Official Caffè Guglielmo logo, vector. Orange/yellow/red concentric target roundel, black stencil-style GUGLIELMO wordmark with a red dot over the i, red sans-serif tagline \"il caffè che fa centro\". Colors: #231F20, #ED1C24, #F5821F, #FFF200.",
+    "width": 766,
+    "height": 218,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/Logo_guglielmo_d8b14f0f-15a7-4b7d-9558-7307b89ce342.svg",
+    "note": "vector; viewBox 0 0 766 218 (pt)"
+  },
+  {
+    "file": "logo-guglielmo.png",
+    "subject": "logo",
+    "description": "PNG render (transparent, 2000 px wide) of the official vector logo: target roundel + GUGLIELMO wordmark + tagline \"il caffè che fa centro\".",
+    "width": 2000,
+    "height": 569,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/Logo_guglielmo_d8b14f0f-15a7-4b7d-9558-7307b89ce342.svg"
+  },
+  {
+    "file": "logo-guglielmo-mark.svg",
+    "subject": "logo",
+    "description": "Target roundel only (orange outer ring #F5821F, yellow ring #FFF200, red bullseye #ED1C24), extracted from the official vector logo without modification of shapes or colors. For favicon / avatar / pattern use.",
+    "width": 173,
+    "height": 173,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/Logo_guglielmo_d8b14f0f-15a7-4b7d-9558-7307b89ce342.svg",
+    "note": "vector; derived crop of official logo"
+  },
+  {
+    "file": "logo-guglielmo-mark.png",
+    "subject": "logo",
+    "description": "PNG render (transparent, 1000 x 1000) of the target roundel mark.",
+    "width": 1000,
+    "height": 1000,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/Logo_guglielmo_d8b14f0f-15a7-4b7d-9558-7307b89ce342.svg"
+  },
+  {
+    "file": "usa-logo-guglielmo-usa.png",
+    "subject": "logo",
+    "description": "Current Guglielmo USA lockup from lespressousa.com: roundel + GUGLIELMO wordmark + red italic \"USA\". LOW RESOLUTION (200 x 100) - reference only; rebuild as vector from logo-guglielmo.svg.",
+    "width": 200,
+    "height": 100,
+    "transparent": true,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png"
+  },
+  {
+    "file": "pack-extra-bar-1kg-beans.jpg",
+    "subject": "packshot",
+    "description": "Extra Bar 1 kg whole-bean bag: matte black bag, gold/cream serif \"EXTRA BAR\" lettering, Guglielmo wordmark and roundel. White background.",
+    "width": 600,
+    "height": 608,
+    "transparent": false,
+    "source_url": "https://www.guglielmostorelamezia.com/wp-content/uploads/2020/10/Extra-Bar-grani-2.jpg"
+  },
+  {
+    "file": "pack-extra-bar-250g-ground.jpg",
+    "subject": "packshot",
+    "description": "Extra Bar 250 g ground brick pack: black with gold \"EXTRA BAR\" lettering and roundel. Light grey background.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/extra_bar_250.jpg"
+  },
+  {
+    "file": "lifestyle-extra-bar-range.jpg",
+    "subject": "lifestyle",
+    "description": "Extra Bar range styled on a white glass shelf: 1 kg bag, 250 g bricks, espresso cup, moka pot and croissants against a white 3D-tile wall.",
+    "width": 1200,
+    "height": 895,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/extra_bar_large_3c2f3870-34b0-45a8-88b4-518440edb216.jpg"
+  },
+  {
+    "file": "pack-5-stelle-1kg-beans.jpg",
+    "subject": "packshot",
+    "description": "Bar 5 Stelle 1 kg whole-bean bag: dark brown/bronze bag with five gold stars, pink-script \"Bar 5 stelle\" logotype, roundel. Grey background.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/bar_5_stelle_grani_1000.jpg"
+  },
+  {
+    "file": "pack-5-stelle-250g-ground-moka.jpg",
+    "subject": "packshot",
+    "description": "Bar 5 Stelle 250 g ground (moka grind) stand-up valve pouch: brown with five stars, \"MOKA\" badge and moka-pot illustration.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/bar_5_stelle_moka_250_rev1.jpg"
+  },
+  {
+    "file": "pack-5-stelle-250g-ground-espresso.jpg",
+    "subject": "packshot",
+    "description": "Bar 5 Stelle 250 g ground (espresso / fine grind) stand-up valve pouch: black-brown with five stars and portafilter illustration.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/bar_5_stelle_espresso_250_rev1.jpg"
+  },
+  {
+    "file": "lifestyle-5-stelle-range.jpg",
+    "subject": "lifestyle",
+    "description": "Bar 5 Stelle family (gold Oro pouch, moka and espresso pouches, 1 kg bean bag, capsule box) with cappuccino, croissant and pastries on a white counter.",
+    "width": 1200,
+    "height": 895,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/bar_5_stelle_large_d8eec3de-be15-40aa-869a-82aa3b62a48f.jpg"
+  },
+  {
+    "file": "pack-espresso-bar-1kg-beans.jpg",
+    "subject": "packshot",
+    "description": "Espresso Bar 1 kg whole-bean bag: black bag with a vintage photo of people at a bar counter, white \"ESPRESSO BAR\" type, roundel. White background.",
+    "width": 600,
+    "height": 600,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/files/Grani_Espresso_Bar_Guglielmo_600x_c17673c9-7bc8-4fb4-a09c-e419e5a94afb.png"
+  },
+  {
+    "file": "pack-espresso-classico-1kg-beans.png",
+    "subject": "packshot",
+    "description": "Espresso Classico 1 kg whole-bean bag, transparent background (cut-out): black-to-deep-red gradient bag, gold serif \"Espresso Classico\", roundel.",
+    "width": 336,
+    "height": 732,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/collections/Progetto_senza_titolo-3.png"
+  },
+  {
+    "file": "pack-espresso-classico-250g-ground.png",
+    "subject": "packshot",
+    "description": "Espresso Classico 250 g ground brick (\"caffè espresso - Gusto Classico\"), transparent background: black-to-red gradient with roundel and moka-pot pour illustration.",
+    "width": 359,
+    "height": 714,
+    "transparent": true,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/collections/2.png"
+  },
+  {
+    "file": "pack-espresso-classico-125g-can.jpg",
+    "subject": "packshot",
+    "description": "Espresso Classico 125 g ground in tin (\"caffè espresso - Gusto Classico\"): black-to-red gradient can with roundel.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/espresso_classico_lattina_125g.jpg"
+  },
+  {
+    "file": "lifestyle-espresso-classico-range.jpg",
+    "subject": "lifestyle",
+    "description": "Espresso Classico family (1 kg bag, 2 x 250 g bipack, tins, bricks) on a dark grey set with espresso cups and roasted beans; moody low-key lighting.",
+    "width": 1732,
+    "height": 1299,
+    "transparent": false,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/espresso_classico_9037.webp"
+  },
+  {
+    "file": "pack-caffetteria-1kg-beans.jpg",
+    "subject": "packshot",
+    "description": "Caffetteria 1 kg whole-bean bag: burgundy/oxblood bag, cream script \"Caffetteria in grani\", roundel. Grey background.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/caffetteria_faf040ce-60d7-42bb-ba01-5470d3d9eff8.jpg"
+  },
+  {
+    "file": "pack-copacabana-1kg-beans.jpg",
+    "subject": "packshot",
+    "description": "Copacabana 1 kg whole-bean bag: metallic gold/yellow bag, art-deco \"Copacabana Caffè\" lettering, large roundel, roasted beans at the base. White background, 2000 px.",
+    "width": 2000,
+    "height": 2000,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/files/copagabana_Guglielmo_Grani.jpg"
+  },
+  {
+    "file": "usa-pack-club-99-250g-ground.jpg",
+    "subject": "packshot",
+    "description": "Club 99 250 g ground (\"per moka\") stand-up pouch: chocolate-brown with gold script \"Club 99\" and a sepia vintage-café medallion (\"Miscela di caffè pregiati\"). White background.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2024/01/club99_250gr.jpg"
+  },
+  {
+    "file": "lifestyle-club-99-range.jpg",
+    "subject": "lifestyle",
+    "description": "Club 99 range: large collector tin, 250 g tin, capsule box and single capsule with espresso cups on a white counter.",
+    "width": 1200,
+    "height": 895,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/club99_large_e1285ed7-a80c-4d9f-8d03-56cc427ee8de.jpg"
+  },
+  {
+    "file": "pack-silver-signature-250g-can.jpg",
+    "subject": "packshot",
+    "description": "Silver (\"Silver Signature\") 250 g ground tin: brushed-silver can with a portrait sketch of founder Guglielmo Papaleo, red signature script \"Guglielmo\", roundel and \"Miscela di caffè pregiati\".",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/speciali_lattina_silver_rev1.jpg"
+  },
+  {
+    "file": "lifestyle-silver-signature-gift-set.jpg",
+    "subject": "lifestyle",
+    "description": "Silver tin with gift box of Guglielmo art-design cups on a white glass counter.",
+    "width": 1200,
+    "height": 895,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/silver_quality_large_3aba0d3c-d0b2-4301-8fe4-89eeebfeaa06.jpg"
+  },
+  {
+    "file": "pack-organic-250g-can.jpg",
+    "subject": "packshot",
+    "description": "Organic 250 g ground tin (\"Caffè da agricoltura biologica - 100% Arabica\"): deep forest-green can with coffee-blossom illustration and roundel.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/speciali_lattina_biologico.jpg"
+  },
+  {
+    "file": "pack-decaf-250g-can.jpg",
+    "subject": "packshot",
+    "description": "Decaffeinato 250 g ground tin: sky-blue can with clouds, script \"decaffeinato\" and a heart-shaped roundel.",
+    "width": 500,
+    "height": 500,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/speciali_lattina_decaffeinato.jpg"
+  },
+  {
+    "file": "usa-pack-decaf-250g-bag.jpg",
+    "subject": "packshot",
+    "description": "Current decaf 250 g ground bag (\"Più Aroma decaffeinato\"): bright cyan bag with heart-shaped red/yellow roundel and white floral ornament. White background.",
+    "width": 2000,
+    "height": 2000,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2025/02/DecaffeinatoBusta.jpg"
+  },
+  {
+    "file": "usa-pack-oro70-capsules-10.jpg",
+    "subject": "packshot",
+    "description": "ORO70 (Espresso 70 \"100% Arabica\") 10-capsule sleeve, Nespresso Original-compatible: black box with gold capsule icon.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2020/05/oro10.jpg"
+  },
+  {
+    "file": "usa-lifestyle-oro70-capsules-beans.jpg",
+    "subject": "lifestyle",
+    "description": "ORO70 10-capsule sleeve lying on a bed of roasted coffee beans (portrait 4:5).",
+    "width": 1080,
+    "height": 1350,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2020/05/ORO.jpg"
+  },
+  {
+    "file": "usa-pack-rosso70-capsules-10.jpg",
+    "subject": "packshot",
+    "description": "ROSSO70 (Espresso 70 \"Gusto Classico\") 10-capsule sleeve: black box with red capsule icon.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2020/11/rosso10.jpg"
+  },
+  {
+    "file": "usa-pack-dek70-capsules-10.jpg",
+    "subject": "packshot",
+    "description": "DEK70 (Espresso 70 \"Decaffeinato\") 10-capsule sleeve: black box with blue capsule icon.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2015/07/dek10.jpg"
+  },
+  {
+    "file": "pack-5-stelle-capsule-point.jpg",
+    "subject": "packshot",
+    "description": "Bar 5 Stelle single-serve 36 mm capsule (Espresso Point-compatible) in its brown foil flow-wrap, with capsule line drawing.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/capsule_bar_5_stelle.jpg"
+  },
+  {
+    "file": "pack-club-99-capsules-box.jpg",
+    "subject": "packshot",
+    "description": "Club 99 capsule box (Espresso Point-compatible) in brown and gold, with capsule line drawing.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/capsule_club99.jpg"
+  },
+  {
+    "file": "pack-espresso-capsule-point.jpg",
+    "subject": "packshot",
+    "description": "\"Pronto Espresso\" single capsule (Espresso Point-compatible) in black foil flow-wrap with roundel - the classic Guglielmo espresso capsule.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/capsule_espresso.jpg"
+  },
+  {
+    "file": "pack-decaf-capsule-point.jpg",
+    "subject": "packshot",
+    "description": "\"Decaffeinato Monodose\" single capsule (Espresso Point-compatible) in blue foil flow-wrap.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://cdn.shopify.com/s/files/1/0725/3426/2025/products/capsule_decaffeinato.jpg"
+  },
+  {
+    "file": "usa-pack-catanzaro-capsules-box.jpg",
+    "subject": "packshot",
+    "description": "U.S. Catanzaro co-branded capsule box (40 capsules) and single capsule: split yellow/red (Catanzaro club colors) with club crest and Guglielmo roundel.",
+    "width": 640,
+    "height": 480,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2023/09/capsule-catanzaro-caffe-guglielmo.png"
+  },
+  {
+    "file": "usa-pack-catanzaro-capsule.jpg",
+    "subject": "packshot",
+    "description": "U.S. Catanzaro (\"CZ\") single capsule flow-wrap in yellow and red with club crest, plus capsule drawings.",
+    "width": 800,
+    "height": 800,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2023/09/cz.jpg"
+  },
+  {
+    "file": "usa-pack-premium-blend-drip-label.jpg",
+    "subject": "packshot",
+    "description": "L'Espresso USA Premium Blend drip label: \"L\" monogram under a yellow/orange/red sunrise arc, roast-profile scale marked Medium Roast.",
+    "width": 671,
+    "height": 744,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2017/12/premium-blend.jpg"
+  },
+  {
+    "file": "usa-pack-french-roast-drip-label.jpg",
+    "subject": "packshot",
+    "description": "L'Espresso USA French Roast drip label: \"L\" monogram under sunrise arc, grey band, roast scale marked Dark Roast.",
+    "width": 671,
+    "height": 743,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2017/12/old-french.jpg"
+  },
+  {
+    "file": "usa-pack-decaf-colombia-drip-label.jpg",
+    "subject": "packshot",
+    "description": "L'Espresso USA Decaffeinated Colombia drip label: \"L\" monogram, maroon band, roast scale marked Medium Roast.",
+    "width": 670,
+    "height": 743,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2017/12/decaf-colombia.jpg"
+  },
+  {
+    "file": "usa-roastery-green-coffee-sack.jpg",
+    "subject": "roastery",
+    "description": "Close-up of an open jute sack of green (unroasted) coffee beans - raw material arriving at the Copanello roastery.",
+    "width": 800,
+    "height": 561,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/production1.jpg"
+  },
+  {
+    "file": "usa-roastery-roasting-plant.jpg",
+    "subject": "roastery",
+    "description": "Inside the Copanello plant: orange-red drum roaster and stainless steel ducting/silos.",
+    "width": 800,
+    "height": 600,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/production2.jpg"
+  },
+  {
+    "file": "usa-roastery-production-floor.jpg",
+    "subject": "roastery",
+    "description": "Wide view of the Copanello production hall: red-orange silos and machinery, packing lines and pallets, tiled floor.",
+    "width": 800,
+    "height": 533,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/production3.jpg"
+  },
+  {
+    "file": "usa-roastery-packaging-line.jpg",
+    "subject": "roastery",
+    "description": "Automated packaging line forming Guglielmo coffee packs.",
+    "width": 800,
+    "height": 533,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/production4.jpg"
+  },
+  {
+    "file": "usa-historic-factory-1970.jpg",
+    "subject": "historic",
+    "description": "Black-and-white photo of the Guglielmo factory hall marked \"1970\": overhead hoppers, grinders and packing machines, stacked sacks and Guglielmo-branded cartons.",
+    "width": 1512,
+    "height": 907,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/Guglielmo-Factory.jpg"
+  },
+  {
+    "file": "roastery-copanello-exterior-2022.jpg",
+    "subject": "roastery",
+    "description": "Exterior of the Caffè Guglielmo plant at Copanello di Stalettì (Aug 2022), seen from the road: two sheds with large \"GUGLIELMO - il caffè che fa centro\" signage. Amateur documentary photo, not hero quality. Photo: Marcuscalabresus, CC BY-SA 4.0 - attribution required.",
+    "width": 1920,
+    "height": 1440,
+    "transparent": false,
+    "source_url": "https://commons.wikimedia.org/wiki/File:Sede_della_Caff%C3%A8_Guglielmo_a_Copanello_(agosto_2022).jpg"
+  },
+  {
+    "file": "usa-historic-guglielmo-bar-counter.jpg",
+    "subject": "historic",
+    "description": "Vintage black-and-white photo of an early Guglielmo coffee bar in Catanzaro: barista at a lever espresso machine under a \"GUGLIELMO\" sign, customers in hats and coats at the counter. Re-photographed from a screen (slight moire, small cursor mark top-center) - request the original scan from Guglielmo SpA for print/hero use.",
+    "width": 2000,
+    "height": 1493,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/Cup-of-Coffee.jpg"
+  },
+  {
+    "file": "usa-historic-fiat-500-concorso-via-sala.jpg",
+    "subject": "historic",
+    "description": "Vintage black-and-white photo on Via Sala, Catanzaro: a Fiat 500 hand-lettered for the \"Concorso Guglielmo\" prize draw (the 11th Fiat 500 raffled in Piazza Prefettura), next to a \"La Casa del Caffè Guglielmo - Catanzaro\" window decal. Date not stated (UNVERIFIED; Fiat 500 era, late 1950s-60s).",
+    "width": 2000,
+    "height": 1546,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo-old.jpg"
+  },
+  {
+    "file": "usa-guglielmo-store-interior.jpg",
+    "subject": "store",
+    "description": "Interior of a Guglielmo monobrand store: red shelving stocked with Guglielmo tins and packs, coffee art on the walls, roundel-branded display drum.",
+    "width": 640,
+    "height": 480,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/08/2012.jpg"
+  },
+  {
+    "file": "store-guglielmo-store-catanzaro.jpg",
+    "subject": "store",
+    "description": "Guglielmo Store (Italy) interior: \"GUGLIELMO STORE\" fascia, red/white shelving with packs and capsule machines, counter with roundel. Press-release photo published by Giornale di Calabria (2017) - confirm usage rights with Guglielmo SpA.",
+    "width": 798,
+    "height": 457,
+    "transparent": false,
+    "source_url": "https://www.giornaledicalabria.it/wp-content/uploads/2017/01/Guglielmo-Caff%C3%A8.jpg"
+  },
+  {
+    "file": "cafe-guglielmo-coffee-south-korea.jpg",
+    "subject": "store",
+    "description": "Night exterior of a \"GUGLIELMO COFFEE\" franchised café in South Korea: glass storefront, warm interior light, roundel signage. Photo credited by AGI (2017) to Guglielmo's Facebook profile - confirm usage rights with Guglielmo SpA.",
+    "width": 1200,
+    "height": 630,
+    "transparent": false,
+    "source_url": "https://www.agi.it/international/2017/04/05/news/coffee_brand_from_calabria_expands_in_south_korea-1655734/"
+  },
+  {
+    "file": "lifestyle-range-on-roundel.jpg",
+    "subject": "lifestyle",
+    "description": "Guglielmo bags (Espresso Classico, Copacabana, Bar 5 Stelle, Extra Bar brick) and roasted beans in front of a giant orange/yellow/red roundel backdrop.",
+    "width": 1211,
+    "height": 1463,
+    "transparent": false,
+    "source_url": "https://www.guglielmostorelamezia.com/wp-content/uploads/2020/10/Image.jpeg"
+  },
+  {
+    "file": "lifestyle-art-design-cups.jpg",
+    "subject": "lifestyle",
+    "description": "Guglielmo \"Art Design\" espresso cups with hand-painted, roundel-inspired motifs on a white table with paintbrushes and chocolates.",
+    "width": 1711,
+    "height": 1235,
+    "transparent": false,
+    "source_url": "https://caffeguglielmo.ch/cdn/shop/files/279420408_7734498336568147_5904372405073134200_n.jpg"
+  },
+  {
+    "file": "usa-lifestyle-espresso-cups.jpg",
+    "subject": "lifestyle",
+    "description": "Close-up of white Guglielmo espresso cups with the roundel logo, soft high-key light.",
+    "width": 1293,
+    "height": 1319,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2018/10/cups.jpg"
+  },
+  {
+    "file": "usa-brand-coach-livery.jpg",
+    "subject": "marketing",
+    "description": "Coach bus in full Guglielmo livery: black body, roundel and \"il caffè che fa centro\" (from the \"Ad Campaigns\" section of lespressousa.com).",
+    "width": 2000,
+    "height": 1001,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2014/07/bus.jpg"
+  },
+  {
+    "file": "usa-brasilena-can.jpg",
+    "subject": "brasilena",
+    "description": "Brasilena 250 ml slim can: yellow can with the sombrero-girl illustration and red \"BRASILENA\" type (made by Acqua Calabria, not Guglielmo).",
+    "width": 887,
+    "height": 1024,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena_can.jpg"
+  },
+  {
+    "file": "usa-brasilena-bottles-6pack.jpg",
+    "subject": "brasilena",
+    "description": "Brasilena glass-bottle 6-pack: yellow carton \"Brasilena - La bibita al caffè in acqua oligominerale Calabria\", sombrero-girl mascot, amber bottles with red caps.",
+    "width": 1000,
+    "height": 1000,
+    "transparent": false,
+    "source_url": "https://lespressousa.com/wp-content/uploads/2026/08/brasilena-bottiglia.png"
+  },
+  {
+    "file": "brasilena-mascot-logo.png",
+    "subject": "brasilena",
+    "description": "Brasilena brand mascot illustration (smiling woman in sombrero with a red flower), transparent background, from the official brasilena.it site.",
+    "width": 1024,
+    "height": 1024,
+    "transparent": true,
+    "source_url": "https://www.brasilena.it/images/logo-donna.png"
+  }
+]

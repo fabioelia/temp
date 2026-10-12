@@ -73,6 +73,19 @@
     return null;
   }
 
+  /* one scale everywhere: 1–10, bucketed Mild 1–4 · Balanced 5–7 · Bold 8–10 */
+  function intensityBucket(n) {
+    n = Number(n);
+    if (!n) return null;
+    if (n <= 4) return { id: "mild", label: "Mild" };
+    if (n <= 7) return { id: "balanced", label: "Balanced" };
+    return { id: "bold", label: "Bold" };
+  }
+  function productIntensity(p) {
+    var b = p && p.blend ? blendInfo(p.blend) : null;
+    return b && b.intensity ? Number(b.intensity) : null;
+  }
+
   var products = {
     all: function () { return catalog().slice(); },
     bySlug: function (slug) {
@@ -311,6 +324,13 @@
     init: function (o) { Object.assign(cfg, o || {}); return window.GUSA; },
     config: cfg,
     store: store, fmt: fmt, img: img, products: products, blend: blendInfo, brand: brand,
+    intensityBucket: intensityBucket, intensity: productIntensity,
+    /* remembered "For Home | For Business" mode, shared by all pages of a concept */
+    mode: function (m) {
+      var k = "gusa-mode-" + cfg.concept;
+      if (m === "home" || m === "business") store.set(k, m);
+      return store.get(k, "home");
+    },
     systems: SYSTEMS, pricing: pricing, cart: cart, map: map, forms: forms,
     locations: function () { return window.GUSA_LOCATIONS || { venues: [], distributors: [] }; },
     $: $, $$: $$, esc: esc, param: param, linkTo: linkTo, remember: remember
