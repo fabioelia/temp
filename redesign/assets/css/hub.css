@@ -188,3 +188,26 @@ footer.foot .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-cont
   .mast nav::-webkit-scrollbar { display: none; }
   .mast nav a { white-space: nowrap; }
 }
+
+/* scorecard as a ruled list (13 areas never leave an orphan card) */
+.scorelist { display: grid; border-top: 1px solid var(--rule); }
+.scorelist .srow { display: grid; grid-template-columns: minmax(150px, 210px) minmax(150px, 190px) minmax(0, 1fr); gap: 8px 24px; align-items: baseline; padding-block: 14px; border-bottom: 1px solid var(--rule); }
+.scorelist .srow h4 { font-size: .98rem; }
+.scorelist .gauge { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.scorelist .meter { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; }
+.scorelist .meter i { height: 8px; border-radius: 2px; background: var(--rule); }
+.scorelist .meter i.on { background: var(--accent); }
+.scorelist .val { font-family: var(--f-display); font-size: 1.5rem; line-height: 1; min-width: 3.2ch; text-align: right; }
+.scorelist p { font-size: .9rem; color: var(--muted); }
+@media (max-width: 760px) { .scorelist .srow { grid-template-columns: minmax(0, 1fr) minmax(140px, 170px); } .scorelist .srow p { grid-column: 1 / -1; } }
+.phones { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 16px; }
+.phones figure { margin: 0; display: grid; gap: 8px; align-content: start; }
+.phones .frame { border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; aspect-ratio: 9 / 16; background: var(--plate); }
+.phones .frame img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.phones figcaption { font-size: .85rem; color: var(--muted); }
+.ref { white-space: nowrap; }
+.phones { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 760px) { .phones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.gallery { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .gallery { grid-template-columns: minmax(0, 1fr); } }

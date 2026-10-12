@@ -91,6 +91,22 @@ for f in states['features']:
     if nm in ('Alaska','Hawaii','Puerto Rico'): continue
     upaths.append(dict(name=nm,d=path(geo_polys(f),pu,1.5)))
 res['us']=dict(viewBox=f"0 0 {W} {HU}",width=W,height=HU,proj=dict(type='albers',phi1=29.5,phi2=45.5,phi0=23,lam0=-96,x0=x0,y1=y1,s=s),paths=upaths)
+
+# ---------- New England region (equirect): counties as land, states as outlines
+NE=dict(lat0=42.8,lng_min=-73.75,lng_max=-69.6,lat_min=41.15,lat_max=44.1,W=1000)
+k2=math.cos(math.radians(NE['lat0'])); wd2=(NE['lng_max']-NE['lng_min'])*k2; hd2=NE['lat_max']-NE['lat_min']; H2=round(NE['W']*hd2/wd2)
+def pr(lon,lat): return ((lon-NE['lng_min'])*k2/wd2*NE['W'], (NE['lat_max']-lat)/hd2*H2)
+rpaths=[]
+for f in topo_features(topo,'counties'):
+    if str(f['id'])[:2] in ('09','23','25','33','36','44','50'):
+        d=path(f['polys'],pr,1.0)
+        if d: rpaths.append(dict(name=f['name'],kind='county',d=d))
+for f in states['features']:
+    if f['properties']['name'] in ('Massachusetts','New Hampshire','Maine','Rhode Island','Connecticut','Vermont','New York'):
+        rpaths.append(dict(name=f['properties']['name'],kind='state',d=path(geo_polys(f),pr,1.0)))
+res['region']=dict(viewBox=f"0 0 {NE['W']} {H2}",width=NE['W'],height=H2,proj=dict(type='equirect',lng_min=NE['lng_min'],lat_max=NE['lat_max'],kx=NE['W']/wd2*k2,ky=H2/hd2),paths=rpaths,
+  labels=[dict(t='Boston',lat=42.36,lng=-71.06),dict(t='Worcester',lat=42.26,lng=-71.80),dict(t='Springfield',lat=42.10,lng=-72.59),dict(t='Portland, ME',lat=43.66,lng=-70.26),dict(t='Providence',lat=41.82,lng=-71.41),dict(t='Massachusetts',lat=42.45,lng=-72.2),dict(t='Atlantic Ocean',lat=41.9,lng=-70.4)])
+
 js='/* Generated map geometry for Guglielmo USA concepts. Sources: us-atlas (counties-10m, US Census), PublicaMundi us-states, Code for Germany click_that_hood boston.geojson (City of Boston). */\nwindow.GUSA_MAPS='+json.dumps(res,separators=(',',':'))+';\n'
 open(OUT,'w').write(js)
 print(len(js)//1024,'KB', 'boston paths',len(bpaths),'us paths',len(upaths), 'boston H',H,'us H',HU)

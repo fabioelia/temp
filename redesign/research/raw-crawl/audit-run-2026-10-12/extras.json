@@ -1,0 +1,362 @@
+{
+ "404": {
+  "status": 404,
+  "title": "Page not found – Guglielmo USA",
+  "text": "Home\n/\n404 Not Found\n\nNothing Found\nSorry, the post you are looking for is not available. Maybe you want to perform a search?\n\nFor best search results, mind the following suggestions:\n\nAlways double check your spelling.\nTry similar keywords, for example: tablet instead of laptop.\nTry using more than one keyword.\n\nThe coffee that hits the spot.\n\nContact Us\n\nOUR PRODUCTS\nSelect a category\nCoffee\n   5 Stelle\n   Caffetteria\n   Capsules\n   Copacabana\n   Drip (American)\n   Espresso Bar\n   Espresso Classico\n   Extra Bar\n   Gift Packs\n   Organic Series\n   Pods-Cialdine\n   Special Blends\n   Specialty Products\nEspresso Accessories\nMachines and Parts\n   Commercial\n   Home\n   Office\nUncategorized\nSelect a category\nSITEMAP\nShop\nBy Blend\nBy Type and Format\nSpecialty Products\nEquipment\nAbout\nLearn More\nJ"
+ },
+ "dropdown-shop": {
+  "w": 772.5,
+  "h": 288,
+  "items": [
+   {
+    "t": "By Blend",
+    "html": "By Blend"
+   },
+   {
+    "t": "Extra Bar",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Extra Bar</span>"
+   },
+   {
+    "t": "5 Stelle",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">5 Stelle</span>"
+   },
+   {
+    "t": "Espresso Bar",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Espresso Bar</span>"
+   },
+   {
+    "t": "Espresso Classico",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Espresso Classico</span>"
+   },
+   {
+    "t": "Caffetteria",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Caffetteria</span>"
+   },
+   {
+    "t": "Copacabana",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Copacabana</span>"
+   },
+   {
+    "t": "Special Blends",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Special Blends</span>"
+   },
+   {
+    "t": "By Type and Format",
+    "html": "By Type and Format"
+   },
+   {
+    "t": "Whole Bean",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Whole Bean</span>"
+   },
+   {
+    "t": "Ground",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Ground</span>"
+   },
+   {
+    "t": "Single Serve",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Single Serve</span>"
+   },
+   {
+    "t": "Drip (American)",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Drip (American)</span>"
+   },
+   {
+    "t": "Specialty Products",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Specialty Products</span>"
+   },
+   {
+    "t": "Shop All Coffee",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Shop All Coffee</span>"
+   },
+   {
+    "t": "Equipment",
+    "html": "Equipment"
+   },
+   {
+    "t": "Home",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Home</span>"
+   },
+   {
+    "t": "Office",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Office</span>"
+   },
+   {
+    "t": "Commercial",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Commercial</span>"
+   }
+  ]
+ },
+ "dropdown-about": {
+  "w": 257.5,
+  "h": 259,
+  "items": [
+   {
+    "t": "About",
+    "html": "About"
+   },
+   {
+    "t": "Our Story",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Our Story</span>"
+   },
+   {
+    "t": "The Story of Guglielmo",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">The Story of Guglielmo</span>"
+   },
+   {
+    "t": "Production",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Production</span>"
+   },
+   {
+    "t": "The Buzz",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">The Buzz</span>"
+   },
+   {
+    "t": "Where to Find",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Where to Find</span>"
+   },
+   {
+    "t": "Espresso Blends",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Espresso Blends</span>"
+   }
+  ]
+ },
+ "dropdown-join-us": {
+  "w": 257.5,
+  "h": 172,
+  "items": [
+   {
+    "t": "Join Us",
+    "html": "Join Us"
+   },
+   {
+    "t": "Business Solutions",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Business Solutions</span>"
+   },
+   {
+    "t": "Partner With Guglielmo USA",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Partner With Guglielmo USA</span>"
+   },
+   {
+    "t": "Franchise Info request",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Franchise Info request</span>"
+   }
+  ]
+ },
+ "dropdown-learn-more": {
+  "w": 208,
+  "h": 120,
+  "items": [
+   {
+    "t": "Coffee & Your Health",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Coffee &amp; Your Health</span>"
+   },
+   {
+    "t": "Marketing",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Marketing</span>"
+   },
+   {
+    "t": "Machine Maintenance",
+    "html": "<span class=\"avia-bullet\"></span><span class=\"avia-menu-text\">Machine Maintenance</span>"
+   }
+  ]
+ },
+ "search-decaf": {
+  "url": "https://lespressousa.com/?s=decaf",
+  "title": "Search Results for “decaf” – Guglielmo USA",
+  "h1": [
+   "8 search results for: decaf"
+  ],
+  "results": [
+   "1",
+   "Espresso Decaf 250g Bag",
+   "Espresso Decaf 250g Bag",
+   "2",
+   "Decaf Drip Beans",
+   "Decaf Drip Beans",
+   "3",
+   "Decaf Drip Ground",
+   "Decaf Drip Ground",
+   "4",
+   "Espresso Decaf Capsules (150 Pack)",
+   "Espresso Decaf Capsules (150 Pack)",
+   "5",
+   "Decaf Pods 180 Ct",
+   "Decaf Pods 180 Ct",
+   "6",
+   "Espresso Decaf Beans (6kg)",
+   "Espresso Decaf Beans (6kg)",
+   "7",
+   "Espresso Decaf 250g Ground Can",
+   "Espresso Decaf 250g Ground Can",
+   "8",
+   "Front Page",
+   "Front Page"
+  ],
+  "count": 8,
+  "bodyText": "Home\n/\nSearch results for \"decaf\""
+ },
+ "search-capsule": {
+  "url": "https://lespressousa.com/?s=capsule",
+  "title": "Search Results for “capsule” – Guglielmo USA",
+  "h1": [
+   "19 search results for: capsule"
+  ],
+  "results": [
+   "1",
+   "ROSSO70 Capsules (120 Pack)",
+   "ROSSO70 Capsules (120 Pack)",
+   "2",
+   "ORO70 Capsules (120 Pack)",
+   "ORO70 Capsules (120 Pack)",
+   "3",
+   "5 Stelle Capsules (150 Pack)",
+   "5 Stelle Capsules (150 Pack)",
+   "4",
+   "Espresso Capsules (20 Pack)",
+   "Espresso Capsules (20 Pack)",
+   "5",
+   "5 Stelle Capsules (20 Pack)",
+   "5 Stelle Capsules (20 Pack)",
+   "6",
+   "DEK70 Capsules (120 Pack)",
+   "DEK70 Capsules (120 Pack)",
+   "7",
+   "ORO70 Capsules (10 Pack)",
+   "ORO70 Capsules (10 Pack)",
+   "8",
+   "ROSSO70 Capsules (10 Pack)",
+   "ROSSO70 Capsules (10 Pack)",
+   "9",
+   "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+   "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+   "10",
+   "Mini Cap Vapore Capsule Machine",
+   "Mini Cap Vapore Capsule Machine"
+  ],
+  "count": 10,
+  "bodyText": "Home\n/\nSearch results for \"capsule\""
+ },
+ "search-5 stelle": {
+  "url": "https://lespressousa.com/?s=5%20stelle",
+  "title": "Search Results for “5 stelle” – Guglielmo USA",
+  "h1": [
+   "5 search results for: 5 stelle"
+  ],
+  "results": [
+   "1",
+   "5 Stelle Capsules (150 Pack)",
+   "5 Stelle Capsules (150 Pack)",
+   "2",
+   "5 Stelle Capsules (20 Pack)",
+   "5 Stelle Capsules (20 Pack)",
+   "3",
+   "5 Stelle 250g Ground",
+   "5 Stelle 250g Ground",
+   "4",
+   "5 Stelle 250g Ground “Fine Grinding”",
+   "5 Stelle 250g Ground “Fine Grinding”",
+   "5",
+   "5 Stelle 1Kg Beans",
+   "5 Stelle 1Kg Beans"
+  ],
+  "count": 5,
+  "bodyText": "Home\n/\nSearch results for \"5 stelle\""
+ },
+ "search-machine": {
+  "url": "https://lespressousa.com/?s=machine",
+  "title": "Search Results for “machine” – Guglielmo USA",
+  "h1": [
+   "34 search results for: machine"
+  ],
+  "results": [
+   "1",
+   "puly CAFF plus® Powder Coffee Machine Cleaner",
+   "puly CAFF plus® Powder Coffee Machine Cleaner",
+   "2",
+   "Mini Pod Machine",
+   "Mini Pod Machine",
+   "3",
+   "Sweet Coffee Vapore Pod Machine",
+   "Sweet Coffee Vapore Pod Machine",
+   "4",
+   "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+   "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+   "5",
+   "Mini Cap Vapore Capsule Machine",
+   "Mini Cap Vapore Capsule Machine",
+   "6",
+   "ESPRESSO PLUS VAP Capsule Machine",
+   "ESPRESSO PLUS VAP Capsule Machine",
+   "7",
+   "WEGA and BFC Commercial Machines",
+   "WEGA and BFC Commercial Machines",
+   "8",
+   "ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO",
+   "ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO",
+   "9",
+   "ROSSO70 Capsules (120 Pack)",
+   "ROSSO70 Capsules (120 Pack)",
+   "10",
+   "ORO70 Capsules (120 Pack)",
+   "ORO70 Capsules (120 Pack)"
+  ],
+  "count": 10,
+  "bodyText": "Home\n/\nSearch results for \"machine\""
+ },
+ "search-product-decaf": {
+  "url": "https://lespressousa.com/?s=decaf&post_type=product",
+  "titles": [
+   "Espresso Decaf 250g Bag | $7.99",
+   "Decaf Drip Beans | $120.00",
+   "Decaf Drip Ground | $108.00",
+   "Espresso Decaf Capsules (150 Pack) | $95.00 – $110.00",
+   "Decaf Pods 180 Ct | $127.00",
+   "Espresso Decaf Beans (6kg) | $192.00",
+   "Espresso Decaf 250g Ground Can | $8.99 "
+  ]
+ },
+ "mobile-menu": {
+  "items": [
+   "Shop -> /shop",
+   "By Blend -> https://lespressousa.com/product-category/coffee/",
+   "Extra Bar -> https://lespressousa.com/product-category/coffee/extra-bar/",
+   "5 Stelle -> https://lespressousa.com/product-category/coffee/5-stelle/",
+   "Espresso Bar -> https://lespressousa.com/product-category/coffee/espresso-bar/",
+   "Espresso Classico -> https://lespressousa.com/product-category/coffee/espresso-classico/",
+   "Caffetteria -> https://lespressousa.com/product-category/coffee/caffetteria/",
+   "Copacabana -> https://lespressousa.com/product-category/coffee/copacabana/",
+   "Special Blends -> https://lespressousa.com/product-category/coffee/special-blends/",
+   "By Type and Format -> https://lespressousa.com/product-category/coffee/",
+   "Whole Bean -> https://lespressousa.com/product-tag/beans/",
+   "Ground -> https://lespressousa.com/product-tag/ground/",
+   "Single Serve -> https://lespressousa.com/product-tag/single-serve/",
+   "Drip (American) -> https://lespressousa.com/product-tag/drip/",
+   "Specialty Products -> https://lespressousa.com/product-category/coffee/specialty-products/",
+   "Shop All Coffee -> https://lespressousa.com/product-category/coffee/",
+   "Equipment -> https://lespressousa.com/product-category/equipment/",
+   "Home -> https://lespressousa.com/product-category/equipment/home/",
+   "Office -> https://lespressousa.com/product-category/equipment/office/",
+   "Commercial -> https://lespressousa.com/product-category/equipment/commercial/",
+   "About -> #",
+   "About -> https://lespressousa.com/about/",
+   "Our Story -> https://lespressousa.com/about/",
+   "The Story of Guglielmo -> https://lespressousa.com/about/the-story-of-guglielmo/",
+   "Production -> https://lespressousa.com/about/production/",
+   "The Buzz -> https://lespressousa.com/about/the-buzz/",
+   "Where to Find -> https://lespressousa.com/about/where-to-buy/",
+   "Espresso Blends -> https://lespressousa.com/espressoblends/",
+   "Join Us -> https://lespressousa.com/join-us/",
+   "Join Us -> https://lespressousa.com/join-us/",
+   "Business Solutions -> https://lespressousa.com/join-us/business-solutions/",
+   "Partner With Guglielmo USA -> https://lespressousa.com/join-us/more-information/",
+   "Franchise Info request -> https://lespressousa.com/join-us/franchise-info-request/",
+   "Learn More -> https://lespressousa.com/learn-more/",
+   "Coffee & Your Health -> https://lespressousa.com/learn-more/#marketing",
+   "Marketing -> /learn-more/#marketing",
+   "Machine Maintenance -> https://lespressousa.com/learn-more/#machine",
+   "My Account -> https://lespressousa.com/my-account/"
+  ],
+  "scrollH": 1984
+ },
+ "mobile-search-visible": true
+}

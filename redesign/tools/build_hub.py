@@ -150,8 +150,8 @@ def build():
             except Exception:
                 v = 0
             meter = ''.join(f'<i class="{"on" if i < round(v) else ""}"></i>' for i in range(10))
-            cards.append(f'<div class="score"><div class="row"><h4>{E(s.get("area", ""))}</h4><span class="val num">{E(s.get("score", ""))}<small class="muted">/10</small></span></div><div class="meter" aria-hidden="true">{meter}</div><p>{E(s.get("justification", ""))}</p></div>')
-        score_html = f'<div class="scores" data-m-stagger="0.04">{"".join(cards)}</div>'
+            cards.append(f'<div class="srow"><h4>{E(s.get("area", ""))}</h4><div class="gauge"><div class="meter" aria-hidden="true">{meter}</div><span class="val">{E(s.get("score", ""))}<small class="muted">/10</small></span></div><p>{E(s.get("justification", ""))}</p></div>')
+        score_html = f'<div class="scorelist" data-m-stagger="0.03">{"".join(cards)}</div>'
 
     # ---- benchmark bars
     top = max(v for _, v in scores)

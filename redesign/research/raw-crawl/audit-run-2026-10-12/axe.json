@@ -1,0 +1,2852 @@
+{
+ "home": {
+  "url": "https://lespressousa.com/",
+  "rules": {
+   "critical": 1,
+   "serious": 5,
+   "moderate": 6,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 47,
+   "moderate": 6,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 18,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main role=\"main\" itemprop=\"mainContentOfPage\" class=\"template-page content  av-content-full alpha units\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "link-in-text-block",
+    "impact": "serious",
+    "help": "Links must be distinguishable without relying on color",
+    "tags": [
+     "wcag2a",
+     "wcag141"
+    ],
+    "nodes": 6,
+    "examples": [
+     {
+      "target": "a[href$=\"bosaitalian.com/\"]",
+      "html": "<a style=\"color: #f05a1a;\" href=\"https://www.bosaitalian.com/\" target=\"_blank\" rel=\"noopener noreferrer\">BOSA</a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     },
+     {
+      "target": "a[href$=\"pazzaonporter.com/\"]",
+      "html": "<a href=\"https://www.pazzaonporter.com/\">Pazza on Porter</a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     },
+     {
+      "target": "a[title=\"Shop\"]",
+      "html": "<a title=\"Shop\" href=\"https://lespressousa.com/shop/\">shop </a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     }
+    ]
+   },
+   {
+    "id": "link-name",
+    "impact": "serious",
+    "help": "Links must have discernible text",
+    "tags": [
+     "wcag2a",
+     "wcag244",
+     "wcag412"
+    ],
+    "nodes": 10,
+    "examples": [
+     {
+      "target": ".av-5nc2-e0a7a596d15ee42f14203cd3c7c77152 > .slide-image[data-rel=\"slide-1\"][title=\"\"]",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\" data-rel=\"slide-1\" class=\"slide-image\" title=\"\">",
+      "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute d"
+     },
+     {
+      "target": ".av-1jfys-ec831d378ca2b8bce6f1d3aabee9cc51 > .slide-image[data-rel=\"slide-1\"][title=\"\"]",
+      "html": "<a href=\"https://lespressousa.com/equipment/\" data-rel=\"slide-1\" class=\"slide-image\" title=\"\">",
+      "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute d"
+     },
+     {
+      "target": ".av-1fxwg-5b1bfc0fbd65d7f312cc9a253e37919e > .slide-image[data-rel=\"slide-1\"][title=\"\"]",
+      "html": "<a href=\"https://lespressousa.com/join-us/\" data-rel=\"slide-1\" class=\"slide-image\" title=\"\">",
+      "summary": "Fix all of the following:\n  Element is in tab order and does not have accessible text\n\nFix any of the following:\n  Element does not have text that is visible to screen readers\n  aria-label attribute d"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1308 > a",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "shop": {
+  "url": "https://lespressousa.com/shop/",
+  "rules": {
+   "critical": 1,
+   "serious": 3,
+   "moderate": 7,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 74,
+   "moderate": 7,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 61,
+    "examples": [
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-banner-is-top-level",
+    "impact": "moderate",
+    "help": "Banner landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": ".woocommerce-products-header",
+      "html": "<header class=\"woocommerce-products-header\">\n\t\t\t<h1 class=\"woocommerce-products-header__title page-title\">Shop</h1>\n\t\n\t</header>",
+      "summary": "Fix any of the following:\n  The null landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-shop content av-content-small units\" role=\"main\" itemprop=\"mainContentOfPage\" itemscope=\"itemscope\" itemtype=\"https://schema.org/SomeProdu",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "a[aria-current=\"page\"]",
+      "html": "<a href=\"/shop\" aria-current=\"page\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1308 > a",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "category": {
+  "url": "https://lespressousa.com/product-category/coffee/",
+  "rules": {
+   "critical": 1,
+   "serious": 2,
+   "moderate": 7,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 114,
+   "moderate": 8,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 102,
+    "examples": [
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-banner-is-top-level",
+    "impact": "moderate",
+    "help": "Banner landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": ".woocommerce-products-header",
+      "html": "<header class=\"woocommerce-products-header\">\n\t\t\t<h1 class=\"woocommerce-products-header__title page-title\">Coffee</h1>\n\t\n\t</header>",
+      "summary": "Fix any of the following:\n  The null landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-shop content av-content-small units\" role=\"main\" itemprop=\"mainContentOfPage\" itemscope=\"itemscope\" itemtype=\"https://schema.org/SomeProdu",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".main_menu",
+      "html": "<nav class=\"main_menu\" data-selectname=\"Select a page\" role=\"navigation\" itemscope=\"itemscope\" itemtype=\"https://schema.org/SiteNavigationElement\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     },
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "a[aria-current=\"page\"]",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\" aria-current=\"page\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "pdp": {
+  "url": "https://lespressousa.com/shop/coffee/5-stelle/5-stelle-1kg-beans/",
+  "rules": {
+   "critical": 1,
+   "serious": 2,
+   "moderate": 3,
+   "minor": 1
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 67,
+   "moderate": 4,
+   "minor": 2
+  },
+  "violations": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 54,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "image-redundant-alt",
+    "impact": "minor",
+    "help": "Alternative text of images should not be repeated as text",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".wp-image-11348",
+      "html": "<img width=\"36\" height=\"36\" src=\"https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-36x36.jpg\" class=\"wp-image-11348 avia-img-lazy-load",
+      "summary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+     },
+     {
+      "target": ".hide_cart_widget_if_empty > .widget_shopping_cart_content > .woocommerce-mini-cart.cart_list.product_list_widget > .woocommerce-mini-cart-item.mini_cart_item > a:nth-child(2) > .attachment-woocommerce_thumbnail.size-woocommerce_thumbnail[alt=\"5 Stelle 1Kg Beans\"]",
+      "html": "<img width=\"450\" height=\"450\" src=\"https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg\" class=\"attachment-woocommerce_thumbn",
+      "summary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "region",
+    "impact": "moderate",
+    "help": "All page content should be contained by landmarks",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".avia-post-prev",
+      "html": "<a class=\"avia-post-nav avia-post-prev with-image\" href=\"https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-250g-ground/\" title=\"Link to: ",
+      "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     {
+      "target": ".avia-post-next",
+      "html": "<a class=\"avia-post-nav avia-post-next with-image\" href=\"https://lespressousa.com/shop/coffee/extra-bar/extra-bar-1kg-beans/\" title=\"Link to: Extra Bar 1Kg Bean",
+      "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 13,
+    "examples": [
+     {
+      "target": ".hide_cart_widget_if_empty > .widget_shopping_cart_content > .woocommerce-mini-cart.cart_list.product_list_widget > .woocommerce-mini-cart-item.mini_cart_item > .remove.remove_from_cart_button[data-product_id=\"56\"]",
+      "html": "<a role=\"button\" href=\"https://lespressousa.com/cart/?remove_item=9f61408e3afb633e50cdf1b20de6f466&amp;_wpnonce=e4877ad6e4\" class=\"remove remove_from_cart_butto",
+      "summary": "Fix any of the following:\n  Target has insufficient size (18px by 20px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter o"
+     },
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "pdp_machine": {
+  "url": "https://lespressousa.com/shop/equipment/home/espresso-plus-vap-capsule-machine/",
+  "rules": {
+   "critical": 1,
+   "serious": 2,
+   "moderate": 3,
+   "minor": 1
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 67,
+   "moderate": 4,
+   "minor": 2
+  },
+  "violations": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 54,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "image-redundant-alt",
+    "impact": "minor",
+    "help": "Alternative text of images should not be repeated as text",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".wp-image-11348",
+      "html": "<img width=\"36\" height=\"36\" src=\"https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-36x36.jpg\" class=\"wp-image-11348 avia-img-lazy-load",
+      "summary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+     },
+     {
+      "target": ".hide_cart_widget_if_empty > .widget_shopping_cart_content > .woocommerce-mini-cart.cart_list.product_list_widget > .woocommerce-mini-cart-item.mini_cart_item > a:nth-child(2) > .attachment-woocommerce_thumbnail.size-woocommerce_thumbnail[alt=\"5 Stelle 1Kg Beans\"]",
+      "html": "<img width=\"450\" height=\"450\" src=\"https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg\" class=\"attachment-woocommerce_thumbn",
+      "summary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "region",
+    "impact": "moderate",
+    "help": "All page content should be contained by landmarks",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".avia-post-prev",
+      "html": "<a class=\"avia-post-nav avia-post-prev with-image\" href=\"https://lespressousa.com/shop/equipment/home/ca-mycaps-v-capsule-machine/\" title=\"Link to: MY@CAPS/V Ca",
+      "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     },
+     {
+      "target": ".avia-post-next",
+      "html": "<a class=\"avia-post-nav avia-post-next with-image\" href=\"https://lespressousa.com/shop/equipment/office/office-plus-vap-capsule-machine/\" title=\"Link to: OFFICE",
+      "summary": "Fix any of the following:\n  Some page content is not contained by landmarks"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 13,
+    "examples": [
+     {
+      "target": ".hide_cart_widget_if_empty > .widget_shopping_cart_content > .woocommerce-mini-cart.cart_list.product_list_widget > .woocommerce-mini-cart-item.mini_cart_item > .remove.remove_from_cart_button[data-product_id=\"56\"]",
+      "html": "<a role=\"button\" href=\"https://lespressousa.com/cart/?remove_item=9f61408e3afb633e50cdf1b20de6f466&amp;_wpnonce=e4877ad6e4\" class=\"remove remove_from_cart_butto",
+      "summary": "Fix any of the following:\n  Target has insufficient size (18px by 20px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diameter o"
+     },
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "cart": {
+  "url": "https://lespressousa.com/cart/",
+  "rules": {
+   "critical": 2,
+   "serious": 2,
+   "moderate": 6,
+   "minor": 1
+  },
+  "nodes": {
+   "critical": 2,
+   "serious": 29,
+   "moderate": 6,
+   "minor": 2
+  },
+  "violations": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 17,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "empty-table-header",
+    "impact": "minor",
+    "help": "Table header text should not be empty",
+    "tags": [],
+    "nodes": 2,
+    "examples": [
+     {
+      "target": ".product-remove[scope=\"col\"]",
+      "html": "<th scope=\"col\" class=\"product-remove\"><span class=\"screen-reader-text\">Remove item</span></th>",
+      "summary": "Fix any of the following:\n  Element does not have text that is visible to screen readers"
+     },
+     {
+      "target": ".product-thumbnail[scope=\"col\"]",
+      "html": "<th scope=\"col\" class=\"product-thumbnail\"><span class=\"screen-reader-text\">Thumbnail image</span></th>",
+      "summary": "Fix any of the following:\n  Element does not have text that is visible to screen readers"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-page content  av-content-full alpha units av-main-page\" role=\"main\" itemprop=\"mainContentOfPage\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "select-name",
+    "impact": "critical",
+    "help": "Select element must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#product_cat",
+      "html": "<select name=\"product_cat\" id=\"product_cat\" class=\"dropdown_product_cat\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1308 > a",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "checkout": {
+  "url": "https://lespressousa.com/checkout/",
+  "rules": {
+   "critical": 2,
+   "serious": 3,
+   "moderate": 6,
+   "minor": 1
+  },
+  "nodes": {
+   "critical": 2,
+   "serious": 40,
+   "moderate": 6,
+   "minor": 1
+  },
+  "violations": [
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 27,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "image-redundant-alt",
+    "impact": "minor",
+    "help": "Alternative text of images should not be repeated as text",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "img[alt=\"Google Pay\"]",
+      "html": "<img src=\"https://lespressousa.com/wp-content/plugins/woocommerce-paypal-payments/modules/ppcp-googlepay/assets/images/googlepay.svg\" alt=\"Google Pay\">",
+      "summary": "Fix all of the following:\n  Element contains <img> element with alt text that duplicates existing text"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-page content  av-content-full alpha units av-main-page\" role=\"main\" itemprop=\"mainContentOfPage\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "link-in-text-block",
+    "impact": "serious",
+    "help": "Links must be distinguishable without relying on color",
+    "tags": [
+     "wcag2a",
+     "wcag141"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": ".woocommerce-privacy-policy-link",
+      "html": "<a href=\"https://lespressousa.com/privacy-policy/\" class=\"woocommerce-privacy-policy-link\" target=\"_blank\">privacy policy</a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "select-name",
+    "impact": "critical",
+    "help": "Select element must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#product_cat",
+      "html": "<select name=\"product_cat\" id=\"product_cat\" class=\"dropdown_product_cat\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1308 > a",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "contact": {
+  "url": "https://lespressousa.com/contact/",
+  "rules": {
+   "critical": 2,
+   "serious": 3,
+   "moderate": 5,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 5,
+   "serious": 27,
+   "moderate": 5,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 14,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "label",
+    "impact": "critical",
+    "help": "Form elements must have labels",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 4,
+    "examples": [
+     {
+      "target": "input[name=\"your-name\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" value=\"\" type=\"text",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": ".wpcf7-email",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email\" aria-required=\"true\" ari",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": "input[name=\"your-subject\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text\" aria-invalid=\"false\" value=\"\" type=\"text\" name=\"your-subject\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-page content  av-content-full alpha units av-main-page\" role=\"main\" itemprop=\"mainContentOfPage\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "#menu-item-1306 > a[href$=\"shop\"]",
+      "html": "<a href=\"/shop\">Shop</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (302.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1307 > a",
+      "html": "<a href=\"https://lespressousa.com/espressoblends/\">By Blend</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1308 > a",
+      "html": "<a href=\"https://lespressousa.com/product-category/coffee/\">By Type and Format</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (289.1px by 21px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "business_solutions": {
+  "url": "https://lespressousa.com/join-us/business-solutions/",
+  "rules": {
+   "critical": 1,
+   "serious": 5,
+   "moderate": 6,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 51,
+   "moderate": 6,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-hidden-focus",
+    "impact": "serious",
+    "help": "ARIA hidden element must not be focusable or contain focusable elements",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 4,
+    "examples": [
+     {
+      "target": "a[title=\"Facebook\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Facebook\" href=\"https://it-it.facebook.com/CaffeGuglielmoOfficialFanpage\" target=\"_blank\" rel=\"noop",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Twitter\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Twitter\" href=\"http://twitter.com/CaffeGuglielmo\" target=\"_blank\" rel=\"noopener\" aria-hidden=\"true\"",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Pinterest\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Pinterest\" href=\"http://www.pinterest.com/CaffeGuglielmo/\" target=\"_blank\" rel=\"noopener\" aria-hidd",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     }
+    ]
+   },
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 22,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main role=\"main\" itemprop=\"mainContentOfPage\" class=\"template-page content  av-content-small units\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "link-in-text-block",
+    "impact": "serious",
+    "help": "Links must be distinguishable without relying on color",
+    "tags": [
+     "wcag2a",
+     "wcag141"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(2) > a",
+      "html": "<a href=\"https://lespressousa.com/more-information/\">Inquire about customized solutions</a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 23,
+    "examples": [
+     {
+      "target": "#menu-item-1030 > a",
+      "html": "<a href=\"https://lespressousa.com/about/\">Guglielmo USA</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1033 > a",
+      "html": "<a href=\"https://lespressousa.com/about/the-story-of-guglielmo/\">The Story of Guglielmo</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1032 > a",
+      "html": "<a href=\"https://lespressousa.com/about/production/\">Production</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "more_information": {
+  "url": "https://lespressousa.com/join-us/more-information/",
+  "rules": {
+   "critical": 3,
+   "serious": 4,
+   "moderate": 6,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 16,
+   "serious": 61,
+   "moderate": 6,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-hidden-focus",
+    "impact": "serious",
+    "help": "ARIA hidden element must not be focusable or contain focusable elements",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 4,
+    "examples": [
+     {
+      "target": "a[title=\"Facebook\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Facebook\" href=\"https://it-it.facebook.com/CaffeGuglielmoOfficialFanpage\" target=\"_blank\" rel=\"noop",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Twitter\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Twitter\" href=\"http://twitter.com/CaffeGuglielmo\" target=\"_blank\" rel=\"noopener\" aria-hidden=\"true\"",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Pinterest\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Pinterest\" href=\"http://www.pinterest.com/CaffeGuglielmo/\" target=\"_blank\" rel=\"noopener\" aria-hidd",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     }
+    ]
+   },
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 33,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "label",
+    "impact": "critical",
+    "help": "Form elements must have labels",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 12,
+    "examples": [
+     {
+      "target": "input[name=\"your-name\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" value=\"\" type=\"text",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": ".wpcf7-email",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email\" aria-required=\"true\" ari",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": ".wpcf7-tel",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-tel wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-tel\" aria-required=\"true\" aria-in",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main role=\"main\" itemprop=\"mainContentOfPage\" class=\"template-page content  av-content-small units\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "select-name",
+    "impact": "critical",
+    "help": "Select element must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 3,
+    "examples": [
+     {
+      "target": "select[name=\"CompanyType\"]",
+      "html": "<select class=\"wpcf7-form-control wpcf7-select wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" name=\"CompanyType\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": "select[name=\"CurrentEspresso\"]",
+      "html": "<select class=\"wpcf7-form-control wpcf7-select wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" name=\"CurrentEspresso\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": "select[name=\"Helpmechoose\"]",
+      "html": "<select class=\"wpcf7-form-control wpcf7-select wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" name=\"Helpmechoose\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 23,
+    "examples": [
+     {
+      "target": "#menu-item-1030 > a",
+      "html": "<a href=\"https://lespressousa.com/about/\">Guglielmo USA</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1033 > a",
+      "html": "<a href=\"https://lespressousa.com/about/the-story-of-guglielmo/\">The Story of Guglielmo</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1032 > a",
+      "html": "<a href=\"https://lespressousa.com/about/production/\">Production</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "franchise": {
+  "url": "https://lespressousa.com/join-us/franchise-info-request/",
+  "rules": {
+   "critical": 3,
+   "serious": 4,
+   "moderate": 6,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 17,
+   "serious": 57,
+   "moderate": 6,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-hidden-focus",
+    "impact": "serious",
+    "help": "ARIA hidden element must not be focusable or contain focusable elements",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 4,
+    "examples": [
+     {
+      "target": "a[title=\"Facebook\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Facebook\" href=\"https://it-it.facebook.com/CaffeGuglielmoOfficialFanpage\" target=\"_blank\" rel=\"noop",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Twitter\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Twitter\" href=\"http://twitter.com/CaffeGuglielmo\" target=\"_blank\" rel=\"noopener\" aria-hidden=\"true\"",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     },
+     {
+      "target": "a[title=\"Pinterest\"]",
+      "html": "<a style=\"margin-right: 10px; text-decoration: none;\" title=\"Pinterest\" href=\"http://www.pinterest.com/CaffeGuglielmo/\" target=\"_blank\" rel=\"noopener\" aria-hidd",
+      "summary": "Fix all of the following:\n  Focusable content should have tabindex=\"-1\" or be removed from the DOM"
+     }
+    ]
+   },
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 29,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-762 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">About</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "label",
+    "impact": "critical",
+    "help": "Form elements must have labels",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 15,
+    "examples": [
+     {
+      "target": "input[name=\"your-name\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" value=\"\" type=\"text",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": "input[name=\"your-address-1\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" value=\"\" type=\"text",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     },
+     {
+      "target": "input[name=\"your-address-2\"]",
+      "html": "<input size=\"40\" maxlength=\"400\" class=\"wpcf7-form-control wpcf7-text\" aria-invalid=\"false\" value=\"\" type=\"text\" name=\"your-address-2\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main class=\"template-page content  av-content-small units av-main-page\" role=\"main\" itemprop=\"mainContentOfPage\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   },
+   {
+    "id": "select-name",
+    "impact": "critical",
+    "help": "Select element must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": ".wpcf7-select",
+      "html": "<select class=\"wpcf7-form-control wpcf7-select wpcf7-validates-as-required\" aria-required=\"true\" aria-invalid=\"false\" name=\"your-state\">",
+      "summary": "Fix any of the following:\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribut"
+     }
+    ]
+   },
+   {
+    "id": "target-size",
+    "impact": "serious",
+    "help": "All touch targets must be 24px large, or leave sufficient space",
+    "tags": [
+     "wcag22aa",
+     "wcag258"
+    ],
+    "nodes": 23,
+    "examples": [
+     {
+      "target": "#menu-item-1030 > a",
+      "html": "<a href=\"https://lespressousa.com/about/\">Guglielmo USA</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1033 > a",
+      "html": "<a href=\"https://lespressousa.com/about/the-story-of-guglielmo/\">The Story of Guglielmo</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     },
+     {
+      "target": "#menu-item-1032 > a",
+      "html": "<a href=\"https://lespressousa.com/about/production/\">Production</a>",
+      "summary": "Fix any of the following:\n  Target has insufficient size (227.1px by 17px, should be at least 24px by 24px)\n  Target has insufficient space to its closest neighbors. Safe clickable space has a diamete"
+     }
+    ]
+   }
+  ]
+ },
+ "where_to_buy": {
+  "url": "https://lespressousa.com/about/where-to-buy/",
+  "rules": {
+   "critical": 1,
+   "serious": 3,
+   "moderate": 6,
+   "minor": 0
+  },
+  "nodes": {
+   "critical": 1,
+   "serious": 29,
+   "moderate": 6,
+   "minor": 0
+  },
+  "violations": [
+   {
+    "id": "aria-input-field-name",
+    "impact": "serious",
+    "help": "ARIA input fields must have an accessible name",
+    "tags": [
+     "wcag2a",
+     "wcag412"
+    ],
+    "nodes": 3,
+    "examples": [
+     {
+      "target": ".wpsl-radius-dropdown > div > ul[role=\"listbox\"]",
+      "html": "<ul role=\"listbox\">",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     },
+     {
+      "target": ".wpsl-category-list > div > ul[role=\"listbox\"]",
+      "html": "<ul role=\"listbox\">",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     },
+     {
+      "target": "#select2-product_cat-container",
+      "html": "<span class=\"select2-selection__rendered\" id=\"select2-product_cat-container\" role=\"textbox\" aria-readonly=\"true\"><span class=\"select2-selection__placeholder\">Se",
+      "summary": "Fix any of the following:\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  El"
+     }
+    ]
+   },
+   {
+    "id": "color-contrast",
+    "impact": "serious",
+    "help": "Elements must meet minimum color contrast ratio thresholds",
+    "tags": [
+     "wcag2aa",
+     "wcag143"
+    ],
+    "nodes": 25,
+    "examples": [
+     {
+      "target": "a[href$=\"shop\"][itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Shop</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-872 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Join Us</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     },
+     {
+      "target": "#menu-item-881 > a[itemprop=\"url\"] > .avia-menu-text",
+      "html": "<span class=\"avia-menu-text\">Learn More</span>",
+      "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.8pt (13px), font weight: normal). Expected contrast rati"
+     }
+    ]
+   },
+   {
+    "id": "heading-order",
+    "impact": "moderate",
+    "help": "Heading levels should only increase by one",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "h6",
+      "html": "<h6>The coffee that hits the spot.</h6>",
+      "summary": "Fix any of the following:\n  Heading order invalid"
+     }
+    ]
+   },
+   {
+    "id": "image-alt",
+    "impact": "critical",
+    "help": "Images must have alternative text",
+    "tags": [
+     "wcag2a",
+     "wcag111"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "p:nth-child(1) > img[decoding=\"async\"]",
+      "html": "<img decoding=\"async\" src=\"//lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png\">",
+      "summary": "Fix any of the following:\n  Element does not have an alt attribute\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist o"
+     }
+    ]
+   },
+   {
+    "id": "landmark-contentinfo-is-top-level",
+    "impact": "moderate",
+    "help": "Contentinfo landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#socket",
+      "html": "<footer class=\"container_wrap socket_color\" id=\"socket\" role=\"contentinfo\" itemscope=\"itemscope\" itemtype=\"https://schema.org/WPFooter\" aria-label=\"Copyright an",
+      "summary": "Fix any of the following:\n  The contentinfo landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-main-is-top-level",
+    "impact": "moderate",
+    "help": "Main landmark should not be contained in another landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "main",
+      "html": "<main role=\"main\" itemprop=\"mainContentOfPage\" class=\"template-page content  av-content-full alpha units\">",
+      "summary": "Fix any of the following:\n  The main landmark is contained in another landmark."
+     }
+    ]
+   },
+   {
+    "id": "landmark-no-duplicate-main",
+    "impact": "moderate",
+    "help": "Document should not have more than one main landmark",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  Document has more than one main landmark"
+     }
+    ]
+   },
+   {
+    "id": "landmark-unique",
+    "impact": "moderate",
+    "help": "Landmarks should have a unique role or role/label/title (i.e. accessible name) combination",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "#main",
+      "html": "<div id=\"main\" role=\"main\" class=\"all_colors\" data-scroll-offset=\"116\">",
+      "summary": "Fix any of the following:\n  The landmark must have a unique aria-label, aria-labelledby, or title to make landmarks distinguishable"
+     }
+    ]
+   },
+   {
+    "id": "link-in-text-block",
+    "impact": "serious",
+    "help": "Links must be distinguishable without relying on color",
+    "tags": [
+     "wcag2a",
+     "wcag141"
+    ],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "a[title=\"Shop\"]",
+      "html": "<a title=\"Shop\" href=\"https://lespressousa.com/shop/\">shopping online</a>",
+      "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.69:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f05a1a, surrounding text: #666666)\n  The link has no sty"
+     }
+    ]
+   },
+   {
+    "id": "page-has-heading-one",
+    "impact": "moderate",
+    "help": "Page should contain a level-one heading",
+    "tags": [],
+    "nodes": 1,
+    "examples": [
+     {
+      "target": "html",
+      "html": "<html lang=\"en-US\" class=\"html_stretched responsive av-preloader-disabled html_header_top html_logo_left html_main_nav_header html_menu_right html_large html_he",
+      "summary": "Fix all of the following:\n  Page must have a level-one heading"
+     }
+    ]
+   }
+  ]
+ },
+ "keyboard_home": [
+  {
+   "tag": "A",
+   "text": "guglielmo_logo",
+   "href": "https://lespressousa.com/",
+   "outline": "none 0px rgb(240, 90, 26)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": false,
+   "subVisible": 0
+  },
+  {
+   "tag": "A",
+   "text": "Shop",
+   "href": "/shop",
+   "outline": "none 0px rgb(105, 105, 105)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": false,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "By Blend",
+   "href": "https://lespressousa.com/product-category/coffee/",
+   "outline": "none 0px rgb(0, 0, 0)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Extra Bar",
+   "href": "https://lespressousa.com/product-category/coffee/extra-bar/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "5 Stelle",
+   "href": "https://lespressousa.com/product-category/coffee/5-stelle/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Espresso Bar",
+   "href": "https://lespressousa.com/product-category/coffee/espresso-bar/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Espresso Classico",
+   "href": "https://lespressousa.com/product-category/coffee/espresso-classico/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Caffetteria",
+   "href": "https://lespressousa.com/product-category/coffee/caffetteria/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Copacabana",
+   "href": "https://lespressousa.com/product-category/coffee/copacabana/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Special Blends",
+   "href": "https://lespressousa.com/product-category/coffee/special-blends/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "By Type and Format",
+   "href": "https://lespressousa.com/product-category/coffee/",
+   "outline": "none 0px rgb(0, 0, 0)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Whole Bean",
+   "href": "https://lespressousa.com/product-tag/beans/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Ground",
+   "href": "https://lespressousa.com/product-tag/ground/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Single Serve",
+   "href": "https://lespressousa.com/product-tag/single-serve/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Drip (American)",
+   "href": "https://lespressousa.com/product-tag/drip/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Specialty Products",
+   "href": "https://lespressousa.com/product-category/coffee/specialty-products/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Shop All Coffee",
+   "href": "https://lespressousa.com/product-category/coffee/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Equipment",
+   "href": "https://lespressousa.com/product-category/equipment/",
+   "outline": "none 0px rgb(0, 0, 0)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Home",
+   "href": "https://lespressousa.com/product-category/equipment/home/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Office",
+   "href": "https://lespressousa.com/product-category/equipment/office/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Commercial",
+   "href": "https://lespressousa.com/product-category/equipment/commercial/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "About",
+   "href": null,
+   "outline": "none 0px rgb(110, 110, 110)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": false,
+   "subVisible": 2
+  },
+  {
+   "tag": "A",
+   "text": "About",
+   "href": "https://lespressousa.com/about/",
+   "outline": "none 0px rgb(0, 0, 0)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 2
+  },
+  {
+   "tag": "A",
+   "text": "Our Story",
+   "href": "https://lespressousa.com/about/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "The Story of Guglielmo",
+   "href": "https://lespressousa.com/about/the-story-of-guglielmo/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Production",
+   "href": "https://lespressousa.com/about/production/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "The Buzz",
+   "href": "https://lespressousa.com/about/the-buzz/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Where to Find",
+   "href": "https://lespressousa.com/about/where-to-buy/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Espresso Blends",
+   "href": "https://lespressousa.com/espressoblends/",
+   "outline": "none 0px rgb(51, 51, 51)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": true,
+   "subVisible": 1
+  },
+  {
+   "tag": "A",
+   "text": "Join Us",
+   "href": "https://lespressousa.com/join-us/",
+   "outline": "none 0px rgb(110, 110, 110)",
+   "boxShadow": "none",
+   "visible": true,
+   "inSubmenu": false,
+   "subVisible": 2
+  }
+ ],
+ "skiplink": [
+  "|https://lespressousa.com/",
+  "Shop|/shop",
+  "By Blend|https://lespressousa.com/product-category/coffee/",
+  "Extra Bar|https://lespressousa.com/product-category/coffee/extra-bar/",
+  "5 Stelle|https://lespressousa.com/product-category/coffee/5-stelle/"
+ ],
+ "focusStyle": {
+  "before": {
+   "o": "none",
+   "c": "rgb(128, 128, 128)",
+   "bg": "rgba(0, 0, 0, 0)"
+  },
+  "after": {
+   "o": "none 0px",
+   "c": "rgb(128, 128, 128)",
+   "bg": "rgba(0, 0, 0, 0)",
+   "bs": "none"
+  }
+ }
+}

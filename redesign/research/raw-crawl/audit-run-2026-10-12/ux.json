@@ -1,0 +1,1479 @@
+{
+ "h1": {
+  "/": [
+   {
+    "text": "Front Page",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ],
+  "/shop/": [
+   {
+    "text": "Shop",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   },
+   {
+    "text": "Shop",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "34px"
+   }
+  ],
+  "/product-category/coffee/": [
+   {
+    "text": "Coffee",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   },
+   {
+    "text": "Coffee",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "34px"
+   }
+  ],
+  "/shop/coffee/5-stelle/5-stelle-1kg-beans/": [
+   {
+    "text": "5 Stelle 1Kg Beans",
+    "visible": true,
+    "w": 640.109375,
+    "h": 37.40625,
+    "fs": "34px"
+   }
+  ],
+  "/contact/": [
+   {
+    "text": "Contact",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ],
+  "/about/": [
+   {
+    "text": "About",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ],
+  "/join-us/business-solutions/": [
+   {
+    "text": "Business Solutions",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ],
+  "/equipment-offering/": [
+   {
+    "text": "Equipment Offering",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ],
+  "/cart/": [
+   {
+    "text": "Cart",
+    "visible": false,
+    "w": 0,
+    "h": 0,
+    "fs": "16px"
+   }
+  ]
+ },
+ "equipIntro": [
+  {
+   "color": "rgb(255, 255, 255)",
+   "bg": "rgb(252, 252, 252)",
+   "top": 245.453125,
+   "left": 745.34375,
+   "w": 93.5,
+   "h": 887.03125,
+   "opacity": "1",
+   "text": "Choosing the appropriate beverage equipment is an important financial decision t"
+  }
+ ],
+ "listing": {
+  "/product-category/coffee/": {
+   "status": "Coffee – Guglielmo USA",
+   "count": 15,
+   "oosBadges": 3,
+   "oosVisibleLabel": 0,
+   "readMore": 3,
+   "callForPrice": 0,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "pagination": "Page 1 of 3 1 2 3",
+   "products": [
+    {
+     "name": "Espresso Classico 250g Ground",
+     "price": "$6.69",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Espresso Bar 1Kg Beans",
+     "price": "$32.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "5 Stelle 1Kg Beans",
+     "price": "$32.50",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Espresso Classico 1Kg Beans",
+     "price": "$31.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Extra Bar 250g Ground",
+     "price": "$7.20",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Extra Bar 1Kg Beans",
+     "price": "$33.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "5 Stelle 250g Ground",
+     "price": "$7.25",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Espresso Decaf 250g Ground Can",
+     "price": "$8.99 \nOriginal price was: $8.99.\n$6.99\nCurrent price is: $6.99.",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "5 Stelle 250g Ground “Fine Grinding”",
+     "price": "$7.25",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Espresso Classico Beans 500g",
+     "price": "$16.00",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Caffetteria 1Kg Beans",
+     "price": "$27.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Brasilena Cans (24-Pack)",
+     "price": "$40.00",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Copacabana 1Kg Beans",
+     "price": "$26.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Silver Signature 250g Ground in Can",
+     "price": "$12.99",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "French Roast Blend Drip Beans",
+     "price": "$110.00",
+     "oos": false,
+     "btn": "Add to cart"
+    }
+   ]
+  },
+  "/product-category/coffee/capsules/": {
+   "status": "Capsules – Guglielmo USA",
+   "count": 12,
+   "oosBadges": 2,
+   "oosVisibleLabel": 0,
+   "readMore": 2,
+   "callForPrice": 0,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "Espresso Capsules (150 Pack)",
+     "price": "$88.00 – $103.00\nPrice range: $88.00 through $103.00",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "ORO70 Capsules (120 Pack)",
+     "price": "$65.00 \nOriginal price was: $65.00.\n$55.00\nCurrent price is: $55.00.",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "ROSSO70 Capsules (120 Pack)",
+     "price": "$65.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "5 Stelle Capsules (150 Pack)",
+     "price": "$94.00 – $109.00\nPrice range: $94.00 through $109.00",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "ROSSO70 Capsules (10 Pack)",
+     "price": "$7.50",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "ORO70 Capsules (10 Pack)",
+     "price": "$7.50",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "DEK70 Capsules (120 Pack)",
+     "price": "$70.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "CZ Cups-Stirrer-Sugar Kit (150 pack)",
+     "price": "$18.50",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Espresso Decaf Capsules (150 Pack)",
+     "price": "$95.00 – $110.00\nPrice range: $95.00 through $110.00",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "Espresso Capsules (20 Pack)",
+     "price": "$15.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "5 Stelle Capsules (20 Pack)",
+     "price": "$16.00",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Cups-Stirrer-Sugar Kit (150 pack)",
+     "price": "$17.50",
+     "oos": false,
+     "btn": "Add to cart"
+    }
+   ]
+  },
+  "/product-category/equipment/commercial/": {
+   "status": "Commercial – Guglielmo USA",
+   "count": 7,
+   "oosBadges": 3,
+   "oosVisibleLabel": 0,
+   "readMore": 3,
+   "callForPrice": 3,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "Puly Milk Plus® Cleaner",
+     "price": "$25.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "puly CAFF plus® Powder Coffee Machine Cleaner",
+     "price": "$19.50",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "pulyGRIND® Grinder Cleaner Crystals",
+     "price": "$35.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO",
+     "price": "$2,250.00 \nOriginal price was: $2,250.00.\n$1,875.00\nCurrent price is: $1,875.00.",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Espresso Grinders",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "WEGA and BFC Commercial Machines",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    }
+   ]
+  },
+  "/product-category/equipment/": {
+   "status": "Machines and Parts – Guglielmo USA",
+   "count": 12,
+   "oosBadges": 5,
+   "oosVisibleLabel": 0,
+   "readMore": 3,
+   "callForPrice": 3,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "Mini Cap Vapore Capsule Machine",
+     "price": "$350.00 – $445.00\nPrice range: $350.00 through $445.00",
+     "oos": true,
+     "btn": "Select options"
+    },
+    {
+     "name": "Water Softener (RDL & Grimac)",
+     "price": "$18.95",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Puly Milk Plus® Cleaner",
+     "price": "$25.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "ESPRESSO PLUS VAP Capsule Machine",
+     "price": "$259.00 – $399.00\nPrice range: $259.00 through $399.00",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "Sweet Coffee Vapore Pod Machine",
+     "price": "$499.00 – $655.00\nPrice range: $499.00 through $655.00",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "puly CAFF plus® Powder Coffee Machine Cleaner",
+     "price": "$19.50",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "pulyGRIND® Grinder Cleaner Crystals",
+     "price": "$35.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Mini Pod Machine",
+     "price": "$375.00 – $525.00\nPrice range: $375.00 through $525.00",
+     "oos": true,
+     "btn": "Select options"
+    },
+    {
+     "name": "ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO",
+     "price": "$2,250.00 \nOriginal price was: $2,250.00.\n$1,875.00\nCurrent price is: $1,875.00.",
+     "oos": false,
+     "btn": "Select options"
+    },
+    {
+     "name": "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "Espresso Grinders",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    },
+    {
+     "name": "WEGA and BFC Commercial Machines",
+     "price": "Call for Price",
+     "oos": true,
+     "btn": "Read more"
+    }
+   ]
+  },
+  "/product-category/coffee/drip-american/": {
+   "status": "Drip (American) – Guglielmo USA",
+   "count": 6,
+   "oosBadges": 1,
+   "oosVisibleLabel": 0,
+   "readMore": 1,
+   "callForPrice": 0,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "French Roast Blend Drip Beans",
+     "price": "$110.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Premium Blend Drip Ground",
+     "price": "$105.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Decaf Drip Beans",
+     "price": "$120.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Premium Blend Drip Beans",
+     "price": "$105.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Decaf Drip Ground",
+     "price": "$108.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "French Roast Blend Drip Ground",
+     "price": "$110.00",
+     "oos": true,
+     "btn": "Read more"
+    }
+   ]
+  },
+  "/product-tag/drip/": {
+   "status": "Drip (American) – Guglielmo USA",
+   "count": 7,
+   "oosBadges": 1,
+   "oosVisibleLabel": 0,
+   "readMore": 1,
+   "callForPrice": 0,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "Caffetteria 1Kg Beans",
+     "price": "$27.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "French Roast Blend Drip Beans",
+     "price": "$110.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Premium Blend Drip Ground",
+     "price": "$105.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Decaf Drip Beans",
+     "price": "$120.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Premium Blend Drip Beans",
+     "price": "$105.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "Decaf Drip Ground",
+     "price": "$108.00",
+     "oos": false,
+     "btn": "Add to cart"
+    },
+    {
+     "name": "French Roast Blend Drip Ground",
+     "price": "$110.00",
+     "oos": true,
+     "btn": "Read more"
+    }
+   ]
+  },
+  "/product-category/coffee/gift-packs/": {
+   "status": "Shop – Guglielmo USA",
+   "count": 3,
+   "oosBadges": 0,
+   "oosVisibleLabel": 0,
+   "readMore": 0,
+   "callForPrice": 0,
+   "sorting": [
+    "Sort by Default",
+    "Default",
+    "Default",
+    "Custom",
+    "Custom",
+    "Name",
+    "Name",
+    "Price",
+    "Price",
+    "Date",
+    "Date",
+    "Popularity (sales)",
+    "Popularity (sales)",
+    "Average rating",
+    "Average rating",
+    "Relevance",
+    "Relevance",
+    "Random",
+    "Random",
+    "Product ID",
+    "Product ID",
+    "Display 15 Products per page",
+    "15 Products per page",
+    "15 Products per page",
+    "30 Products per page",
+    "30 Products per page",
+    "45 Products per page",
+    "45 Products per page"
+   ],
+   "products": [
+    {
+     "name": "Coffee (44)",
+     "oos": false
+    },
+    {
+     "name": "Espresso Accessories (5)",
+     "oos": false
+    },
+    {
+     "name": "Machines and Parts (12)",
+     "oos": false
+    }
+   ]
+  }
+ },
+ "locator": {
+  "results": 50,
+  "mapIframes": 1,
+  "gm": true,
+  "markers": 26,
+  "firstResults": [
+   "Modern Pastry",
+   "Modern Pastry",
+   "Paradiso Boston",
+   "Paradiso Boston",
+   "Polcaris",
+   "Polcaris",
+   "Villa Francesca",
+   "Villa Francesca",
+   "Bricco Ristorante",
+   "Bricco Ristorante",
+   "Mare",
+   "Mare",
+   "Quattro Ristorante",
+   "Quattro Ristorante",
+   "Cafe Rustico",
+   "Cafe Rustico",
+   "Arya Trattoria",
+   "Arya Trattoria",
+   "Aqua Pazza",
+   "Aqua Pazza",
+   "Blake’s Kitchen + Bar @ Indigo Hotel",
+   "Blake’s Kitchen + Bar @ Indigo Hotel",
+   "Assaggio",
+   "Assaggio",
+   "Caffe Dello Sport",
+   "Caffe Dello Sport",
+   "Ristorante Limoncello",
+   "Ristorante Limoncello",
+   "Mike’s Pastry",
+   "Mike’s Pastry",
+   "Trattoria il Panino",
+   "Trattoria il Panino",
+   "Trattoria il Panino",
+   "Trattoria il Panino",
+   "Antonio’s Cucina Italiana",
+   "Antonio’s Cucina Italiana",
+   "Bella Vista",
+   "Bella Vista",
+   "Ristorante Saraceno",
+   "Ristorante Saraceno"
+  ],
+  "radius": "50",
+  "plugin": 231,
+  "tabs": [
+   "Distributors",
+   "Locations"
+  ]
+ },
+ "distributorsTab": [
+  "",
+  "Become a distributor!\nYour location\nSearch radius\n50 mi\n10 mi\n25 mi\n50 mi\n100 mi\n200 mi\n500 mi\n1 mi\nCategory filter\nAny\nAny\nCoffee Shop\nOther\nRestaurant\nRetail\nSkip map, jump to search results\n\n\nKeyboard shortcuts\nMap data ©2026 Google\nTerms\nReport a map error\n\nModern Pastry\n257 Hanover St\nBoston "
+ ],
+ "forms": {
+  "/contact/": [
+   {
+    "action": "/contact/#wpcf7-f8-p906-o1",
+    "id": "wpcf7-form init",
+    "fieldCount": 4,
+    "required": 2,
+    "fields": {
+     "your-name": {
+      "type": "text",
+      "req": true
+     },
+     "your-email": {
+      "type": "email",
+      "req": true
+     },
+     "your-subject": {
+      "type": "text",
+      "req": false
+     },
+     "your-message": {
+      "type": "textarea",
+      "req": false
+     }
+    },
+    "submit": [
+     "Send"
+    ]
+   }
+  ],
+  "/join-us/more-information/": [
+   {
+    "action": "/join-us/more-information/#wpcf7-f2482-p2643-o1",
+    "id": "wpcf7-form init",
+    "fieldCount": 14,
+    "required": 9,
+    "fields": {
+     "your-name": {
+      "type": "text",
+      "req": true
+     },
+     "your-email": {
+      "type": "email",
+      "req": true
+     },
+     "your-phone": {
+      "type": "tel",
+      "req": true
+     },
+     "Positioninthebusiness": {
+      "type": "text",
+      "req": true
+     },
+     "your-city": {
+      "type": "text",
+      "req": true
+     },
+     "your-zipcode": {
+      "type": "text",
+      "req": true
+     },
+     "Existingcustomer": {
+      "type": "radio",
+      "req": false
+     },
+     "CompanyName": {
+      "type": "text",
+      "req": false
+     },
+     "CompanyType": {
+      "type": "select",
+      "req": true
+     },
+     "CurrentEspresso": {
+      "type": "select",
+      "req": true
+     },
+     "Currentprovider": {
+      "type": "text",
+      "req": false
+     },
+     "Helpmechoose": {
+      "type": "select",
+      "req": true
+     },
+     "Tellusmore": {
+      "type": "textarea",
+      "req": false
+     },
+     "aboutus": {
+      "type": "text",
+      "req": false
+     }
+    },
+    "submit": [
+     "Send Request"
+    ]
+   }
+  ],
+  "/join-us/franchise-info-request/": [
+   {
+    "action": "/join-us/franchise-info-request/#wpcf7-f1231-p1232-o1",
+    "id": "wpcf7-form init",
+    "fieldCount": 13,
+    "required": 9,
+    "fields": {
+     "your-name": {
+      "type": "text",
+      "req": true
+     },
+     "your-address-1": {
+      "type": "text",
+      "req": true
+     },
+     "your-address-2": {
+      "type": "text",
+      "req": false
+     },
+     "your-city": {
+      "type": "text",
+      "req": true
+     },
+     "your-state": {
+      "type": "select",
+      "req": true
+     },
+     "your-zipcode": {
+      "type": "text",
+      "req": true
+     },
+     "your-email": {
+      "type": "email",
+      "req": true
+     },
+     "your-phone": {
+      "type": "tel",
+      "req": true
+     },
+     "developing": {
+      "type": "textarea",
+      "req": true
+     },
+     "experience": {
+      "type": "radio",
+      "req": false
+     },
+     "networth": {
+      "type": "radio",
+      "req": false
+     },
+     "assets": {
+      "type": "radio",
+      "req": false
+     },
+     "qualification": {
+      "type": "textarea",
+      "req": true
+     }
+    },
+    "submit": [
+     "Send Request"
+    ]
+   }
+  ],
+  "/my-account/": [
+   {
+    "action": null,
+    "id": "woocommerce-form woocommerce-form-login ",
+    "fieldCount": 3,
+    "required": 2,
+    "fields": {
+     "username": {
+      "type": "text",
+      "req": true
+     },
+     "password": {
+      "type": "password",
+      "req": true
+     },
+     "rememberme": {
+      "type": "checkbox",
+      "req": false
+     }
+    },
+    "submit": [
+     "Log in"
+    ]
+   },
+   {
+    "action": null,
+    "id": "woocommerce-form woocommerce-form-regist",
+    "fieldCount": 2,
+    "required": 2,
+    "fields": {
+     "email": {
+      "type": "email",
+      "req": true
+     },
+     "password": {
+      "type": "password",
+      "req": true
+     }
+    },
+    "submit": [
+     "Register"
+    ]
+   }
+  ],
+  "/newsletter/": [],
+  "/refer-a-friend/": []
+ },
+ "pdp": {
+  "/shop/coffee/5-stelle/5-stelle-1kg-beans/": {
+   "title": "5 Stelle 1Kg Beans – Guglielmo USA",
+   "tabs": [
+    "Description",
+    "Additional information"
+   ],
+   "reviews": false,
+   "shippingMention": false,
+   "returnsMention": false,
+   "stock": "In stock",
+   "price": "$32.50",
+   "variations": [],
+   "addToCart": true,
+   "addToCartText": "Add to cart",
+   "gallery": 4,
+   "related": 4,
+   "upsells": 0,
+   "crossLabel": [
+    "Related products",
+    "Caffetteria 1Kg Beans",
+    "Premium Blend Drip Beans",
+    "Extra Bar 1Kg Beans",
+    "5 Stelle 250g Ground"
+   ],
+   "phoneOnPage": false,
+   "contactLink": [],
+   "sku": "B5S1KB",
+   "bulkTable": true,
+   "h1": "5 Stelle 1Kg Beans",
+   "titleOverflow": {
+    "sw": 640,
+    "cw": 640
+   },
+   "status": 200
+  },
+  "/shop/equipment/home/espresso-plus-vap-capsule-machine/": {
+   "title": "ESPRESSO PLUS VAP Capsule Machine – Guglielmo USA",
+   "tabs": [
+    "Description",
+    "Additional information"
+   ],
+   "reviews": false,
+   "shippingMention": false,
+   "returnsMention": false,
+   "price": "$259.00 – $399.00\nPrice range: $259.00 through $399.00",
+   "variations": [
+    {
+     "name": "attribute_pa_test",
+     "options": [
+      "Choose an option",
+      "Fully test machine operation"
+     ],
+     "selected": "fully-test-machine-operation"
+    },
+    {
+     "name": "attribute_pa_capsule-kit-deal-choice",
+     "options": [
+      "Choose an option",
+      "None",
+      "+150 Capsules",
+      "+300 Capsules"
+     ],
+     "selected": ""
+    }
+   ],
+   "addToCart": true,
+   "addToCartText": "Add to cart",
+   "gallery": 8,
+   "related": 4,
+   "upsells": 0,
+   "crossLabel": [
+    "Related products",
+    "puly CAFF plus® Powder Coffee Machine Cleaner",
+    "Mini Pod Machine",
+    "ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO",
+    "Mini Cap Vapore Capsule Machine"
+   ],
+   "phoneOnPage": false,
+   "contactLink": [],
+   "sku": "CAP-ESPRESSO PLUS VAP",
+   "bulkTable": true,
+   "h1": "ESPRESSO PLUS VAP Capsule Machine",
+   "titleOverflow": {
+    "sw": 640,
+    "cw": 640
+   },
+   "status": 200
+  },
+  "/shop/equipment/commercial/wega-and-other-commercial-machines/": {
+   "title": "WEGA and BFC Commercial Machines – Guglielmo USA",
+   "tabs": [
+    "Description",
+    "Additional information"
+   ],
+   "reviews": false,
+   "shippingMention": false,
+   "returnsMention": false,
+   "price": "Call for Price",
+   "variations": [],
+   "addToCart": false,
+   "gallery": 12,
+   "related": 4,
+   "upsells": 0,
+   "crossLabel": [
+    "Related products",
+    "Puly Milk Plus® Cleaner",
+    "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+    "Espresso Grinders",
+    "pulyGRIND® Grinder Cleaner Crystals"
+   ],
+   "phoneOnPage": false,
+   "contactLink": [
+    "https://lespressousa.com/contact/"
+   ],
+   "sku": "EQWA",
+   "bulkTable": false,
+   "h1": "WEGA and BFC Commercial Machines",
+   "titleOverflow": {
+    "sw": 640,
+    "cw": 640
+   },
+   "status": 200
+  },
+  "/shop/uncategorized/order-adjustment/": {
+   "title": "Order Adjustment – Guglielmo USA",
+   "tabs": [],
+   "reviews": false,
+   "shippingMention": false,
+   "returnsMention": false,
+   "variations": [],
+   "addToCart": false,
+   "gallery": 0,
+   "related": 0,
+   "upsells": 0,
+   "crossLabel": [],
+   "phoneOnPage": false,
+   "contactLink": [],
+   "bulkTable": false,
+   "titleOverflow": null,
+   "status": 200
+  }
+ },
+ "cart": {
+  "shippingCalc": false,
+  "shippingRow": null,
+  "express": [],
+  "coupon": true,
+  "crossSells": 0,
+  "freeShipMsg": false,
+  "totals": "CART TOTALS SUBTOTAL $32.50 TOTAL $32.50 Proceed to checkout"
+ },
+ "checkout": {
+  "visibleFields": 15,
+  "required": 10,
+  "names": [
+   "billing_first_name",
+   "billing_last_name",
+   "billing_company",
+   "billing_country",
+   "billing_address_1",
+   "billing_address_2",
+   "billing_city",
+   "billing_state",
+   "billing_postcode",
+   "billing_phone",
+   "billing_email",
+   "createaccount",
+   "ship_to_different_address",
+   "order_comments",
+   "terms"
+  ],
+  "payment": [
+   "Credit Card",
+   "PayPal or Venmo",
+   "Google Pay"
+  ],
+  "guest": true,
+  "loginPrompt": true,
+  "couponToggle": true,
+  "shippingRow": null,
+  "orderReview": "PRODUCT SUBTOTAL 5 Stelle 1Kg Beans × 1 $32.50 SUBTOTAL $32.50 TOTAL $32.50 Credit Card Pay securely using your credit card. PayPal or Venmo Google Pay Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy. I have read and agree to the website terms and conditions * Continue to Payment ",
+  "terms": true,
+  "placeOrder": "Continue to Payment",
+  "expressTop": [
+   "ppc-button-wrapper ppcp-width-500",
+   "ppc-button-ppcp-gateway"
+  ]
+ },
+ "social": [
+  "https://it-it.facebook.com/CaffeGuglielmoOfficialFanpage",
+  "http://twitter.com/CaffeGuglielmo",
+  "http://www.pinterest.com/CaffeGuglielmo/",
+  "https://www.youtube.com/channel/UCVuFDe4e1hg_PcFJtcsRubw/feed"
+ ],
+ "footerText": "© Copyright Guglielmo USA -",
+ "phoneInHeader": false,
+ "noticebar": null,
+ "homeLinks": [
+  " -> https://lespressousa.com/espressoblends/",
+  " -> https://lespressousa.com/equipment/",
+  " -> https://lespressousa.com/join-us/",
+  " -> https://lespressousa.com/about/where-to-buy/",
+  " -> https://lespressousa.com/about/",
+  " -> https://lespressousa.com/shop/coffee/specialty-products/brasilena-cans-6-pack/",
+  " -> https://lespressousa.com/product-category/coffee/?filter_format=single-serve-compatible-capsule",
+  " -> https://lespressousa.com/shop/coffee/espresso-classico/espresso-decaf-250g-ground-can/",
+  " -> https://lespressousa.com/shop/coffee/special-blends/special-edition-can/",
+  " -> https://lespressousa.com/product-category/coffee/",
+  "… and many more -> https://lespressousa.com/product-category/coffee/",
+  "Taberna de Haro -> https://www.tabernaboston.com/",
+  "BOSA -> https://www.bosaitalian.com/",
+  "Pazza on Porter -> https://www.pazzaonporter.com/",
+  " -> https://thewellingtonbelmont.com/",
+  " -> https://caffedellosport.net/",
+  " -> https://lakonparis.com/",
+  " -> https://www.facebook.com/ladolcevitageorgetownma/",
+  " -> http://www.broadwayspastry.com/",
+  " -> https://lespressousa.com/wp-content/uploads/2014/06/broadway-pastry.jpg",
+  " -> https://elpotromexicangrill.com/",
+  " -> https://www.forcellaboston.com/",
+  " -> https://www.nandonorthendboston.com/",
+  "shop -> https://lespressousa.com/shop/",
+  "Contact us -> https://lespressousa.com/contact/",
+  "join us -> https://lespressousa.com/join-us/",
+  "here -> https://lespressousa.com/join-us/"
+ ],
+ "homeSlides": [
+  "",
+  "",
+  "",
+  "",
+  "",
+  "GOING QUICKLY … … and many more",
+  "GUGLIELMO NEAR YOU Dining Out? Taberna de Haro 999 Beacon St., Brookline 02446 Coastal Italian offers creative coastal Italian Cuisine at BOSA 160 Merrimack St., Haverhill, MA 01830 Try “Crazy” good f",
+  "",
+  "",
+  "",
+  "",
+  "JOIN OUR FAMILY Here’s how: Create an account and shop today In the New England area and interested in our services? Contact us today See our join us section to learn more about becoming a Guglielmo d"
+ ],
+ "tabsToMain": 15,
+ "mobile": {
+  "home": {
+   "interactive": 44,
+   "under44": 36,
+   "under24": 32,
+   "tinyExamples": [
+    "A 113x18",
+    "A 75x18",
+    "A 82x18",
+    "A 90x18",
+    "… and many more 110x18",
+    "Taberna de Haro 102x18"
+   ],
+   "textEls": 63,
+   "fontLt12": 1,
+   "fontLt14": 53,
+   "fontLt16": 56,
+   "medianFont": 13,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 2744,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -1500,
+    "h": 82
+   }
+  },
+  "shop": {
+   "interactive": 51,
+   "under44": 45,
+   "under24": 42,
+   "tinyExamples": [
+    "Home 43x15",
+    "Shop 37x15",
+    "Search 58x21",
+    "Coffee 45x20",
+    "Machines and Parts 137x20",
+    "Specialty 62x20"
+   ],
+   "textEls": 89,
+   "fontLt12": 5,
+   "fontLt14": 29,
+   "fontLt16": 89,
+   "medianFont": 15,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 3505,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -1500,
+    "h": 82
+   }
+  },
+  "category": {
+   "interactive": 92,
+   "under44": 74,
+   "under24": 69,
+   "tinyExamples": [
+    "Home 43x15",
+    "Shop 37x15",
+    "Add to cart 152x23",
+    "Show Details 152x23",
+    "Add to cart 152x23",
+    "Show Details 152x23"
+   ],
+   "textEls": 142,
+   "fontLt12": 36,
+   "fontLt14": 71,
+   "fontLt16": 142,
+   "medianFont": 14,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 9707,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -1500,
+    "h": 82
+   }
+  },
+  "pdp": {
+   "interactive": 45,
+   "under44": 36,
+   "under24": 29,
+   "tinyExamples": [
+    "Home 43x15",
+    "Shop 37x15",
+    "Coffee 45x15",
+    "5 Stelle 50x15",
+    "5 Stelle 37x15",
+    "Whole Beans 67x15"
+   ],
+   "textEls": 63,
+   "fontLt12": 20,
+   "fontLt14": 52,
+   "fontLt16": 60,
+   "medianFont": 13,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 3573,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -1500,
+    "h": 82
+   }
+  },
+  "cart": {
+   "interactive": 20,
+   "under44": 17,
+   "under24": 14,
+   "tinyExamples": [
+    "Home 43x15",
+    "Contact Us 68x18",
+    "Shop 332x17",
+    "By Blend 319x21",
+    "By Type and Format 319x21",
+    "Specialty Products 319x21"
+   ],
+   "textEls": 21,
+   "fontLt12": 1,
+   "fontLt14": 18,
+   "fontLt16": 21,
+   "medianFont": 13,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 1175,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -331,
+    "h": 82
+   }
+  },
+  "contact": {
+   "interactive": 24,
+   "under44": 20,
+   "under24": 15,
+   "tinyExamples": [
+    "Home 43x15",
+    "Contact Us 68x18",
+    "Select a category\nCoffee\n   5  1x1",
+    "Shop 332x17",
+    "By Blend 319x21",
+    "By Type and Format 319x21"
+   ],
+   "textEls": 24,
+   "fontLt12": 1,
+   "fontLt14": 21,
+   "fontLt16": 24,
+   "medianFont": 13,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 1709,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -865,
+    "h": 82
+   }
+  },
+  "business": {
+   "interactive": 41,
+   "under44": 35,
+   "under24": 32,
+   "tinyExamples": [
+    "Home 43x15",
+    "Join Us 48x15",
+    "Inquire about customized solut 214x18",
+    "Guglielmo USA 332x17",
+    "The Story of Guglielmo 332x17",
+    "Production 332x17"
+   ],
+   "textEls": 67,
+   "fontLt12": 1,
+   "fontLt14": 51,
+   "fontLt16": 58,
+   "medianFont": 13,
+   "headerH": 82,
+   "headerPos": "relative",
+   "overflowX": false,
+   "scrollW": 390,
+   "pageH": 7377,
+   "viewportMeta": "width=device-width, initial-scale=1",
+   "headerTopAfterScroll": {
+    "top": -1500,
+    "h": 82
+   }
+  }
+ },
+ "mobileFilterPos": {
+  "sidebarTop": 7762.5,
+  "firstProductTop": 297,
+  "pageH": 9707
+ },
+ "mobileMenu": {
+  "items": 38,
+  "scrollH": 1984,
+  "accordions": 9
+ }
+}

@@ -16,11 +16,12 @@ PAGES = [
     ('docs/wordpress-implementation.md', 'docs/wordpress.html', 'WordPress Build Plan', 'Implementation'),
     ('research/competitors.md', 'research/competitors.html', 'Competitor Benchmark', 'Research'),
     ('research/brand-pack.md', 'research/brand-pack.html', 'Brand Content Pack', 'Research'),
+    ('research/current-site-audit.md', 'research/current-site-audit.html', 'Full Audit Report', 'Audit'),
 ]
 
 LINK_MAP = {
     'strategy.md': 'strategy.html', 'concept-directions.md': 'directions.html', 'wordpress-implementation.md': 'wordpress.html',
-    'competitors.md': 'competitors.html', 'brand-pack.md': 'brand-pack.html', 'current-site-audit.md': 'index.html',
+    'competitors.md': 'competitors.html', 'brand-pack.md': 'brand-pack.html', 'current-site-audit.md': 'current-site-audit.html',
 }
 
 NAV = [('index.html', 'Overview'), ('audit/index.html', 'Audit'), ('research/competitors.html', 'Benchmark'),

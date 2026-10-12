@@ -1,0 +1,4524 @@
+{
+ "home": {
+  "name": "home",
+  "url": "https://lespressousa.com/",
+  "mode": "desktop",
+  "loadWall": 2860,
+  "requests": 130,
+  "bytes": 1070344,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 22472
+   },
+   "Stylesheet": {
+    "n": 50,
+    "bytes": 168773
+   },
+   "Script": {
+    "n": 54,
+    "bytes": 401485
+   },
+   "Image": {
+    "n": 15,
+    "bytes": 248515
+   },
+   "Font": {
+    "n": 8,
+    "bytes": 225365
+   },
+   "XHR": {
+    "n": 2,
+    "bytes": 3734
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 115,
+    "bytes": 702801
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6204
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28577
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180429
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 121137
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   },
+   "": {
+    "n": 1,
+    "bytes": 0
+   }
+  },
+  "errors": [],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/home-header-284x300.jpg",
+    "bytes": 110655,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena-6-pack-300x208.jpg",
+    "bytes": 62637,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/broadway-pastry-300x199.jpg",
+    "bytes": 21935,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_headline.png",
+    "bytes": 13488,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/decaf-100x100.jpg",
+    "bytes": 8828,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2022/09/welington-logo-300x74.png",
+    "bytes": 5972,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/speciale-100x100.jpg",
+    "bytes": 5504,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2020/05/oro10-80x80.jpg",
+    "bytes": 3872,
+    "mime": "image/webp"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 121137,
+    "type": "Script"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/home-header-284x300.jpg",
+    "bytes": 110655,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena-6-pack-300x208.jpg",
+    "bytes": 62637,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52690,
+    "type": "Font"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49086,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello/entypo-fontello.woff2",
+    "bytes": 40689,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "bytes": 33364,
+    "type": "Stylesheet"
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "bytes": 31476,
+    "type": "Script"
+   },
+   {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/4df4a60fa397/api.js",
+    "bytes": 28577,
+    "type": "Script"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTUGmu1aB.woff2",
+    "bytes": 27374,
+    "type": "Font"
+   }
+  ],
+  "imgFormats": {
+   "image/webp": 14,
+   "image/jpeg": 1
+  },
+  "protos": {
+   "http/1.1": 129,
+   "undefined": 1
+  },
+  "uncompressed": [],
+  "ttfb": 157.20000000018626,
+  "dcl": 2511.9000000001397,
+  "load": 2855,
+  "htmlBytes": 21673,
+  "htmlDecoded": 108476,
+  "fcp": 1648,
+  "lcp": {
+   "t": 2800,
+   "size": 85200,
+   "url": "https://lespressousa.com/wp-content/uploads/2014/06/home-header-284x300.jpg",
+   "el": "DIV.avia-section av-217q6-2af9074e6ce1f714115d4c2db83868e3 main_ "
+  },
+  "cls": 0.000822337962962963,
+  "clsEntries": [
+   {
+    "v": 0.000822337962962963,
+    "t": 2572.4000000001397,
+    "src": "DIV.container_wrap footer_color"
+   }
+  ],
+  "tbt": 15,
+  "longtasks": 1,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 195,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 299,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 297,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 397,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 411,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 475,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 501,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 530,
+    "size": 14315
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 407,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 491,
+    "size": 1338
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 514,
+    "size": 852
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 608,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 582,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 610,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 632,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 682,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 673,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 676,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 721,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 733,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 742,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 797,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 804,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 802,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 825,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 846,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 853,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 920,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 933,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 935,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 957,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 958,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 1051,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 1045,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 1051,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 1058,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 1067,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 1074,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 1148,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 1187,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 1176,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 1193,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1195,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 1267,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/avia_posts_css/post-2.css?ver=ver-1791492234",
+    "dur": 1256,
+    "size": 923
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1307,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1316,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1357,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1415,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1392,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1422,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1282,
+    "size": 366
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1425,
+    "size": 851
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1426,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 1305,
+    "size": 2266
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 427,
+    "size": 1855
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 428,
+    "size": 902
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_headline.png",
+    "nw": 820,
+    "nh": 100,
+    "w": 820,
+    "h": 100,
+    "loading": null,
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 820px) 100vw, 820px",
+    "alt": "The Coffee that hits the Spot",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "820",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_coffee.png",
+    "nw": 100,
+    "nh": 100,
+    "w": 100,
+    "h": 100,
+    "loading": "eager",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_machines.png",
+    "nw": 100,
+    "nh": 100,
+    "w": 100,
+    "h": 100,
+    "loading": "eager",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_joinus.png",
+    "nw": 100,
+    "nh": 100,
+    "w": 100,
+    "h": 100,
+    "loading": "eager",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_wheretobuy.png",
+    "nw": 100,
+    "nh": 100,
+    "w": 100,
+    "h": 100,
+    "loading": "eager",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_learnmore.png",
+    "nw": 100,
+    "nh": 100,
+    "w": 100,
+    "h": 100,
+    "loading": "eager",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena-6-pack-300x208.jpg",
+    "nw": 113,
+    "nh": 78,
+    "w": 113,
+    "h": 78,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 113px) 100vw, 113px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "113",
+    "hAttr": "78"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2020/05/oro10-80x80.jpg",
+    "nw": 74,
+    "nh": 74,
+    "w": 75,
+    "h": 75,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 75px) 100vw, 75px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "75",
+    "hAttr": "75"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/decaf-100x100.jpg",
+    "nw": 82,
+    "nh": 82,
+    "w": 82,
+    "h": 82,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 82px) 100vw, 82px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "82",
+    "hAttr": "82"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/speciale-100x100.jpg",
+    "nw": 90,
+    "nh": 90,
+    "w": 90,
+    "h": 90,
+    "loading": "lazy",
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 90px) 100vw, 90px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "90",
+    "hAttr": "90"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2022/09/welington-logo-300x74.png",
+    "nw": 195,
+    "nh": 48,
+    "w": 195,
+    "h": 68,
+    "loading": "lazy",
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 195px) 100vw, 195px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "195",
+    "hAttr": "48"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/broadway-pastry-300x199.jpg",
+    "nw": 300,
+    "nh": 199,
+    "w": 244,
+    "h": 162,
+    "loading": "lazy",
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": "broadway pastry",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "244",
+    "hAttr": "162"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/avia_posts_css/post-2.css?ver=ver-1791492234",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 678,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 15106
+ },
+ "shop": {
+  "name": "shop",
+  "url": "https://lespressousa.com/shop/",
+  "mode": "desktop",
+  "loadWall": 2592,
+  "requests": 120,
+  "bytes": 1047288,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 19902
+   },
+   "Stylesheet": {
+    "n": 49,
+    "bytes": 161644
+   },
+   "Script": {
+    "n": 54,
+    "bytes": 400062
+   },
+   "Image": {
+    "n": 6,
+    "bytes": 237206
+   },
+   "Font": {
+    "n": 8,
+    "bytes": 225067
+   },
+   "XHR": {
+    "n": 2,
+    "bytes": 3407
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 105,
+    "bytes": 679868
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6053
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28577
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180457
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 121137
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   },
+   "": {
+    "n": 1,
+    "bytes": 0
+   }
+  },
+  "errors": [],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-450x450.jpeg",
+    "bytes": 101627,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/Polaris-EVD-450x374.png",
+    "bytes": 76397,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/puly-450x450.jpg",
+    "bytes": 51071,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "bytes": 3641,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "bytes": 3526,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/images/arrow_down.png",
+    "bytes": 944,
+    "mime": "image/webp"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 121137,
+    "type": "Script"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-450x450.jpeg",
+    "bytes": 101627,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/Polaris-EVD-450x374.png",
+    "bytes": 76397,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52691,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/puly-450x450.jpg",
+    "bytes": 51071,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49099,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello/entypo-fontello.woff2",
+    "bytes": 40689,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "bytes": 33363,
+    "type": "Stylesheet"
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "bytes": 31142,
+    "type": "Script"
+   },
+   {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/4df4a60fa397/api.js",
+    "bytes": 28577,
+    "type": "Script"
+   }
+  ],
+  "imgFormats": {
+   "image/jpeg": 2,
+   "image/webp": 4
+  },
+  "protos": {
+   "http/1.1": 119,
+   "undefined": 1
+  },
+  "uncompressed": [],
+  "ttfb": 101.10000000009313,
+  "dcl": 2354.8000000000466,
+  "load": 2589.5,
+  "htmlBytes": 19266,
+  "htmlDecoded": 100708,
+  "fcp": 1408,
+  "lcp": {
+   "t": 1424,
+   "size": 51443,
+   "url": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-450x450.jpeg",
+   "el": "IMG. "
+  },
+  "cls": 0.0001649852109053498,
+  "clsEntries": [
+   {
+    "v": 0.0001649852109053498,
+    "t": 1674,
+    "src": "BUTTON.|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo"
+   }
+  ],
+  "tbt": 4,
+  "longtasks": 1,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 121,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 153,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 226,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 220,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 221,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 271,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 328,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 319,
+    "size": 14315
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 347,
+    "size": 1338
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 504,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 382,
+    "size": 852
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 446,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 421,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 451,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 423,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 514,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 498,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 515,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 552,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 561,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 621,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 614,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 620,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 612,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 656,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 663,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 717,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 722,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 735,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 758,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 769,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 815,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 819,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 897,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 852,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 865,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 878,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 917,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 918,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 969,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 982,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 979,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1015,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 1010,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1089,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1087,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1107,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1108,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1125,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1192,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1010,
+    "size": 366
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1195,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1209,
+    "size": 851
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 308,
+    "size": 902
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 315,
+    "size": 1855
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 1075,
+    "size": 2266
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-450x450.jpeg",
+    "nw": 450,
+    "nh": 450,
+    "w": 227,
+    "h": 227,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "Coffee",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2017/12/puly-450x450.jpg",
+    "nw": 450,
+    "nh": 450,
+    "w": 227,
+    "h": 227,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "Espresso Accessories",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/Polaris-EVD-450x374.png",
+    "nw": 450,
+    "nh": 374,
+    "w": 227,
+    "h": 189,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "Machines and Parts",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "374"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 690,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 15106
+ },
+ "category": {
+  "name": "category",
+  "url": "https://lespressousa.com/product-category/coffee/",
+  "mode": "desktop",
+  "loadWall": 2616,
+  "requests": 131,
+  "bytes": 1335603,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 23268
+   },
+   "Stylesheet": {
+    "n": 49,
+    "bytes": 167836
+   },
+   "Script": {
+    "n": 54,
+    "bytes": 402149
+   },
+   "Image": {
+    "n": 18,
+    "bytes": 517505
+   },
+   "Font": {
+    "n": 7,
+    "bytes": 221114
+   },
+   "XHR": {
+    "n": 2,
+    "bytes": 3731
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 116,
+    "bytes": 968689
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6053
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28577
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180425
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 120663
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   },
+   "": {
+    "n": 1,
+    "bytes": 0
+   }
+  },
+  "errors": [],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-500x321.jpeg",
+    "bytes": 81815,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena_can-450x450.jpg",
+    "bytes": 74787,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/old-french-450x450.jpg",
+    "bytes": 45543,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/espressobar-450x450.jpg",
+    "bytes": 44962,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-300x300.jpg",
+    "bytes": 37351,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/extra_bar_250-300x300.jpg",
+    "bytes": 36439,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-300x300.jpg",
+    "bytes": 33986,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/5StelleGround250-300x300.jpg",
+    "bytes": 33842,
+    "mime": "image/jpeg"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 120663,
+    "type": "Script"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-500x321.jpeg",
+    "bytes": 81815,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena_can-450x450.jpg",
+    "bytes": 74787,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52678,
+    "type": "Font"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49097,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/old-french-450x450.jpg",
+    "bytes": 45543,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/espressobar-450x450.jpg",
+    "bytes": 44962,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-template-builder/assets/fonts/entypo-fontello/entypo-fontello.woff2",
+    "bytes": 40689,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-300x300.jpg",
+    "bytes": 37351,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/extra_bar_250-300x300.jpg",
+    "bytes": 36439,
+    "type": "Image"
+   }
+  ],
+  "imgFormats": {
+   "image/jpeg": 9,
+   "image/webp": 9
+  },
+  "protos": {
+   "http/1.1": 130,
+   "undefined": 1
+  },
+  "uncompressed": [],
+  "ttfb": 182.80000000004657,
+  "dcl": 2542.100000000093,
+  "load": 2614.100000000093,
+  "htmlBytes": 22523,
+  "htmlDecoded": 163292,
+  "fcp": 1648,
+  "lcp": {
+   "t": 2632,
+   "size": 51443,
+   "url": "https://lespressousa.com/wp-content/uploads/2014/06/classico.jpg",
+   "el": "IMG.wp-image-55 avia-img-lazy-loading-55 attachment-shop_catalog "
+  },
+  "cls": 0.0001649852109053498,
+  "clsEntries": [
+   {
+    "v": 0.0001649852109053498,
+    "t": 1690.3000000000466,
+    "src": "BUTTON.|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo|SECTION.widget clearfix woocommerce widget_layered_nav woo"
+   }
+  ],
+  "tbt": 18,
+  "longtasks": 2,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 111,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 116,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 251,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 231,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 239,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 329,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 333,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 348,
+    "size": 1338
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 406,
+    "size": 14315
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 355,
+    "size": 852
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 409,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 433,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 435,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 476,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 466,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 525,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 552,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 568,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 580,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 577,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 669,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 671,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 711,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 671,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 683,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 703,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 785,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 808,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 793,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 806,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 834,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 844,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 899,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 911,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 911,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 929,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 981,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 977,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 995,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 1034,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 1046,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 1052,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1095,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 1097,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1191,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1177,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1198,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1218,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1219,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1264,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1114,
+    "size": 366
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 1147,
+    "size": 2266
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1300,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1307,
+    "size": 851
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 266,
+    "size": 902
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 371,
+    "size": 1855
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/coffee-500x321.jpeg",
+    "nw": 500,
+    "nh": 321,
+    "w": 0,
+    "h": 0,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": "",
+    "aboveFold": false,
+    "visible": false,
+    "wAttr": "500",
+    "hAttr": "321"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/classico.jpg",
+    "nw": 340,
+    "nh": 340,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 340px) 100vw, 340px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "340",
+    "hAttr": "340"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/espressobar-450x450.jpg",
+    "nw": 450,
+    "nh": 450,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/extra_bar_250-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/extra.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 250px) 100vw, 250px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "250",
+    "hAttr": "250"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/5StelleGround250-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/decaf.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 300px) 100vw, 300px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "300"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/5StelleMacinaturaEspresso-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/caffetteria_1000_grani-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2018/03/brasilena_can-450x450.jpg",
+    "nw": 226,
+    "nh": 226,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/copacabana_img.png",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 198px) 100vw, 198px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "198",
+    "hAttr": "198"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/speciale-300x300.jpg",
+    "nw": 227,
+    "nh": 227,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2017/12/old-french-450x450.jpg",
+    "nw": 226,
+    "nh": 226,
+    "w": 227,
+    "h": 227,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 1122,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 15106
+ },
+ "pdp": {
+  "name": "pdp",
+  "url": "https://lespressousa.com/shop/coffee/5-stelle/5-stelle-1kg-beans/",
+  "mode": "desktop",
+  "loadWall": 2588,
+  "requests": 134,
+  "bytes": 1137554,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 23344
+   },
+   "Stylesheet": {
+    "n": 50,
+    "bytes": 166135
+   },
+   "Script": {
+    "n": 57,
+    "bytes": 416812
+   },
+   "Image": {
+    "n": 18,
+    "bytes": 347405
+   },
+   "Font": {
+    "n": 6,
+    "bytes": 180450
+   },
+   "XHR": {
+    "n": 2,
+    "bytes": 3408
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 119,
+    "bytes": 770205
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6053
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28513
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180450
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 121137
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   },
+   "": {
+    "n": 1,
+    "bytes": 0
+   }
+  },
+  "errors": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/5stellebeans.jpg",
+    "status": 200,
+    "failed": "net::ERR_ABORTED"
+   }
+  ],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000.jpg",
+    "bytes": 134643,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68812,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68812,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/5stellebeans.jpg",
+    "bytes": 12737,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/5stellebeans-100x100.jpg",
+    "bytes": 10348,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/5StelleMacinaturaEspresso-120x120.jpg",
+    "bytes": 7889,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/premium-blend-120x120.jpg",
+    "bytes": 7758,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2017/12/old-french-120x120.jpg",
+    "bytes": 7556,
+    "mime": "image/jpeg"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000.jpg",
+    "bytes": 134643,
+    "type": "Image"
+   },
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 121137,
+    "type": "Script"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68812,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68812,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52688,
+    "type": "Font"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49098,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "bytes": 33362,
+    "type": "Stylesheet"
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "bytes": 31142,
+    "type": "Script"
+   },
+   {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/4df4a60fa397/api.js",
+    "bytes": 28513,
+    "type": "Script"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTUGmu1aB.woff2",
+    "bytes": 27373,
+    "type": "Font"
+   }
+  ],
+  "imgFormats": {
+   "image/jpeg": 6,
+   "image/webp": 12
+  },
+  "protos": {
+   "http/1.1": 133,
+   "undefined": 1
+  },
+  "uncompressed": [],
+  "ttfb": 228.5,
+  "dcl": 2584.9000000001397,
+  "load": 2585.2000000001863,
+  "htmlBytes": 22537,
+  "htmlDecoded": 125299,
+  "fcp": 1544,
+  "lcp": {
+   "t": 2628,
+   "size": 23478,
+   "url": "",
+   "el": "P. A perfect combination of top quality Cen"
+  },
+  "cls": 0.011727422651963306,
+  "clsEntries": [
+   {
+    "v": 0.00011403744963134432,
+    "t": 1573.3000000000466,
+    "src": "TD.|TD.|TD.|A.|TD."
+   },
+   {
+    "v": 0.00008520554698216735,
+    "t": 2666.3000000000466,
+    "src": "INPUT.input-text qty text no-spin-num"
+   },
+   {
+    "v": 0.010493827160493827,
+    "t": 2756.7000000001863,
+    "src": "ASIDE.sidebar sidebar_sidebar_right  smartphones_sidebar"
+   },
+   {
+    "v": 0.001034352494855967,
+    "t": 2851.3000000000466,
+    "src": "ASIDE.sidebar sidebar_sidebar_right  smartphones_sidebar"
+   }
+  ],
+  "tbt": 21,
+  "longtasks": 1,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 121,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 137,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 133,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 137,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 238,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 255,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 254,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 285,
+    "size": 14315
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 295,
+    "size": 1338
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 342,
+    "size": 852
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 410,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 358,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/brands.css?ver=11.1.2",
+    "dur": 383,
+    "size": 1040
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 408,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 442,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 419,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 456,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 469,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 534,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 547,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 526,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 557,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 566,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 593,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 629,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 650,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 651,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 654,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 660,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 722,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 730,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 764,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 760,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 781,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 832,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 856,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 882,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 859,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 880,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 896,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 939,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 962,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 979,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1008,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 996,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1064,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1108,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1109,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1125,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1156,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1158,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1160,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1041,
+    "size": 366
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 1051,
+    "size": 2266
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1216,
+    "size": 851
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 296,
+    "size": 902
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 365,
+    "size": 1855
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "nw": 450,
+    "nh": 450,
+    "w": 328,
+    "h": 328,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "5 Stelle 1Kg Beans",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000.jpg",
+    "nw": 800,
+    "nh": 800,
+    "w": 800,
+    "h": 800,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/5stellebeans.jpg",
+    "nw": 400,
+    "nh": 400,
+    "w": 328,
+    "h": 328,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 400px) 100vw, 400px",
+    "alt": "5 Stelle 1Kg Beans - Image 2",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "400",
+    "hAttr": "400"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "5 Stelle 1Kg Beans",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/5stellebeans-100x100.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "5 Stelle 1Kg Beans - Image 2",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/08/guglielmo_icon_beans_48.png",
+    "nw": 48,
+    "nh": 48,
+    "w": 48,
+    "h": 48,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 48px) 100vw, 48px",
+    "alt": "guglielmo_icon_beans_48",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "48",
+    "hAttr": "48"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/08/guglielmo_icon_machine_48.png",
+    "nw": 48,
+    "nh": 48,
+    "w": 48,
+    "h": 48,
+    "loading": "lazy",
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 48px) 100vw, 48px",
+    "alt": "guglielmo_icon_machine_48",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "48",
+    "hAttr": "48"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/08/guglielmo_icon_northern_48.png",
+    "nw": 48,
+    "nh": 48,
+    "w": 48,
+    "h": 48,
+    "loading": "lazy",
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 48px) 100vw, 48px",
+    "alt": "guglielmo_icon_northern_48",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "48",
+    "hAttr": "48"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/5StelleMacinaturaEspresso-120x120.jpg",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2017/12/old-french-120x120.jpg",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/caffetteria_1000_grani-120x120.jpg",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2017/12/premium-blend-120x120.jpg",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/classico-80x80.jpg",
+    "nw": 80,
+    "nh": 80,
+    "w": 80,
+    "h": 80,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 80px) 100vw, 80px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "80",
+    "hAttr": "80"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/extra-80x80.jpg",
+    "nw": 80,
+    "nh": 80,
+    "w": 80,
+    "h": 80,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 80px) 100vw, 80px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "80",
+    "hAttr": "80"
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/brands.css?ver=11.1.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 789,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 17125
+ },
+ "pdp_machine": {
+  "name": "pdp_machine",
+  "url": "https://lespressousa.com/shop/equipment/home/espresso-plus-vap-capsule-machine/",
+  "mode": "desktop",
+  "loadWall": 2538,
+  "requests": 136,
+  "bytes": 1303393,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 27046
+   },
+   "Stylesheet": {
+    "n": 50,
+    "bytes": 165482
+   },
+   "Script": {
+    "n": 60,
+    "bytes": 427569
+   },
+   "Image": {
+    "n": 17,
+    "bytes": 499134
+   },
+   "Font": {
+    "n": 6,
+    "bytes": 180428
+   },
+   "XHR": {
+    "n": 2,
+    "bytes": 3734
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 121,
+    "bytes": 936002
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6053
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28577
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180428
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 121137
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   },
+   "": {
+    "n": 1,
+    "bytes": 0
+   }
+  },
+  "errors": [],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery1-450x609.jpg",
+    "bytes": 205887,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery2-450x485.jpg",
+    "bytes": 142843,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2026/08/rdl-mini-pod-bianco-nero-250x300.jpg",
+    "bytes": 35138,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery1-100x100.jpg",
+    "bytes": 12968,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap-e1425683202242.jpg",
+    "bytes": 11707,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap-e1425683202242.jpg",
+    "bytes": 11381,
+    "mime": "image/jpeg"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery2-100x100.jpg",
+    "bytes": 11140,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressodelcapitano_logo-100x100.jpg",
+    "bytes": 10733,
+    "mime": "image/webp"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery1-450x609.jpg",
+    "bytes": 205887,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery2-450x485.jpg",
+    "bytes": 142843,
+    "type": "Image"
+   },
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 121137,
+    "type": "Script"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52678,
+    "type": "Font"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49097,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2026/08/rdl-mini-pod-bianco-nero-250x300.jpg",
+    "bytes": 35138,
+    "type": "Image"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "bytes": 33364,
+    "type": "Stylesheet"
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "bytes": 31468,
+    "type": "Script"
+   },
+   {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/4df4a60fa397/api.js",
+    "bytes": 28577,
+    "type": "Script"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTUGmu1aB.woff2",
+    "bytes": 27362,
+    "type": "Font"
+   }
+  ],
+  "imgFormats": {
+   "image/webp": 9,
+   "image/jpeg": 7,
+   "image/avif": 1
+  },
+  "protos": {
+   "http/1.1": 135,
+   "undefined": 1
+  },
+  "uncompressed": [],
+  "ttfb": 227.5999999998603,
+  "dcl": 2532.3000000000466,
+  "load": 2532.5,
+  "htmlBytes": 26233,
+  "htmlDecoded": 159775,
+  "fcp": 1524,
+  "lcp": {
+   "t": 1840,
+   "size": 25301,
+   "url": "",
+   "el": "H1.product_title entry-title ESPRESSO PLUS VAP Capsule Machine"
+  },
+  "cls": 0.020913925945350006,
+  "clsEntries": [
+   {
+    "v": 0.007570931475185399,
+    "t": 1825.3999999999069,
+    "src": "FORM.variations_form cart|DIV.woocommerce-tabs wc-tabs-wrapper|DIV.product_meta|UL.tabs wc-tabs|DIV.woocommerce-product-details__short-description"
+   },
+   {
+    "v": 0.010493827160493827,
+    "t": 2703.8000000000466,
+    "src": "ASIDE.sidebar sidebar_sidebar_right  smartphones_sidebar"
+   },
+   {
+    "v": 0.001814814814814815,
+    "t": 2722.6999999999534,
+    "src": "DIV.product_meta|DIV.woocommerce-tabs wc-tabs-wrapper"
+   },
+   {
+    "v": 0.001034352494855967,
+    "t": 2736.8000000000466,
+    "src": "ASIDE.sidebar sidebar_sidebar_right  smartphones_sidebar"
+   }
+  ],
+  "tbt": 12,
+  "longtasks": 1,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 122,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 130,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 135,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 201,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 226,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 253,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 262,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 313,
+    "size": 14315
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 336,
+    "size": 1338
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 452,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 351,
+    "size": 852
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 418,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 374,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/brands.css?ver=11.1.2",
+    "dur": 422,
+    "size": 1040
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 483,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 438,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 477,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 492,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 533,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 544,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 578,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 605,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 608,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 629,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 657,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 725,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 677,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 724,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 728,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 735,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 765,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 778,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 833,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 838,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 850,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 867,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 876,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 970,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 934,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 961,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 962,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 969,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 982,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1051,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 1075,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1076,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1088,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1151,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1179,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1180,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1186,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1199,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 1072,
+    "size": 2266
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1080,
+    "size": 366
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1195,
+    "size": 851
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 296,
+    "size": 902
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 368,
+    "size": 1855
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap-e1425683202242.jpg",
+    "nw": 211,
+    "nh": 211,
+    "w": 328,
+    "h": 328,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 211px) 100vw, 211px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "211",
+    "hAttr": "211"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery1-450x609.jpg",
+    "nw": 450,
+    "nh": 609,
+    "w": 328,
+    "h": 444,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 2",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "609"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery2-450x485.jpg",
+    "nw": 450,
+    "nh": 485,
+    "w": 328,
+    "h": 353,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 3",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "485"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressodelcapitano_logo.jpg",
+    "nw": 328,
+    "nh": 143,
+    "w": 328,
+    "h": 143,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 236px) 100vw, 236px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 4",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "236",
+    "hAttr": "103"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap-e1425683202242-100x100.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery1-100x100.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 2",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressoplusvap_gallery2-100x100.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 3",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressodelcapitano_logo-100x100.jpg",
+    "nw": 100,
+    "nh": 100,
+    "w": 85,
+    "h": 85,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 100px) 100vw, 100px",
+    "alt": "ESPRESSO PLUS VAP Capsule Machine - Image 4",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "100",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/espressodelcapitano_logo.jpg",
+    "nw": 236,
+    "nh": 103,
+    "w": 163,
+    "h": 71,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": "espressodelcapitano_logo",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "163",
+    "hAttr": "71"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2017/12/puly-120x120.jpg",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2026/08/pulycaffpowder-120x120.png",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2025/07/pulyCrystalsSmall-120x120.avif",
+    "nw": 120,
+    "nh": 120,
+    "w": 120,
+    "h": 120,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 450px) 100vw, 450px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2026/08/rdl-mini-pod-bianco-nero-250x300.jpg",
+    "nw": 120,
+    "nh": 144,
+    "w": 120,
+    "h": 144,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 375px) 100vw, 375px",
+    "alt": "",
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": "375",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": false,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/mycapswithcoffee-51x80.png",
+    "nw": 51,
+    "nh": 80,
+    "w": 51,
+    "h": 80,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 51px) 100vw, 51px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "51",
+    "hAttr": "80"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2015/02/officeplusvapnew-e1425682572795-80x80.jpg",
+    "nw": 80,
+    "nh": 80,
+    "w": 80,
+    "h": 80,
+    "loading": "lazy",
+    "lazyClass": true,
+    "hasSrcset": true,
+    "sizes": "auto, (max-width: 80px) 100vw, 80px",
+    "alt": "",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "80",
+    "hAttr": "80"
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/brands.css?ver=11.1.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 847,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 26581
+ },
+ "cart": {
+  "name": "cart",
+  "url": "https://lespressousa.com/cart/",
+  "mode": "desktop",
+  "loadWall": 3280,
+  "requests": 121,
+  "bytes": 1251407,
+  "byType": {
+   "Document": {
+    "n": 1,
+    "bytes": 20749
+   },
+   "Stylesheet": {
+    "n": 50,
+    "bytes": 167414
+   },
+   "Script": {
+    "n": 58,
+    "bytes": 801019
+   },
+   "Image": {
+    "n": 5,
+    "bytes": 77548
+   },
+   "Font": {
+    "n": 7,
+    "bytes": 184677
+   }
+  },
+  "hosts": {
+   "lespressousa.com": {
+    "n": 107,
+    "bytes": 884014
+   },
+   "maxcdn.bootstrapcdn.com": {
+    "n": 1,
+    "bytes": 7138
+   },
+   "fonts.googleapis.com": {
+    "n": 3,
+    "bytes": 6053
+   },
+   "challenges.cloudflare.com": {
+    "n": 1,
+    "bytes": 28577
+   },
+   "fonts.gstatic.com": {
+    "n": 6,
+    "bytes": 180430
+   },
+   "www.googletagmanager.com": {
+    "n": 1,
+    "bytes": 121137
+   },
+   "rec.smartlook.com": {
+    "n": 2,
+    "bytes": 24058
+   }
+  },
+  "errors": [],
+  "consoleErrs": [
+   "warning: [Smartlook] Smartlook is stopped. Automation framework is detected."
+  ],
+  "largestImgs": [
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68486,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "bytes": 3641,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "bytes": 3526,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/images/remove.png",
+    "bytes": 963,
+    "mime": "image/webp"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/images/layout/bg-button.png",
+    "bytes": 932,
+    "mime": "image/webp"
+   }
+  ],
+  "largestAll": [
+   {
+    "url": "https://lespressousa.com/wp-includes/js/zxcvbn.min.js",
+    "bytes": 403022,
+    "type": "Script"
+   },
+   {
+    "url": "https://www.googletagmanager.com/gtm.js?id=GTM-PFF3R2R",
+    "bytes": 121137,
+    "type": "Script"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "bytes": 68486,
+    "type": "Image"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTVOmu1aB.woff2",
+    "bytes": 52690,
+    "type": "Font"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+    "bytes": 49086,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "bytes": 33364,
+    "type": "Stylesheet"
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "bytes": 31150,
+    "type": "Script"
+   },
+   {
+    "url": "https://challenges.cloudflare.com/turnstile/v0/g/4df4a60fa397/api.js",
+    "bytes": 28577,
+    "type": "Script"
+   },
+   {
+    "url": "https://fonts.gstatic.com/s/opensans/v44/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTUGmu1aB.woff2",
+    "bytes": 27362,
+    "type": "Font"
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/js/selectWoo/selectWoo.full.min.js?ver=1.0.9-wc.11.1.2",
+    "bytes": 22887,
+    "type": "Script"
+   }
+  ],
+  "imgFormats": {
+   "image/webp": 5
+  },
+  "protos": {
+   "http/1.1": 121
+  },
+  "uncompressed": [],
+  "ttfb": 784.3999999999069,
+  "dcl": 3086.7999999998137,
+  "load": 3276.899999999907,
+  "htmlBytes": 20284,
+  "htmlDecoded": 97255,
+  "fcp": 2184,
+  "lcp": {
+   "t": 2204,
+   "size": 20000,
+   "url": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+   "el": "IMG. "
+  },
+  "cls": 0.0003659270779749657,
+  "clsEntries": [
+   {
+    "v": 0.00015534979423868312,
+    "t": 2178.899999999907,
+    "src": "H6.|P."
+   },
+   {
+    "v": 0.00012537173675411525,
+    "t": 2471.7999999998137,
+    "src": "TD.|TH.product-subtotal|TD.product-price|TD.product-subtotal|TD."
+   },
+   {
+    "v": 0.00008520554698216735,
+    "t": 3124.7999999998137,
+    "src": "INPUT.input-text qty text no-spin-num"
+   }
+  ],
+  "tbt": 3,
+  "longtasks": 1,
+  "renderBlocking": [
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+    "dur": 158,
+    "size": 3774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+    "dur": 142,
+    "size": 654
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+    "dur": 145,
+    "size": 1844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+    "dur": 155,
+    "size": 774
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+    "dur": 241,
+    "size": 4788
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+    "dur": 415,
+    "size": 13593
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+    "dur": 261,
+    "size": 6405
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+    "dur": 280,
+    "size": 14315
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+    "dur": 367,
+    "size": 1338
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+    "dur": 340,
+    "size": 2266
+   },
+   {
+    "url": "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+    "dur": 327,
+    "size": 6475
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+    "dur": 376,
+    "size": 852
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+    "dur": 396,
+    "size": 776
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+    "dur": 448,
+    "size": 1065
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-paypal-payments/assets/ppcp-local-alternative-payment-methods-css-gateway.css?ver=4.1.3",
+    "dur": 553,
+    "size": 369
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+    "dur": 484,
+    "size": 3854
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+    "dur": 486,
+    "size": 1212
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+    "dur": 511,
+    "size": 1217
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+    "dur": 544,
+    "size": 2106
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+    "dur": 547,
+    "size": 1701
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+    "dur": 586,
+    "size": 2934
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+    "dur": 641,
+    "size": 1125
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+    "dur": 692,
+    "size": 790
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+    "dur": 646,
+    "size": 1995
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+    "dur": 664,
+    "size": 823
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+    "dur": 665,
+    "size": 1400
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+    "dur": 748,
+    "size": 884
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+    "dur": 758,
+    "size": 966
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+    "dur": 791,
+    "size": 1197
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+    "dur": 821,
+    "size": 1450
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+    "dur": 789,
+    "size": 3073
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+    "dur": 827,
+    "size": 873
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+    "dur": 858,
+    "size": 750
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+    "dur": 877,
+    "size": 832
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+    "dur": 896,
+    "size": 2000
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+    "dur": 897,
+    "size": 1550
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+    "dur": 925,
+    "size": 1196
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+    "dur": 931,
+    "size": 1223
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+    "dur": 989,
+    "size": 1881
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+    "dur": 991,
+    "size": 749
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+    "dur": 1002,
+    "size": 922
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+    "dur": 1008,
+    "size": 1858
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+    "dur": 1019,
+    "size": 1263
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+    "dur": 1034,
+    "size": 4554
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+    "dur": 1099,
+    "size": 32844
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+    "dur": 1113,
+    "size": 625
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+    "dur": 1114,
+    "size": 5181
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+    "dur": 1120,
+    "size": 30933
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255",
+    "dur": 1141,
+    "size": 2160
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/dist/i18n.min.js?ver=1dfe7db3940c23ea9216",
+    "dur": 1204,
+    "size": 2794
+   },
+   {
+    "url": "https://lespressousa.com/wp-includes/js/zxcvbn-async.min.js?ver=1.0",
+    "dur": 1202,
+    "size": 556
+   },
+   {
+    "url": "https://lespressousa.com/wp-admin/js/password-strength-meter.min.js?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1219,
+    "size": 921
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+    "dur": 1227,
+    "size": 1536
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+    "dur": 1237,
+    "size": 10599
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+    "dur": 1245,
+    "size": 565
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+    "dur": 1303,
+    "size": 684
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2",
+    "dur": 1323,
+    "size": 851
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+    "dur": 1324,
+    "size": 889
+   },
+   {
+    "url": "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 1103,
+    "size": 366
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 342,
+    "size": 902
+   },
+   {
+    "url": "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+    "dur": 369,
+    "size": 1855
+   }
+  ],
+  "imgs": [
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png",
+    "nw": 200,
+    "nh": 100,
+    "w": 200,
+    "h": 100,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 200px) 100vw, 200px",
+    "alt": "Guglielmo USA",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "300",
+    "hAttr": "100"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg",
+    "nw": 450,
+    "nh": 450,
+    "w": 32,
+    "h": 32,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": true,
+    "sizes": "(max-width: 450px) 100vw, 450px",
+    "alt": "5 Stelle 1Kg Beans",
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": "450",
+    "hAttr": "450"
+   },
+   {
+    "src": "https://lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png",
+    "nw": 200,
+    "nh": 30,
+    "w": 200,
+    "h": 30,
+    "loading": null,
+    "lazyClass": false,
+    "hasSrcset": false,
+    "sizes": null,
+    "alt": null,
+    "aboveFold": true,
+    "visible": true,
+    "wAttr": null,
+    "hAttr": null
+   }
+  ],
+  "headScripts": [
+   "https://lespressousa.com/wp-includes/js/jquery/jquery.min.js?ver=3.7.1",
+   "https://lespressousa.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1",
+   "https://lespressousa.com/wp-includes/js/dist/hooks.min.js?ver=f0f188028580e8dc1255",
+   "https://lespressousa.com/wp-includes/js/dist/i18n.min.js?ver=1dfe7db3940c23ea9216",
+   "https://lespressousa.com/wp-includes/js/zxcvbn-async.min.js?ver=1.0",
+   "https://lespressousa.com/wp-admin/js/password-strength-meter.min.js?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/slick.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/tweecool.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-frontend.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/js/nb-subscribe.min.js?ver=3.1.0",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-js.min.js?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/avia-compat.min.js?ver=8.2"
+  ],
+  "headCss": [
+   "https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=auto",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/assets/css/blocks/wc-authorize-net-cim-checkout-block.css?ver=3.10.20",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-address-suggestion.css?ver=060233b2c0b8dec285b6",
+   "https://lespressousa.com/wp-content/plugins/ups-woocommerce-shipping/assets/js/build/style-checkout-access-point-selector.css?ver=d1c214e58884bfed4044",
+   "https://lespressousa.com/wp-content/themes/enfold/css/grid.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/base.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/layout.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/shortcodes.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-woocommerce/woocommerce-mod.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=6.1.7",
+   "https://lespressousa.com/wp-content/plugins/woocommerce/assets/css/select2.css?ver=11.1.2",
+   "https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/ticker-style.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/notice-bar/css/slick-theme.min.css?ver=3.1.0",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-paypal-payments/assets/ppcp-local-alternative-payment-methods-css-gateway.css?ver=4.1.3",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-gateway-authorize-net-cim/vendor/skyverge/wc-plugin-framework/woocommerce/payment-gateway/assets/css/frontend/sv-wc-payment-gateway-payment-form.min.css?ver=6.2.4",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/blog/blog.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/postslider/postslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/buttons/buttons.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/comments/comments.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/slideshow.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/contentslider/contentslider.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/slideshow/phone-track.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/gallery/gallery.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/grid_row/grid_row.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/heading/heading.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/hr/hr.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/icon/icon.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/iconbox/iconbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/image/image.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/masonry_entries/masonry_entries.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-site-preloader.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/catalogue/catalogue.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/promobox/promobox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/social_share/social_share.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/table/table.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/tabs/tabs.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/team/team.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/testimonials/testimonials.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/config-templatebuilder/avia-shortcodes/video/video.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-fold-unfold.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/js/aviapopup/magnific-popup.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-lightbox.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/themes/enfold/css/avia-snippet-widget.min.css?ver=8.2",
+   "https://lespressousa.com/wp-content/uploads/dynamic_avia/enfold.css?ver=6ac7fea7ae42d",
+   "https://lespressousa.com/wp-content/themes/enfold/css/custom.css?ver=8.2",
+   "https://lespressousa.com/wp-content/plugins/woocommerce-bulk-discount/css/style.css?ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Merriweather&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1",
+   "https://fonts.googleapis.com/css?family=Open+Sans&ver=f6140d43313e5082cf9e8398a81f7eb1"
+  ],
+  "domNodes": 572,
+  "inlineStyleBytes": 22194,
+  "inlineScriptBytes": 19280
+ }
+}

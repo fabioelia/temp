@@ -244,13 +244,15 @@
       opts = opts || {};
       var water = opts.water || "#cfdde3", land = opts.land || "#f4efe6", district = opts.district || "#ece3d4", stroke = opts.stroke || "#b9ab95";
       var sw = opts.strokeWidth || 0.8;
-      var s = '<svg class="' + (opts.className || "gusa-map") + '" viewBox="' + m.viewBox + '" role="img" aria-label="' + (key === "us" ? "Map of the United States" : "Map of Greater Boston") + '" preserveAspectRatio="xMidYMid slice">';
+      var s = '<svg class="' + (opts.className || "gusa-map") + '" viewBox="' + m.viewBox + '" role="img" aria-label="' + ({ us: "Map of the United States", region: "Map of New England", boston: "Map of Greater Boston" }[key] || "Map") + '" preserveAspectRatio="xMidYMid slice">';
       s += '<rect width="' + m.width + '" height="' + m.height + '" fill="' + water + '"/>';
       m.paths.forEach(function (p) {
         if (p.kind === "county") s += '<path d="' + p.d + '" fill="' + land + '" stroke="' + land + '" stroke-width="1"/>';
       });
       m.paths.forEach(function (p) {
-        if (p.kind !== "county") s += '<path d="' + p.d + '" fill="' + (key === "us" ? land : district) + '" stroke="' + stroke + '" stroke-width="' + sw + '"><title>' + p.name + "</title></path>";
+        if (p.kind === "county") return;
+        if (p.kind === "state") s += '<path d="' + p.d + '" fill="none" stroke="' + stroke + '" stroke-width="' + (sw * 1.4) + '" stroke-linejoin="round"><title>' + p.name + "</title></path>";
+        else s += '<path d="' + p.d + '" fill="' + (key === "us" ? land : district) + '" stroke="' + stroke + '" stroke-width="' + sw + '"><title>' + p.name + "</title></path>";
       });
       s += "</svg>";
       return s;

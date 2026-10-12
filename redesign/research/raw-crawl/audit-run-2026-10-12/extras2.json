@@ -1,0 +1,84 @@
+{
+ "order-adjustment": {
+  "status": 200,
+  "url": "https://lespressousa.com/shop/uncategorized/order-adjustment/"
+ },
+ "pdp-outofstock": {
+  "status": 200,
+  "url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-beans-500g/"
+ },
+ "learn-more": {
+  "status": 200,
+  "url": "https://lespressousa.com/learn-more/",
+  "text": "Coffee & Your Health Italian-style coffee may reduce risk of prostate cancer, research shows ROME, Italy – Italian researchers report that Italian-style coffee, such as espresso or cappuccino, can reduce a person’s risk for developing prostate cancer. The study, conducted by I.R.C.C.S. Neuromed in collaboration with the Italian National Institute of Health and the I.R.C.C.S. Istituto Dermopatico dell’Immacolata of Rome, found that three or more cups of Italian-style coffee a day can lower prostate cancer risk. The results were also confirmed by laboratory testing Read More.. Comunicafe"
+ },
+ "dripcoffee": {
+  "status": 200,
+  "url": "https://lespressousa.com/dripcoffee/",
+  "text": "Our Drip Coffee Browse our full line of quality drip coffees, including single origin, organic, flavored and cold brew blends. The coffee beans are globally sourced and locally roasted in small batches to ensure freshness. Our coffee is backed by over 60 years of roasting and blending experience guaranteeing quality and consistency. Six distinct blends of drip coffee, ranging from light to dark roast. Specialty coffees and rotating blends available all year. Two coffee roasts developed exclusively for the Cold Brew method. Locally roasted to ensure freshness. We can provide all equipment and a"
+ },
+ "espressoblends": {
+  "status": 200,
+  "url": "https://lespressousa.com/espressoblends/",
+  "text": "Our Espresso Blends We offer a complete selection of delicious Italian espresso coffee products. Guglielmo USA provides customers with beans and ground coffees, servingware and specialty beverages. Eight distinct blends of espresso coffee. Available in retail and wholesale packaging to meet all customer needs. ‘Guglielmo’ branded espresso servingware. We can provide all equipment and accessories necessary for brewing the prefect espresso. Several blends are avalble in conviniance single serve formats Shop by blend below or Shop All Coffee Now"
+ },
+ "hotel": {
+  "status": 200,
+  "url": "https://lespressousa.com/join-us/business-solutions/hotel/",
+  "text": "Hospitality Have your guest wake up to an in-room beverage service guaranteed to satisfy and build customer loyalty We offer a variety of coffee and specialty beverages Automatic milk frothers for lattes and cappuccinos No wasted coffee and no mess to clean up The easy cup/stirrer kits reduce clean up and waste Machines are espresso point compatible Guglielmo systems are easy and safe to use Gugliemlo Espresso/beverage systems in these locations can add preceded value and enhance both customer experience and comfort GUEST ROOMS REFRESHMENT/COMMON AREAS RECEPTION AREA LONGUES LET US HELP YOU FI"
+ },
+ "more-information": {
+  "status": 200,
+  "url": "https://lespressousa.com/join-us/more-information/",
+  "text": "Business Solutions Inquiry Contact Information Your Name (required) Email (required) Phone Number (required) Your Position in the Company City Zip Business Information Are you an Existing or Returning Customer YesNo Company Name Type of Company Restaurant Office/Corporate Cafe/Coffee shop Retail Hotel Other food service Other What coffee system do you currently use? New installation Traditional (Espresso machine, pot brewers, etc.) Single serve (Keurig, Nespresso etc.) Bean to Cup Other Who is your current coffee service provider? What can we help you with? —Please choose an option— Product pr"
+ },
+ "cat-commercial": {
+  "status": 200,
+  "url": "https://lespressousa.com/product-category/equipment/commercial/",
+  "text": "Sort by Default Display 15 Products per page Puly Milk Plus® Cleaner $25.00 Add to cart Show Details puly CAFF plus® Powder Coffee Machine Cleaner $19.50 Add to cart Show Details pulyGRIND® Grinder Cleaner Crystals $35.00 Add to cart Show Details ROCKET APPARTAMENTO TCA (CHROME/BLACK) + ESPRESSO $2,250.00 Original price was: $2,250.00. $1,875.00 Current price is: $1,875.00. Sale! Select options Maxi Cap Pro Evolution 2 Group Capsule Machine Call for Price Read more Espresso Grinders Call for Price Read more Show Details WEGA and BFC Commercial Machines Call for Price Read more Show Details"
+ },
+ "oosPdp": {
+  "stock": "Out of stock",
+  "atc": false,
+  "notify": false
+ },
+ "distTab": [
+  {
+   "active": true,
+   "text": "",
+   "html": 66
+  },
+  {
+   "active": false,
+   "text": "",
+   "html": 104143
+  }
+ ],
+ "locatorUnique": [
+  "",
+  "Phone",
+  "Fax"
+ ],
+ "locatorCities": [],
+ "focusBeforeMain": {
+  "inHeader": 42,
+  "total": 87,
+  "skip": false
+ },
+ "mobilePdpCoffeeFresh": {
+  "atcY": 804,
+  "h1Y": 684.375,
+  "vh": 844
+ },
+ "mobilePdpMachineAfterView": {
+  "atcY": 0,
+  "h1Y": 792.90625,
+  "priceY": 883.71875,
+  "vh": 844
+ },
+ "mobilePdpCoffeeAfterView": {
+  "atcY": 967.328125,
+  "h1Y": 847.703125,
+  "vh": 844
+ }
+}
