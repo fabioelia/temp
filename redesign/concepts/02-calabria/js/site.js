@@ -703,8 +703,30 @@
   var pageFn = (window.CAL_PAGES || {})[PAGE];
   if (pageFn) { try { pageFn(window.CAL); } catch (err) { if (window.console) console.error(err); } }
 
+  // static intensity gauges written in the HTML as data-gauge="n"
+  $$("[data-gauge]").forEach(function (el) { el.innerHTML = gauge(+el.getAttribute("data-gauge")); });
   // press feedback for anything rendered by the page module
   $$(".btn, .add-btn, .chip, .icon-btn, .fchoice, .variant, .pcard__cta, .compare__swap").forEach(function (b) { b.setAttribute("data-m-press", ""); });
+  // headlines with italic words: split into word spans ourselves (keeping <em>) so the layer's word reveal preserves them
+  if (MO.live) $$("[data-m-split]").forEach(function (h) {
+    if (!h.children.length || h.getAttribute("data-m-split-done")) return;
+    h.setAttribute("aria-label", h.textContent.replace(/\s+/g, " ").trim());
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (w) {
+            if (!w) return;
+            if (/^\s+$/.test(w)) { frag.appendChild(document.createTextNode(w)); return; }
+            var s = document.createElement("span"); s.className = "m-word"; s.setAttribute("aria-hidden", "true");
+            s.style.display = "inline-block"; s.style.willChange = "transform"; s.textContent = w; frag.appendChild(s);
+          });
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1) { n.setAttribute("aria-hidden", "true"); walk(n); }
+      });
+    })(h);
+    h.setAttribute("data-m-split-done", "1");
+  });
   $$("[data-sensory]").forEach(function (box) { if (!box.__tips) bindSensoryTips(box.parentNode, function () { return box.__a; }, function () { return box.__b; }); });
 
   /* Motion tuning for Calabria: long, soft "slow tide" easing; short travel distances so nothing feels busy. */

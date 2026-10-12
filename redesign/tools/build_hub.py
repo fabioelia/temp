@@ -183,7 +183,7 @@ def build():
     <p class="muted"><strong>Built for:</strong> {E(c['audience'])}</p>
     <ul class="chips">{sig}</ul>
     <p class="muted"><strong>Motion:</strong> {E(c['motion'])}</p>
-    <div class="btns"><a class="btn" href="{base}index.html" data-m-press>Open concept</a><a class="btn ghost" href="{base}README.md">Design notes</a></div>
+    <div class="btns"><a class="btn" href="{base}index.html" data-m-press>Open concept</a><a class="btn ghost" href="{base}notes.html">Design notes</a></div>
     <p class="pagelinks">{links}</p>
   </div>
 </article>''')

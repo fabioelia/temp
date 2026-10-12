@@ -82,6 +82,26 @@
   C.lifestyle = function (blend) { return LIFESTYLE[blend] ? G.img("assets/img/brand/" + LIFESTYLE[blend]) : null; };
   C.bucket = function (n) { return G.intensityBucket(n); };
 
+  /* brand.json fields carry source notes in brackets: show clean customer-facing text */
+  C.clean = function (s) {
+    s = String(s || "").replace(/\s*\([^)]*\)/g, "").replace(/\s*-\s*(PROPOSED|UNVERIFIED).*$/i, "").trim();
+    s = s.split(/[;,]\s*(?=softened|official|L'Espresso|"roasted)|\.\s/)[0].replace(/[.;,]+$/, "").trim();
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  };
+  C.notes = function (b) {
+    return (b && b.notes || []).map(function (n) { return C.clean(n).replace(/\.$/, ""); }).filter(Boolean);
+  };
+  var COMP = {
+    "extra-bar": "Arabica & Robusta", "5-stelle": "Arabica-led: Central American & Brazilian Arabica", "espresso-bar": "Arabica & Robusta",
+    "espresso-classico": "Robusta (Africa, Asia) & Arabica (Brazil, Central America)", "caffetteria": "Arabica & Robusta from South America, Africa & Asia",
+    "copacabana": "20% Arabica · 80% Robusta", "club-99": "Central American Arabica, finished with fine Robusta", "silver-signature": "Fine Arabica coffees",
+    "organic": "100% Arabica, certified organic", "decaf": "100% Arabica, decaffeinated (≤ 0.10% caffeine)", "oro70": "100% Arabica",
+    "rosso70": "Arabica & Robusta, “Gusto Classico”", "dek70": "Decaffeinated (≤ 0.10% caffeine)", "catanzaro-cz": "Intense house capsule blend",
+    "premium-blend-drip": "Central & South American beans", "french-roast-drip": "Dark-roasted blend", "decaf-drip": "Colombian, decaffeinated"
+  };
+  C.compShort = function (id) { return COMP[id] || C.clean((G.blend(id) || {}).composition); };
+  C.lineLabel = function (line) { return { espresso: "Espresso blend", capsule: "Capsule line", drip: "Drip coffee" }[line] || "Blend"; };
+
   /* ======================================================================
      Product helpers: Format · Fits · Intensity
      ====================================================================== */
