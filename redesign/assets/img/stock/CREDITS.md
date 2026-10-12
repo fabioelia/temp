@@ -20,7 +20,6 @@ Notes: people shown are not models of Guglielmo USA and must not be presented as
 | `espresso-shot-naked-portafilter-01.jpg` | Photo by Charles Sims (@1charlessims) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/coffee-in-clear-glass-mug-k-w7laFKa0g) |
 | `espresso-shot-glass-saucer-light-01.jpg` | Photo by Adi Goldstein (@adigold1) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/clear-glass-cup-on-saucer-xKS-1DP4g7A) |
 | `espresso-shot-white-cup-light-01.jpg` | Photo by Nathan Dumlao (@nate_dumlao) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/white-ceramic-teacup-on-saucer-l59fmhtprIE) |
-| `espresso-shot-portafilter-closeup-01.jpg` | Photo by Nathan Dumlao (@nate_dumlao) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/espresso-pouring-from-portafilter-So7cyDtlmls) |
 | `espresso-shot-drip-yellow-cup-01.jpg` | Photo by Mohamed Shaffaf (@shaffuscanvas) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/espresso-dripping-from-metal-portafilter-RZJRWMnd0DM) |
 | `espresso-shot-wood-table-01.jpg` | Photo by Katt Galvan (@kattgalvan) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-cup-of-coffee-sitting-on-top-of-a-white-plate-3v0vppDjvMI) |
 | `espresso-shot-bottomless-topdown-01.jpg` | Photo by Patrick Untersee (@sparki) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/clear-drinking-glass-with-brown-liquid-PrVcG2cXWao) |
@@ -52,7 +51,6 @@ Notes: people shown are not models of Guglielmo USA and must not be presented as
 | `bar-caffe-storefront-01.jpg` | Photo by Evgeny Matveev (@eugene_rus) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-bakery-with-a-sign-above-it-that-says-cafe-hrD-pG8X3jo) |
 | `bar-barista-portrait-01.jpg` | Photo by Brent Gorwin (@brentg) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/man-pouring-latte-on-coffee-vhQUnmnOLys) |
 | `bar-espresso-cup-pour-01.jpg` | Photo by Victoria Shes (@victoriakosmo) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/white-ceramic-mug-with-coffee-p2Vwn3Jj3V8) |
-| `bar-red-cup-pour-01.jpg` | Photo by Sebastian Coman Photography (@sebastiancoman) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/person-holding-cup-of-drink-_dMHv6bNi5A) |
 | `bar-cafe-counter-pendants-01.jpg` | Photo by Nafinia Putra (@nputra) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/black-kitchen-appliance-on-kitchen-island-with-pendant-lights-Kwdp-0pok-I) |
 | `bar-latte-pour-dark-portrait-01.jpg` | Photo by Nathan Dumlao (@nate_dumlao) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/man-pouring-milk-in-coffee-2z3MOB3kfJU) |
 
@@ -66,7 +64,6 @@ Notes: people shown are not models of Guglielmo USA and must not be presented as
 | `beans-cupped-hands-01.jpg` | Photo by Jakub Kapusnak (@foodiesfeed) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/stack-of-coffee-beans-on-persons-hand-1LaCrYx5J7I) |
 | `beans-green-coffee-macro-01.jpg` | Photo by Battlecreek Coffee Roasters (@battlecreekcoffeeroasters) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/coffee-beans-close-up-photography-Yx1XkPYUBss) |
 | `beans-roasted-macro-01.jpg` | Photo by Anastasiia Chepinska (@anastasiiachepinska) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/brown-coffee-beans-on-brown-wooden-table-lcfH0p6emhw) |
-| `beans-green-among-roasted-01.jpg` | Photo by Sabin Popa (@sabin_mihai) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/brown-coffee-beans-with-green-leaf-WqCkUU30Gvk) |
 | `beans-sack-portrait-01.jpg` | Photo by Tina Schmidt (@ts00) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-burlap-sack-filled-with-roasted-coffee-beans-Epc4ygprEx4) |
 | `beans-roaster-cooling-portrait-01.jpg` | Photo by Scott Soltys-Curry (@heyscottcurry) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-close-up-of-a-machine-making-coffee-beans-_7CVm353m7A) |
 | `beans-hand-pan-01.jpg` | Photo by Milo Miloezger (@miloezger) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/coffee-beans-on-gray-steel-wok-rKYRJu0n06Y) |
@@ -78,7 +75,6 @@ Notes: people shown are not models of Guglielmo USA and must not be presented as
 | `origin-hand-picking-cherries-01.jpg` | Photo by Carlos Felipe Ramírez Mesa (@cafera13) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-person-holding-a-bunch-of-berries-Ni7Cfu8AIMI) |
 | `origin-ripe-cherries-cluster-01.jpg` | Photo by Quang Nguyen Vinh (@quangpraha) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-bunch-of-coffee-beans-growing-on-a-tree-OE1zLjHsfm0) |
 | `origin-cherries-soft-light-01.jpg` | Photo by Clint McKoy (@clintmckoy) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/round-green-and-red-berries-h28p96ICizo) |
-| `origin-red-cherries-closeup-01.jpg` | Photo by Elle inlom (@elliethailand64) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-close-up-of-some-berries-JzAWr74kO3E) |
 | `origin-picker-basket-01.jpg` | Photo by Gerson Cifuentes (@gtk1x) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/a-person-picking-coffee-beans-from-a-tree-0-SWia-_xjA) |
 | `origin-plantation-hills-01.jpg` | Photo by Reiseuhu (@reiseuhu) on Unsplash | Unsplash License | [unsplash.com](https://unsplash.com/photos/aerial-photography-of-forest-2GrRlrLReQc) |
 

@@ -179,3 +179,12 @@ footer.foot { padding-block: 40px 60px; color: var(--muted); font-size: .88rem; 
 footer.foot .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+/* refinements */
+.stat .big .num { font-family: inherit; font-variant-numeric: lining-nums tabular-nums; }
+.hero .eyebrow { display: block; margin-bottom: 18px; }
+@media (max-width: 720px) {
+  .mast nav { flex-wrap: nowrap; overflow-x: auto; width: 100%; gap: 16px; padding-bottom: 2px; scrollbar-width: none; }
+  .mast nav::-webkit-scrollbar { display: none; }
+  .mast nav a { white-space: nowrap; }
+}

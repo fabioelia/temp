@@ -175,30 +175,6 @@
     "bytes": 40764
   },
   {
-    "file": "espresso-shot-portafilter-closeup-01.jpg",
-    "category": "espresso-shot",
-    "description": "Vertical macro of espresso flowing from a dark portafilter into a cup, with a soft creamy out-of-focus foreground; subject in the upper half, blurred lower third.",
-    "orientation": "portrait",
-    "width": 934,
-    "height": 1400,
-    "tone": "dark",
-    "dominant_colors": [
-      "#010603",
-      "#7e6e56",
-      "#5a442b"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/espresso-pouring-from-portafilter-So7cyDtlmls",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
-    "source_id": "photo-1609050471053-8636409f9f5b",
-    "bytes": 95197
-  },
-  {
     "file": "espresso-shot-drip-yellow-cup-01.jpg",
     "category": "espresso-shot",
     "description": "Vertical close-up of the last espresso drops falling from a chrome group head toward a yellow cup at the bottom edge; warm metallic tones, quieter blurred area mid-left.",
@@ -711,28 +687,52 @@
     "bytes": 111100
   },
   {
-    "file": "bar-red-cup-pour-01.jpg",
+    "file": "bar-cafe-counter-pendants-01.jpg",
     "category": "bar",
-    "description": "Square shot of a barista's hands pouring steamed milk into a red cup under the group heads of a warm-lit commercial espresso machine; busy, energetic, fills the frame.",
-    "orientation": "square",
+    "description": "Bright café counter with Edison-bulb pendants, white-brick wall with wooden shelves, chalkboard menu, grinders and a multi-group espresso machine while a barista works; airy, light upper area.",
+    "orientation": "landscape",
     "width": 1400,
-    "height": 1400,
+    "height": 788,
     "tone": "mid",
     "dominant_colors": [
-      "#031316",
-      "#6f381c",
-      "#d1944d"
+      "#271f18",
+      "#898076",
+      "#aca9a6"
     ],
     "good_for": [
       "card",
       "inline"
     ],
     "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/person-holding-cup-of-drink-_dMHv6bNi5A",
+    "source_url": "https://unsplash.com/photos/black-kitchen-appliance-on-kitchen-island-with-pendant-lights-Kwdp-0pok-I",
     "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Sebastian Coman Photography (@sebastiancoman) on Unsplash",
-    "source_id": "photo-1576670392954-38b1fdb78b1d",
-    "bytes": 272253
+    "credit": "Photo by Nafinia Putra (@nputra) on Unsplash",
+    "source_id": "photo-1453614512568-c4024d13c247",
+    "bytes": 180228
+  },
+  {
+    "file": "bar-latte-pour-dark-portrait-01.jpg",
+    "category": "bar",
+    "description": "Tattooed barista pouring milk from a steel pitcher into a latte glass with heart art over a dark wooden bar; dramatic dark background, subject centered in the upper half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#050b08",
+      "#19150c",
+      "#392c1d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/man-pouring-milk-in-coffee-2z3MOB3kfJU",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1514066558159-fc8c737ef259",
+    "bytes": 89524
   },
   {
     "file": "beans-roasting-drum-01.jpg",
@@ -884,30 +884,6 @@
     "bytes": 309271
   },
   {
-    "file": "beans-green-among-roasted-01.jpg",
-    "category": "beans",
-    "description": "Top-down macro of a single pale green coffee bean nestled among glossy dark roasted beans; green bean slightly below center, dark texture everywhere else.",
-    "orientation": "portrait",
-    "width": 933,
-    "height": 1400,
-    "tone": "dark",
-    "dominant_colors": [
-      "#010100",
-      "#160f06",
-      "#0a0601"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/brown-coffee-beans-with-green-leaf-WqCkUU30Gvk",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Sabin Popa (@sabin_mihai) on Unsplash",
-    "source_id": "photo-1599231110146-c7cb40d0c6ff",
-    "bytes": 125436
-  },
-  {
     "file": "beans-sack-portrait-01.jpg",
     "category": "beans",
     "description": "Roasted beans in an open natural burlap sack with stenciled stripes in soft daylight; plain grey background in the top-left corner.",
@@ -1053,30 +1029,6 @@
     "credit": "Photo by Clint McKoy (@clintmckoy) on Unsplash",
     "source_id": "photo-1515694590185-73647ba02c10",
     "bytes": 140654
-  },
-  {
-    "file": "origin-red-cherries-closeup-01.jpg",
-    "category": "origin",
-    "description": "Macro of glossy ripe red coffee cherries on a branch with large green leaves and bokeh behind; subject fills the center.",
-    "orientation": "landscape",
-    "width": 1400,
-    "height": 1050,
-    "tone": "mid",
-    "dominant_colors": [
-      "#3f3e15",
-      "#7c7a4e",
-      "#999b78"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/a-close-up-of-some-berries-JzAWr74kO3E",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Elle inlom (@elliethailand64) on Unsplash",
-    "source_id": "photo-1667900692644-bdc14c0d5463",
-    "bytes": 182496
   },
   {
     "file": "origin-picker-basket-01.jpg",
@@ -1843,6 +1795,30 @@
     "bytes": 153292
   },
   {
+    "file": "home-espresso-machine-corner-01.jpg",
+    "category": "home",
+    "description": "Home barista station with a semi-automatic espresso machine, pour-over set and kettle on a wooden table under a white lamp, framed by plants; warm, vertical.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#8a7461",
+      "#20200f",
+      "#35391f"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-and-silver-coffee-maker-on-brown-wooden-table-9aNpX5wfaU0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Luke Porter (@lukeporter) on Unsplash",
+    "source_id": "photo-1620051787208-a45bc64e32ff",
+    "bytes": 152196
+  },
+  {
     "file": "business-office-kitchenette-01.jpg",
     "category": "business",
     "description": "Modern office break-room kitchenette with matte-black cabinets, under-cabinet lighting and a bean-to-cup machine in a wood-trimmed alcove beside a grey-carpet corridor; clean and light, open wall at right.",
@@ -2015,6 +1991,31 @@
     "bytes": 212115
   },
   {
+    "file": "business-commercial-espresso-machine-01.jpg",
+    "category": "business",
+    "description": "Front close-up of a stainless two-group commercial espresso machine with touch-button panel and locked portafilters, warm café bokeh behind (brand marks cropped out).",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1027,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0f1313",
+      "#51412f",
+      "#3a2a1e"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/silver-espresso-machine-hvcQJUFkvNg",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Isabela Kronemberger (@kronemberger) on Unsplash",
+    "source_id": "photo-1531937465322-9909ce13f8ca",
+    "bytes": 203828
+  },
+  {
     "file": "food-pairing-cornetti-cappuccino-topdown-01.jpg",
     "category": "food-pairing",
     "description": "Overhead view of a cappuccino with leaf latte art beside two sugar-dusted cornetti filled with apricot jam and custard on a rustic board over white marble; bright, open marble top-left.",
@@ -2110,6 +2111,54 @@
     "credit": "Photo by Esther Kontny (@esther_kontny) on Unsplash",
     "source_id": "photo-1672707069464-ca9c580043cf",
     "bytes": 175121
+  },
+  {
+    "file": "food-pairing-cannoli-fork-01.jpg",
+    "category": "food-pairing",
+    "description": "A hand cutting into a cream-filled cannolo with a fork on a striped plate in a warm, dim pastry shop; dark background in the upper half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#2e1406",
+      "#0d0803",
+      "#b38974"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-hand-uses-a-fork-to-eat-a-cannoli-sBCa7efmN9Y",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Brelyn Bashrum (@brelynkk) on Unsplash",
+    "source_id": "photo-1777333033326-d20ad009b24e",
+    "bytes": 153128
+  },
+  {
+    "file": "food-pairing-tiramisu-jars-01.jpg",
+    "category": "food-pairing",
+    "description": "Tiramisu in glass cups topped with cocoa-dusted mascarpone peaks on a wooden board with meringues and gold spoons; dark rustic backdrop across the top.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1c1611",
+      "#8e6143",
+      "#53301b"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-wooden-table-topped-with-desserts-on-top-of-plates-wb1qOsAjFPM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anna Jakutajc-Wojtalik (@annajakwoj) on Unsplash",
+    "source_id": "photo-1710106519622-8c49d0bcff2f",
+    "bytes": 199788
   },
   {
     "file": "textures-dark-wood-planks-01.jpg",
@@ -2442,150 +2491,5 @@
     "credit": "Photo by RoseBox رز باکس (@rosebox) on Unsplash",
     "source_id": "photo-1566576721346-d4a3b4eaeb55",
     "bytes": 72944
-  },
-  {
-    "file": "bar-cafe-counter-pendants-01.jpg",
-    "category": "bar",
-    "description": "Bright café counter with Edison-bulb pendants, white-brick wall with wooden shelves, chalkboard menu, grinders and a multi-group espresso machine while a barista works; airy, light upper area.",
-    "orientation": "landscape",
-    "width": 1400,
-    "height": 788,
-    "tone": "mid",
-    "dominant_colors": [
-      "#271f18",
-      "#898076",
-      "#aca9a6"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/black-kitchen-appliance-on-kitchen-island-with-pendant-lights-Kwdp-0pok-I",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Nafinia Putra (@nputra) on Unsplash",
-    "source_id": "photo-1453614512568-c4024d13c247",
-    "bytes": 180228
-  },
-  {
-    "file": "bar-latte-pour-dark-portrait-01.jpg",
-    "category": "bar",
-    "description": "Tattooed barista pouring milk from a steel pitcher into a latte glass with heart art over a dark wooden bar; dramatic dark background, subject centered in the upper half.",
-    "orientation": "portrait",
-    "width": 933,
-    "height": 1400,
-    "tone": "dark",
-    "dominant_colors": [
-      "#050b08",
-      "#19150c",
-      "#392c1d"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/man-pouring-milk-in-coffee-2z3MOB3kfJU",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
-    "source_id": "photo-1514066558159-fc8c737ef259",
-    "bytes": 89524
-  },
-  {
-    "file": "home-espresso-machine-corner-01.jpg",
-    "category": "home",
-    "description": "Home barista station with a semi-automatic espresso machine, pour-over set and kettle on a wooden table under a white lamp, framed by plants; warm, vertical.",
-    "orientation": "portrait",
-    "width": 1120,
-    "height": 1400,
-    "tone": "mid",
-    "dominant_colors": [
-      "#8a7461",
-      "#20200f",
-      "#35391f"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/black-and-silver-coffee-maker-on-brown-wooden-table-9aNpX5wfaU0",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Luke Porter (@lukeporter) on Unsplash",
-    "source_id": "photo-1620051787208-a45bc64e32ff",
-    "bytes": 152196
-  },
-  {
-    "file": "business-commercial-espresso-machine-01.jpg",
-    "category": "business",
-    "description": "Front close-up of a stainless two-group commercial espresso machine with touch-button panel and locked portafilters, warm café bokeh behind (brand marks cropped out).",
-    "orientation": "landscape",
-    "width": 1800,
-    "height": 1027,
-    "tone": "dark",
-    "dominant_colors": [
-      "#0f1313",
-      "#51412f",
-      "#3a2a1e"
-    ],
-    "good_for": [
-      "hero",
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/silver-espresso-machine-hvcQJUFkvNg",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Isabela Kronemberger (@kronemberger) on Unsplash",
-    "source_id": "photo-1531937465322-9909ce13f8ca",
-    "bytes": 203828
-  },
-  {
-    "file": "food-pairing-cannoli-fork-01.jpg",
-    "category": "food-pairing",
-    "description": "A hand cutting into a cream-filled cannolo with a fork on a striped plate in a warm, dim pastry shop; dark background in the upper half.",
-    "orientation": "portrait",
-    "width": 933,
-    "height": 1400,
-    "tone": "dark",
-    "dominant_colors": [
-      "#2e1406",
-      "#0d0803",
-      "#b38974"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/a-hand-uses-a-fork-to-eat-a-cannoli-sBCa7efmN9Y",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Brelyn Bashrum (@brelynkk) on Unsplash",
-    "source_id": "photo-1777333033326-d20ad009b24e",
-    "bytes": 153128
-  },
-  {
-    "file": "food-pairing-tiramisu-jars-01.jpg",
-    "category": "food-pairing",
-    "description": "Tiramisu in glass cups topped with cocoa-dusted mascarpone peaks on a wooden board with meringues and gold spoons; dark rustic backdrop across the top.",
-    "orientation": "portrait",
-    "width": 933,
-    "height": 1400,
-    "tone": "mid",
-    "dominant_colors": [
-      "#1c1611",
-      "#8e6143",
-      "#53301b"
-    ],
-    "good_for": [
-      "card",
-      "inline"
-    ],
-    "source": "Unsplash",
-    "source_url": "https://unsplash.com/photos/a-wooden-table-topped-with-desserts-on-top-of-plates-wb1qOsAjFPM",
-    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
-    "credit": "Photo by Anna Jakutajc-Wojtalik (@annajakwoj) on Unsplash",
-    "source_id": "photo-1710106519622-8c49d0bcff2f",
-    "bytes": 199788
   }
 ]
