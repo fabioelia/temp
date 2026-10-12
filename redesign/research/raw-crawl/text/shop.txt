@@ -1,0 +1,105 @@
+TITLE: Shop – Guglielmo USA
+META DESC: None
+H1: ['Shop', 'Shop']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 52 Forms: 1
+IMAGES (5):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2014/06/coffee-450x450.jpeg | alt='Coffee'
+  https://lespressousa.com/wp-content/uploads/2017/12/puly-450x450.jpg | alt='Espresso Accessories'
+  https://lespressousa.com/wp-content/uploads/2014/06/Polaris-EVD-450x374.png | alt='Machines and Parts'
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+Shop
+You are here:
+Home
+1
+/
+Shop
+2
+Shop
+Sort by
+Default
+Default
+Custom
+Name
+Price
+Date
+Popularity (sales)
+Average rating
+Relevance
+Random
+Product ID
+Display
+15 Products per page
+15 Products per page
+30 Products per page
+45 Products per page
+Coffee
+(44)
+Espresso Accessories
+(5)
+Machines and Parts
+(12)
+Need help choosing?
+Search Products
+Search for:
+Search
+Filter by Product
+Coffee
+(37)
+Machines and Parts
+(11)
+Specialty
+(6)
+Filter by Type
+Espresso
+(31)
+Drip (American)
+(7)
+Decaf
+(8)
+Filter by Format
+Ground
+(12)
+Whole Beans
+(13)
+Single Serve - Pods
+(7)
+Single Serve - Capsules
+(10)
+Single Serve - Compatible Capsules
+(7)
+Filter by Blend
+Caffetteria
+(2)
+Club 99
+(1)
+Copacabana
+(2)
+Espresso Bar
+(2)
+Espresso Classico
+(11)
+Extra Bar
+(3)
+5 Stelle
+(6)
+Silver
+(1)
+Filter by Style
+Central Italian
+(6)
+Northern Italian
+(9)
+Southern Italian
+(12)
+FILTER BY INTENDED EQUIPMENT USE
+Commercial
+(3)
+Home
+(4)
+Office
+(1)

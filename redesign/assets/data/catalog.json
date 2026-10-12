@@ -1,0 +1,2459 @@
+{
+ "meta": {
+  "source": "https://lespressousa.com/wp-json/wc/store/v1/products (crawled 2026-10-12)",
+  "systems": {
+   "espresso-point-36": "Guglielmo 36 mm capsules — fit Lavazza Espresso Point®-type machines (Espresso del Capitano, RDL, Panafe)",
+   "nespresso-original": "Espresso 70 line (ORO70/ROSSO70/DEK70) — compatible with Nespresso® Original-line machines",
+   "ese-44": "E.S.E. 44 mm paper pods (cialde) — fit any ESE pod machine (Grimac, RDL)",
+   "pod-38": "38 mm pods — discontinued",
+   "traditional": "Traditional portafilter espresso machine (beans/ground)"
+  },
+  "notes": "Prices in USD. quote=true means \"call for price\" today. Case discount on coffee: 5% (6+), 6% (12+), 8% (18+). Order Adjustment item removed."
+ },
+ "products": [
+  {
+   "id": 56,
+   "slug": "5-stelle-1kg-beans",
+   "name": "5 Stelle 1 kg Beans",
+   "category": "coffee",
+   "blend": "5-stelle",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 32.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/5-stelle-1kg-beans__0.jpg",
+    "assets/img/products/5-stelle-1kg-beans__1.jpg"
+   ],
+   "description": "A perfect combination of top quality Central-American and Brazilian Arabica beans along with other select top quality beans give the appropriately named 5 star blend its unmistakable flavor. Characteristics : Very good cream texture, with a taste that is both delicate and intense with a veining of sweetness. Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/5-stelle/5-stelle-1kg-beans/"
+  },
+  {
+   "id": 153,
+   "slug": "5-stelle-250g-ground",
+   "name": "5 Stelle 250 g Ground",
+   "category": "coffee",
+   "blend": "5-stelle",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 7.25,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/5-stelle-250g-ground__0.jpg"
+   ],
+   "description": "The delicious “5 Stelle”, five star, blend conveniently ground for your moka machine. Features a “stand up”, releasable, stay-fresh bag design. Buy a case of 20 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/5-stelle/5-stelle-250g-ground/"
+  },
+  {
+   "id": 151,
+   "slug": "5-stelle-250g-ground-fine-grinding",
+   "name": "5 Stelle 250 g Ground Fine Grind (Moka)",
+   "category": "coffee",
+   "blend": "5-stelle",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 7.25,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/5-stelle-250g-ground-fine-grinding__0.jpg"
+   ],
+   "description": "The delicious “5 Stelle”, five star, blend conveniently ground fine for bar style “espresso” machines. Features a “stand up”, releasable, stay-fresh bag design. This blend specifically ground finer for espresso machines. For Moka style, stove top machines, please see the regular 5 Stelle Ground . Buy a case of 20 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/5-stelle/5-stelle-250g-ground-fine-grinding/"
+  },
+  {
+   "id": 70,
+   "slug": "caffetteria-1kg-beans",
+   "name": "Caffetteria 1 kg Beans",
+   "category": "coffee",
+   "blend": "caffetteria",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 27.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/caffetteria-1kg-beans__0.jpg"
+   ],
+   "description": "A blend of carefully selected quality beans make Caffetteria a delicious and “crema” filled coffee. Excellent for both the moka and barrista machine. Characteristic : the identifying characteristics of Caffetteria are its strong taste and rich cream. Customers have told us that this blend can also be enjoyed as American (drip) coffee with a surprisingly distinct flavor. Also used to add kick to other lighter blends. Buy a case of 6 and save.",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/caffetteria/caffetteria-1kg-beans/"
+  },
+  {
+   "id": 23089,
+   "slug": "club-99-250g-ground",
+   "name": "Club 99 250 g Ground",
+   "category": "coffee",
+   "blend": "club-99",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 8.99,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/club-99-250g-ground__0.jpg"
+   ],
+   "description": "A top shelf blend of the finest Arabica and Robusta qualities on the market, the result of years of careful research and selection of sweet Central American origins. Now in in the new “stand up”, releasable, stay-fresh bag package. A unique and creamy taste, an unmistakable flavor.",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/special-blends/club-99-250g-ground/"
+  },
+  {
+   "id": 135,
+   "slug": "copacabana-1-kg-beans",
+   "name": "Copacabana 1 kg Beans",
+   "category": "coffee",
+   "blend": "copacabana",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 26.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/copacabana-1-kg-beans__0.jpg"
+   ],
+   "description": "All around balanced blend ideal for cappuccinos, adding kick to other blends but also for a robust espresso of its own. Characteristics: Ideal for cappuccinos Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/copacabana/copacabana-1-kg-beans/"
+  },
+  {
+   "id": 19418,
+   "slug": "decaf-drip-beans",
+   "name": "Decaf Drip Beans",
+   "category": "coffee",
+   "blend": "decaf",
+   "format": "drip-beans",
+   "system": null,
+   "size": "5 lb case",
+   "price": 120.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/decaf-drip-beans__0.jpg"
+   ],
+   "description": "Guglielmo USA Colombian Drip in Whole Beans Full-bodied decaf blend with chocolatey, nutty and caramelly aftertaste. 2 x 5 lb bulk, neutral bags (1o lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/decaf-drip-beans/"
+  },
+  {
+   "id": 1204,
+   "slug": "decaf-drip-ground",
+   "name": "Decaf Drip Ground",
+   "category": "coffee",
+   "blend": "decaf",
+   "format": "drip-ground",
+   "system": null,
+   "size": "5 lb case",
+   "price": 108.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/decaf-drip-ground__0.jpg"
+   ],
+   "description": "Guglielmo USA Decaf Drip Ground Coffee A decaf blend of the finest beans 80 x 2 oz individually dosed packages (10 lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/decaf-drip-ground/"
+  },
+  {
+   "id": 24257,
+   "slug": "espresso-decaf-250g-ground-bag",
+   "name": "Espresso Decaf 250 g Bag",
+   "category": "coffee",
+   "blend": "decaf",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 7.99,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-decaf-250g-ground-bag__0.jpg"
+   ],
+   "description": "Guglielmo’s 100% Arabica decaffeinated blend. Decaffeination obtained through the water-based decaffeination process. Buy a case of 12 and save",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-decaf-250g-ground-bag/"
+  },
+  {
+   "id": 62,
+   "slug": "espresso-decaf-250g-ground-can",
+   "name": "Espresso Decaf 250 g Ground Can",
+   "category": "coffee",
+   "blend": "decaf",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 6.99,
+   "compare_at": 8.99,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-decaf-250g-ground-can__0.jpg"
+   ],
+   "description": "Guglielmo’s classic decaffeinated blend in can package. Decaffeination obtained through the water-based decaffeination process. Buy a case of 12 and save",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-decaf-250g-ground-can/"
+  },
+  {
+   "id": 68,
+   "slug": "espresso-decaf-beans-6kg",
+   "name": "Espresso Decaf Beans (6 kg)",
+   "category": "coffee",
+   "blend": "decaf",
+   "format": "beans",
+   "system": null,
+   "size": "6 kg",
+   "price": 192.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-decaf-beans-6kg__0.jpg"
+   ],
+   "description": "Specially blended for Guglielmo USA ( packaged in neutral bags ) a delicious combination of high quality beans decaffeinated for a healthier cup. Decaffeination obtained through the more healthy water based decaffeination process. 12 x 500g bags per case (6 Kg). Wholesale item. Sold in case quantities only.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-decaf-beans-6kg/"
+  },
+  {
+   "id": 52,
+   "slug": "espresso-bar-1kg-beans",
+   "name": "Espresso Bar 1 kg Beans",
+   "category": "coffee",
+   "blend": "espresso-bar",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 32.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-bar-1kg-beans__0.jpg"
+   ],
+   "description": "A newer blend from Guglielmo aimed to capture the essence of Espresso Classico but blending in select beans to add a bit more sweetness. Characteristics : The perfect balance between espresso’s desirable strength and delicious sweetness. Excellent cream and aroma. Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-bar/espresso-bar-1kg-beans/"
+  },
+  {
+   "id": 4756,
+   "slug": "espresso-classico-125g-ground-in-can",
+   "name": "Espresso Classico 125 g Ground in Can",
+   "category": "coffee",
+   "blend": "espresso-classico",
+   "format": "ground",
+   "system": null,
+   "size": "125 g",
+   "price": 4.75,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-classico-125g-ground-in-can__0.jpg"
+   ],
+   "description": "Guglielmo coffee has become famous thanks to the intense flavor of this ground blend, specially formulated for the moka style machine. This ground blend is among the most popular ground blends in Southern Italian homes. The intensity of this blend can be attributed to the perfect balance of Robusta coffee and Brazilian Arabica coffee. Characteristics : Great aroma and cream and uplifting taste. 125g can container for extended freshness. Buy a case of 18 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-125g-ground-in-can/"
+  },
+  {
+   "id": 66,
+   "slug": "espresso-classico-1kg-beans",
+   "name": "Espresso Classico 1 kg Beans",
+   "category": "coffee",
+   "blend": "espresso-classico",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 31.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-classico-1kg-beans__0.jpg"
+   ],
+   "description": "Robusta and Brazilian Arabica beans result in a strong coffee, with great cream, nutty taste and room filling aroma. This particular series was blended with the idea of making great coffee on moka, or other style stove top, machines. It is also often used together with other blends to add depth or as a standalone Southern Italian caffe`. Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-1kg-beans/"
+  },
+  {
+   "id": 54,
+   "slug": "espresso-classico-250g-ground",
+   "name": "Espresso Classico 250 g Ground",
+   "category": "coffee",
+   "blend": "espresso-classico",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 6.69,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-classico-250g-ground__0.jpg",
+    "assets/img/products/espresso-classico-250g-ground__1.jpg"
+   ],
+   "description": "Guglielmo’s tradition is held on this blend. Guglielmo coffee has become famous thanks to the intense flavor of this ground blend, specially formulated for the moka style machine. This ground blend is among the most popular blends in the Southern Italian homes. The intensity of this blend can be attributed to the perfect balance of Robusta coffee and Brazilian Arabica coffee. Characteristics : Great aroma and cream and uplifting taste. Buy a case of 20 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-250g-ground/"
+  },
+  {
+   "id": 64,
+   "slug": "espresso-classico-beans-500g",
+   "name": "Espresso Classico Beans 500 g",
+   "category": "coffee",
+   "blend": "espresso-classico",
+   "format": "beans",
+   "system": null,
+   "size": "500 g",
+   "price": 16.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-classico-beans-500g__0.jpg"
+   ],
+   "description": "Robusta and Brazilian Arabica beans result in a strong coffee, with great cream, nutty taste and room filling aroma. This particular series was blended with the idea of making great coffee on moka, or other style stove top, machines. It is also often used together with other blends to add depth or as a standalone Southern Italian caffe`.",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/espresso-classico/espresso-classico-beans-500g/"
+  },
+  {
+   "id": 58,
+   "slug": "extra-bar-1kg-beans",
+   "name": "Extra Bar 1 kg Beans",
+   "category": "coffee",
+   "blend": "extra-bar",
+   "format": "beans",
+   "system": null,
+   "size": "1 kg",
+   "price": 33.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/extra-bar-1kg-beans__0.jpg"
+   ],
+   "description": "A blend you will find in many “bars” in Southern Italy and one that continues to be refined over the years to ensure its spot in the class of “authentic” Italian espresso. Characteristics : Excellent cream texture, with a bold aroma and unforgettable taste. Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/extra-bar/extra-bar-1kg-beans/"
+  },
+  {
+   "id": 133,
+   "slug": "extra-bar-250g-ground",
+   "name": "Extra Bar 250 g Ground",
+   "category": "coffee",
+   "blend": "extra-bar",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 7.2,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/extra-bar-250g-ground__0.jpg"
+   ],
+   "description": "The delicious and intense flavor of Extra Bar ready ground for your moka. Characteristic : Excellent aroma and taste Buy case quantity and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/extra-bar/extra-bar-250g-ground/"
+  },
+  {
+   "id": 1201,
+   "slug": "french-roast-blend-drip-beans",
+   "name": "French Roast Blend Drip Beans",
+   "category": "coffee",
+   "blend": "french-roast",
+   "format": "drip-beans",
+   "system": null,
+   "size": "5 lb case",
+   "price": 110.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/french-roast-blend-drip-beans__0.jpg"
+   ],
+   "description": "Guglielmo USA French Roast Blend Drip in Whole Beans Rich & full-bodied, this blend will leave sweet, smoky caramel aftertaste. A dark roasted blend 2 x 5 lb bulk, neutral bags (1o lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/french-roast-blend-drip-beans/"
+  },
+  {
+   "id": 1202,
+   "slug": "french-roast-blend-drip-ground",
+   "name": "French Roast Blend Drip Ground",
+   "category": "coffee",
+   "blend": "french-roast",
+   "format": "drip-ground",
+   "system": null,
+   "size": "5 lb case",
+   "price": 110.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/french-roast-blend-drip-ground__0.jpg"
+   ],
+   "description": "Guglielmo USA French Roast Drip Ground Coffee Rich & full-bodied, this blend will leave sweet, smoky caramel aftertaste. A dark roasted blend 80 x 2 oz individually dosed packages (1o lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/french-roast-blend-drip-ground/"
+  },
+  {
+   "id": 5896,
+   "slug": "french-roast-drip-beans",
+   "name": "French Roast Drip Beans",
+   "category": "coffee",
+   "blend": "french-roast",
+   "format": "drip-beans",
+   "system": null,
+   "size": "12 oz",
+   "price": 10.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/french-roast-drip-beans__0.jpg",
+    "assets/img/products/french-roast-drip-beans__1.jpg"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/french-roast-drip-beans/"
+  },
+  {
+   "id": 74,
+   "slug": "organic-espresso",
+   "name": "Organic Espresso",
+   "category": "coffee",
+   "blend": "organic",
+   "format": "ground",
+   "system": null,
+   "size": null,
+   "price": 6.99,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/organic-espresso__0.jpg"
+   ],
+   "description": "Guglielmo’s own organically grown ground espresso. A blend of 100% Arabica coffee in tin can 250g to extend freshness. Bioagricoop controlled and certified. Buy a case of 6 and save",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/organic-series/organic-espresso/"
+  },
+  {
+   "id": 1194,
+   "slug": "premium-blend-drip-beans",
+   "name": "Premium Blend Drip Beans",
+   "category": "coffee",
+   "blend": "premium-drip",
+   "format": "drip-beans",
+   "system": null,
+   "size": "5 lb case",
+   "price": 105.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/premium-blend-drip-beans__0.jpg"
+   ],
+   "description": "Guglielmo USA Premium Blend Drip in Whole Beans A medium roasted blend, it features the finest Central and Southern American beans. 2 x 5 lb bulk, neutral bags (1o lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/premium-blend-drip-beans/"
+  },
+  {
+   "id": 23031,
+   "slug": "premium-drip-beans-small",
+   "name": "Premium Blend Drip Beans (Small)",
+   "category": "coffee",
+   "blend": "premium-drip",
+   "format": "drip-beans",
+   "system": null,
+   "size": "12 oz",
+   "price": 11.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/premium-drip-beans-small__0.jpg"
+   ],
+   "description": "Guglielmo USA Premium Drip Blend in Whole Beans. A medium roasted blend, it features the finest Central and Southern American beans. 12 oz. special trial package (wholesale).",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/premium-drip-beans-small/"
+  },
+  {
+   "id": 1190,
+   "slug": "premium-blend-drip-ground",
+   "name": "Premium Blend Drip Ground",
+   "category": "coffee",
+   "blend": "premium-drip",
+   "format": "drip-ground",
+   "system": null,
+   "size": "5 lb case",
+   "price": 105.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/premium-blend-drip-ground__0.jpg"
+   ],
+   "description": "Guglielmo USA Premium Drip Ground Coffee A medium roasted blend, it features the finest Central and Southern American beans. 64 x 2.5 oz individually dosed packages (1o lbs)",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/drip-american/premium-blend-drip-ground/"
+  },
+  {
+   "id": 72,
+   "slug": "special-edition-can",
+   "name": "Silver Signature 250 g Ground in Can",
+   "category": "coffee",
+   "blend": "silver-signature",
+   "format": "ground",
+   "system": null,
+   "size": "250 g",
+   "price": 12.99,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/special-edition-can__0.jpg"
+   ],
+   "description": "A special blend of fine Arabica coffees carefully selected to commemorate the life of the founder of Guglielmo SpA, Guglielmo Papaleo himself. This delicious blend in attractive can design is sure to make you ask for seconds.",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/special-blends/special-edition-can/"
+  },
+  {
+   "id": 5512,
+   "slug": "5-stelle-capsules-150-pack",
+   "name": "5 Stelle Capsules (150 Pack)",
+   "category": "single-serve",
+   "blend": "5-stelle",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "150 capsules",
+   "price": 94.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/5-stelle-capsules-150-pack__0.jpg",
+    "assets/img/products/5-stelle-capsules-150-pack__1.jpg",
+    "assets/img/products/5-stelle-capsules-150-pack__2.jpg"
+   ],
+   "description": "Guglielmo 5 Stelle 36 mm Ø capsules. As always, it’s the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. A creamy and sweeter blend capturing the subtle notes of the 5 Stelle blend in capsule format. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule 36 mm Ø Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/5-stelle-capsules-150-pack/"
+  },
+  {
+   "id": 3996,
+   "slug": "5-stelle-capsules-20-pack",
+   "name": "5 Stelle Capsules (20 Pack)",
+   "category": "single-serve",
+   "blend": "5-stelle",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "20 capsules",
+   "price": 16.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/5-stelle-capsules-20-pack__0.jpg",
+    "assets/img/products/5-stelle-capsules-20-pack__1.jpg"
+   ],
+   "description": "Guglielmo 5 Stelle capsules are the latest addition to the Ø 36 mm capsule line. As always, it’s the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. A creamy and sweeter blend capturing the subtle notes of the 5 Stelle blend. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule Ø 36 mm 20 pack trial size Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/5-stelle-capsules-20-pack/"
+  },
+  {
+   "id": 22700,
+   "slug": "cz-capsules-40-pack",
+   "name": "Catanzaro Capsules (40 Pack)",
+   "category": "single-serve",
+   "blend": "catanzaro",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "40 capsules",
+   "price": 22.0,
+   "compare_at": 35.0,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/cz-capsules-40-pack__0.jpg",
+    "assets/img/products/cz-capsules-40-pack__1.jpg"
+   ],
+   "description": "An intense and delicious blend carefully crafted in collaboration with U.S. Catanzaro. U.S. Catanzaro soccer club made a glorious return to Italy’s Serie B soccer and looks for more ambitious results this season. A unique and creamy taste, an unmistakable flavor now available in the 36 mm Ø capsule line. As always, it’s the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule 40 capsules per package 36 mm Ø Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/cz-capsules-40-pack/"
+  },
+  {
+   "id": 5955,
+   "slug": "club-99-capsules-12-pack",
+   "name": "Club 99 Capsules (50 Pack)",
+   "category": "single-serve",
+   "blend": "club-99",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "50 capsules",
+   "price": 26.0,
+   "compare_at": 40.0,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/club-99-capsules-12-pack__0.jpg",
+    "assets/img/products/club-99-capsules-12-pack__1.jpg"
+   ],
+   "description": "A top shelf blend of the finest Arabica and Robusta qualities on the market, the result of years of careful research and selection of sweet Central American origins. A unique and creamy taste, an unmistakable flavor now available in the 36 mm Ø capsule line. As always, it’s the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule 50 capsules per package 36 mm Ø Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/club-99-capsules-12-pack/"
+  },
+  {
+   "id": 78,
+   "slug": "decaf-pods-180-ct",
+   "name": "Decaf Pods 180 Ct",
+   "category": "single-serve",
+   "blend": "decaf",
+   "format": "pod",
+   "system": "ese-44",
+   "size": "180 pods",
+   "price": 127.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/decaf-pods-180-ct__0.jpg",
+    "assets/img/products/decaf-pods-180-ct__1.jpg"
+   ],
+   "description": "Guglielmo pods are the simple and guaranteed way of obtaining a consistently delicious and healthy espresso cup. The characteristics of the pods are: 7 grams dose of coffee, pressed between two layers of filtering paper. Passing water uniformly through the filter will result in the perfect coffee. Guglielmo pods are: 44 mm circular diameter (ESE) hygiene guaranteed delicious blend caffeine free Includes 180 decaffeinated pods.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/pods-cialdine/decaf-pods-180-ct/"
+  },
+  {
+   "id": 116,
+   "slug": "espresso-decaf-capsule-100",
+   "name": "Espresso Decaf Capsules (150 Pack)",
+   "category": "single-serve",
+   "blend": "decaf",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "150 capsules",
+   "price": 95.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-decaf-capsule-100__0.jpg"
+   ],
+   "description": "Guglielmo Espresso Decaffeinated capsules are the simple and guaranteed way of obtaining a consistently delicious and healthy espresso cup with little maintenance. 7 grams dose of coffee carefully placed in capsule. Passing water uniformly through the capsule creates the perfect coffee every time. 150 Capsules Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/espresso-decaf-capsule-100/"
+  },
+  {
+   "id": 3015,
+   "slug": "dek70-capsules-120-pack",
+   "name": "DEK70 Capsules (120 Pack)",
+   "category": "single-serve",
+   "blend": "dek70",
+   "format": "capsule",
+   "system": "nespresso-original",
+   "size": "120 capsules",
+   "price": 70.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/dek70-capsules-120-pack__0.jpg",
+    "assets/img/products/dek70-capsules-120-pack__1.jpg"
+   ],
+   "description": "Guglielmo’s Espresso 70 line of capsules (alternative to Nespresso * capsules). Enjoy a great coffee any time. Caffeine not exceeding 0,10% (on dry basis). Capsules are compatible with Nespresso * Original capsule machines. 120 Capsules. * Guglielmo USA and its products are not endorsed by, sponsored by or approved by Nespresso USA, Inc. or any of its affiliates, and Guglielmo USA is not a licensee of Nespresso USA, Inc. or any of its affiliates. Nespresso® is a registered trademark of Société des Produits Nestlé S.A.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/dek70-capsules-120-pack/"
+  },
+  {
+   "id": 1533,
+   "slug": "espresso-capsules-150",
+   "name": "Espresso Capsules (150 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "150 capsules",
+   "price": 88.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-capsules-150__0.jpg",
+    "assets/img/products/espresso-capsules-150__1.jpg"
+   ],
+   "description": "Guglielmo Espresso capsules are the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. A creamy, satisfying blend that will make you the envy of the neighborhood or office. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule 36 mm Ø Passing water uniformly through the capsule creates the perfect coffee every time. Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/espresso-capsules-150/"
+  },
+  {
+   "id": 3999,
+   "slug": "espresso-capsules-20-pack",
+   "name": "Espresso Capsules (20 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "capsule",
+   "system": "espresso-point-36",
+   "size": "20 capsules",
+   "price": 15.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-capsules-20-pack__0.jpg"
+   ],
+   "description": "Guglielmo Espresso capsules are the simple and guaranteed way of obtaining a consistently delicious espresso cup with little maintenance. A creamy, satisfying blend that will make you the envy of the neighborhood or office. The characteristics of the capsules are: 7 grams dose of coffee carefully placed in capsule 36 mm Ø 20 Pack trial size Passing water uniformly through the capsule creates the perfect coffee every time. Fits Lavazza Espresso Point® System* * Guglielmo is not affiliated with, endorsed or sponsored by Lavazza. Lavazza® and Espresso Point® are registered trademarks of Luigi Lavazza S.p.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/espresso-capsules-20-pack/"
+  },
+  {
+   "id": 24172,
+   "slug": "espresso-ese-pods-44-mm-o-150-pack",
+   "name": "Espresso ESE Pods – 44 mm Ø (150 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "pod",
+   "system": "ese-44",
+   "size": "150 pods",
+   "price": 88.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-ese-pods-44-mm-o-150-pack__0.jpg",
+    "assets/img/products/espresso-ese-pods-44-mm-o-150-pack__1.jpg"
+   ],
+   "description": "Guglielmo ESE pods (cialde) are the simple and guaranteed way of obtaining a consistently delicious espresso cup. 7 grams dose of coffee, pressed between two layers of filtering paper. Passing water uniformly through the filter will result in the perfect coffee. Guglielmo pods are: 44 mm circular diameter ESE pods carefully sourced blend of delicious coffee compostable (pod) Contains 150 Regular Pods",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/pods-cialdine/espresso-ese-pods-44-mm-o-150-pack/"
+  },
+  {
+   "id": 4002,
+   "slug": "espresso-pods-20-pack",
+   "name": "Espresso ESE Pods – 44 mm Ø (20 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "pod",
+   "system": "ese-44",
+   "size": "20 pods",
+   "price": 15.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-pods-20-pack__0.jpg",
+    "assets/img/products/espresso-pods-20-pack__1.jpg"
+   ],
+   "description": "Guglielmo ESE pods are the simple and guaranteed way of obtaining a consistently delicious espresso cup. 7 grams dose of coffee, pressed between two layers of filtering paper. Passing water uniformly through the filter will result in the perfect coffee. Guglielmo pods are: 44 mm circular diameter (ESE) hygiene guaranteed delicious blend 20 count trial size",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/pods-cialdine/espresso-pods-20-pack/"
+  },
+  {
+   "id": 6267,
+   "slug": "espresso-ese-pods-44-mm-200-pack",
+   "name": "Espresso ESE Pods – 44 mm Ø (200 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "pod",
+   "system": "ese-44",
+   "size": "200 pods",
+   "price": 115.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/espresso-ese-pods-44-mm-200-pack__0.jpg",
+    "assets/img/products/espresso-ese-pods-44-mm-200-pack__1.jpg"
+   ],
+   "description": "Guglielmo ESE pods (cialde) are the simple and guaranteed way of obtaining a consistently delicious espresso cup. 7 grams dose of coffee, pressed between two layers of filtering paper. Passing water uniformly through the filter will result in the perfect coffee. Guglielmo pods are: 44 mm circular diameter ESE pods carefully sourced blend of delicious coffee compostable (pod) Contains 200 Regular Pods",
+   "bundle_offer": null,
+   "region_style": [
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/pods-cialdine/espresso-ese-pods-44-mm-200-pack/"
+  },
+  {
+   "id": 1532,
+   "slug": "pod-200-ct",
+   "name": "Espresso Pods – 38 mm Ø (200 Pack)",
+   "category": "single-serve",
+   "blend": "espresso-classico",
+   "format": "pod",
+   "system": "pod-38",
+   "size": "200 pods",
+   "price": 100.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/pod-200-ct__0.jpg"
+   ],
+   "description": "NOTE: This product has been discontinued. As an alternative please see our E.S.E. sized pods If you have a machine that has a smaller pod holder please contact us . Guglielmo pods are the simple and guaranteed way of obtaining a consistently delicious espresso cup. 7 grams dose of coffee, pressed between two layers of filtering paper. Passing water uniformly through the filter will result in the perfect coffee. Guglielmo pods are: 38 mm circular diameter (but will fit ESE)* hygiene guaranteed delicious blend 200 Regular Pods Best if used with machines designed to take 38 mm circular pod",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/pods-cialdine/pod-200-ct/"
+  },
+  {
+   "id": 3014,
+   "slug": "oro70-capsules-10-pack",
+   "name": "ORO70 Capsules (10 Pack)",
+   "category": "single-serve",
+   "blend": "oro70",
+   "format": "capsule",
+   "system": "nespresso-original",
+   "size": "10 capsules",
+   "price": 7.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/oro70-capsules-10-pack__0.jpg",
+    "assets/img/products/oro70-capsules-10-pack__1.jpg"
+   ],
+   "description": "Guglielmo’s Espresso 70 line of capsules (alternative to Nespresso * capsules). ORO70 is a sweet and soft blend obtained by blending the best 100% Arabica coffee. Capsules are compatible with Nespresso * Original capsule machines. 10 Capsules. * Guglielmo USA and its products are not endorsed by, sponsored by or approved by Nespresso USA, Inc. or any of its affiliates, and Guglielmo USA is not a licensee of Nespresso USA, Inc. or any of its affiliates. Nespresso® is a registered trademark of Société des Produits Nestlé S.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian",
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/oro70-capsules-10-pack/"
+  },
+  {
+   "id": 18086,
+   "slug": "oro70-capsules-120-pack",
+   "name": "ORO70 Capsules (120 Pack)",
+   "category": "single-serve",
+   "blend": "oro70",
+   "format": "capsule",
+   "system": "nespresso-original",
+   "size": "120 capsules",
+   "price": 55.0,
+   "compare_at": 65.0,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/oro70-capsules-120-pack__0.jpg",
+    "assets/img/products/oro70-capsules-120-pack__1.jpg",
+    "assets/img/products/oro70-capsules-120-pack__2.jpg"
+   ],
+   "description": "Guglielmo’s Espresso 70 line of capsules (alternative to Nespresso * capsules). ORO70 is a sweet and soft blend obtained by blending the best 100% Arabica coffee. Capsules are compatible with Nespresso * Original capsule machines. 120 Capsules. * Guglielmo USA and its products are not endorsed by, sponsored by or approved by Nespresso USA, Inc. or any of its affiliates, and Guglielmo USA is not a licensee of Nespresso USA, Inc. or any of its affiliates. Nespresso® is a registered trademark of Société des Produits Nestlé S.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian",
+    "Northern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/oro70-capsules-120-pack/"
+  },
+  {
+   "id": 3013,
+   "slug": "rosso70-capsules-10-pack",
+   "name": "ROSSO70 Capsules (10 Pack)",
+   "category": "single-serve",
+   "blend": "rosso70",
+   "format": "capsule",
+   "system": "nespresso-original",
+   "size": "10 capsules",
+   "price": 7.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/rosso70-capsules-10-pack__0.jpg",
+    "assets/img/products/rosso70-capsules-10-pack__1.jpg"
+   ],
+   "description": "Guglielmo’s Espresso 70 line of capsules (alternative to Nespresso * capsules). ROSSO70 is a creamy blend with a decisive flavor typical of Southern Italian blends. Capsules are compatible with Nespresso * Original capsule machines. 10 Capsules. * Guglielmo USA and its products are not endorsed by, sponsored by or approved by Nespresso USA, Inc. or any of its affiliates, and Guglielmo USA is not a licensee of Nespresso USA, Inc. or any of its affiliates. Nespresso® is a registered trademark of Société des Produits Nestlé S.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian",
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/rosso70-capsules-10-pack/"
+  },
+  {
+   "id": 19507,
+   "slug": "rosso70-capsules-120-pack",
+   "name": "ROSSO70 Capsules (120 Pack)",
+   "category": "single-serve",
+   "blend": "rosso70",
+   "format": "capsule",
+   "system": "nespresso-original",
+   "size": "120 capsules",
+   "price": 65.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/rosso70-capsules-120-pack__0.jpg",
+    "assets/img/products/rosso70-capsules-120-pack__1.jpg"
+   ],
+   "description": "Guglielmo’s Espresso 70 line of capsules (alternative to Nespresso * capsules). ROSSO70 is a creamy blend with a decisive flavor typical of Southern Italian blends. Individually packaged to preserve freshness . Capsules are compatible with Nespresso * Original capsule machines. 120 Capsules. * Guglielmo USA and its products are not endorsed by, sponsored by or approved by Nespresso USA, Inc. or any of its affiliates, and Guglielmo USA is not a licensee of Nespresso USA, Inc. or any of its affiliates. Nespresso® is a registered trademark of Société des Produits Nestlé S.A.",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian",
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/rosso70-capsules-120-pack/"
+  },
+  {
+   "id": 4128,
+   "slug": "ca-fox-e-36-mm-capsule-machine",
+   "name": "CA-FOX-E (36 mm Ø) Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 199.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "Panafe",
+   "images": [
+    "assets/img/products/ca-fox-e-36-mm-capsule-machine__0.jpg",
+    "assets/img/products/ca-fox-e-36-mm-capsule-machine__1.jpg"
+   ],
+   "description": "The PANAFE` CA-FOX-E is designed to take Guglielmo capsules (36 mm Ø ) and produce a delicious espresso, long or Americano in short time. A stylish and simple capsule machine and here are some details: ♦ Espresso, long or Americano dosing ♦ Energy-saving model ♦ Top loading capsule insertion door system ♦ Semi-automatic ejection of the capsule ♦ The press-capsule in brass guarantees a stable temperature & a perfect brewing ♦ Removable double drip tray for short & long coffee selection & for cups of different sizes ♦ PANAFE’ patented ANODIZED heat-exchanger ♦ Removable water tank & drip tray ♦ Easy accessibility for cleaning & maintenance] ♦ Thermostat made in Italy ♦ Water Tank Capacity: 1.20 Lt ♦ Product Size: (LxWxH) mm 170 x 370 x 294 ♦ Weight: 5.05 Kg All machines arrive from the manuf",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 150 capsule deal, your first 150 coffees are $1.66 /shot & the machine is paid for! ♦ With the 300 capsule deal, your first 300 coffees are $0.98 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/ca-fox-e-36-mm-capsule-machine/"
+  },
+  {
+   "id": 3924,
+   "slug": "ca-fox-e-compatible-capsule-machine",
+   "name": "CA-FOX-E Compatible Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "nespresso-original",
+   "size": null,
+   "price": 249.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "Panafe",
+   "images": [
+    "assets/img/products/ca-fox-e-compatible-capsule-machine__0.jpg",
+    "assets/img/products/ca-fox-e-compatible-capsule-machine__1.jpg",
+    "assets/img/products/ca-fox-e-compatible-capsule-machine__2.jpg"
+   ],
+   "description": "The PANAFE` CA-FOX-E is designed to take Guglielmo’s 70 capsules , a compatible alternative to NESPRESSO * capsules, and produce a delicious espresso, long or Americano in short time. A stylish and simple capsule machine and here are some details: ♦ Espresso, long or Americano dosing ♦ Energy-saving model ♦ Top loading capsule insertion door system ♦ Semi-automatic ejection of the capsule ♦ The press-capsule in brass guarantees a stable temperature & a perfect brewing ♦ Removable double drip tray for short & long coffee selection & for cups of different sizes ♦ PANAFE’ patented ANODIZED heat-exchanger ♦ Removable water tank & drip tray ♦ Easy accessibility for cleaning & maintenance ♦ Thermostat made in Italy ♦ Water Tank Capacity: 1.20 Lt ♦ Product Size: (LxWxH) mm 170 x 370 x 294 ♦ Weigh",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 120 capsule deal, your first 120 coffees are $2.41 /shot & the machine is paid for! In all cases that’s an awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/ca-fox-e-compatible-capsule-machine/"
+  },
+  {
+   "id": 120,
+   "slug": "ca-como-e-cp",
+   "name": "COMO-E CP Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 375.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/ca-como-e-cp__0.jpg",
+    "assets/img/products/ca-como-e-cp__1.jpg"
+   ],
+   "description": "The PANAFE` COMO-E CP is designed to take Guglielmo capsule (36 mm) and produce a delicious espresso in short time. A lightweight capsule machine characterized by: Small footprint (25x33x40 cm) Weight 4.8 Kg Aluminum food grade heat exchanger 1.2 Liter Tank Removable tank and tray for ease fill and cleaning All machines arrive from the manufacturer in a sealed box. One of our technicians will test your machine to ensure that all aspects of the machine are fully functional. The machine will then be cleaned, repacked and shipped to you. Color of machine is RED PANAFE’ ® Espresso Coffee Machines is a brand of Commerciale Adriatica srl",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 200 capsule deal, your first 200 coffees are $2.25 /shot & the machine is paid for! ♦ With the 400 capsule deal, your first 400 coffees are $1.31 /shot & the machine is paid for! ♦ With the 600 capsule deal, your first 600 coffees are $1.00 /shot & the machine is paid for! In all cases that’s a awesome deal f",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/ca-como-e-cp/"
+  },
+  {
+   "id": 1787,
+   "slug": "double-cap-2-group-capsule-machine",
+   "name": "Double Cap 2 Group Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": null,
+   "compare_at": null,
+   "quote": true,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "business"
+   ],
+   "brand": "Espresso del Capitano",
+   "images": [
+    "assets/img/products/double-cap-2-group-capsule-machine__0.jpg",
+    "assets/img/products/double-cap-2-group-capsule-machine__1.jpg",
+    "assets/img/products/double-cap-2-group-capsule-machine__2.jpg",
+    "assets/img/products/double-cap-2-group-capsule-machine__3.jpg"
+   ],
+   "description": "The Espresso del Capitano Double Cap Plus Vap 220V 2 Group capsule machine is designed to take Guglielmo capsule ( 36 mm Ø) and produce a delicious espresso or cappuccino in short time. A MADE IN ITALY stylish capsule machine and here are some details: ♦ Automatic coffee doses ♦ Steam wand ♦ Automatic ejection of the capsule ♦ Exclusive, patented infusion system ♦ Automatic energy-saving function ♦ Removable water tank ♦ Removable receptacle for capsules ♦ Adjustable cup holder ♦ Warning light – no water in tank ♦ Machine temperature light ♦ Interchangeable filter water softener ♦ Electronic thermostat ♦ Water Tank Capacity: 3.00 Lt ♦ Product Size: (LxWxH) mm 350 x 400 x 380 ♦ Product Weight: 15 Kg PLEASE NOTE THIS MACHINE IS 220V All machines arrive from the manufacturer in",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/double-cap-2-group-capsule-machine/"
+  },
+  {
+   "id": 96,
+   "slug": "grinder",
+   "name": "Espresso Grinders",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "traditional",
+   "size": null,
+   "price": null,
+   "compare_at": null,
+   "quote": true,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "business"
+   ],
+   "brand": "OTHER",
+   "images": [
+    "assets/img/products/grinder__0.jpg",
+    "assets/img/products/grinder__1.jpg",
+    "assets/img/products/grinder__2.jpg"
+   ],
+   "description": "Mazzer, Macap and WEGA Commercial Grinder selection available, please contact us for more info",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/grinder/"
+  },
+  {
+   "id": 1683,
+   "slug": "espresso-plus-vap-capsule-machine",
+   "name": "Espresso Plus VAP Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 259.0,
+   "compare_at": 325.0,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "Espresso del Capitano",
+   "images": [
+    "assets/img/products/espresso-plus-vap-capsule-machine__0.jpg",
+    "assets/img/products/espresso-plus-vap-capsule-machine__1.jpg",
+    "assets/img/products/espresso-plus-vap-capsule-machine__2.jpg",
+    "assets/img/products/espresso-plus-vap-capsule-machine__3.jpg"
+   ],
+   "description": "The Espresso del Capitano ESPRESSO PLUS VAP is designed to take Guglielmo capsules ( 36 mm Ø) and produce a delicious espresso in short time. A MADE IN ITALY stylish capsule machine and here are some details: ♦ Aluminum lever ♦ Automatic coffee doses ♦ Steam wand ♦ Automatic ejection of the capsule ♦ Automatic rinsing and heating of infusion unit ♦ Automatic energy-saving function ♦ Heated removable water tank ♦ Removable receptacle for capsules (15 capsules) for easy cleaning with drawer-full led ♦ Adjustable cup holder ♦ Easy accessibility for cleaning & maintenance ♦ Warning light – no water in tank ♦ Electronic thermostat ♦ Water Tank Capacity: 2.00 Lt ♦ Product Size: (LxWxH) mm 290 x 200 x 260 All machines arrive from the manufacturer in a sealed box. One of our technicians will test",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 150 capsule deal, your first 150 coffees are $2.66 On sale $2.19 /shot & the machine is paid for! ♦ With the 300 capsule deal, your first 300 coffees are $1.56 On sale $1.33 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/espresso-plus-vap-capsule-machine/"
+  },
+  {
+   "id": 1678,
+   "slug": "ca-mycaps-v-capsule-machine",
+   "name": "MY@CAPS/V Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 299.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "Panafe",
+   "images": [
+    "assets/img/products/ca-mycaps-v-capsule-machine__0.jpg",
+    "assets/img/products/ca-mycaps-v-capsule-machine__1.jpg",
+    "assets/img/products/ca-mycaps-v-capsule-machine__2.jpg",
+    "assets/img/products/ca-mycaps-v-capsule-machine__3.jpg"
+   ],
+   "description": "The PANAFE` MY@CAPS/V is designed to take Guglielmo capsules (36 mm Ø) and produce a delicious espresso or cappuccino in short time. A stylish capsule machine and here are some details: ♦ Electronic controls ♦ Automatic dosing ♦ Steam wand ♦ Energy-saving model ♦ Top loading capsule insertion door system ♦ Semi-automatic ejection of the capsule ♦ The press-capsule in brass guarantees a stable temperature & a perfect brewing ♦ Heat exchanger (for coffee) & the U-boiler (for steam) are completely independent ♦ Removable double drip tray for short & long coffee selection & for cups of different sizes ♦ PANAFE’ patented ANODIZED heat-exchanger ♦ Removable water tank & drip tray ♦ Easy accessibility for cleaning & maintenance ♦ NTC Probe accurate temperature control ♦ Water Tank Capacity: 2.00",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 150 capsule deal, your first 150 coffees are $2.33 /shot & the machine is paid for! ♦ With the 300 capsule deal, your first 300 coffees are $1.33 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/ca-mycaps-v-capsule-machine/"
+  },
+  {
+   "id": 1766,
+   "slug": "maxi-cap-pro-evolution-2-group-capsule-machine",
+   "name": "Maxi Cap Pro Evolution 2 Group Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": null,
+   "compare_at": null,
+   "quote": true,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "business"
+   ],
+   "brand": "RDL",
+   "images": [
+    "assets/img/products/maxi-cap-pro-evolution-2-group-capsule-machine__0.jpg",
+    "assets/img/products/maxi-cap-pro-evolution-2-group-capsule-machine__1.jpg"
+   ],
+   "description": "The RDL Maxi Cap Pro Evolution is designed to take Guglielmo capsules (36 mm Ø and produce a delicious espresso or cappuccino in short time. A commercial capsule machine and here are some details: ♦ Two group capsule machine ♦ Stainless steel steam wand with swivel ♦ Hot water stainless steel wand ♦ Automatic ejection of the capsule ♦ Double aluminum heat exchanger ♦ 18-bar vibrating pump for each single coffee unit ♦ Safety thermostat on the coffee groups and thermal fuse for steam heat exchangerma ♦ Steam heat exchanger with automatic micro pump ♦ Large tray for used capsules with easy front access ♦ Water Tank Capacity: 5.00 Lt with double water softener ♦ 2 and 3 way solenoid valves for coffee and hot water functions ♦ 1.2 Lt boiler with 15 Bar autonomous pump ♦ Boiler sa",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/maxi-cap-pro-evolution-2-group-capsule-machine/"
+  },
+  {
+   "id": 1747,
+   "slug": "mini-cap-vapore-capsule-machine",
+   "name": "Mini Cap Vapore Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 350.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "RDL",
+   "images": [
+    "assets/img/products/mini-cap-vapore-capsule-machine__0.jpg",
+    "assets/img/products/mini-cap-vapore-capsule-machine__1.jpg"
+   ],
+   "description": "The RDL Mini Cap Vapore is designed to take Guglielmo capsules ( 36 mm Ø) and produce a delicious espresso or cappuccino in short time. A MADE IN ITALY stylish capsule machine and here are some details: ♦ ABS frame ♦ In tank water softener ♦ Steam wand ♦ Automatic ejection of the capsule ♦ Aluminum heat exchanger ♦ Coffee/Steam heat exchanger with double resistor ♦ Safety thermostat for brewing and steam unit ♦ Water Tank Capacity: 2.00 Lt ♦ Weight: 8 kg ♦ Product Size: (L x W x H) mm 230 x 330 x 310 Color of machine is BLACK All machines arrive from the manufacturer in a sealed box. One of our technicians will test your machine to ensure that all aspects of the machine are fully functional. The machine will then be cleaned, repacked and shipped to you. Please be sure to visit our Terms pa",
+   "bundle_offer": "Check out all the cost effective capsule deals when ordering your new machine. ♦ With the 150 capsule deal, your first 150 coffees are $2.66 /shot & the machine is paid for! ♦ With the 300 capsule deal, your first 300 coffees are $1.48 /shot & the machine is paid for! In all cases that’s an awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/mini-cap-vapore-capsule-machine/"
+  },
+  {
+   "id": 26525,
+   "slug": "mini-pod-machine",
+   "name": "Mini Pod Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "ese-44",
+   "size": null,
+   "price": 375.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home"
+   ],
+   "brand": "RDL",
+   "images": [
+    "assets/img/products/mini-pod-machine__0.jpg",
+    "assets/img/products/mini-pod-machine__1.jpg",
+    "assets/img/products/mini-pod-machine__2.jpg",
+    "assets/img/products/mini-pod-machine__3.jpg"
+   ],
+   "description": "The RDL Mini Pod is crafted to brew rich, flavorful espresso using our standard 44 mm ESE pods, all while delivering a striking, modern aesthetic. A MADE IN ITALY stylish pods machine and here are some details: ♦ This model operates manually and DOES NOT have a steam option ♦ ABS frame ♦ In tank water softener ♦ Aluminum heat exchanger ♦ 15 Bar vibration pump ♦ Safety thermostat for brewing and steam unit ♦ Water Tank Capacity: 2.00 Lt ♦ Weight: 8 kg ♦ Product Size: (L x W x H) mm 230 x 330 x 310 Various color combinations while supplies last All machines arrive from the manufacturer in a sealed box. One of our technicians will test your machine to ensure that all aspects of the machine are fully functional. The machine will then be cleaned, repacked and shipped to you. Please be sure to v",
+   "bundle_offer": "Check out all the cost effective deals when ordering your new machine. ♦ With the 150 deal, your first 150 coffees cost $3.03 /shot and then the machine is paid for! ♦ With the 300 deal, your first 300 coffees cost $1.75 /shot and then the machine is paid for! In all cases that’s an awesome deal for delicious espresso at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/mini-pod-machine/"
+  },
+  {
+   "id": 1800,
+   "slug": "multi-cap-2-group-capsule-machine",
+   "name": "Multi Cap 2 Group Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": null,
+   "compare_at": null,
+   "quote": true,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "business"
+   ],
+   "brand": "Espresso del Capitano",
+   "images": [
+    "assets/img/products/multi-cap-2-group-capsule-machine__0.jpg",
+    "assets/img/products/multi-cap-2-group-capsule-machine__1.jpg",
+    "assets/img/products/multi-cap-2-group-capsule-machine__2.jpg",
+    "assets/img/products/multi-cap-2-group-capsule-machine__3.jpg"
+   ],
+   "description": "The Espresso del Capitano Multi Cap Plus Vap 220V 2 Group capsule machine is designed to take Guglielmo capsule ( 36 mm Ø and produce a delicious espresso or cappuccino in short time. A MADE IN ITALY stylish capsule machine and here are some details: ♦ Automatic and programmable coffee dosing ♦ Steam wand ♦ Hot water dispensing nozzle ♦ Automatic ejection of the capsule ♦ Exclusive, patented infusion system ♦ Automatic rinsing and heating of infusion unit ♦ Infusor rinsing and heating by sending hot water without any capsule inserted ♦ Energy-saving functions ♦ Removable water tank ♦ Removable receptacle for capsules ♦ Adjustable cup holder ♦ Warning light – no water in tank ♦ Machine temperature light ♦ Interchangeable filter water softener ♦ Steel housing ♦ Stainless steel",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/multi-cap-2-group-capsule-machine/"
+  },
+  {
+   "id": 1687,
+   "slug": "office-plus-vap-capsule-machine",
+   "name": "Office Plus VAP Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 669.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "office"
+   ],
+   "brand": "Espresso del Capitano",
+   "images": [
+    "assets/img/products/office-plus-vap-capsule-machine__0.jpg",
+    "assets/img/products/office-plus-vap-capsule-machine__1.jpg",
+    "assets/img/products/office-plus-vap-capsule-machine__2.jpg",
+    "assets/img/products/office-plus-vap-capsule-machine__3.jpg"
+   ],
+   "description": "The Espresso del Capitano OFFICE PLUS VAP is designed to take Guglielmo capsule ( 36 mm Ø and produce a delicious espresso or cappuccino in short time. A MADE IN ITALY stylish capsule machine designed for light commercial use and here are some details: ♦ Automatic coffee doses ♦ Steam wand ♦ Automatic ejection of the capsule ♦ Exclusive, patented infusion system ♦ Automatic energy-saving function ♦ Removable water tank ♦ Removable receptacle for capsules (5o capsules) ♦ Adjustable cup holder ♦ Removable and washable hopper ♦ Warning light – no water in tank ♦ Machine temperature light ♦ Interchangeable filter water softener ♦ Electronic thermostat ♦ Water Tank Capacity: 3.00 Lt ♦ Product Size: (LxWxH) mm 400 x 200 x 250 ♦ Product Weight: 8.5 Kg All machines arrive from the manufacturer in",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/office/office-plus-vap-capsule-machine/"
+  },
+  {
+   "id": 22910,
+   "slug": "pallina-vapor-pod-machine",
+   "name": "Pallina Vapor Pod Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "ese-44",
+   "size": null,
+   "price": 425.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Grimac",
+   "images": [
+    "assets/img/products/pallina-vapor-pod-machine__0.png",
+    "assets/img/products/pallina-vapor-pod-machine__1.png",
+    "assets/img/products/pallina-vapor-pod-machine__2.jpg"
+   ],
+   "description": "Enjoy delicious espresso made right at home with the GRIMAC Pallina Vapor for ESE pods. Once fully warmed up, a strong jet of steam is ready for preparing a delicious and frothy cappuccino through the steam wand. In short order you can enjoy a delicious espresso or frothy cappuccino. This machine is easy to use and even easier to clean. The two inline water softeners make decalcification a thing of the past and help make a coffee that is just perfect. Other info: MADE IN ITALY 2 liter water tank Small dimensions Water softener Steel Body/ABS side panel Patented Compensator for pre-infusions Independently ignitable heat exchangers Dimensions: (L x W x H mm) 320 x 202 x 305 Weight: 8 kg For ESE 44 mm pods Color of machine is BLACK All machines arrive from the manufacturer in a sealed box. On",
+   "bundle_offer": "Check out all the cost effective pod deals when ordering your new machine. ♦ With the 200 pod deal, your first 200 coffees are $2.63 /shot & the machine is paid for! ♦ With the 400 pod deal, your first 400 coffees are $1.53 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/pallina-vapor-pod-machine/"
+  },
+  {
+   "id": 25200,
+   "slug": "rocket-appartamento-tca-chrome-black",
+   "name": "Rocket Appartamento TCA",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "traditional",
+   "size": null,
+   "price": 1875.0,
+   "compare_at": 2250.0,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Rocket Espresso",
+   "images": [
+    "assets/img/products/rocket-appartamento-tca-chrome-black__0.jpg",
+    "assets/img/products/rocket-appartamento-tca-chrome-black__1.jpg",
+    "assets/img/products/rocket-appartamento-tca-chrome-black__2.jpg",
+    "assets/img/products/rocket-appartamento-tca-chrome-black__3.jpg"
+   ],
+   "description": "Experience the future of espresso machines with the Rocket Appartamento TCA, where cutting-edge design meets exceptional performance, now featuring Temperature Control Adjustment (TCA). This next-generation model combines a sleek, modern aesthetic with enhanced features, elevating your home coffee experience. With its cutting-edge design and performance improvements, the Appartamento TCA sets a new standard in premium domestic espresso machines SPECIFICATIONS Built in heat exchanger 1.8 liter boiler capacity Boiler covering for energy saving Vibration pump 1.9 liter water tank capacity Low water tank reserve sensor Dimensions: 270W × 448D × 358H mm Wattage: 115V | 60Hz | 1200W Weight: 22 Kg Machine will be fully test prior to shipping to ensure proper function. Equipment will be drained an",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/rocket-appartamento-tca-chrome-black/"
+  },
+  {
+   "id": 5983,
+   "slug": "sweetcoffeevapore",
+   "name": "Sweet Coffee Vapore Pod Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "ese-44",
+   "size": null,
+   "price": 499.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "RDL",
+   "images": [
+    "assets/img/products/sweetcoffeevapore__0.jpg",
+    "assets/img/products/sweetcoffeevapore__1.jpg",
+    "assets/img/products/sweetcoffeevapore__2.jpg",
+    "assets/img/products/sweetcoffeevapore__3.jpg"
+   ],
+   "description": "The RDL Sweet Coffee Vapore pod machine works with ESE pods to produce a delicious espresso every time. A MADE IN ITALY stylish capsule machine and here are some details: ♦ ABS frame ♦ In tank water softener ♦ Steam wand ♦ Brass heat exchanger ♦ Coffee/Steam heat exchanger with double resistor ♦ Safety thermostat for brewing and steam unit ♦ Water Tank Capacity: 2.50 Lt ♦ Weight: 13 kg ♦ Product Size: (L x W x H) mm 255 x 355 x 330 Color available at this time is only BLACK All machines arrive from the manufacturer in a sealed box. One of our technicians will test your machine to ensure that all aspects of the machine are fully functional. The machine will then be cleaned, repacked and shipped to you. Please be sure to visit our Terms page for additional details and return policy.",
+   "bundle_offer": "Check out all the cost effective pod deals when ordering your new machine. ♦ With the 150 pod deal, your first 150 coffees are $3.87 /shot & after that the machine is paid for! ♦ With the 300 pod deal, your first 300 coffees are $2.18 /shot & after that the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/sweetcoffeevapore/"
+  },
+  {
+   "id": 23222,
+   "slug": "terry-opale",
+   "name": "Terry Opale Pod Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "ese-44",
+   "size": null,
+   "price": 330.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Grimac",
+   "images": [
+    "assets/img/products/terry-opale__0.jpg",
+    "assets/img/products/terry-opale__1.jpg"
+   ],
+   "description": "Enjoy delicious espresso made right at home with the GRIMAC Terry Opale for ESE pods. This machine is easy to use and even easier to clean. The inline water softener make decalcification a thing of the past and help make a coffee that is just perfect. Other info: MADE IN ITALY 2 liter water tank Small dimensions Water softener Steel Body/ABS front panel Patented compensator for pre-infusions Pod compression feature Dimensions: (L x W x H mm) 374 x 282 x 370 Weight: 10 kg For ESE 44 mm pods Color is black PLEASE NOTE : This model DOES NOT have a steam option All machines arrive from the manufacturer in a sealed box. One of our technicians will test your machine to ensure that all aspects of the machine are fully functional. The machine will then be cleaned, repacked and shipped to you. Plea",
+   "bundle_offer": "Check out all the cost effective pod deals when ordering your new machine. ♦ With the 150 pod deal, your first 150 coffees are $2.71 /shot & the machine is paid for! ♦ With the 300 pod deal, your first 300 coffees are $1.62 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious espresso-drink at home.",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/terry-opale/"
+  },
+  {
+   "id": 98,
+   "slug": "terry-vapor-nuvola",
+   "name": "Terry Vapor (Nuvola) Pod Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "ese-44",
+   "size": null,
+   "price": 669.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Grimac",
+   "images": [
+    "assets/img/products/terry-vapor-nuvola__0.jpg"
+   ],
+   "description": "The GRIMAC Terry Vapor (Nuvola) is the simplest way to the excellent espresso thanks to the simple pods system it uses. Once fully warmed up, a strong jet of steam is always ready for preparing a delicious and frothy cappuccino through the steam wand. In just seconds you can enjoy a delicious espresso or frothy cappuccino. This machine is easy to use and even easier to clean. The two inline water softeners make decalcification a thing of the past and help make a coffee that is just perfect. Other info: ♦ MADE IN ITALY ♦ 3 liter water tank ♦ Stainless steel/ABS housing ♦ Dual brass boilers for simultaneous delivery of steam and coffee ♦ Thermoblock heaters for minimum wait time between uses ♦ Cup Warmer ♦ Large drip pan ♦ Dimensions: (inches) 9 L x 12.7 H x 13.7 D ♦ Weight: 10 kg ♦ Equipped",
+   "bundle_offer": "Check out all the cost effective pod deals when ordering your new machine. ♦ With the 200 pod deal, your first 200 coffees are $3.72 /shot & the machine is paid for! ♦ With the 400 pod deal, your first 400 coffees are $2.05 /shot & the machine is paid for! ♦ With the 600 pod deal, your first 600 coffees are $1.48 /shot & the machine is paid for! In all cases that’s a awesome deal for delicious esp",
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/terry-vapor-nuvola/"
+  },
+  {
+   "id": 23227,
+   "slug": "tube-capsule-machine",
+   "name": "Tube Capsule Machine",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "espresso-point-36",
+   "size": null,
+   "price": 165.0,
+   "compare_at": 179.0,
+   "quote": false,
+   "in_stock": true,
+   "variable": true,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Grimac",
+   "images": [
+    "assets/img/products/tube-capsule-machine__0.jpg"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/home/tube-capsule-machine/"
+  },
+  {
+   "id": 92,
+   "slug": "wega-and-other-commercial-machines",
+   "name": "WEGA and BFC Commercial Machines",
+   "category": "machine",
+   "blend": null,
+   "format": null,
+   "system": "traditional",
+   "size": null,
+   "price": null,
+   "compare_at": null,
+   "quote": true,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "business"
+   ],
+   "brand": "WEGA / BFC",
+   "images": [
+    "assets/img/products/wega-and-other-commercial-machines__0.png",
+    "assets/img/products/wega-and-other-commercial-machines__1.jpg",
+    "assets/img/products/wega-and-other-commercial-machines__2.jpg",
+    "assets/img/products/wega-and-other-commercial-machines__3.png"
+   ],
+   "description": "Espresso machines available as fully automatic or semi automatic machines. A few select WEGA and BFC machines can be found in the linked catalogs below. Images are representative only, actual models, specs and colors may vary and can be customized. Many more models and complete coffee solutions available, for more information contact us WEGA Urban WEGA Polaris BFC Galileo WEGA IO",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/wega-and-other-commercial-machines/"
+  },
+  {
+   "id": 84,
+   "slug": "medium-jar-5-stelle",
+   "name": "Medium Jar & 5 Stelle",
+   "category": "gift",
+   "blend": "5-stelle",
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 25.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/medium-jar-5-stelle__0.jpg"
+   ],
+   "description": "A beautiful made in Italy ceramic jar that can be used as a cookie jar or many other purposes. Enclosed are two 250g bags of 5 Stelle Ground coffee. Makes a great gift. Color and design may vary.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/medium-jar-5-stelle/"
+  },
+  {
+   "id": 82,
+   "slug": "small-jar-5-stelle",
+   "name": "Small Jar & 5 Stelle",
+   "category": "gift",
+   "blend": "5-stelle",
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 20.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/small-jar-5-stelle__0.jpg"
+   ],
+   "description": "A beautiful made in Italy ceramic jar that can serve many purposes. Enclosed is a 250g bag of 5 Stelle Ground coffee. Makes a great gift. Color and design may vary.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/small-jar-5-stelle/"
+  },
+  {
+   "id": 86,
+   "slug": "tall-jar-5-stelle",
+   "name": "Tall Jar & 5 Stelle",
+   "category": "gift",
+   "blend": "5-stelle",
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 25.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/tall-jar-5-stelle__0.jpg"
+   ],
+   "description": "A beautiful made in Italy ceramic jar that can be used to store opened pasta or for any other purposes. Enclosed are two 250g bags of 5 Stelle Ground coffee. Makes a great gift. 5 Stelle Blend will be replaced by “ORO” while the former is out of stock. Color and design may vary.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/tall-jar-5-stelle/"
+  },
+  {
+   "id": 88,
+   "slug": "pitcher-classico",
+   "name": "Pitcher & Classico",
+   "category": "gift",
+   "blend": "espresso-classico",
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 30.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/pitcher-classico__0.jpg"
+   ],
+   "description": "A beautiful ceramic pitcher and two 250 cans of excellent ground coffee. Colors may vary.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/pitcher-classico/"
+  },
+  {
+   "id": 5204,
+   "slug": "threecanespresso",
+   "name": "Three Can with Espresso Cup",
+   "category": "gift",
+   "blend": "espresso-classico",
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 19.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/threecanespresso__0.jpg"
+   ],
+   "description": "Includes: 1 x Silver 250 g Espresso Can 2 x Classico 125 g Espresso Can Espresso cup and saucer For a limited time only.",
+   "bundle_offer": null,
+   "region_style": [
+    "Central Italian",
+    "Northern Italian",
+    "Southern Italian"
+   ],
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/threecanespresso/"
+  },
+  {
+   "id": 112,
+   "slug": "jar-with-coffee",
+   "name": "Jar with Coffee",
+   "category": "gift",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 15.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/jar-with-coffee__0.jpg"
+   ],
+   "description": "Handy little jar with 250g espresso classico ground (coffee not packaged together). Enjoy the coffee and use the jar for anything from a flower vase, to a place to store your coffee, to anything else you can think of.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/gift-packs/jar-with-coffee/"
+  },
+  {
+   "id": 3813,
+   "slug": "caramelle",
+   "name": "Espresso Hard Candy – Caramelle",
+   "category": "merch",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 28.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/caramelle__0.jpg"
+   ],
+   "description": "1 Kg bag of hard candy filled with Guglielmo coffee cream Transparent bulk bag only No outer bag branding, individual candy branding only",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/caramelle/"
+  },
+  {
+   "id": 24805,
+   "slug": "guglielmo-caffeino-glass",
+   "name": "Guglielmo Caffeino Glass",
+   "category": "merch",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 6.75,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/guglielmo-caffeino-glass__0.jpg"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/guglielmo-caffeino-glass/"
+  },
+  {
+   "id": 6650,
+   "slug": "guglielmo-cappuccino-cup-set",
+   "name": "Guglielmo Cappuccino Cup Set",
+   "category": "merch",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 50.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/guglielmo-cappuccino-cup-set__0.jpg"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/guglielmo-cappuccino-cup-set/"
+  },
+  {
+   "id": 6247,
+   "slug": "guglielmo-espresso-cup-set",
+   "name": "Guglielmo Espresso Cup Set",
+   "category": "merch",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 52.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/guglielmo-espresso-cup-set__0.jpg"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/guglielmo-espresso-cup-set/"
+  },
+  {
+   "id": 26522,
+   "slug": "brasilena-bottles-24-pack",
+   "name": "Brasilena Bottles (24-Pack)",
+   "category": "beverage",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 40.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Brasilena",
+   "images": [
+    "assets/img/products/brasilena-bottles-24-pack__0.png"
+   ],
+   "description": "",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/brasilena-bottles-24-pack/"
+  },
+  {
+   "id": 24556,
+   "slug": "brasilena-can-single",
+   "name": "Brasilena Can (Single)",
+   "category": "beverage",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 2.1,
+   "compare_at": 2.5,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Brasilena",
+   "images": [
+    "assets/img/products/brasilena-can-single__0.jpg"
+   ],
+   "description": "Brasilena is the famous lightly carbonated espresso drink. Serve chilled or over ice for a delicious and refreshing delight. 250 ml can.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/brasilena-can-single/"
+  },
+  {
+   "id": 90,
+   "slug": "brasilena-cans-24-pack",
+   "name": "Brasilena Cans (24-Pack)",
+   "category": "beverage",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 40.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Brasilena",
+   "images": [
+    "assets/img/products/brasilena-cans-24-pack__0.jpg",
+    "assets/img/products/brasilena-cans-24-pack__1.jpg"
+   ],
+   "description": "Brasilena is the famous lightly carbonated espresso drink. Serve chilled or over ice for a delicious and refreshing delight. 24 x 250 ml cans.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/brasilena-cans-24-pack/"
+  },
+  {
+   "id": 5645,
+   "slug": "brasilena-cans-6-pack",
+   "name": "Brasilena Cans (6-Pack)",
+   "category": "beverage",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 13.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Brasilena",
+   "images": [
+    "assets/img/products/brasilena-cans-6-pack__0.jpg",
+    "assets/img/products/brasilena-cans-6-pack__1.jpg"
+   ],
+   "description": "Brasilena is the famous lightly carbonated espresso drink. Serve chilled or over ice for a delicious and refreshing delight. Packaging varies and may consist of 6 individual cans with or without 6-pack carton. 6 x 250 ml cans.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/specialty-products/brasilena-cans-6-pack/"
+  },
+  {
+   "id": 108,
+   "slug": "pod-holder-o-ring-mg147",
+   "name": "Pod Holder O-Ring MG147",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 6.98,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/pod-holder-o-ring-mg147__0.jpg"
+   ],
+   "description": "Replacement O-RING for upper pod holder assembly of DADA VAPOR. GRIMAC part number MG147 For other parts please contact us at sales@lespressousa.com",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/pod-holder-o-ring-mg147/"
+  },
+  {
+   "id": 149,
+   "slug": "pod-holder-screen",
+   "name": "Pod Holder Screen",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 15.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/pod-holder-screen__0.jpg"
+   ],
+   "description": "Pod holder screen (filter) for GRIMAC – 38 mm diameter – fits Guglielmo Pod For other parts please contact us at sales@lespressousa.com",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/pod-holder-screen/"
+  },
+  {
+   "id": 5337,
+   "slug": "puly-milk-plus-cleaner",
+   "name": "Puly Milk Plus® Cleaner",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 25.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Puly",
+   "images": [
+    "assets/img/products/puly-milk-plus-cleaner__0.jpg"
+   ],
+   "description": "Puly Milk Plus® is your solution to steam wand and milk froth cleaning! Single phase cleaning system for wands, frothers and any other surface that comes in contact with milk and coffee. Puly Milk Plus® can also be used as a soaking detergent for all your coffee equipment cleaning needs. Product details: Bottle with incorporated dosing 1 liter Made in Italy NSF certified",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/puly-milk-plus-cleaner/"
+  },
+  {
+   "id": 5885,
+   "slug": "water-softener-rdl",
+   "name": "Water Softener (RDL & Grimac)",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 18.95,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "RDL",
+   "images": [
+    "assets/img/products/water-softener-rdl__0.jpg"
+   ],
+   "description": "Replacement water softener for RDL Mini Cap Vapor, Grimac and similar models Softener style, color and material may vary from photo. For other parts please contact us at sales@lespressousa.com",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/water-softener-rdl/"
+  },
+  {
+   "id": 26612,
+   "slug": "puly-caff-plus-powder",
+   "name": "Puly CAFF plus® Powder Coffee Machine Cleaner",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 19.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Puly",
+   "images": [
+    "assets/img/products/puly-caff-plus-powder__0.png",
+    "assets/img/products/puly-caff-plus-powder__1.png"
+   ],
+   "description": "puly CAFF plus® Powder is an espresso machine detergent specially crafted for backflushing group heads and cleaning portafilters and discharge valves. Product details: removes coffee residues and fat deposits prevents unpleasant odors in all water passages of the espresso machine certified by the NSF International regular use helps promote better coffee machine functionality can also be used for cups and tea pots 570 g (20 oz) See pulyCAFF® Plus – pulyCAFF for additional details",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/puly-caff-plus-powder/"
+  },
+  {
+   "id": 24779,
+   "slug": "pulygrind-grinder-cleaner-crystals",
+   "name": "pulyGRIND® Grinder Cleaner Crystals",
+   "category": "care",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": null,
+   "price": 35.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "business",
+    "home",
+    "office"
+   ],
+   "brand": "Puly",
+   "images": [
+    "assets/img/products/pulygrind-grinder-cleaner-crystals__0.jpg",
+    "assets/img/products/pulygrind-grinder-cleaner-crystals__1.jpg"
+   ],
+   "description": "pulyGRIND® Crystals are designed to free flat and conical burr grinding chambers from coffee deposits. Product details: Small crystals, with extremely high absorbent power for oils and fats Complies with European regulations Made with natural and renewable products All ingredients of natural origin and completely renewable (Organic) Made in Italy Ideal for disc and conical grinders 405g for approx. 27 applications",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/equipment/commercial/pulygrind-grinder-cleaner-crystals/"
+  },
+  {
+   "id": 23013,
+   "slug": "cz-cups-stirrer-sugar-kit-150-pack",
+   "name": "CZ Cups-Stirrer-Sugar Kit (150 pack)",
+   "category": "supplies",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": "150 pack",
+   "price": 18.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/cz-cups-stirrer-sugar-kit-150-pack__0.jpg"
+   ],
+   "description": "Guglielmo U.S. Catanzaro branded kits include: 150 paper cups 150 stirrers 150 sugar packets for the total hassle free coffee experience.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/cz-cups-stirrer-sugar-kit-150-pack/"
+  },
+  {
+   "id": 4067,
+   "slug": "cups-stirrer-sugar-kit-100-pack",
+   "name": "Cups-Stirrer-Sugar Kit (100 pack)",
+   "category": "supplies",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": "100 pack",
+   "price": 16.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/cups-stirrer-sugar-kit-100-pack__0.jpg"
+   ],
+   "description": "Guglielmo kits include: 100 plastic cups stirrers sugar packets To complete your hassle free coffee experience",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/cups-stirrer-sugar-kit-100-pack/"
+  },
+  {
+   "id": 24777,
+   "slug": "cups-stirrer-sugar-kit-150-pack",
+   "name": "Cups-Stirrer-Sugar Kit (150 pack)",
+   "category": "supplies",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": "150 pack",
+   "price": 17.5,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": true,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/cups-stirrer-sugar-kit-150-pack__0.jpg"
+   ],
+   "description": "Guglielmo kits include: 150 paper cups 150 stirrers 150 sugar packets for the total hassle free coffee experience.",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/cups-stirrer-sugar-kit-150-pack/"
+  },
+  {
+   "id": 5314,
+   "slug": "cups-stirrer-sugar-kit-50-pack",
+   "name": "Cups-Stirrer-Sugar Kit (50 pack)",
+   "category": "supplies",
+   "blend": null,
+   "format": null,
+   "system": null,
+   "size": "50 pack",
+   "price": 5.0,
+   "compare_at": null,
+   "quote": false,
+   "in_stock": false,
+   "variable": false,
+   "audience": [
+    "home",
+    "office"
+   ],
+   "brand": "Guglielmo",
+   "images": [
+    "assets/img/products/cups-stirrer-sugar-kit-50-pack__0.jpg"
+   ],
+   "description": "Guglielmo kits include: plastic cups stirrers sugar packets To complete your hassle free coffee experience",
+   "bundle_offer": null,
+   "region_style": null,
+   "original_url": "https://lespressousa.com/shop/coffee/capsules/cups-stirrer-sugar-kit-50-pack/"
+  }
+ ]
+}

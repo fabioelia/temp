@@ -1,0 +1,24 @@
+TITLE: The Story of Guglielmo – Guglielmo USA
+META DESC: None
+H1: ['The Story of Guglielmo']
+OG: []
+JSON-LD blocks: 0
+Scripts: 51 CSS: 55 Forms: 0
+IMAGES (2):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+The Story of Guglielmo
+You are here:
+Home
+1
+/
+About
+2
+/
+The Story of Guglielmo
+Guglielmo SpA
+A brief history of Guglielmo SpA can be found in the
+Guglielmo SpA website
+A synopsis of 70+ years is in this Guglielmo video production

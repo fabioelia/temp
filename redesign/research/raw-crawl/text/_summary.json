@@ -1,0 +1,477 @@
+{
+ "about.html": {
+  "title": "About \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "About"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 3,
+  "noalt": 1,
+  "words": 185
+ },
+ "about__distributors.html": {
+  "title": "Where to Find \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Where to Find"
+  ],
+  "ld": 0,
+  "scripts": 54,
+  "css": 59,
+  "imgs": 5,
+  "noalt": 1,
+  "words": 154
+ },
+ "about__production.html": {
+  "title": "Production \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Production"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 12,
+  "noalt": 11,
+  "words": 511
+ },
+ "about__the-buzz.html": {
+  "title": "The Buzz \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "The Buzz"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 187
+ },
+ "about__the-story-of-guglielmo.html": {
+  "title": "The Story of Guglielmo \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "The Story of Guglielmo"
+  ],
+  "ld": 0,
+  "scripts": 51,
+  "css": 55,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 44
+ },
+ "about__where-to-buy.html": {
+  "title": "Where to Find \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Where to Find"
+  ],
+  "ld": 0,
+  "scripts": 54,
+  "css": 59,
+  "imgs": 5,
+  "noalt": 1,
+  "words": 154
+ },
+ "cart.html": {
+  "title": "Cart \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Cart"
+  ],
+  "ld": 0,
+  "scripts": 53,
+  "css": 53,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 16
+ },
+ "contact.html": {
+  "title": "Contact \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Contact"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 17
+ },
+ "dripcoffee.html": {
+  "title": "Drip Coffee \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Drip Coffee"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 10,
+  "noalt": 8,
+  "words": 137
+ },
+ "equipment-offering.html": {
+  "title": "Equipment Offering \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Equipment Offering"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 20,
+  "noalt": 19,
+  "words": 141
+ },
+ "equipment.html": {
+  "title": "Equipment \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Equipment"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 7,
+  "noalt": 6,
+  "words": 158
+ },
+ "espressoblends.html": {
+  "title": "Coffee \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Coffee"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 10,
+  "noalt": 9,
+  "words": 242
+ },
+ "home.html": {
+  "title": "Guglielmo USA \u2013 The Coffee that hits the spot",
+  "meta": false,
+  "h1": [
+   "Front Page"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 14,
+  "noalt": 11,
+  "words": 237
+ },
+ "join-us.html": {
+  "title": "Join Us \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Join Us"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 3,
+  "noalt": 2,
+  "words": 278
+ },
+ "join-us__business-solutions.html": {
+  "title": "Business Solutions \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Business Solutions"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 17,
+  "noalt": 16,
+  "words": 264
+ },
+ "join-us__business-solutions__foodservice-solutions.html": {
+  "title": "Foodservice Solutions \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Foodservice Solutions"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 5,
+  "noalt": 4,
+  "words": 260
+ },
+ "join-us__business-solutions__hotel.html": {
+  "title": "Hotel \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Hotel"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 3,
+  "noalt": 2,
+  "words": 156
+ },
+ "join-us__business-solutions__office-and-corporate-solutions.html": {
+  "title": "Office and Corporate Solutions \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Office and Corporate Solutions"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 4,
+  "noalt": 3,
+  "words": 230
+ },
+ "join-us__franchise-info-request.html": {
+  "title": "Franchise Info request \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Franchise Info request"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 199
+ },
+ "join-us__more-information.html": {
+  "title": "Request More Information \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Request More Information"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 173
+ },
+ "learn-more.html": {
+  "title": "Learn More \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Learn More"
+  ],
+  "ld": 0,
+  "scripts": 51,
+  "css": 55,
+  "imgs": 9,
+  "noalt": 8,
+  "words": 672
+ },
+ "machine-maintenance.html": {
+  "title": "Maintenance \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Maintenance"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 53,
+  "imgs": 3,
+  "noalt": 2,
+  "words": 289
+ },
+ "my-account.html": {
+  "title": "My Account \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "My Account"
+  ],
+  "ld": 0,
+  "scripts": 68,
+  "css": 51,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 104
+ },
+ "newsletter.html": {
+  "title": "Newsletter \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Newsletter"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 48
+ },
+ "privacy-policy.html": {
+  "title": "Privacy Policy \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Privacy Policy",
+   "ONLINE PRIVACY POLICY AGREEMENT"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 1388
+ },
+ "product-category__coffee.html": {
+  "title": "Coffee \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Coffee",
+   "Coffee"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 18,
+  "noalt": 17,
+  "words": 467
+ },
+ "product-category__coffee__capsules.html": {
+  "title": "Capsules \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Capsules",
+   "Capsules"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 15,
+  "noalt": 14,
+  "words": 420
+ },
+ "product-category__equipment.html": {
+  "title": "Machines and Parts \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Machines and Parts",
+   "Machines and Parts"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 15,
+  "noalt": 14,
+  "words": 450
+ },
+ "products-page.html": {
+  "title": "Coffee \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Coffee",
+   "Coffee"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 18,
+  "noalt": 17,
+  "words": 467
+ },
+ "refer-a-friend.html": {
+  "title": "Refer a Friend \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Refer a Friend"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 52
+ },
+ "shop.html": {
+  "title": "Shop \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Shop",
+   "Shop"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 5,
+  "noalt": 1,
+  "words": 152
+ },
+ "shop__coffee__5-stelle__5-stelle-1kg-beans.html": {
+  "title": "5 Stelle 1Kg Beans \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "5 Stelle 1Kg Beans"
+  ],
+  "ld": 1,
+  "scripts": 51,
+  "css": 53,
+  "imgs": 13,
+  "noalt": 7,
+  "words": 222
+ },
+ "shop__coffee__espresso-classico__espresso-classico-250g-ground.html": {
+  "title": "Espresso Classico 250g Ground \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Espresso Classico 250g Ground"
+  ],
+  "ld": 1,
+  "scripts": 51,
+  "css": 53,
+  "imgs": 13,
+  "noalt": 7,
+  "words": 253
+ },
+ "shop__equipment__commercial__wega-and-other-commercial-machines.html": {
+  "title": "WEGA and BFC Commercial Machines \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "WEGA and BFC Commercial Machines"
+  ],
+  "ld": 0,
+  "scripts": 51,
+  "css": 53,
+  "imgs": 18,
+  "noalt": 9,
+  "words": 238
+ },
+ "shop__equipment__home__espresso-plus-vap-capsule-machine.html": {
+  "title": "ESPRESSO PLUS VAP Capsule Machine \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "ESPRESSO PLUS VAP Capsule Machine"
+  ],
+  "ld": 1,
+  "scripts": 54,
+  "css": 53,
+  "imgs": 17,
+  "noalt": 7,
+  "words": 464
+ },
+ "terms.html": {
+  "title": "Terms \u2013 Guglielmo USA",
+  "meta": false,
+  "h1": [
+   "Terms",
+   "General Questions and Terms"
+  ],
+  "ld": 0,
+  "scripts": 48,
+  "css": 52,
+  "imgs": 2,
+  "noalt": 1,
+  "words": 843
+ }
+}

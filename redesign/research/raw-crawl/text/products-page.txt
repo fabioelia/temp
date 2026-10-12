@@ -1,0 +1,251 @@
+TITLE: Coffee – Guglielmo USA
+META DESC: None
+H1: ['Coffee', 'Coffee']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 52 Forms: 1
+IMAGES (18):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2014/06/coffee-500x321.jpeg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/classico.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/espressobar-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/bar_5_stelle_grani_1000-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/extra_bar_250-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/extra.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/5StelleGround250-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/decaf.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/5StelleMacinaturaEspresso-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/classicobeans500-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/caffetteria_1000_grani-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2018/03/brasilena_can-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/copacabana_img.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/speciale-450x450.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/old-french-450x450.jpg | alt=''
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+Coffee
+You are here:
+Home
+1
+/
+Shop
+2
+/
+Coffee
+Coffee
+Sort by
+Default
+Default
+Custom
+Name
+Price
+Date
+Popularity (sales)
+Average rating
+Relevance
+Random
+Product ID
+Display
+15 Products per page
+15 Products per page
+30 Products per page
+45 Products per page
+Espresso Classico 250g Ground
+$
+6.69
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Espresso Bar 1Kg Beans
+$
+32.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+5 Stelle 1Kg Beans
+$
+32.50
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Espresso Classico 1Kg Beans
+$
+31.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Extra Bar 250g Ground
+$
+7.20
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Extra Bar 1Kg Beans
+$
+33.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+5 Stelle 250g Ground
+$
+7.25
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Espresso Decaf 250g Ground Can
+$
+8.99
+Original price was: $8.99.
+$
+6.99
+Current price is: $6.99.
+Sale!
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+5 Stelle 250g Ground  “Fine Grinding”
+$
+7.25
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Espresso Classico Beans 500g
+$
+16.00
+Add to cart
+Add to cart
+Read more
+Show Details
+Show Details
+Show Details
+Caffetteria 1Kg Beans
+$
+27.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Brasilena Cans (24-Pack)
+$
+40.00
+Add to cart
+Add to cart
+Read more
+Show Details
+Show Details
+Show Details
+Copacabana 1Kg Beans
+$
+26.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Silver Signature 250g Ground in Can
+$
+12.99
+Add to cart
+Add to cart
+Read more
+Show Details
+Show Details
+Show Details
+French Roast Blend Drip Beans
+$
+110.00
+Add to cart
+Add to cart
+Add to cart
+Show Details
+Show Details
+Show Details
+Page 1 of 3
+1
+2
+3
+Need help choosing?
+Search Products
+Search for:
+Search
+Filter by Product
+Coffee
+(37)
+Machines and Parts
+(3)
+Specialty
+(6)
+Filter by Type
+Espresso
+(31)
+Drip (American)
+(7)
+Decaf
+(8)
+Filter by Format
+Ground
+(11)
+Whole Beans
+(11)
+Single Serve - Pods
+(5)
+Single Serve - Capsules
+(7)
+Single Serve - Compatible Capsules
+(7)
+Filter by Blend
+Caffetteria
+(1)
+Club 99
+(1)
+Copacabana
+(1)
+Espresso Bar
+(1)
+Espresso Classico
+(10)
+Extra Bar
+(2)
+5 Stelle
+(5)
+Silver
+(1)
+Filter by Style
+Central Italian
+(6)
+Northern Italian
+(9)
+Southern Italian
+(12)

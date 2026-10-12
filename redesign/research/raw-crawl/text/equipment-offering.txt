@@ -1,0 +1,64 @@
+TITLE: Equipment Offering – Guglielmo USA
+META DESC: None
+H1: ['Equipment Offering']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 53 Forms: 0
+IMAGES (20):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2015/04/old-equipment2.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/capitno-machine-espresso-vap-263x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/03/mini-cap-vap-nera-e1428346967696-282x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/02/officeplusvap-e1425682412871-234x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/02/my_caps-v-3_large-269x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/wega_atlas1.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/Multi-Cap-2-Group-300x263.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/wegaorionevo_EVD-e1720816224268-495x400.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Polaris-EVD-300x249.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/Double-Cap-2-e1514757504390-290x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/03/maxi-cap-evo-lat-sito-180x180.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/03/maxi-cap-evo-lat-sito-180x180.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/CA-Twin-CAPS-243x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/02/officeplusvap-e1425682412871-234x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/Double-Cap-2-e1514757504390-290x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/capitno-machine-espresso-vap-263x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2015/03/maxi-cap-evo-lat-sito-300x258.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2017/12/CA-Twin-CAPS-243x300.jpg | alt=''
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+Equipment Offering
+You are here:
+Home
+1
+/
+Equipment Offering
+Choosing the appropriate beverage equipment is an important financial decision that ultimately affects customer satisfaction and perceived value. Guglielmo USA offers a wide-range of coffee and espresso equipment to meet the needs of any size client. Find the equipment that works best for your home or business.
+Home
+&
+Office
+Click on a machine to learn more…
+Espresso Plus
+Mini CAP
+Office Plus
+MY Caps
+Foodservice
+Cafe & Restaurant
+Click on a machine to learn more…
+WEGA Atlas
+Multi Cap 2
+WEGA Orion
+WEGA Polaris
+Double Cap Plus
+Maxi Cap Pro Evolution
+Catering & Retail
+Click on a machine to learn more…
+Maxi Cap Pro Evolution
+MY Twin Cap
+Office Plus
+Double Cap Plus
+Hospitality
+Click on a machine to learn more…
+Espresso Plus
+Maxi Cap Pro Evolution
+MY Twin Cap

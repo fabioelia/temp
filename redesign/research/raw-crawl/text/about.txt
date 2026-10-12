@@ -1,0 +1,43 @@
+TITLE: About – Guglielmo USA
+META DESC: None
+H1: ['About']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 53 Forms: 1
+IMAGES (3):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2014/06/about_mimmo.jpg | alt='about_mimmo'
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+About
+You are here:
+Home
+1
+/
+About
+Our Story
+L’Espresso USA was started in 2000 by Mimmo Elia, and has grown from a small coffee imports company in Boston Massachusetts, to a firm with five distributor’s nation wide, and hundreds of state wide customers.
+We are not your usual firm, but a big family owned company which represents an extraordinary example of efficiency and productivity capacity. Expanding in size we currently occupy warehouses in several strategic cities in greater Boston. Using only the finest quality products we have grown to be a household name in the Boston area.
+In 2003 we also expanded into the Canadian market and have had growing success in that area as well. We believe that our commitment to customer service and superior products is the foundation of this success which we promise to carry forward for many years to come.
+Search
+Search
+About
+Guglielmo USA
+The Story of Guglielmo
+Production
+The Buzz
+Where to Find
+Join Us
+Business Solutions
+Franchising
+Become a Distributor
+Become a Retailer
+Learn More
+Coffee and Your Health
+Marketing
+Social Media
+Facebook
+Twitter
+Pinterest
+Youtube

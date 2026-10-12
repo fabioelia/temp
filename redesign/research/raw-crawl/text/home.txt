@@ -1,0 +1,81 @@
+TITLE: Guglielmo USA – The Coffee that hits the spot
+META DESC: None
+H1: ['Front Page']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 53 Forms: 0
+IMAGES (14):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_headline.png | alt='The Coffee that hits the Spot'
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_coffee.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_machines.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_joinus.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_wheretobuy.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_icon_learnmore.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2018/03/brasilena-6-pack-300x208.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2020/05/oro10-300x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/decaf.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/speciale-300x300.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2022/09/welington-logo-300x74.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/broadway-pastry-300x199.jpg | alt='broadway pastry'
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+Front Page
+You are here:
+Home
+GOING QUICKLY …
+… and many more
+GUGLIELMO NEAR YOU
+Dining Out?
+Taberna de Haro
+999 Beacon St., Brookline 02446
+Coastal Italian offers creative coastal Italian Cuisine at
+BOSA
+160 Merrimack St., Haverhill, MA 01830
+Try “Crazy” good food
+Pazza on Porter
+107 Porter St., Boston, MA 02128
+GUGLIELMO NEAR YOU
+Outside of Boston?
+Grab dinner and a decaffeinated latte at
+The Wellington
+75 Leonard St., Belmont 02478
+A taste of the North End in Eastie?
+Visit the newsiest
+Caffe dello Sport
+973 Saratoga St., East Boston 02128
+GUGLIELMO NEAR YOU
+Time for a Special Treat ?
+Try a pastry with your espresso at
+Lakon Paris Patisserie
+, visit the one closest to you in Newton, Brookline, Seaport or Brighton.
+Enjoy the sweet life at
+La Dolce Vita
+in the Georgetown with a cappuccino and dessert
+GUGLIELMO NEAR YOU
+South Boston Bound?
+Grab a pastry with your cappuccino at
+Broadway’s Pastry
+258 W Broadway, South Boston, MA
+GUGLIELMO NEAR YOU
+Newest Locations offering Guglielmo Caffe
+El Porto
+170 Everett Ave., Chelsea, MA 02150
+Forcella
+33 North Square, Boston, MA 02113
+Nando
+393 Hanover St, Boston, MA 02113
+JOIN OUR FAMILY
+Here’s how:
+Create an account and
+shop
+today
+In the New England area and interested in our services?
+Contact us
+today
+See our
+join us
+section to learn more about becoming a Guglielmo distributor
+Consider our franchising options. Learn more
+here

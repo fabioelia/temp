@@ -1,0 +1,46 @@
+TITLE: Coffee – Guglielmo USA
+META DESC: None
+H1: ['Coffee']
+OG: []
+JSON-LD blocks: 0
+Scripts: 48 CSS: 53 Forms: 0
+IMAGES (10):
+  https://lespressousa.com/wp-content/uploads/2014/06/guglielmo_logo.png | alt='Guglielmo USA'
+  https://lespressousa.com/wp-content/uploads/2017/12/drip-coffee-with-bag-300x172.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2026/06/cart_new-300x300.png | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Blend-ExtraBar-705x529.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/08/Blend-5Stelle-705x529.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Blend-EspressoBar-705x529.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Blend-EspressoClassico-705x529.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Blend-Caffetteria-705x529.jpg | alt=''
+  https://lespressousa.com/wp-content/uploads/2014/06/Blend-Copacabana-705x529.jpg | alt=''
+  //lespressousa.com/wp-content/uploads/2014/07/guglielmo_logo_inverse.png | alt=''
+
+TEXT:
+Coffee
+You are here:
+Home
+1
+/
+Coffee
+Our Espresso Blends
+We offer a complete selection of delicious Italian espresso coffee products. Guglielmo USA provides customers with beans and ground coffees, servingware and specialty beverages.
+Eight distinct blends of espresso coffee.
+Available in retail and wholesale packaging to meet all customer needs.
+‘Guglielmo’ branded espresso servingware.
+We can provide all equipment and accessories necessary for brewing the prefect espresso.
+Several blends are avalble in conviniance single serve formats
+Shop by blend below or
+Shop All Coffee Now
+Extra Bar
+The coffee of choice for the Italian “bar”. Very popular among Italian coffee shops with unforgettable taste.  A blend that continues to be refined over the years to ensure it’s spot in the class of “authentic” Italian espresso.
+5 Stelle
+A blend of carefully selected Central-American, Brazilian Arabica and other top quality beans.
+Espresso Bar
+Central and South American select beans blended and toasted to perfection for excellent cream texture and unforgettable taste.  A blend that has gained respect and popularity across the globe.
+Espresso Classico
+South American and African Robusta and Arabica beans result in a strong coffee.  A favorite in many homes and bars alike.  The blend that started the Guglielmo tradition.
+Caffetteria
+Combination of South American, African and Asian beans renowned for intense flavor, aroma and smooth crema.
+Copacabana
+All around balanced blend ideal for cappuccinos, adding kick to other blends but also for a robust espresso of its own.
