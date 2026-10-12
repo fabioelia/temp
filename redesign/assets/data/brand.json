@@ -1,0 +1,1233 @@
+{
+  "meta": {
+    "generated": "2026-10-12",
+    "note": "Values marked UNVERIFIED or PROPOSED must be confirmed before publication. guglielmo.it could not be fetched directly (HTTP 403 / bot challenge); official facts come via the official e-shop pages as indexed by search, plus official partners and press.",
+    "sources": {
+      "usa_about": "https://lespressousa.com/about/",
+      "usa_production": "https://lespressousa.com/about/production/",
+      "usa_blends": "https://lespressousa.com/espressoblends/",
+      "usa_joinus": "https://lespressousa.com/join-us/",
+      "usa_bizsol": "https://lespressousa.com/join-us/business-solutions/",
+      "usa_drip": "https://lespressousa.com/dripcoffee/",
+      "usa_catalog": "research/raw-crawl/catalog.json (lespressousa.com/shop)",
+      "official_origins": "https://www.caffeguglielmoshop.it/en/our-origins/ (official e-shop; read via search index, site blocks our crawler)",
+      "official_passion": "https://www.caffeguglielmoshop.it/en/passion-and-research/ (official e-shop; via search index)",
+      "official_world": "https://www.caffeguglielmoshop.it/en/guglielmo-over-the-world/ (official e-shop; via search index)",
+      "ch_shop": "https://caffeguglielmo.ch/products.json (Caffè Guglielmo Switzerland, official partner)",
+      "lamezia": "https://www.guglielmostorelamezia.com/ (Guglielmo Store Lamezia Terme)",
+      "itwiki": "https://it.wikipedia.org/wiki/Guglielmo_Caff%C3%A8",
+      "enwiki": "https://en.wikipedia.org/wiki/Guglielmo_Caff%C3%A8",
+      "eccellenze": "https://www.eccellenzecalabresi.it/guglielmo-caffe/",
+      "comunicaffe": "https://www.comunicaffe.it/catanzaro-dieci-anni-fa-moriva-guglielmo-papaleo-la-sua-industria-nacque-nel-1935-era-il-signore-del-caffe-che-fa-centro-oggi-il-suo-cognome-significa-caffe-in-molte-zon/",
+      "uscz": "https://www.uscatanzaro.net/il-cavaliere-guglielmo-papaleo-a-dieci-anni-dalla-sua-scomparsa/",
+      "bever_inei": "https://www.beverfood.com/entrata-caffe-guglielmo-salgono-41-soci-istituto-nazionale-caffe-espresso-wd1959/",
+      "bever_vn": "https://www.beverfood.com/caffe-guglielmo-vietnam-accordo-distribuzione-cym_zwd_90962/",
+      "bever_cn": "https://www.beverfood.com/caffe-guglielmo-cina-qingdao-prima-caffetteria-wd75196/",
+      "bever_store": "https://www.beverfood.com/catena-coffee-store-guglielmo-caffe-porta-14-unita-wd74774/",
+      "bever_dg": "https://www.beverfood.com/caffe-guglielmo-capsule-compatibili-sistemi-nescafe-dolce-gusto-wd107103/",
+      "agi_kr": "https://www.agi.it/international/2017/04/05/news/coffee_brand_from_calabria_expands_in_south_korea-1655734/",
+      "gdc_kr": "https://www.giornaledicalabria.it/made-in-italy-caffe-guglielmo-13-mo-punto-vendita-in-corea-del-sud/"
+    }
+  },
+  "company": {
+    "brand": "Caffè Guglielmo",
+    "legal_name": "Guglielmo S.p.A. (Wikipedia: \"Guglielmo Caffè S.p.A.\")",
+    "founder": "Guglielmo Papaleo (Catanzaro). Named Cavaliere del Lavoro (Order of Merit for Labour) in 1997. Died May 2003 (sources give 5 May and 10 May - exact day UNVERIFIED).",
+    "founded": 1943,
+    "founded_note": "Official brand date is 1943 (company timeline, Italian Wikipedia, company press boilerplate \"Creata nel 1943\"). Some sources say 1945 for the Corso Mazzini shop (English Wikipedia, eccellenzecalabresi.it, beverfood 2008). Coffee production and sale began in 1947.",
+    "origin_city": "Catanzaro, Calabria, Italy",
+    "headquarters_and_plant": "Località Copanello 1, 88071 Stalettì (CZ), Calabria, Italy - on the Ionian coast a few km from Catanzaro",
+    "commercial_offices": [
+      "Copanello di Stalettì (Central and Southern Italy)",
+      "Bologna (Northern Italy)"
+    ],
+    "other_branches": [
+      "Rome and Milan branches (Italian Wikipedia)",
+      "Vimodrone (MI) distribution office for Lombardy (official e-shop, via search index)"
+    ],
+    "plant_area_m2": 10000,
+    "capacity_tonnes_per_year": 3000,
+    "employees": "About 60 (eccellenzecalabresi.it; LinkedIn) - UNVERIFIED current figure",
+    "production": {
+      "phases": [
+        "Green coffee cleaned of impurities (leaves, twigs, stones) and checked by specialists for organoleptic quality",
+        "Roasting in drum roasters at up to about 300 °C, with roast time set for each origin",
+        "Blending of the roasted Arabica and Robusta origins into each recipe",
+        "Grinding and packing: vacuum bricks, valve pouches in protective atmosphere, tins, capsules, ESE pods, whole beans"
+      ],
+      "roasting_method": "Origins are roasted separately and blended after roasting (official \"Passion and research\" page; Guglielmo USA production page). Wikipedia adds: methane-fired rotating-drum roasters, about 240-300 °C, 15-20 minutes, air-cooled (UNVERIFIED by the official site).",
+      "infrastructure_unverified": "Two newer roasters, an 18 m outdoor green-coffee silo with 14 cells (about 3,300 sacks), green-bean cleaning machine and roasted-coffee silo installed from 1997 onward (English Wikipedia; UNVERIFIED).",
+      "green_coffee_origins": "Brazil, Central America, Ethiopia, Indonesia, Vietnam among others (official e-shop homepage via search index; UNVERIFIED as complete list)"
+    },
+    "certifications": [
+      {
+        "name": "ISO 9001 quality management system",
+        "status": "Stated on Guglielmo USA production page; the site badge shows \"UNI EN ISO 9001:2008\" with DNV / SINCERT marks. Current certificate version and validity UNVERIFIED. (Earlier: ISO 9002 per eccellenzecalabresi.it.)"
+      },
+      {
+        "name": "HACCP self-control system",
+        "status": "Per CEE 93/43 and D.Lgs. 155/97 (Guglielmo USA production page)."
+      },
+      {
+        "name": "Istituto Nazionale Espresso Italiano (INEI) - \"Espresso Italiano Certificato\"",
+        "status": "Guglielmo joined INEI in 2008 (beverfood.com). Club 99 beans and Extra Bar beans certified under Annex No. 33 of Certificate No. 214 (CSQA-recognized scheme) per Guglielmo USA production page. Current membership and certificate status UNVERIFIED - confirm before publishing."
+      },
+      {
+        "name": "Organic (Organic Espresso)",
+        "status": "\"Bioagricoop controlled and certified\" (L'Espresso USA catalog). Current certifier UNVERIFIED."
+      }
+    ],
+    "slogan_it": "il caffè che fa centro",
+    "slogan_en": "The coffee that hits the spot (literally: \"the coffee that hits the bullseye\")",
+    "logo_history": "Current concentric-target roundel and slogan introduced in the 1972-1987 period (official timeline); English Wikipedia dates it to 1985 and says it replaced a logo showing William Tell (Guglielmo Tell) shooting at a target (UNVERIFIED).",
+    "family": [
+      {
+        "generation": 1,
+        "name": "Guglielmo Papaleo",
+        "role": "Founder"
+      },
+      {
+        "generation": 2,
+        "name": "Roberto Volpi",
+        "role": "Son-in-law; joined 1984 from Milan; managing director (Wikipedia)"
+      },
+      {
+        "generation": 3,
+        "name": "Daniele Rossi",
+        "role": "Grandson; joined March 1997 (planning and quality control); later General Manager / consigliere delegato"
+      },
+      {
+        "generation": 3,
+        "name": "Matteo Tubertini",
+        "role": "Grandson; joined 1998, export (Wikipedia); co-leads the company"
+      },
+      {
+        "generation": 3,
+        "name": "Beatrice Volpi",
+        "role": "Marketing and communication (beverfood 2018)"
+      }
+    ],
+    "family_note": "Official copy: 80+ years and three generations of the Papaleo family (2017: run by Daniele Rossi with uncle Roberto Volpi and cousins Matteo Tubertini and Beatrice Volpi).",
+    "markets": {
+      "export_country_count": "No official count published - UNVERIFIED",
+      "documented_markets": [
+        "Italy",
+        "USA (L'Espresso USA, Boston, since 2000)",
+        "Canada (L'Espresso USA since 2003; Importations Mini Italia, Montreal)",
+        "United Kingdom (Caffè Guglielmo UK Ltd, London)",
+        "Switzerland (Orizont Line, since 1996 per Swiss partner)",
+        "Germany",
+        "Portugal",
+        "Belgium",
+        "Australia",
+        "South Korea",
+        "China",
+        "Vietnam (exclusive distributor Cheung YongMa Ltd, 2017)"
+      ],
+      "note": "At least 11 export countries documented across official and press sources (2017 press: partnerships in North America, Australia, UK, Portugal, Germany, Belgium, Switzerland, plus China, South Korea, Vietnam)."
+    },
+    "retail": {
+      "guglielmo_stores_italy": "14 monobrand Guglielmo Stores in Italy in 2017: Bologna, Botricello, Catanzaro (3), Cosenza, Crotone, Firenze, Furci Siculo, Lamezia Terme, Rossano, S. Andrea sullo Jonio, Torino, Vibo Valentia (AGI / Giornale di Calabria 2017). Current number UNVERIFIED.",
+      "asia": "10 Guglielmo cafés in South Korea by Feb 2017, 13 by April 2017 (franchise partner); first café in China at Lion Mall, Qingdao, Feb 2017."
+    },
+    "guglielmo_point": {
+      "description": "Guglielmo Point is the café / coffee-shop franchise format. A \"Guglielmo Point di Milano\" was operating in 2008 (beverfood).",
+      "usa_claims_from_our_site": [
+        "Guglielmo Caffè and Guglielmo USA are looking to bring the Guglielmo Point franchise to the United States",
+        "Proven international success",
+        "Over 35 locations worldwide (date of claim unknown - UNVERIFIED current)",
+        "Expert training and support",
+        "Site-specific market analysis",
+        "Advertising reimbursement (conditions apply)",
+        "Exclusive product pricing and merchandising"
+      ],
+      "usa_candidate_requirements": "Franchise inquiry form asks for $2.5 million net worth and $1 million liquid assets.",
+      "status": "No US Guglielmo Point location identified. Current franchise terms UNVERIFIED - confirm with Guglielmo SpA."
+    },
+    "museum_visitors": "No Guglielmo coffee museum or public plant-visit program found in any source - UNVERIFIED / not documented. Ask Guglielmo SpA before mentioning.",
+    "sponsorship": [
+      "U.S. Catanzaro (long-time main sponsor; co-branded capsules)",
+      "F.C. Crotone 2001/02 (Wikipedia)"
+    ],
+    "websites": {
+      "official": "https://www.guglielmo.it/ (not reachable from our network: HTTP 403 / SiteGround bot challenge)",
+      "official_eshop": "https://www.caffeguglielmoshop.it/",
+      "swiss_partner": "https://caffeguglielmo.ch/",
+      "store_lamezia": "https://www.guglielmostorelamezia.com/"
+    }
+  },
+  "usa": {
+    "legal_name": "L'Espresso USA",
+    "trading_as": "Guglielmo USA",
+    "role": "US importer and distributor of Caffè Guglielmo; coffee and espresso equipment sales and service",
+    "founder": "Domenico \"Mimmo\" Elia",
+    "founded": 2000,
+    "city": "Boston, Massachusetts (warehouses in several cities in greater Boston)",
+    "canada_expansion": 2003,
+    "phone": "(617) 612-0090",
+    "email": "info@lespressousa.com",
+    "website": "https://lespressousa.com/",
+    "scale_claims": "Grown from a small coffee import company to \"five distributors nationwide and hundreds of statewide customers\" (site copy, date unknown). The Where to Find page currently lists three.",
+    "distributors": [
+      {
+        "name": "Guglielmo USA",
+        "state": "MA",
+        "contact": "Domenico Elia",
+        "phone": "(617) 612-0090"
+      },
+      {
+        "name": "Espresso World",
+        "state": "IL",
+        "contact": "Husso Klebic",
+        "phone": "(773) 275-8309",
+        "web": "http://www.espressoworld.us"
+      },
+      {
+        "name": "Moka & Company",
+        "state": "PA",
+        "contact": "Joe Sgro",
+        "phone": "(717) 393-9666"
+      }
+    ],
+    "services": [
+      {
+        "title": "Prompt coffee delivery",
+        "text": "Order online or by phone; coffee arrives within 3 business days."
+      },
+      {
+        "title": "Service and training",
+        "text": "Expert on-site technical assistance and repairs to minimize downtime; staff training from brewing and presentation to equipment use and maintenance."
+      },
+      {
+        "title": "No-cost loaner machines",
+        "text": "If a machine cannot be repaired on site, a loaner is provided at no cost; loaners also available for functions and special events."
+      },
+      {
+        "title": "Water treatment",
+        "text": "Professional installation of water filter / softener systems to extend equipment life and improve taste."
+      },
+      {
+        "title": "Equipment procurement",
+        "text": "Direct purchase, lease-to-own, consignment and other programs for every size of client."
+      },
+      {
+        "title": "Installation and calibration",
+        "text": "Equipment installation, calibration and on-site support for all installed commercial equipment."
+      }
+    ],
+    "experience_claim": "\"Over 25 years of sales and service experience\" (Equipment and Join Us pages; Business Solutions page says \"over 20 years\" - align copy).",
+    "brands_serviced": [
+      "La Marzocco",
+      "Nuova Simonelli",
+      "Faema",
+      "Sanremo",
+      "La Cimbali",
+      "Bezzera",
+      "Compak",
+      "Fetco",
+      "Curtis"
+    ],
+    "equipment_brands_sold": [
+      "WEGA",
+      "BFC",
+      "Rocket",
+      "Capitani (Espresso del Capitano)",
+      "RDL",
+      "Grimac",
+      "Puly"
+    ],
+    "other_brands_shown_on_site": [
+      "Astoria",
+      "Mazzer",
+      "Macap",
+      "Fiorenzato",
+      "Rancilio",
+      "Bunn",
+      "Newco"
+    ],
+    "segments": [
+      "Foodservice (coffee shops, restaurants, catering, retail)",
+      "Office and corporate",
+      "Hospitality (hotels)",
+      "Home"
+    ],
+    "boston_accounts_on_homepage": [
+      "Taberna de Haro (Brookline)",
+      "BOSA (Haverhill)",
+      "Pazza on Porter (East Boston)",
+      "The Wellington (Belmont)",
+      "Caffè dello Sport (East Boston)",
+      "Lakon Paris Patisserie",
+      "La Dolce Vita",
+      "Broadway's Pastry (South Boston)",
+      "El Porto (Chelsea)",
+      "Forcella (North End)",
+      "Nando (North End)"
+    ],
+    "also_imports": [
+      "Brasilena coffee soda (Acqua Calabria)",
+      "Guglielmo cups, glasses, coffee hard candy, gift packs"
+    ],
+    "copy_fixes_needed": [
+      "Gugliemo -> Guglielmo",
+      "Gugliemlo -> Guglielmo",
+      "Cutris -> Curtis",
+      "prefect -> perfect",
+      "avalble -> available",
+      "conviniance -> convenience",
+      "distributor's -> distributors",
+      "experiance -> experience",
+      "LONGUES -> LOUNGES",
+      "Maintenace -> Maintenance",
+      "barrista -> barista",
+      "1o lbs -> 10 lbs",
+      "Premium Blend (Small) short text says \"Dark Roast\" but product is medium roast"
+    ]
+  },
+  "timeline": [
+    {
+      "year": 1935,
+      "title": "Apprentice in Catanzaro",
+      "text": "Guglielmo Papaleo starts as a shop boy in a grocery in the old town of Catanzaro, learning the trade."
+    },
+    {
+      "year": 1943,
+      "title": "A shop and a coffee machine",
+      "text": "Papaleo opens his own small shop on Corso Mazzini, Catanzaro, with a small coffee machine inside. The brand counts its history from this year (some sources say 1945)."
+    },
+    {
+      "year": 1947,
+      "title": "Coffee becomes the business",
+      "text": "Production and sale of coffee begin; the shop is enlarged so customers can taste the coffee on the spot."
+    },
+    {
+      "year": 1950,
+      "title": "The first Guglielmo bar",
+      "text": "The first Guglielmo coffee bar opens (Italian Wikipedia; official timeline)."
+    },
+    {
+      "year": 1952,
+      "title": "Stratò and the coffee-pot vans",
+      "text": "The business moves to the Stratò district of Catanzaro and sells across the province, promoted by advertising vans shaped like a coffee pot with cups."
+    },
+    {
+      "year": 1957,
+      "title": "First roasting plant",
+      "text": "Rising demand leads to the first roasting plant in Catanzaro Sala, with customs warehouses, production and offices (English Wikipedia says 1960)."
+    },
+    {
+      "year": 1968,
+      "title": "Building Copanello",
+      "text": "Construction begins on a new industrial complex at Copanello, on the Ionian coast."
+    },
+    {
+      "year": 1972,
+      "title": "Copanello opens, S.p.A. is born",
+      "text": "The Copanello plant is inaugurated with modern machinery and the company becomes a joint-stock company (S.p.A.). (English Wikipedia dates the move to 1970.)"
+    },
+    {
+      "year": 1984,
+      "title": "A second generation joins",
+      "text": "Roberto Volpi, Papaleo's son-in-law, joins from Milan and becomes managing director."
+    },
+    {
+      "year": 1985,
+      "title": "The target logo",
+      "text": "The concentric-target roundel and slogan \"il caffè che fa centro\" replace the earlier William Tell logo (Wikipedia date; the official timeline places the new identity in 1972-1987)."
+    },
+    {
+      "year": 1997,
+      "title": "Cavaliere del Lavoro and 50 years",
+      "text": "Guglielmo Papaleo is named Cavaliere del Lavoro and the company celebrates 50 years of coffee production; grandson Daniele Rossi joins the firm."
+    },
+    {
+      "year": 1998,
+      "title": "Export begins in earnest",
+      "text": "Grandson Matteo Tubertini joins to lead exports into Europe and builds the partnership with the US importer, L'Espresso USA (English Wikipedia)."
+    },
+    {
+      "year": 2000,
+      "title": "L'Espresso USA in Boston",
+      "text": "Mimmo (Domenico) Elia founds L'Espresso USA in Boston to import and distribute Caffè Guglielmo."
+    },
+    {
+      "year": 2001,
+      "title": "Looking abroad",
+      "text": "Guglielmo decides to invest in foreign markets and, in 2001-2002, begins exhibiting at major coffee trade fairs in Portugal and Germany."
+    },
+    {
+      "year": 2003,
+      "title": "Canada, and a farewell",
+      "text": "L'Espresso USA expands into Canada. In May 2003 founder Guglielmo Papaleo passes away."
+    },
+    {
+      "year": 2008,
+      "title": "Espresso Italiano",
+      "text": "Caffè Guglielmo joins the Istituto Nazionale Espresso Italiano; a Guglielmo Point operates in Milan and a Rome branch opens."
+    },
+    {
+      "year": 2013,
+      "title": "70 years",
+      "text": "The company celebrates 70 years of activity."
+    },
+    {
+      "year": 2017,
+      "title": "From Calabria to Asia",
+      "text": "First Guglielmo café in China (Qingdao, February), 13 franchised cafés in South Korea (April), 14 Guglielmo Stores in Italy, and an exclusive distribution deal for Vietnam (September)."
+    },
+    {
+      "year": 2018,
+      "title": "Gusto capsules",
+      "text": "March 2018: launch of Gusto capsules compatible with Nescafé Dolce Gusto machines, completing Guglielmo's compatible-capsule range, sold in supermarkets and the 14 Guglielmo Stores."
+    },
+    {
+      "year": 2023,
+      "title": "80 years",
+      "text": "Eighty years since 1943; U.S. Catanzaro co-branded capsules arrive in the US (L'Espresso USA catalog, 2023)."
+    }
+  ],
+  "blends": [
+    {
+      "id": "extra-bar",
+      "name": "Extra Bar",
+      "line": "espresso",
+      "composition": "Arabica and Robusta blend (\"the perfect blend of Arabica and Robusta\" - official partner). Percentages not published. CONFLICT: Guglielmo Store Lamezia describes the beans as 100% Robusta - UNVERIFIED.",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium-dark to dark (PROPOSED - not published).",
+      "intensity": 9,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità forte\" / strong)",
+      "notes": [
+        "intense, unique aroma (official)",
+        "refined aroma with decisive notes (official store)",
+        "bold aroma (L'Espresso USA)",
+        "dark cocoa (PROPOSED)",
+        "toasted hazelnut (PROPOSED)"
+      ],
+      "body": "Full (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Dense, excellent texture (L'Espresso USA: \"excellent cream texture\")",
+      "best_for": [
+        "espresso",
+        "cappuccino",
+        "moka (250 g ground)"
+      ],
+      "color_hex": "#222122",
+      "accent_hex": "#CCBA6C",
+      "color_note": "Matte black pack with gold/cream lettering",
+      "description": "The house blend of the Southern Italian espresso bar. Extra Bar pairs Arabica with Robusta for a dense crema, an intense aroma and a bold, cocoa-dark finish that stands up to milk. One of Guglielmo's longest-running blends, refined over the decades and made for the espresso machine and the moka pot alike.",
+      "formats": [
+        "1 kg whole beans",
+        "250 g ground (moka)"
+      ],
+      "certification": "Extra Bar beans certified \"Espresso Italiano\" by INEI (Annex 33, Cert. 214) per Guglielmo USA site - current status UNVERIFIED",
+      "images": [
+        "pack-extra-bar-1kg-beans.jpg",
+        "pack-extra-bar-250g-ground.jpg",
+        "lifestyle-extra-bar-range.jpg"
+      ],
+      "description_word_count": 52
+    },
+    {
+      "id": "5-stelle",
+      "name": "5 Stelle (Bar 5 Stelle)",
+      "line": "espresso",
+      "composition": "Arabica-led: Central American and Brazilian Arabica plus \"other select top quality beans\" (L'Espresso USA). Guglielmo Store: \"best origins of Arabica and Robusta\". Percentages not published.",
+      "origins": "Central America, Brazil (L'Espresso USA); an older Guglielmo text cites African and Central American origins (eccellenzecalabresi.it).",
+      "roast": "Dark (\"tostatura spinta\", eccellenzecalabresi.it), softened by long, progressive roast cycles (retailer sheet).",
+      "intensity": 7,
+      "intensity_source": "PROPOSED (official partner: \"media\" for moka grind, \"forte\" for espresso grind)",
+      "notes": [
+        "delicate yet intense, with a vein of sweetness (L'Espresso USA)",
+        "floral, sweet (L'Espresso USA \"Essence\" tags)",
+        "full and rounded (official)"
+      ],
+      "body": "Full, rounded (official: \"full and rounded flavour\")",
+      "acidity": "Low-medium (PROPOSED)",
+      "crema": "Very good crema texture (L'Espresso USA)",
+      "best_for": [
+        "espresso",
+        "moka",
+        "cappuccino",
+        "capsules (Espresso Point-compatible)"
+      ],
+      "color_hex": "#74350A",
+      "accent_hex": "#D2AA48",
+      "color_note": "Bronze-brown 1 kg bag / dark brown pouches, five gold stars, pink script logotype",
+      "description": "Five stars, one cup. Bar 5 Stelle blends Central American and Brazilian Arabica with other select origins, roasted slowly for a full, rounded body and a ribbon of sweetness. Delicate yet intense, with soft floral aromatics, it shines as a straight espresso and comes ground for the moka pot or finer for the espresso machine.",
+      "formats": [
+        "1 kg whole beans",
+        "250 g ground (moka)",
+        "250 g ground fine (\"Fine Grinding\", espresso)",
+        "Capsules 20 and 150 (36 mm, 7 g, Espresso Point-compatible)",
+        "Gift jars with 250 g bags"
+      ],
+      "images": [
+        "pack-5-stelle-1kg-beans.jpg",
+        "pack-5-stelle-250g-ground-moka.jpg",
+        "pack-5-stelle-250g-ground-espresso.jpg",
+        "pack-5-stelle-capsule-point.jpg",
+        "lifestyle-5-stelle-range.jpg"
+      ],
+      "description_word_count": 55
+    },
+    {
+      "id": "espresso-bar",
+      "name": "Espresso Bar",
+      "line": "espresso",
+      "composition": "Arabica and Robusta (\"fine Arabica and Robusta\" - official partner). Older Guglielmo text: Central American Arabica, African coffees and \"the best Robusta\" (eccellenzecalabresi.it). Percentages not published.",
+      "origins": "Central and South America (L'Espresso USA); Central America and Africa (eccellenzecalabresi.it).",
+      "roast": "Medium-light (\"tostatura media leggera\", eccellenzecalabresi.it).",
+      "intensity": 6,
+      "intensity_source": "PROPOSED",
+      "notes": [
+        "balance of strength and sweetness (L'Espresso USA)",
+        "excellent aroma (L'Espresso USA)",
+        "milk chocolate (PROPOSED)",
+        "caramel (PROPOSED)"
+      ],
+      "body": "Medium (PROPOSED)",
+      "acidity": "Medium-low (PROPOSED)",
+      "crema": "Excellent crema (L'Espresso USA)",
+      "best_for": [
+        "espresso",
+        "cappuccino"
+      ],
+      "color_hex": "#21211F",
+      "accent_hex": "#7B624F",
+      "color_note": "Black bag with a sepia vintage bar photograph",
+      "description": "Espresso Bar starts from the backbone of Espresso Classico and adds select Central and South American Arabicas for extra sweetness. The result is a balanced, approachable shot with silky crema and a gentle finish. Guglielmo designed it as a lighter blend for export markets and Northern Italy, which makes it an easy everyday house espresso.",
+      "formats": [
+        "1 kg whole beans"
+      ],
+      "images": [
+        "pack-espresso-bar-1kg-beans.jpg"
+      ],
+      "description_word_count": 55
+    },
+    {
+      "id": "espresso-classico",
+      "name": "Espresso Classico",
+      "line": "espresso",
+      "composition": "Robusta (African and Asian) plus Arabica (Central American and Brazilian) - Guglielmo description via eccellenzecalabresi.it; L'Espresso USA: \"Robusta and Brazilian Arabica\". Percentages not published.",
+      "origins": "Africa and Asia (Robusta); Brazil and Central America (Arabica).",
+      "roast": "Dark (\"tostatura standard spinta\"); official: \"a marked roast, softened by long, progressive cycles\".",
+      "intensity": 9,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità forte\" / strong)",
+      "notes": [
+        "decisive, intense and round (Guglielmo via eccellenzecalabresi.it)",
+        "nutty (L'Espresso USA)",
+        "room-filling aroma (L'Espresso USA)",
+        "uplifting taste (L'Espresso USA)"
+      ],
+      "body": "Full (\"excellent body\", eccellenzecalabresi.it)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Great crema (L'Espresso USA)",
+      "best_for": [
+        "moka",
+        "espresso",
+        "ESE pods",
+        "capsules"
+      ],
+      "color_hex": "#860104",
+      "accent_hex": "#170F10",
+      "color_note": "Black-to-deep-red gradient pack, gold serif type (\"Gusto Classico\")",
+      "description": "The blend that started the Guglielmo tradition and a staple in Southern Italian homes. Robusta from Africa and Asia meets sweet Brazilian and Central American Arabica in a deep roast built for the moka pot: intense, round and nutty, with generous crema and an aroma that fills the kitchen. Also excellent as a bar espresso.",
+      "formats": [
+        "1 kg whole beans",
+        "500 g whole beans",
+        "250 g ground",
+        "125 g ground tin",
+        "Espresso capsules 20 and 150 (36 mm, Espresso Point-compatible)",
+        "ESE pods 44 mm: 20, 150, 200",
+        "Gift packs"
+      ],
+      "images": [
+        "pack-espresso-classico-1kg-beans.png",
+        "pack-espresso-classico-250g-ground.png",
+        "pack-espresso-classico-125g-can.jpg",
+        "pack-espresso-capsule-point.jpg",
+        "lifestyle-espresso-classico-range.jpg"
+      ],
+      "description_word_count": 55
+    },
+    {
+      "id": "caffetteria",
+      "name": "Caffetteria",
+      "line": "espresso",
+      "composition": "Arabica and Robusta blend - split not published (UNVERIFIED).",
+      "origins": "South America, Africa and Asia (L'Espresso USA).",
+      "roast": "Dark (PROPOSED); official: \"particularly refined and artfully roasted\".",
+      "intensity": 9,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità forte\" / strong)",
+      "notes": [
+        "intense, decisive flavor (official)",
+        "robust taste (official)",
+        "intense aroma (L'Espresso USA)",
+        "bittersweet chocolate (PROPOSED)"
+      ],
+      "body": "Full (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Rich, smooth crema (L'Espresso USA)",
+      "best_for": [
+        "espresso",
+        "moka",
+        "blending (adds strength to lighter blends)",
+        "drip (per customer use)"
+      ],
+      "color_hex": "#5C2021",
+      "accent_hex": "#BCA394",
+      "color_note": "Oxblood / burgundy bag with cream script",
+      "description": "Caffetteria is Guglielmo's boldest whole bean: South American, African and Asian origins roasted for a strong, decisive cup with thick, velvety crema. Baristas pull it on its own for a full-throttle espresso or use it to give lighter blends more punch, and some customers even brew it as drip for a distinctive mug.",
+      "formats": [
+        "1 kg whole beans"
+      ],
+      "images": [
+        "pack-caffetteria-1kg-beans.jpg"
+      ],
+      "description_word_count": 53
+    },
+    {
+      "id": "copacabana",
+      "name": "Copacabana",
+      "line": "espresso",
+      "composition": "20% Arabica / 80% Robusta (Caffè Guglielmo Switzerland, official partner product page).",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium-dark (PROPOSED - not published).",
+      "intensity": 8,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità media\", but the Robusta share suggests a stronger cup)",
+      "notes": [
+        "balanced, harmonious (official partner)",
+        "a more delicate touch in an intense coffee (official partner)",
+        "malt (PROPOSED)",
+        "dark cocoa (PROPOSED)"
+      ],
+      "body": "Full (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Thick and persistent (PROPOSED)",
+      "best_for": [
+        "cappuccino",
+        "latte",
+        "espresso",
+        "blending"
+      ],
+      "color_hex": "#E0B04B",
+      "accent_hex": "#B26C26",
+      "color_note": "Metallic gold/yellow bag, art-deco lettering",
+      "description": "A sunny gold bag with serious character. Copacabana combines 20% Arabica with 80% Robusta for a rounded, harmonious cup that cuts cleanly through steamed milk, making it a natural for cappuccino and latte. Pull it straight for a robust espresso, or blend it in to give a softer coffee more backbone.",
+      "formats": [
+        "1 kg whole beans"
+      ],
+      "images": [
+        "pack-copacabana-1kg-beans.jpg"
+      ],
+      "description_word_count": 51
+    },
+    {
+      "id": "club-99",
+      "name": "Club 99",
+      "line": "espresso",
+      "composition": "Prized Central American Arabica \"with a complement of excellent Robusta coffee to make the crema even more intense\" (official). Percentages not published.",
+      "origins": "Central America (official).",
+      "roast": "Medium (PROPOSED - not published).",
+      "intensity": 7,
+      "intensity_source": "PROPOSED (official partner tags Club 99 capsules \"Intensità forte\")",
+      "notes": [
+        "sweet (official)",
+        "fragrant (official)",
+        "creamy, unmistakable flavor (official)"
+      ],
+      "body": "Medium-full (PROPOSED)",
+      "acidity": "Medium-low (PROPOSED)",
+      "crema": "Intense; Robusta added specifically to deepen it (official)",
+      "best_for": [
+        "espresso",
+        "moka",
+        "capsules (Espresso Point-compatible)"
+      ],
+      "color_hex": "#583723",
+      "accent_hex": "#D6C993",
+      "color_note": "Chocolate brown with gold script and a sepia vintage-café medallion",
+      "description": "Guglielmo calls Club 99 its best blend: years of selecting prized Central American Arabicas, finished with a touch of fine Robusta to deepen the crema. Expect a sweet, fragrant cup with a smooth, creamy texture. It comes in a collectible pack, ground for the moka pot, and in Espresso Point-compatible capsules for the office.",
+      "formats": [
+        "250 g ground (moka)",
+        "50 capsules (36 mm, 7 g, Espresso Point-compatible)"
+      ],
+      "certification": "Club 99 beans certified \"Espresso Italiano\" by INEI per Guglielmo USA site (beans are not in our current catalog) - current status UNVERIFIED",
+      "images": [
+        "usa-pack-club-99-250g-ground.jpg",
+        "pack-club-99-capsules-box.jpg",
+        "lifestyle-club-99-range.jpg"
+      ],
+      "description_word_count": 54
+    },
+    {
+      "id": "silver-signature",
+      "name": "Silver Signature",
+      "line": "espresso",
+      "composition": "Fine Arabica coffees (L'Espresso USA catalog); official: a selection of \"the finest coffees in the world\". Arabica share UNVERIFIED.",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium (PROPOSED); \"roasted and ground Italian style\" (official).",
+      "intensity": 6,
+      "intensity_source": "PROPOSED",
+      "notes": [
+        "delicate, precious flavor and aroma (official)",
+        "elegant and balanced (official store)"
+      ],
+      "body": "Medium (PROPOSED)",
+      "acidity": "Medium (PROPOSED)",
+      "crema": "Fine and even (PROPOSED)",
+      "best_for": [
+        "moka",
+        "espresso"
+      ],
+      "color_hex": "#AFA58E",
+      "accent_hex": "#ED1C24",
+      "color_note": "Brushed-silver tin with the founder's portrait and red signature (accent approximated from logo red)",
+      "description": "Created to honor founder Guglielmo Papaleo, whose portrait and signature still grace the tin, Silver began as a commemorative blend and stayed on by popular demand. Fine Arabica coffees are roasted and ground Italian-style for an elegant, balanced cup with a delicate, refined aroma. Brew it in the moka pot or an espresso machine.",
+      "formats": [
+        "250 g ground tin",
+        "Gift pack: Three Can with Espresso Cup"
+      ],
+      "images": [
+        "pack-silver-signature-250g-can.jpg",
+        "lifestyle-silver-signature-gift-set.jpg"
+      ],
+      "description_word_count": 54
+    },
+    {
+      "id": "organic",
+      "name": "Organic Espresso",
+      "line": "espresso",
+      "composition": "100% Arabica, certified organic (\"Bioagricoop controlled and certified\" - L'Espresso USA). Swiss partner: single-origin coffee grown organically in Central America.",
+      "origins": "Central America (official partner).",
+      "roast": "Medium (PROPOSED - not published).",
+      "intensity": 5,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità media\")",
+      "notes": [
+        "mild (PROPOSED)",
+        "cocoa (PROPOSED)",
+        "cereal sweetness (PROPOSED)"
+      ],
+      "body": "Medium-light (PROPOSED)",
+      "acidity": "Medium (PROPOSED)",
+      "crema": "Light hazel (PROPOSED)",
+      "best_for": [
+        "moka",
+        "espresso"
+      ],
+      "color_hex": "#102117",
+      "accent_hex": "#BDB885",
+      "color_note": "Deep forest-green tin with coffee-blossom illustration",
+      "description": "Guglielmo's organic espresso is 100% Arabica from certified organic agriculture, ground for the moka pot and sealed in a 250 g tin to keep it fresh. Expect a gentle, smooth cup with soft sweetness and low bitterness: an easy choice for anyone who prefers a lighter espresso without giving up its Italian character.",
+      "formats": [
+        "250 g ground tin"
+      ],
+      "images": [
+        "pack-organic-250g-can.jpg"
+      ],
+      "description_word_count": 53
+    },
+    {
+      "id": "decaf",
+      "name": "Decaf (Espresso Decaffeinato)",
+      "line": "espresso",
+      "composition": "100% Arabica, caffeine below 0.10% (official); water-based decaffeination process (L'Espresso USA catalog). The 6 kg wholesale decaf is \"specially blended for Guglielmo USA\" - composition UNVERIFIED.",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium (PROPOSED - not published).",
+      "intensity": 5,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità media\")",
+      "notes": [
+        "soft, persistent aroma (official store)",
+        "sweet and creamy (official, decaf capsule copy)"
+      ],
+      "body": "Medium (PROPOSED)",
+      "acidity": "Low-medium (PROPOSED)",
+      "crema": "Creamy (official)",
+      "best_for": [
+        "espresso",
+        "moka",
+        "evening service"
+      ],
+      "color_hex": "#5884AD",
+      "accent_hex": "#06C7FB",
+      "color_note": "Sky-blue tin with clouds and heart roundel; current 250 g bag is bright cyan (\"Più Aroma decaffeinato\")",
+      "description": "All the ritual, none of the caffeine. Guglielmo's decaf is 100% Arabica, decaffeinated with a water-based process to below 0.10% caffeine, then roasted for a soft, persistent aroma and a smooth, sweet crema. It comes ground for the moka pot, as whole beans for the bar, and in capsules and ESE pods.",
+      "formats": [
+        "250 g ground tin",
+        "250 g ground bag",
+        "6 kg whole beans (12 x 500 g neutral bags, wholesale)",
+        "Decaf capsules 150 (Espresso Point-compatible)",
+        "Decaf ESE pods 180",
+        "DEK70 capsules (see DEK70)"
+      ],
+      "images": [
+        "pack-decaf-250g-can.jpg",
+        "usa-pack-decaf-250g-bag.jpg",
+        "pack-decaf-capsule-point.jpg"
+      ],
+      "description_word_count": 52
+    },
+    {
+      "id": "oro70",
+      "name": "ORO70",
+      "line": "capsule",
+      "composition": "100% Arabica (official / L'Espresso USA).",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium-light (PROPOSED - not published).",
+      "intensity": 5,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità media\")",
+      "notes": [
+        "sweet and soft (L'Espresso USA)",
+        "sweet and delicate (official)"
+      ],
+      "body": "Medium-light (PROPOSED)",
+      "acidity": "Medium, balanced (PROPOSED)",
+      "crema": "Fine (PROPOSED)",
+      "best_for": [
+        "espresso (Nespresso Original-compatible capsule)"
+      ],
+      "color_hex": "#252425",
+      "accent_hex": "#866844",
+      "color_note": "Black sleeve, gold capsule icon, \"100% Arabica\"",
+      "description": "ORO70 is the gentle side of the Espresso 70 capsule line: 100% Arabica, sweet and soft, with a delicate aroma and a silky finish. Each capsule fits Nespresso Original machines*, so a Calabrian espresso is one button away at home or in the office. (*Not affiliated with or endorsed by Nespresso.)",
+      "formats": [
+        "10 capsules",
+        "120 capsules"
+      ],
+      "images": [
+        "usa-pack-oro70-capsules-10.jpg",
+        "usa-lifestyle-oro70-capsules-beans.jpg"
+      ],
+      "description_word_count": 44
+    },
+    {
+      "id": "rosso70",
+      "name": "ROSSO70",
+      "line": "capsule",
+      "composition": "Arabica and Robusta \"Gusto Classico\" blend - split not published (UNVERIFIED); L'Espresso USA tags it to the Espresso Classico family.",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Dark (PROPOSED - not published).",
+      "intensity": 8,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità forte\")",
+      "notes": [
+        "decisive flavor (L'Espresso USA)",
+        "creamy, long-lasting crema (official)",
+        "typical Southern Italian character (L'Espresso USA)"
+      ],
+      "body": "Full (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Prolonged creaminess (official)",
+      "best_for": [
+        "espresso (Nespresso Original-compatible capsule)",
+        "cappuccino"
+      ],
+      "color_hex": "#202020",
+      "accent_hex": "#A30B19",
+      "color_note": "Black sleeve, red capsule icon, \"Gusto Classico\"",
+      "description": "ROSSO70 is classic Southern Italian espresso in capsule form: a creamy blend with a decisive, full-bodied flavor and long-lasting crema, in the tradition of Espresso Classico. Compatible with Nespresso Original machines*, it is the everyday capsule for anyone who likes coffee with conviction. (*Not affiliated with or endorsed by Nespresso.)",
+      "formats": [
+        "10 capsules",
+        "120 capsules"
+      ],
+      "images": [
+        "usa-pack-rosso70-capsules-10.jpg"
+      ],
+      "description_word_count": 43
+    },
+    {
+      "id": "dek70",
+      "name": "DEK70",
+      "line": "capsule",
+      "composition": "Decaffeinated coffee, caffeine not exceeding 0.10% on dry basis (L'Espresso USA / official). Arabica share for this capsule UNVERIFIED.",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium (PROPOSED - not published).",
+      "intensity": 5,
+      "intensity_source": "PROPOSED (official partner tags it \"Intensità media\")",
+      "notes": [
+        "round, gentle (PROPOSED)",
+        "good at any hour (official: \"great to enjoy anytime\")"
+      ],
+      "body": "Medium (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Creamy (PROPOSED)",
+      "best_for": [
+        "espresso (Nespresso Original-compatible capsule)",
+        "evening"
+      ],
+      "color_hex": "#262729",
+      "accent_hex": "#36667A",
+      "color_note": "Black sleeve, blue capsule icon (\"Decaffeinato\"; called \"Blu 70\" in Switzerland)",
+      "description": "DEK70 brings the Espresso 70 experience without the caffeine: decaffeinated to no more than 0.10% caffeine, with a round, gentle cup that works after dinner as well as at breakfast. Compatible with Nespresso Original machines*, it is ready whenever you want one more espresso. (*Not affiliated with or endorsed by Nespresso.)",
+      "formats": [
+        "120 capsules"
+      ],
+      "images": [
+        "usa-pack-dek70-capsules-10.jpg"
+      ],
+      "description_word_count": 44
+    },
+    {
+      "id": "catanzaro-cz",
+      "name": "Catanzaro (\"CZ\") Capsules",
+      "line": "capsule",
+      "composition": "Not published (UNVERIFIED). Catalog blend attribute: \"Limited\".",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Medium-dark (PROPOSED - not published).",
+      "intensity": 8,
+      "intensity_source": "PROPOSED (described as \"intense\" by L'Espresso USA)",
+      "notes": [
+        "intense (L'Espresso USA)",
+        "creamy, unmistakable flavor (L'Espresso USA)"
+      ],
+      "body": "Full (PROPOSED)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "Creamy (L'Espresso USA)",
+      "best_for": [
+        "espresso (Espresso Point-compatible capsule)"
+      ],
+      "color_hex": "#DBC014",
+      "accent_hex": "#B42728",
+      "color_note": "Split yellow/red (U.S. Catanzaro club colors) with club crest",
+      "description": "Made in collaboration with U.S. Catanzaro, the hometown club Guglielmo has long supported, these Espresso Point-compatible capsules wear the team's yellow and red. Inside is an intense, creamy blend with unmistakable Calabrian character: a match-day espresso for fans in Boston and beyond, packed 40 capsules to a box.",
+      "formats": [
+        "40 capsules (36 mm, 7 g, Espresso Point-compatible)",
+        "CZ-branded cups/stirrer/sugar kit (150)"
+      ],
+      "images": [
+        "usa-pack-catanzaro-capsules-box.jpg",
+        "usa-pack-catanzaro-capsule.jpg"
+      ],
+      "description_word_count": 48
+    },
+    {
+      "id": "premium-blend-drip",
+      "name": "Premium Blend (drip)",
+      "line": "drip",
+      "composition": "Central and South American beans (L'Espresso USA). Arabica share not stated. Roaster: L'Espresso USA drip line is \"locally roasted in small batches\" (not Guglielmo SpA) - roaster identity UNVERIFIED.",
+      "origins": "Central and South America.",
+      "roast": "Medium (label). NOTE: the 12 oz \"Small\" listing says \"Dark Roast\" - catalog error to fix.",
+      "intensity": 5,
+      "intensity_source": "PROPOSED",
+      "notes": [
+        "rich (label)",
+        "full-bodied (label)",
+        "smooth finish (PROPOSED)"
+      ],
+      "body": "Full (label)",
+      "acidity": "Medium (PROPOSED)",
+      "crema": "n/a (drip)",
+      "best_for": [
+        "drip",
+        "batch brewer",
+        "pour-over"
+      ],
+      "color_hex": "#9BBB58",
+      "accent_hex": "#FFC000",
+      "color_note": "L'Espresso USA label: green band under a yellow-orange sunrise arc",
+      "description": "Our signature drip blend, crafted from Central and South American beans and roasted to a medium profile in small batches for a rich, full-bodied cup. Built for batch brewers and busy offices, it comes as whole beans or in pre-measured 2.5 oz fractional packs, so every pot tastes the way it should.",
+      "formats": [
+        "2 x 5 lb whole beans",
+        "12 oz whole-bean trial bag",
+        "64 x 2.5 oz ground fractional packs"
+      ],
+      "images": [
+        "usa-pack-premium-blend-drip-label.jpg"
+      ],
+      "description_word_count": 52
+    },
+    {
+      "id": "french-roast-drip",
+      "name": "French Roast (drip)",
+      "line": "drip",
+      "composition": "Dark-roasted blend; origins not stated. Locally roasted for L'Espresso USA (roaster UNVERIFIED).",
+      "origins": "Not published (UNVERIFIED).",
+      "roast": "Dark (label).",
+      "intensity": 8,
+      "intensity_source": "PROPOSED",
+      "notes": [
+        "rich and full-bodied (label)",
+        "sweet, smoky caramel aftertaste (label)"
+      ],
+      "body": "Full (label)",
+      "acidity": "Low (PROPOSED)",
+      "crema": "n/a (drip)",
+      "best_for": [
+        "drip",
+        "batch brewer",
+        "with milk"
+      ],
+      "color_hex": "#595959",
+      "accent_hex": "#FFC000",
+      "color_note": "L'Espresso USA label: grey band under the sunrise arc",
+      "description": "Dark, rich and full-bodied, French Roast is taken further in the roaster for a bold cup that finishes with sweet, smoky caramel. It holds its own with cream and sugar and stays satisfying from the first pot of the morning to the last. Available as whole beans or in pre-measured 2 oz fractional packs.",
+      "formats": [
+        "2 x 5 lb whole beans",
+        "80 x 2 oz ground fractional packs",
+        "French Roast Drip Beans (retail listing, size not stated)"
+      ],
+      "images": [
+        "usa-pack-french-roast-drip-label.jpg"
+      ],
+      "description_word_count": 54
+    },
+    {
+      "id": "decaf-drip",
+      "name": "Decaf (drip) - Decaffeinated Colombia",
+      "line": "drip",
+      "composition": "Colombian coffee, decaffeinated (label). Locally roasted for L'Espresso USA (roaster and decaf process UNVERIFIED).",
+      "origins": "Colombia (label).",
+      "roast": "Medium (label).",
+      "intensity": 5,
+      "intensity_source": "PROPOSED",
+      "notes": [
+        "chocolate (label)",
+        "nutty (label)",
+        "caramel aftertaste (label)",
+        "full-bodied (label)"
+      ],
+      "body": "Full (label)",
+      "acidity": "Medium-low (PROPOSED)",
+      "crema": "n/a (drip)",
+      "best_for": [
+        "drip",
+        "evening service"
+      ],
+      "color_hex": "#953737",
+      "accent_hex": "#FFC000",
+      "color_note": "L'Espresso USA label: maroon band under the sunrise arc",
+      "description": "A full-bodied Colombian decaf with chocolate, nutty and caramel notes, roasted medium so the flavor stays round and generous. Ideal for evening service and for guests who skip the caffeine but not the taste, it comes as whole beans in 5 lb bags or in pre-measured 2 oz fractional packs.",
+      "formats": [
+        "2 x 5 lb whole beans",
+        "80 x 2 oz ground fractional packs"
+      ],
+      "images": [
+        "usa-pack-decaf-colombia-drip-label.jpg"
+      ],
+      "description_word_count": 50
+    }
+  ],
+  "taglines": [
+    "Il caffè che fa centro. The coffee that hits the spot.",
+    "Right on target, cup after cup.",
+    "From the Ionian coast to your cup.",
+    "Roasted in Calabria. Delivered from Boston.",
+    "Southern Italian espresso, straight up.",
+    "Since 1943, aiming for the perfect cup.",
+    "Three generations. One target.",
+    "Bring the Calabrian bar home.",
+    "Un caffè? Sempre.",
+    "Calabria in every crema.",
+    "Italian espresso, Boston service.",
+    "Bullseye espresso, from bean to bar."
+  ],
+  "stories": [
+    {
+      "title": "Il bar, alla calabrese",
+      "text": "In Catanzaro the day runs on the bar. A quick \"un caffè\" at the counter before work, another after lunch, one more when a friend walks in. Guglielmo grew up inside that ritual: Guglielmo Papaleo opened his shop on Corso Mazzini with a single coffee machine, and by 1950 the first Guglielmo bar was pouring espresso for the city. Every blend we import still answers to that counter: short, intense, generous with crema, gone in three sips.",
+      "word_count": 77
+    },
+    {
+      "title": "The roastery on the Ionian coast",
+      "text": "Guglielmo roasts at Copanello di Stalettì, a few kilometers from Catanzaro, where the plant has overlooked the Ionian Sea since 1972. Sacks of green coffee from Brazil, Central America, Africa and Asia are cleaned and tasted before they go near a roaster. Each origin is roasted on its own, up to about 300 °C, until its oils and aroma open, and only then blended into Extra Bar, Classico or Club 99. The plant spans 10,000 square meters.",
+      "word_count": 77
+    },
+    {
+      "title": "From Corso Mazzini to Boston",
+      "text": "In 2000 Mimmo (Domenico) Elia began importing Caffè Guglielmo to Boston, bringing a Calabrian espresso to the restaurants, pastry shops and families of New England. What started as a small import company grew into L'Espresso USA: distributors in several states, Canada since 2003, and a service team that installs, repairs and lends machines. Today the same blends poured in Catanzaro reach counters from the North End to Belmont. The coffee comes from Copanello; the delivery, the training and the service calls come from Boston.",
+      "word_count": 84
+    }
+  ],
+  "brasilena": {
+    "title": "Brasilena: Calabria's coffee soda",
+    "maker": "Acqua Calabria (Cristofaro family), plant at Monte Covello, Girifalco (province of Catanzaro). Not a Guglielmo product; imported and sold by L'Espresso USA.",
+    "facts": [
+      "Sparkling soft drink made from an infusion of roasted coffee in Calabrian oligomineral water (Acqua Calabria); ingredients: water, sugar, coffee infusion (12%), carbon dioxide, flavorings (Cookist).",
+      "Origins in the 1930s, when the Cristofaro grandfather made a \"gazzosa al caffè\" in his small emporium in Girifalco, roasting the coffee himself (Gambero Rosso interview, via CalabriaMagnifica / Radio Food).",
+      "The Brasilena name was registered and industrial bottling began in the 1960s (Salvatore Cristofaro); the drink became a regional success in the 1980s; production at Monte Covello since 1982 (sources vary - UNVERIFIED exact years).",
+      "Formats: glass bottles of 18, 25 and 92 cl and a 25 cl slim can; US: 250 ml cans (single, 6, 24) and bottles (24).",
+      "Reported as Calabria's best-selling soft drink and recognized as a \"Marchio Storico di Interesse Nazionale\" in 2021 (Cookist / Radio Food - UNVERIFIED).",
+      "The vintage label features a smiling woman in a sombrero (illustration signed \"R. Casaro\" on the carton); the name is said to evoke South American coffee arriving in Calabrian ports (UNVERIFIED)."
+    ],
+    "story": "Brasilena is what Calabria drinks when it is too late for an espresso and too early for an aperitivo. Born as a \"gazzosa al caffè\" in a 1930s village shop in Girifalco, it is still made by the Cristofaro family's Acqua Calabria: real coffee infused in Calabrian mineral water, lightly sparkling, bittersweet and served ice-cold. US tagline used on our site: \"Brasilena, it sparkles your life.\"",
+    "sources": [
+      "https://www.cookist.it/storia-della-brasilena-la-bevanda-calabrese-al-caffe-che-spopola-nel-mondo/",
+      "https://www.calabriamagnifica.it/itinerari-gastronomici/brasilena-storia-della-bibita-simbolo-di-catanzaro/",
+      "https://www.radio-food.it/brasilena-bibita/",
+      "https://www.brasilena.it/"
+    ]
+  },
+  "voice": [
+    {
+      "principle": "Rooted, not nostalgic",
+      "detail": "Speak from real places and objects - Catanzaro, Copanello, the bar counter, the moka - instead of generic \"old world\" imagery."
+    },
+    {
+      "principle": "Short and strong, like the espresso",
+      "detail": "Direct sentences, active verbs, no hype words (no \"unforgettable\", \"world's best\", \"artisanal\" without proof)."
+    },
+    {
+      "principle": "Warm hospitality",
+      "detail": "The welcome of a Calabrian bar: inclusive, generous, a little playful. Italian words sparingly, always clear from context."
+    },
+    {
+      "principle": "Expert, never precious",
+      "detail": "Explain roast, grind and crema in plain English; give operators practical, specific guidance."
+    },
+    {
+      "principle": "Honest and exact",
+      "detail": "Only verifiable claims; name certifications and blends precisely; label compatibility claims and trademarks correctly."
+    },
+    {
+      "principle": "Two voices, one family",
+      "detail": "Guglielmo speaks heritage and taste; Guglielmo USA speaks service and reliability (3-day delivery, loaner machines, on-site techs)."
+    },
+    {
+      "principle": "Aim with a wink",
+      "detail": "Use the \"fa centro\" / bullseye idea as a light motif, not in every headline."
+    }
+  ],
+  "colors": {
+    "brand_primary": {
+      "guglielmo_red": {
+        "hex": "#ED1C24",
+        "use": "Bullseye, dot over the i, tagline",
+        "source": "official SVG logo fill rgb(92.9%,11.0%,14.1%)"
+      },
+      "guglielmo_orange": {
+        "hex": "#F5821F",
+        "use": "Outer ring of the roundel",
+        "source": "official SVG logo"
+      },
+      "guglielmo_yellow": {
+        "hex": "#FFF200",
+        "use": "Middle ring of the roundel",
+        "source": "official SVG logo"
+      },
+      "guglielmo_black": {
+        "hex": "#231F20",
+        "use": "Wordmark",
+        "source": "official SVG logo"
+      }
+    },
+    "usa_lockup": {
+      "usa_red": {
+        "hex": "#E73C32",
+        "note": "Sampled from the 200 px Guglielmo USA PNG (anti-aliased; treat as approximate - use #ED1C24 in rebuilt vector)"
+      }
+    },
+    "packaging_neutrals": {
+      "espresso_black": "#1F1F1F",
+      "classico_red": "#860104",
+      "gold_foil": "#CCBA6C",
+      "warm_cream": "#D6C993",
+      "paper_white": "#FFFFFF"
+    },
+    "lespresso_drip_labels": {
+      "arc_yellow": "#FFFF03",
+      "arc_gold": "#FFC000",
+      "arc_orange_red": "#EC4D00",
+      "premium_green": "#9BBB58",
+      "french_grey": "#595959",
+      "decaf_maroon": "#953737"
+    },
+    "blends": {
+      "extra-bar": {
+        "main": "#222122",
+        "accent": "#CCBA6C",
+        "note": "Matte black pack with gold/cream lettering"
+      },
+      "5-stelle": {
+        "main": "#74350A",
+        "accent": "#D2AA48",
+        "note": "Bronze-brown 1 kg bag / dark brown pouches, five gold stars, pink script logotype"
+      },
+      "espresso-bar": {
+        "main": "#21211F",
+        "accent": "#7B624F",
+        "note": "Black bag with a sepia vintage bar photograph"
+      },
+      "espresso-classico": {
+        "main": "#860104",
+        "accent": "#170F10",
+        "note": "Black-to-deep-red gradient pack, gold serif type (\"Gusto Classico\")"
+      },
+      "caffetteria": {
+        "main": "#5C2021",
+        "accent": "#BCA394",
+        "note": "Oxblood / burgundy bag with cream script"
+      },
+      "copacabana": {
+        "main": "#E0B04B",
+        "accent": "#B26C26",
+        "note": "Metallic gold/yellow bag, art-deco lettering"
+      },
+      "club-99": {
+        "main": "#583723",
+        "accent": "#D6C993",
+        "note": "Chocolate brown with gold script and a sepia vintage-café medallion"
+      },
+      "silver-signature": {
+        "main": "#AFA58E",
+        "accent": "#ED1C24",
+        "note": "Brushed-silver tin with the founder's portrait and red signature (accent approximated from logo red)"
+      },
+      "organic": {
+        "main": "#102117",
+        "accent": "#BDB885",
+        "note": "Deep forest-green tin with coffee-blossom illustration"
+      },
+      "decaf": {
+        "main": "#5884AD",
+        "accent": "#06C7FB",
+        "note": "Sky-blue tin with clouds and heart roundel; current 250 g bag is bright cyan (\"Più Aroma decaffeinato\")"
+      },
+      "oro70": {
+        "main": "#252425",
+        "accent": "#866844",
+        "note": "Black sleeve, gold capsule icon, \"100% Arabica\""
+      },
+      "rosso70": {
+        "main": "#202020",
+        "accent": "#A30B19",
+        "note": "Black sleeve, red capsule icon, \"Gusto Classico\""
+      },
+      "dek70": {
+        "main": "#262729",
+        "accent": "#36667A",
+        "note": "Black sleeve, blue capsule icon (\"Decaffeinato\"; called \"Blu 70\" in Switzerland)"
+      },
+      "catanzaro-cz": {
+        "main": "#DBC014",
+        "accent": "#B42728",
+        "note": "Split yellow/red (U.S. Catanzaro club colors) with club crest"
+      },
+      "premium-blend-drip": {
+        "main": "#9BBB58",
+        "accent": "#FFC000",
+        "note": "L'Espresso USA label: green band under a yellow-orange sunrise arc"
+      },
+      "french-roast-drip": {
+        "main": "#595959",
+        "accent": "#FFC000",
+        "note": "L'Espresso USA label: grey band under the sunrise arc"
+      },
+      "decaf-drip": {
+        "main": "#953737",
+        "accent": "#FFC000",
+        "note": "L'Espresso USA label: maroon band under the sunrise arc"
+      }
+    },
+    "brasilena": {
+      "yellow": "#F7D500",
+      "red_brown": "#A3310A",
+      "note": "Sampled from the 6-pack carton photo (yellow field, red BRASILENA panel)"
+    },
+    "method": "Logo colors read directly from the official SVG fills. Pack colors are median-cut samples from official packshots in assets/img/brand (lighting and print finish affect values; use as digital approximations)."
+  },
+  "typography_observed": {
+    "wordmark": "Custom stencil-cut, condensed, heavy display letterforms (GUGLIELMO) with a red dot over the i; not a retail font (UNVERIFIED name).",
+    "tagline": "Clean, regular-weight sans-serif in red, lowercase (\"il caffè che fa centro\").",
+    "packaging": "Each blend has its own display lettering: gold Didone-style serif (Extra Bar, Espresso Classico), retro pink script (Bar 5 Stelle), gold copperplate script (Club 99), art-deco caps (Copacabana), handwritten signature (Silver).",
+    "web_recommendation": "PROPOSED: a condensed grotesk or stencil display for headlines (never re-set the logo), a high-contrast serif for blend names, a neutral sans for body copy."
+  }
+}

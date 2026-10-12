@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WordPress Build Plan — Guglielmo USA Redesign</title>
+<meta name="description" content="The five concepts are static, clickable demos on purpose: they let you choose a direction quickly, and their shared
+data model (assets/data/catalog.json, assets/js/gusa-kit.js) alr">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="stylesheet" href="../assets/css/hub.css">
+</head>
+<body>
+<div class="progress" data-m-progress aria-hidden="true"></div>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/img/logo/guglielmo-mark.svg" alt="" width="26" height="26">Guglielmo USA · Redesign</a>
+  <nav aria-label="Report sections"><a href="../index.html">Overview</a><a href="../audit/index.html">Audit</a><a href="../research/competitors.html">Benchmark</a><a href="../docs/strategy.html">Strategy</a><a href="../research/brand-pack.html">Brand pack</a><a href="../docs/wordpress.html" aria-current="page">WordPress plan</a></nav>
+</div></header>
+<main class="doc wrap">
+  <p class="toc"><span class="eyebrow">Implementation</span></p>
+  <article class="content" data-m="fade">
+<h1 id="taking-the-chosen-concept-into-wordpress-woocommerce">Taking the chosen concept into WordPress + WooCommerce</h1>
+<p>The five concepts are static, clickable demos on purpose: they let you choose a direction quickly, and their shared
+data model (<code>assets/data/catalog.json</code>, <code>assets/js/gusa-kit.js</code>) already mirrors how WooCommerce should be configured.
+Building them straight into WordPress first would have locked in one direction before you had seen five. Once you pick
+a direction, it becomes a custom block theme on the existing store.</p>
+<h2 id="1-recommended-architecture">1. Recommended architecture</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Recommendation</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Theme</td>
+<td><strong>Custom block theme</strong> (Full Site Editing: <code>theme.json</code> + HTML templates + block patterns), replacing Enfold</td>
+<td>Enfold loads ~48 scripts and ~53 stylesheets per page; a block theme ships only what each page uses, and the team can edit layouts in the Site Editor without a page builder</td>
+</tr>
+<tr>
+<td>Design tokens</td>
+<td>Concept <code>site.css</code> custom properties → <code>theme.json</code> (<code>settings.color.palette</code>, <code>typography.fontFamilies</code> with self-hosted fonts, <code>spacing.spacingSizes</code>)</td>
+<td>One source of truth; editors only pick on-brand colors and type</td>
+</tr>
+<tr>
+<td>Shop templates</td>
+<td>WooCommerce block templates: Product Catalog, Single Product, Product Category, Cart, Checkout (blocks)</td>
+<td>Cart/Checkout blocks support express payments and are much faster than the shortcode checkout</td>
+</tr>
+<tr>
+<td>Filters</td>
+<td>WooCommerce <strong>Product Filters</strong> blocks on new global attributes (see §2)</td>
+<td>"Fits my machine", format, blend, intensity, audience without a filter plugin</td>
+</tr>
+<tr>
+<td>Custom blocks</td>
+<td>Small custom block plugin (<code>guglielmo-blocks</code>) for: intensity rings / sensory chart, compatibility table, cost-per-shot calculator, solution finder, store map, coffee quiz</td>
+<td>These are the concept's signature features; port logic from <code>gusa-kit.js</code></td>
+</tr>
+<tr>
+<td>Hosting</td>
+<td>Managed WordPress host with server page cache, Redis object cache, HTTP/3, image CDN</td>
+<td>TTFB and LCP targets (§6)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-catalog-clean-up-do-this-first-every-concept-depends-on-it">2. Catalog clean-up (do this first; every concept depends on it)</h2>
+<ol>
+<li><strong>Remove or hide</strong> the public "Order Adjustment" product (make it private; use WooCommerce order edit for adjustments).</li>
+<li><strong>Consolidate products into variable products per blend</strong>: e.g. <em>5 Stelle</em> with attribute <code>pa_format</code> (Whole beans /
+   Ground / Fine grind for moka / 36 mm capsules) and <code>pa_size</code> (250 g / 1 kg / 20 / 150 ct). Today each size is a separate
+   simple product, which duplicates content and splits reviews.</li>
+<li><strong>New global attributes:</strong> <code>pa_system</code> (36 mm capsule, Espresso 70 / Nespresso®-compatible, ESE 44 mm pod, Traditional),
+   <code>pa_intensity</code> (1–10), <code>pa_roast</code>, <code>pa_arabica_share</code>, <code>pa_audience</code> (Home, Office, Business). Delete the stray
+   <code>pa_test</code> attribute and the "Region: Northern Italian" values that confuse a Calabrian brand story (replace with a
+   "taste style" attribute if still wanted).</li>
+<li><strong>Out of stock (≈40 of 86 products):</strong> decide per item: discontinue (redirect to the closest product), "back soon" with a
+   restock-alert form, or hide from catalog. Never leave dead ends in category grids.</li>
+<li><strong>"Call for price" machines:</strong> convert to a <em>quote request</em> product type (no price, CTA opens the lead form with the
+   model prefilled) instead of $0 products.</li>
+<li><strong>Images:</strong> re-shoot or source high-resolution packshots (37 of 147 current product images are under 500 px); use
+   consistent backgrounds and 1:1 + 4:5 crops; WebP/AVIF delivery.</li>
+<li><strong>Copy:</strong> rewrite all product descriptions from <code>research/brand-pack.md</code> blend profiles (tasting notes, composition,
+   brewing, pairing). Fix typos and conflicting claims across the site.</li>
+</ol>
+<h2 id="3-feature-plugin-build-map">3. Feature → plugin / build map</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature (in concepts)</th>
+<th>Implementation</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subscribe &amp; save</td>
+<td><strong>WooCommerce Subscriptions</strong> (or WooPayments' built-in subscriptions) + "All Products for Subscriptions" for opt-in subscriptions on existing products</td>
+<td>Every 2/4/6 weeks, skip/pause in My Account</td>
+</tr>
+<tr>
+<td>Case discount 5/6/8 %</td>
+<td>Keep current bulk-discount rules or move to <strong>WooCommerce Dynamic Pricing / Discount Rules</strong></td>
+<td>Show the tiers on the product page and in the cart</td>
+</tr>
+<tr>
+<td>Machine + coffee bundles</td>
+<td><strong>WooCommerce Product Bundles</strong></td>
+<td>Replaces "Capsule package choice" variations; cost-per-shot block reads bundle price</td>
+</tr>
+<tr>
+<td>Bundle builder (Crema)</td>
+<td>Product Bundles with optional items, or <strong>Composite Products</strong></td>
+<td>Machine → coffee → accessories steps</td>
+</tr>
+<tr>
+<td>Coffee finder quiz (Centro)</td>
+<td>Custom block (logic from <code>quiz.html</code>), results link to products; optional email capture to Klaviyo</td>
+<td>Keep it client-side for speed</td>
+</tr>
+<tr>
+<td>Solution finder + lead forms (Pro)</td>
+<td>Custom block + <strong>Gravity Forms</strong> (or Fluent Forms) with conditional logic → CRM (HubSpot free tier works)</td>
+<td>Short forms: ≤ 6 fields, progressive profiling</td>
+</tr>
+<tr>
+<td>Trade portal / reorder (Pro)</td>
+<td><strong>B2BKing</strong> or <strong>Wholesale Suite</strong> for trade roles, tiered pricing, net terms, quick-order form; WooCommerce "Order again" + saved lists</td>
+<td>Gate trade pricing behind approved accounts</td>
+</tr>
+<tr>
+<td>Service bookings</td>
+<td>Gravity Forms + calendar booking (e.g. <strong>Amelia</strong> or <strong>Bookly</strong>) or a simple request form routed to the service team</td>
+<td>Start with a request form</td>
+</tr>
+<tr>
+<td>Store locator / map</td>
+<td>Custom block rendering the SVG map + list (as in the concepts) from a "Venue" custom post type; or keep <strong>WP Store Locator</strong> restyled</td>
+<td>The current WPSL instance shows only 3 entries; venue data lives on the homepage today</td>
+</tr>
+<tr>
+<td>Loyalty + referral (Quartiere)</td>
+<td><strong>WPLoyalty</strong> (points, tiers, referral) or Smile.io</td>
+<td>Replaces the broken refer-a-friend shortcode</td>
+</tr>
+<tr>
+<td>Reviews</td>
+<td>WooCommerce native reviews (verified owners) with <strong>Judge.me</strong> or <strong>CusRev</strong> for review requests by email</td>
+<td>Ask every past customer; never seed fake reviews</td>
+</tr>
+<tr>
+<td>Newsletter</td>
+<td><strong>Klaviyo</strong> (WooCommerce integration) or MailPoet</td>
+<td>Replaces the broken <code>[newsletter]</code> shortcode</td>
+</tr>
+<tr>
+<td>Search</td>
+<td>WooCommerce product search block + <strong>FiboSearch</strong> (live suggestions, typo tolerance)</td>
+<td>"decaf", "capsule", "5 stelle" must return the right things</td>
+</tr>
+<tr>
+<td>Express checkout</td>
+<td><strong>WooPayments</strong> or <strong>Stripe for WooCommerce</strong> (Apple Pay, Google Pay, Link) + PayPal Payments (already installed)</td>
+<td>Authorize.net CIM can stay for saved B2B cards if needed</td>
+</tr>
+<tr>
+<td>Shipping</td>
+<td>Keep UPS live rates; add free-shipping threshold ($59 proposed) and local delivery zones for New England</td>
+<td>Show delivery promise on product page</td>
+</tr>
+<tr>
+<td>Journal / recipes (Calabria, Quartiere)</td>
+<td>Native posts + custom "Recipe" pattern; Schema via Rank Math</td>
+<td>Replace 2012–2015 health-news page</td>
+</tr>
+<tr>
+<td>SEO</td>
+<td><strong>Rank Math</strong> or <strong>Yoast</strong>: meta descriptions, Open Graph, Product/Organization/LocalBusiness/Breadcrumb schema; clean sitemap (exclude cart/checkout/legacy <code>/products-page/</code>)</td>
+<td>301-redirect legacy URLs</td>
+</tr>
+<tr>
+<td>Consent &amp; analytics</td>
+<td>GA4 + Google Tag Manager via consent banner (Complianz / CookieYes)</td>
+<td>None of the concepts load trackers</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-redirect-map-old-new-partial">4. Redirect map (old → new, partial)</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Old URL</th>
+<th>New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/products-page/*</code> (legacy WP e-Commerce)</td>
+<td><code>/shop/</code></td>
+</tr>
+<tr>
+<td><code>/espressoblends/</code></td>
+<td><code>/coffee/</code> (blend explorer)</td>
+</tr>
+<tr>
+<td><code>/dripcoffee/</code></td>
+<td><code>/shop/?format=drip</code></td>
+</tr>
+<tr>
+<td><code>/equipment/</code>, <code>/equipment-offering/</code></td>
+<td><code>/machines/</code></td>
+</tr>
+<tr>
+<td><code>/join-us/</code>, <code>/join-us/business-solutions/*</code></td>
+<td><code>/business/</code> (+ segment anchors)</td>
+</tr>
+<tr>
+<td><code>/join-us/franchise-info-request/</code>, <code>/join-us/more-information/</code></td>
+<td><code>/business/partner/</code></td>
+</tr>
+<tr>
+<td><code>/about/distributors/</code>, <code>/about/where-to-buy/</code> (duplicates)</td>
+<td><code>/find-us/</code></td>
+</tr>
+<tr>
+<td><code>/about/the-story-of-guglielmo/</code>, <code>/about/production/</code></td>
+<td><code>/our-story/</code></td>
+</tr>
+<tr>
+<td><code>/about/the-buzz/</code></td>
+<td><code>/our-story/#customers</code></td>
+</tr>
+<tr>
+<td><code>/learn-more/</code>, <code>/machine-maintenance/</code></td>
+<td><code>/journal/</code> and <code>/business/service/</code></td>
+</tr>
+<tr>
+<td><code>/refer-a-friend/</code>, <code>/newsletter/</code></td>
+<td><code>/rewards/</code> and footer signup</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-phased-plan">5. Phased plan</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Scope</th>
+<th>Indicative effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0. Quick wins (current site)</td>
+<td>Fix the top-15 audit items: remove Order Adjustment, fix broken shortcodes, meta descriptions, alt text, typos, contact details, hide dead out-of-stock items</td>
+<td>1 week</td>
+</tr>
+<tr>
+<td>1. Foundation</td>
+<td>Catalog restructure (§2), block theme with chosen concept's design system, header/footer, Home, Shop, PDP, Cart/Checkout blocks, express pay, redirects, SEO</td>
+<td>5–7 weeks</td>
+</tr>
+<tr>
+<td>2. Growth</td>
+<td>Subscriptions, bundles, quiz or system chooser, reviews programme, Klaviyo flows (welcome, replenishment, win-back), business landing + solution finder + CRM</td>
+<td>4–6 weeks</td>
+</tr>
+<tr>
+<td>3. Trade &amp; community</td>
+<td>Trade accounts and quick reorder, service booking, loyalty/referral, journal and recipes, venue map CPT</td>
+<td>4–6 weeks</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="6-targets-to-hold-the-build-to">6. Targets to hold the build to</h2>
+<ul>
+<li>Largest Contentful Paint &lt; 2.5 s on 4G mobile, CLS &lt; 0.1, INP &lt; 200 ms; &lt; 25 requests and &lt; 1 MB on product pages.</li>
+<li>WCAG 2.2 AA (contrast, focus, labels, keyboard).</li>
+<li>Every product: ≥ 3 images ≥ 1200 px, full blend profile, compatibility info for single-serve, schema with price/availability.</li>
+<li>Forms: ≤ 6 fields for first contact; response promise shown (e.g. "We reply within one business day").</li>
+</ul>
+  </article>
+</main>
+<footer class="foot"><div class="wrap"><span>Prepared for Guglielmo USA (L'Espresso USA) · October 2026</span><a href="../index.html">Back to the overview</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js"></script>
+<script src="../assets/js/gusa-motion.js"></script>
+<script>GUSA.motion.init({ distance: 16 });</script>
+</body>
+</html>

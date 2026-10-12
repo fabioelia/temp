@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Digital Strategy — Guglielmo USA Redesign</title>
+<meta name="description" content="Inputs: our crawl of lespressousa.com (research/raw-crawl/), the live UX/performance audit
+(the site audit), the competitor benchmark of 17 sites (research/competitors.md) and the ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="stylesheet" href="../assets/css/hub.css">
+</head>
+<body>
+<div class="progress" data-m-progress aria-hidden="true"></div>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/img/logo/guglielmo-mark.svg" alt="" width="26" height="26">Guglielmo USA · Redesign</a>
+  <nav aria-label="Report sections"><a href="../index.html">Overview</a><a href="../audit/index.html">Audit</a><a href="../research/competitors.html">Benchmark</a><a href="../docs/strategy.html" aria-current="page">Strategy</a><a href="../research/brand-pack.html">Brand pack</a><a href="../docs/wordpress.html">WordPress plan</a></nav>
+</div></header>
+<main class="doc wrap">
+  <p class="toc"><span class="eyebrow">Strategy</span></p>
+  <article class="content" data-m="fade">
+<h1 id="guglielmo-usa-digital-strategy-agency-synthesis">Guglielmo USA — Digital Strategy (agency synthesis)</h1>
+<p>Inputs: our crawl of lespressousa.com (<code>research/raw-crawl/</code>), the live UX/performance audit
+(<a href="../audit/index.html">the site audit</a>), the competitor benchmark of 17 sites (<code>research/competitors.md</code>) and the brand pack
+(<code>research/brand-pack.md</code>).</p>
+<h2 id="1-the-situation-in-one-paragraph">1. The situation in one paragraph</h2>
+<p>Guglielmo USA sells a genuinely distinctive product (a Calabrian espresso roasted since the 1940s, certified Espresso
+Italiano blends, a family importer in Greater Boston since 2000) through a site that looks and works like 2014. On our
+52-point feature matrix it scores <strong>11.5</strong>; every benchmark scores between <strong>25.5 and 43</strong> (illy 43, Nespresso 42,
+Lavazza 41). The gap is table stakes, not polish: product information, compatibility, filters, subscriptions, reviews,
+contact details, SEO and speed. The business side (wholesale, equipment, service, franchising, distributors) is buried
+under "Join Us" and ends in long forms.</p>
+<h2 id="2-audiences-and-their-jobs">2. Audiences and their jobs</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Audience</th>
+<th>What they come to do</th>
+<th>What the site must give them</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Italian-American loyalists (core repeat buyers, nationwide)</td>
+<td>Re-order "the coffee from home" quickly</td>
+<td>Fast reorder, subscription, the right blend name and pack they know, heritage that confirms authenticity</td>
+</tr>
+<tr>
+<td>Capsule and pod machine owners</td>
+<td>Find refills that fit their machine</td>
+<td>"Shop by your machine", compatibility on every product, bulk packs, subscription</td>
+</tr>
+<tr>
+<td>Espresso-curious home buyers</td>
+<td>Choose a blend or a machine</td>
+<td>Intensity scale, tasting notes, finder quiz, machine + coffee bundles with cost per cup</td>
+</tr>
+<tr>
+<td>Cafés, restaurants, pastry shops (New England)</td>
+<td>Get better espresso, reliable supply and service</td>
+<td>Solution finder, tasting request, equipment + lease, service promise, proof (local venues)</td>
+</tr>
+<tr>
+<td>Offices, hotels, caterers</td>
+<td>A simple, low-mess coffee program</td>
+<td>Capsule systems, cost per cup, cups/stirrer kits, delivery promise, short lead form</td>
+</tr>
+<tr>
+<td>Prospective distributors, retailers, franchisees</td>
+<td>Evaluate a partnership</td>
+<td>Clear programme pages, territory map, what support they get, short application</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="3-principles-every-concept-follows">3. Principles every concept follows</h2>
+<ol>
+<li><strong>Two clear doors.</strong> A "For Home | For Business" switch in the header (pattern from Lavazza, Faema, Nespresso). Each mode
+   has its own primary call to action: <em>Subscribe &amp; save</em> (home) and <em>Book a tasting</em> (business).</li>
+<li><strong>Shop by your machine first.</strong> Compatibility is the number-one question: 36 mm capsules (Espresso Point-type),
+   Espresso 70 (Nespresso® Original-compatible), E.S.E. 44 mm pods, traditional (beans/ground, moka, espresso machine),
+   drip. Every product card shows Format · Fits · Intensity.</li>
+<li><strong>One intensity scale (1–10)</strong> for every blend, with buckets <em>Mild 1–4 · Balanced 5–7 · Bold 8–10</em>, plus roast,
+   arabica/robusta share, notes and best brew method. Same scale on cards, product pages, quiz and comparison tools.</li>
+<li><strong>No dead ends.</strong> Out-of-stock items are hidden by default (toggle to show) or carry "Notify me"; quote-only machines
+   say "Request a quote", never $0; the "Order Adjustment" item disappears.</li>
+<li><strong>Make the hidden value visible.</strong> Case discounts (5/6/8% at 6/12/18) shown as a tier table; free-shipping progress in the
+   cart; machine + capsule "pays for itself" math shown as cost per shot.</li>
+<li><strong>Short forms, then conversation.</strong> First contact ≤ 6 fields; solution finder asks 3–4 questions before contact details;
+   every business page offers "Book a tasting".</li>
+<li><strong>One source of truth for facts.</strong> Founding year, years of experience, number of blends, certifications and address come
+   from the brand pack and appear identically everywhere.</li>
+<li><strong>Fast and accessible by default.</strong> Performance budget (&lt; 1 MB, &lt; 25 requests on product pages), WCAG 2.2 AA, real alt text,
+   meta descriptions and structured data on every template.</li>
+</ol>
+<h2 id="4-feature-set-priority-from-the-benchmark">4. Feature set (priority from the benchmark)</h2>
+<p><strong>Launch (must-have):</strong> home/business switch · shop-by-machine + compatibility badges · standard coffee PDP (intensity,
+roast, notes, composition, brew methods, cost per cup) · faceted filters · subscribe &amp; save with skip/pause · visible volume
+tiers · reviews with schema (collected from real customers) · catalog hygiene · 4-step business solution finder · book a
+tasting · service request with triage · Find Guglielmo map · real brand story + full contact/trust block · Apple Pay /
+Google Pay / PayPal + free-shipping bar · SEO baseline · working newsletter.</p>
+<p><strong>Phase 2:</strong> coffee-finder quiz · machine + capsule bundles · tasting kit · trade portal (reorder, PO number, invoices) ·
+lease calculator · service plans · segment pages with partner stories · Guglielmo Point franchise page · distributor
+programme with territory map · brew guides and recipes · machine support hub · office cost-per-cup calculator.</p>
+<p><strong>Phase 3:</strong> loyalty points · referral · barista training bookings · capsule recycling · gift cards and corporate gifting ·
+Italian-American care package · video onboarding for machine buyers · repair status · refurbished machines · perfect-serve kit.</p>
+<p>The five concepts each prototype the launch set plus a different slice of phases 2–3, so the client can see them working.</p>
+<h2 id="5-information-architecture-baseline-concepts-may-vary-labels">5. Information architecture (baseline; concepts may vary labels)</h2>
+<ul>
+<li><strong>Utility bar:</strong> For Home | For Business · Find Guglielmo · Trade login · (617) 612-0090 · Free shipping over $59</li>
+<li><strong>Home mode nav:</strong> Coffee (shop by machine / format / blend, finder, tasting kit) · Machines (capsule &amp; pod, home espresso,
+  bundles, care) · Subscribe · Gifts &amp; Italian pantry (cups, Brasilena, candy) · Learn (our story, blends &amp; intensity guide,
+  brew guides, recipes, machine support) · Find Guglielmo</li>
+<li><strong>Business mode nav:</strong> Solutions (cafés, restaurants &amp; pizzerias, offices, hotels &amp; catering, retail) · Coffee programme
+  (wholesale blends, tasting, training, perfect serve) · Equipment (WEGA/BFC, capsule systems, grinders, water treatment,
+  lease) · Service &amp; support · Partner with us (franchise, distributor, retailer) · Trade login · <strong>Get a proposal</strong></li>
+<li><strong>Footer:</strong> Shop · Business · Support · Company · contact block (verified address, phone, email, hours) · trust row ·
+  newsletter · legal</li>
+</ul>
+<h2 id="6-open-items-for-the-client">6. Open items for the client</h2>
+<ul>
+<li>Confirm the public business address: the parent's distributor list shows <strong>266 Calvary St, Waltham, MA 02453</strong>; the site
+  says Boston. One address must be used across the site, Google Business Profile and schema.</li>
+<li>Confirm founding year and claims to use (parent says 1943 / "over 80 years"; current site says 60 and 70 years).</li>
+<li>Approve proposed commercial policies shown in the demos: 10% subscribe &amp; save, free shipping at $59, "Give $10, get $10"
+  referral, tasting kit.</li>
+<li>Supply high-resolution packshots and partner-venue photography; collect real reviews from past customers.</li>
+</ul>
+  </article>
+</main>
+<footer class="foot"><div class="wrap"><span>Prepared for Guglielmo USA (L'Espresso USA) · October 2026</span><a href="../index.html">Back to the overview</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js"></script>
+<script src="../assets/js/gusa-motion.js"></script>
+<script>GUSA.motion.init({ distance: 16 });</script>
+</body>
+</html>

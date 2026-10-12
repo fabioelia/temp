@@ -30,6 +30,11 @@ richest graphic and verbal device — use it with intent.
 - `redesign/assets/data/catalog.json` — 86 real products (prices, stock, formats, systems, images). Use `catalog.js`.
 - `redesign/assets/img/stock/manifest.json` — curated photo library (pick images by description; credits in CREDITS.md).
 - `redesign/assets/img/brand/manifest.json` — Guglielmo brand imagery (packshots, roastery, history).
+  Brand-image rules: do NOT use `store-guglielmo-store-catanzaro*` or `cafe-guglielmo-coffee-south-korea*` (press photos,
+  permission pending). If you use `roastery-copanello-exterior-2022.jpg`, show its CC BY-SA credit in a caption. Treat all
+  intensity scores and sensory notes as the agency's proposal (fine to display; the README should say they need client
+  sign-off). Brasilena is made by Acqua Calabria (not by Guglielmo): say "from Calabria", never "by Guglielmo".
+  Founding year to display: **1943** (Guglielmo Papaleo, Catanzaro); roastery at Copanello since **1972**.
 - `redesign/assets/img/products/` — product packshots (referenced from the catalog). Some are low-res: show them on a
   neutral tile at modest size rather than blowing them up; prefer brand-pack packshots for hero use.
 - `redesign/assets/img/logo/` — `guglielmo-logo-color.png` (light backgrounds), `guglielmo-logo-white.png` (dark),
@@ -44,7 +49,9 @@ Load in this order on every page (paths are relative from `redesign/concepts/0N-
 <script src="../../assets/data/maps.js"></script>   <!-- only on pages with a map -->
 <script src="../../assets/js/gusa-kit.js"></script>
 <script>GUSA.init({ concept: "0N", root: "../../" });</script>
-<script src="js/site.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js"></script>
+<script src="../../assets/js/gusa-motion.js"></script>
+<script src="js/site.js"></script>   <!-- ends with GUSA.motion.init({...}) -->
 ```
 Read `redesign/assets/js/gusa-kit.js` — it gives you: `GUSA.products.filter/sort/bySlug/family/machinesFor/coffeeFor/
 pricePerUnit/formatLabel`, `GUSA.blend(id)` (brand blend profile), `GUSA.systems` (capsule/pod compatibility),
@@ -54,6 +61,33 @@ render counties as fill-only land; neighborhoods carry the detail), `GUSA.forms.
 submits), `GUSA.img(path)` (prefixes root), `GUSA.esc`, `GUSA.param`, `GUSA.linkTo`.
 Product links are `product.html#<slug>` (hash, not query string). `GUSA.param('slug')` reads it. A PDP opened with no hash
 must default to `5-stelle-1kg-beans`.
+
+## 3b. Motion is built on Motion (motion.dev) — required
+All JavaScript animation in every concept and template uses **Motion** (the motion.dev library, formerly Framer Motion),
+through the shared layer `redesign/assets/js/gusa-motion.js`. Load it on every page, before your `site.js`:
+```html
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js"></script>  <!-- exact pin; global `Motion` -->
+<script src="../../assets/js/gusa-motion.js"></script>                                 <!-- after gusa-kit.js -->
+```
+Then call `GUSA.motion.init({ ease, duration, distance })` at the end of `site.js` (after you render dynamic markup),
+tuning the tokens to your concept's personality. Read `gusa-motion.js` fully. It gives you:
+- **Declarative attributes** for templates: `data-m="rise|fade|scale|slide-l|slide-r|clip|ring|tilt"`, `data-m-delay`,
+  `data-m-stagger` (parent), `data-m-hero` + `data-m-order` (load sequence), `data-m-split` (word-by-word headline),
+  `data-m-count` (+ `-prefix/-suffix/-decimals`; write the final formatted value in the HTML too), `data-m-parallax`,
+  `data-m-progress`, `data-m-hover="lift|grow|tilt"`, `data-m-press`, `data-m-marquee`.
+- **Commerce helpers**: `GUSA.motion.flyToCart(fromEl, cartIconEl, imgSrc)` on every add-to-cart, `bump(el)`,
+  `drawer(panel, open, side, scrim)` for the cart/nav/search drawers, `number(el, to, fmt)` for live totals and
+  calculators, `swap(container, render, dir)` for quiz/wizard steps and tabs, `list(items)` after filtering,
+  `bullseye(el)` (brand ring ripple for "hit" moments), `scrub(target, onProgress)` for bespoke scroll scenes.
+- **Direct Motion API** (`Motion.animate / scroll / inView / stagger / hover / press / spring`) for your signature moments;
+  use it directly in `site.js` for anything bespoke (e.g. a quiz result, a system-chooser morph, a map pin drop, a
+  scroll-scrubbed hero), always guarded with `GUSA.motion.live` so reduced-motion users and a failed CDN load still get a
+  complete, static page.
+Motion rules: content is complete and visible at rest (no element hidden until an observer fires; the layer only applies
+the "from" pose at the moment of entry); one orchestrated hero moment per page plus restrained micro-interactions; every
+interactive element gets press/hover feedback; durations 150–900 ms; respect `prefers-reduced-motion` (the layer does).
+Document your concept's motion choreography (what moves, when, why, easing) in your README. Do not add other animation
+libraries (no GSAP, AOS, anime.js).
 
 ## 4. Required pages (identical set across concepts, so the client can compare)
 All in `redesign/concepts/0N-name/`:
@@ -112,7 +146,7 @@ review counts, press quotes or awards.
   `width=device-width, initial-scale=1, viewport-fit=cover`, its own `<title>` like "5 Stelle — Guglielmo USA").
 - Concept CSS in `css/site.css`, concept JS in `js/site.js` (plus optional page scripts). No build step.
 - **External resources: ONLY Google Fonts** (`fonts.googleapis.com` / `fonts.gstatic.com`, always with a fallback stack)
-  and, if truly needed, scripts from `https://cdnjs.cloudflare.com` pinned to an exact version. Everything else is blocked:
+  and the pinned Motion script `https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js` (no other scripts needed). Everything else is blocked:
   **no external images, no iframes (no Google Maps/YouTube), no other CDNs, no analytics**. All images come from
   `../../assets/img/...`. Video: none (use imagery/motion instead).
 - No `alert/confirm/prompt`, no `window.print`, no `<a download>`. `mailto:`/`tel:` links may be present but always show the

@@ -1,0 +1,2127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Competitor Benchmark — Guglielmo USA Redesign</title>
+<meta name="description" content="Prepared 12 Oct 2026 for the design team. Inputs: live fetches of about 90 pages, using a browser user-agent, plus WebFetch and web search where pages blocked bots or rendered cont">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<link rel="stylesheet" href="../assets/css/hub.css">
+</head>
+<body>
+<div class="progress" data-m-progress aria-hidden="true"></div>
+<header class="mast"><div class="wrap">
+  <a class="brand" href="../index.html"><img src="../assets/img/logo/guglielmo-mark.svg" alt="" width="26" height="26">Guglielmo USA · Redesign</a>
+  <nav aria-label="Report sections"><a href="../index.html">Overview</a><a href="../audit/index.html">Audit</a><a href="../research/competitors.html" aria-current="page">Benchmark</a><a href="../docs/strategy.html">Strategy</a><a href="../research/brand-pack.html">Brand pack</a><a href="../docs/wordpress.html">WordPress plan</a></nav>
+</div></header>
+<main class="doc wrap">
+  <p class="toc"><span class="eyebrow">Research</span></p>
+  <article class="content" data-m="fade">
+<h1 id="competitor-peer-benchmark-guglielmo-usa-lespressousacom-redesign">Competitor &amp; Peer Benchmark: Guglielmo USA (lespressousa.com) redesign</h1>
+<p>Prepared 12 Oct 2026 for the design team. Inputs: live fetches of about 90 pages, using a browser user-agent, plus WebFetch and web search where pages blocked bots or rendered content client-side. Machine-readable companion: <code>competitors.json</code>, generated from the same data as the matrix in section 4.</p>
+<p><strong>Access notes.</strong> illy refuses WebFetch (403), but curl with a browser user-agent worked. Nespresso US serves almost no server-side HTML, so its navigation comes from embedded JSON and its subscription terms from search snippets. Blue Bottle, Clive Coffee and Miscela d'Oro USA sit behind Cloudflare challenges, and Ammirati Coffee's domain did not resolve. Findings for those sites come from search results and are marked as such. Facts about Guglielmo USA come from our own crawl in <code>raw-crawl/</code>.</p>
+<hr />
+<h2 id="1-executive-summary">1. Executive summary</h2>
+<ol>
+<li><strong>Guglielmo USA scores 11.5 of 52 on our feature matrix.</strong> Every benchmark scores between 25.5 and 43 (illy 43, Nespresso 42, Lavazza 41). The gap lies in table-stakes features, not advanced ones: product data, filters, subscriptions, reviews, contact details and SEO basics.</li>
+<li><strong>Our hardest UX problem is format and machine compatibility.</strong> Guglielmo sells 36 mm capsules, 38 mm pods, 44 mm ESE pods, beans, ground coffee and drip coffee, plus the machines for each. Borbone, Kimbo and the parent shop caffeguglielmoshop.it organise their coffee menus by machine system, and illy prints "Suitable For" on every card. Guglielmo USA should make "Shop by your machine" its main browsing tool.</li>
+<li><strong>Leaders show one consistent intensity scale, and Lavazza shows why consistency matters.</strong> illy uses "5 of 9", Borbone uses 7 to 10, and Nespresso uses 1 to 13. Lavazza mixes x/5, x/10 and x/13 on a single homepage. We should define one 1–10 scale for all 7–8 blends, together with roast, notes, Arabica/Robusta share and best brew method.</li>
+<li><strong>Subscriptions are universal except at Guglielmo.</strong> Discounts run from 5% (Seattle Coffee Gear) to 25% (Lavazza My Way), usually with free shipping and self-service skip, pause and cancel. Lavazza and Nespresso also sell machine-plus-capsule plans; Lavazza's saves up to $130 on the machine.</li>
+<li><strong>The best combined consumer-and-B2B sites put a Home/Business switch in the header.</strong> Examples are Lavazza ("Lavazza for your HOME | BUSINESS"), Faema Canada ("For Home | For Business") and Nespresso ("For Business"). Guglielmo's business offer is currently buried under "Join Us".</li>
+<li><strong>B2B best practice is a short qualifying finder plus self-service, not a long form.</strong>
+   - Finder: Lavazza Professional UK asks four steps (environment, headcount, drinks, contact). Chris' Coffee uses a commercial questionnaire.
+   - Self-service: Segafredo, Counter Culture, Partners and Nespresso Pro run trade portals. Segafredo's has a PO-number field; Nespresso Pro has EasyOrder and Reorder.</li>
+<li><strong>The closest analogues are importer/distributors that bundle coffee, equipment, service and finance.</strong>
+   - Faema Canada: lease and rent-to-own calculator via Econolease, a beans-vs-capsules cost calculator, a service centre and a logo wall of customers.
+   - Chris' Coffee (NY): equipment loans and rentals, technicians on call 24 hours, a 90-mile delivery radius, and Organic, Fair Trade, Kosher and SQF certifications.
+   - Counter Culture and Partners: triaged tech requests and scheduled preventive maintenance.</li>
+<li><strong>A Guglielmo distributor already does this well.</strong> Wake Up Espresso in Vienna (wakeup-espresso.com) lists Guglielmo first. It offers flavour tags, a 5+1 kg deal, a flexible subscription, machines tested before shipping, and personal onboarding by phone or WhatsApp video. It is the most transferable single model.</li>
+<li><strong>Trust and brand depth are the cheapest wins.</strong> Guglielmo's story page has 44 words, its claims conflict (60 vs 70 years, while the parent says since 1943, "over 80 years"), there is no phone or address, there are zero reviews, and the newsletter and referral pages show broken shortcodes. Peers lean on heritage numbers, certifications, review counts and founder stories. The parent can supply ISO 9001 and the "Beyond Fair Trade" claim shown on caffeguglielmo.cz.</li>
+<li><strong>Platform is the root cause.</strong> The current stack is WordPress with the Enfold theme and WooCommerce, loading about 101 asset files per page, with no meta descriptions, Open Graph tags or schema. 13 of the 17 benchmarks run Shopify, which comes with wallets, review apps and subscription apps. illy runs on Salesforce Commerce Cloud, Lavazza on Adobe Experience Manager and Nespresso on a proprietary stack. Vergnano is the only one besides Guglielmo on WordPress. A replatform, or at least a rebuilt theme with proper plugins, is a precondition for most Must-haves.</li>
+</ol>
+<hr />
+<h2 id="2-baseline-guglielmo-usa-today">2. Baseline: Guglielmo USA today</h2>
+<ul>
+<li><strong>Top nav (crawl).</strong> Shop (By Blend / By Type and Format) | Equipment (Home, Office, Commercial) | About (Our Story, The Story of Guglielmo, Production, The Buzz, Where to Find, Espresso Blends) | Join Us (Business Solutions, Partner With Guglielmo USA, Franchise Info Request) | Learn More (Coffee &amp; Your Health, Marketing, Machine Maintenance) | My Account.</li>
+<li><strong>Homepage.</strong> Icon row → "Going quickly…" products → "Guglielmo near you" text list of Boston-area restaurants → "Join our family" text.</li>
+<li><strong>Catalog.</strong> 87 products, about 40 out of stock. Commercial machines show $0 or "Call for price". "Order Adjustment" is listed publicly. No reviews, subscriptions, finder, intensity or compatibility data. Case discounts of 5–8% on 6/12/18 units are applied silently by a plugin.</li>
+<li><strong>Business.</strong> Foodservice, office and hotel pages that end in a long inquiry form. The franchise page is a long form. The WP Store Locator has 3 distributors (MA, IL, PA).</li>
+<li><strong>Trust and SEO.</strong> Contact page has a form only. No meta descriptions, no OG, no JSON-LD, most images lack alt text, about 48 JS and 53 CSS files per page. Payments are Authorize.net and PayPal; shipping is UPS. There are many typos.</li>
+<li><strong>NAP inconsistency to resolve.</strong> The parent's distributor list (caffeguglielmoshop.it/guglielmo-nel-mondo) gives Guglielmo USA LLC at 266 Calvary St, Waltham MA 02453, tel. +1 617 612 0090, info@lespressousa.com and guglielmousa.com, which redirects to lespressousa.com. The brief describes the company as Boston-based. Confirm one address for the site, Google Business Profile and schema.</li>
+</ul>
+<hr />
+<h2 id="3-competitor-and-peer-profiles">3. Competitor and peer profiles</h2>
+<p>Each profile covers the same points where they applied: nav · homepage order · audience split · filters · PDP · subscriptions and bundles · B2B · locator and franchise · content · trust and loyalty · localization and checkout · visual identity · good and bad.</p>
+<h3 id="31-lavazza-us-lavazza-professional-uk-flavia">3.1 Lavazza US (+ Lavazza Professional UK, Flavia)</h3>
+<p>URLs: https://www.lavazzausa.com/en · /en/business · /en/my-way-coffee-subscription · /en/whole-bean-coffee · https://www.lavazzapro.co.uk/ · https://flavia.com/</p>
+<ul>
+<li><strong>Nav.</strong> A utility bar holds Lavazza World, Machine Registration and Loyalty Program. A "Lavazza for your HOME | BUSINESS" toggle sits above the main nav, which reads Products | Subscriptions | Promotions | Lavazza Stories | Search | Cart | Account. The Products mega-menu has Coffee (Tablì Tabs, Whole Bean, Ground, Capsules &amp; pods, K-Cup, Nespresso-compatible, Expert Capsules, FLAVIA Freshpacks), Coffee Machines, Accessories, Collections and "Brewing now" (Best Sellers, Coffee Bundles).</li>
+<li><strong>Homepage order.</strong> Promo hero (Autumn Savings: code plus tiered "$5 off $49+ … $40 off $199+") → Tablì collection → My Lavazza Loyalty sign-up → Kits/Promotions → 3 subscription cards (Capsules / Machine+Capsules / Ground &amp; Beans) → collection tabs (¡Tierra!, Espresso, Dolcevita) with product cards → Stories (Top Gastronomy chefs) → sustainability → recipes → service blocks (delivery, newsletter, customer service, loyalty).</li>
+<li><strong>Audience split.</strong> The Business toggle swaps in a separate nav: Food Service Solutions (collections, preparations, equipment, in-store solutions, stories, Training Center) and @Work Solutions (Expert, Flavia, Bean to Cup, Cold Brew).</li>
+<li><strong>Filters.</strong> The whole-bean listing page offers Collection, Format, Intensity, Pack Size, Blend, Aromatic Notes, Preparation, Roast and Color, plus sorting. A "Find your coffee match" quiz tile sits inside the grid.</li>
+<li><strong>PDP.</strong> Format badge and intensity (7/10), short description, size selector, "Earns 25 [Beans]", Add to Cart and "Subscribe and Save 25%". Below are tabs: Profile &amp; Roasting (aromatic notes, roast), Blend (composition, origin regions), Product Info, and Preparations (tip plus barista video). Back-in-stock "Notify me".</li>
+<li><strong>Subscription.</strong> "Lavazza My Way": 25% off every delivery, flexible scheduling, free shipping on subscription orders over $50, $5 off the first subscription (code 5OFFSUB). Machine + capsules plan: Classy Plus at $149.99, up to $130 off the machine, plus 25% off capsules.</li>
+<li><strong>B2B.</strong> Business pillars are Advisory Service, Enhance Your Experience (POS tools), Become a Coffee Connoisseur (Training Center) and Technical Assistance, plus "Business Customer Login". The UK pro site adds:</li>
+<li>a 4-step solution finder: environment (Office / Manufacturing / Public / Semi-public / Back of house) → people (10–25, 26–50, 51–99, 100+) → drinks (multi-select) → contact</li>
+<li>a "Workplace Coffee Calculator"</li>
+<li>a 24-hour callback promise</li>
+<li>a fully managed service</li>
+<li>BLUE capsule, KLIX, FLAVIA and bean-to-cup machines</li>
+<li><strong>Content and trust.</strong> Lavazza Stories (recipes, Calendar, Top Gastronomy, sports), ¡Tierra! sustainability, "since 1895", phone 833-933-0389. Loyalty is My Lavazza: 1 Bean per $1 and 2x on subscriptions. The site has EN and ES US locales. Payments: Apple Pay and PayPal.</li>
+<li><strong>Visual.</strong> Deep navy and white, uppercase nav, chef and lifestyle photography, packshots on white.</li>
+<li><strong>Bad.</strong> Inconsistent intensity scales on one page (Perfetto "3/5", Espresso "5/10", ¡Tierra! capsules "7/13"). No Open Graph tags. A stack of overlapping promotions (code, tiers and subscription discounts) makes the price message noisy.</li>
+</ul>
+<h3 id="32-illy-us">3.2 illy US</h3>
+<p>URLs: https://www.illy.com/en-us · /en-us/coffee/whole-bean-coffee · /en-us/coffee-delivery · /en-us/professional-partners · /en-us/storesfind · /en-us/illy-lovers-loyalty-program</p>
+<ul>
+<li><strong>Nav.</strong> Subscription | Coffee | Coffee Machines | Gifts &amp; Accessories | Promotions | a sustainability group (A Cup of Love, Planet, Circularity) | Art | Università del Caffè | Professional | illy Lovers. The footer has a region selector covering 16 market/language sites plus the global site.</li>
+<li><strong>Homepage order.</strong> "The Perfect Pair" hero → Our Coffee Selection carousel → "The Coffee You Love Delivered Automatically" → "Choose the subscription that's best for you" → Our Coffee Machines → gifts → illy Lovers.</li>
+<li><strong>Filters.</strong> Intensity in buckets (Soft 3–4 / Medium 5–6 / Strong 7–9), "type of coffee you wish to prepare" (Espresso, Moka, Drip, Decaf, Arabica Selection), format, roast/origin, package size, and "available as part of a Subscription". Unavailable values show as "not selectable" rather than vanishing.</li>
+<li><strong>PDP</strong> (Classico 500 g example):</li>
+<li>"Flavor Intensity 5 of 9" and loyalty preview "+305" hearts</li>
+<li>three icon facts: Selection ("100% Arabica"), How We're Brewing, Suitable For ("grinders and grind-on-demand machines")</li>
+<li>long copy covering taste profile, sustainability, roast degree, packaging/storage, preparation method and a Subscribe &amp; Save paragraph</li>
+<li>shipping block: free over $50, 2nd-day and next-day options</li>
+<li>subscription panel with packs and frequency ("Every 4 weeks")</li>
+<li>PowerReviews ratings</li>
+<li><strong>Subscription.</strong> "Subscribe &amp; Save 20% Off + Free Shipping on all Recurring Orders". A build-your-own "Coffee Only Subscription" page lists every eligible SKU with its "Suitable For" machine type. Subscriptions earn 1.5x loyalty hearts.</li>
+<li><strong>Bundles.</strong> Coffee Case Packs, Machine Gifts &amp; Bundles, Curated Coffee Bundles.</li>
+<li><strong>B2B.</strong> Professional hub "illy for your business" with tiles for Cafés, Bakeries, Restaurants, Hotel and Offices (small vs medium-large enterprises), a franchise page (<code>/professional-partners/business-types/coffee-supply-for-shop-franchise-illy</code>), Chef Ambassador, a "Partner with illy – three simple steps" CTA, and a reserved-area login.</li>
+<li><strong>Locator.</strong> ZIP search with filters for illy Caffès and illy Shop.</li>
+<li><strong>Content.</strong> illy Art Collection cups, contemporary art exhibitions, Università del Caffè, Ernesto Illy Foundation, recipe guide, how-to guides (espresso, moka, French press, Turkish).</li>
+<li><strong>Trust and loyalty.</strong> B Corp, "since 1933", "1% of the best Arabica". illy Lovers gives 500 welcome hearts and 20% off. Refer a Friend, machine registration, tutorials, manuals, spare parts, and a "collect my old machine" service.</li>
+<li><strong>Checkout.</strong> Apple Pay, Klarna, PayPal.</li>
+<li><strong>Visual.</strong> illy red (#d12420) on warm off-white (#f6f0ec) with espresso-brown (#512c1f) accents; Manrope plus the "Illy Script" display face; gallery-like whitespace and art-led imagery.</li>
+<li><strong>Bad.</strong> Heavy client-side rendering (the business page is a Livestory embed) and bot-blocking. A quantity dropdown runs to 100.</li>
+</ul>
+<h3 id="33-segafredo-zanetti-us-massimo-zanetti-beverage-usa">3.3 Segafredo Zanetti US (Massimo Zanetti Beverage USA)</h3>
+<p>URLs: https://segafredocoffee.com/ (segafredousa.com redirects here; segafredo.us is a parked domain) · https://foodservice.segafredocoffee.com/ · https://wholesale.segafredocoffee.com/</p>
+<ul>
+<li><strong>Nav.</strong> Shop | Espresso | Coffee | Single-Serve | Serviceware | Craft (Brewing Manual, Drink Recipes, Essentials). Foodservice and News sit in the footer.</li>
+<li><strong>Homepage order.</strong> "Coffee, uncompromised." → brand statement → "Made for busy mornings" → "Roasted for the ambitious" with 4 signature roasts (Brillante, Crescendo, Vivace, Enzo) → "Raise the coffee bar" → "Subscriptions get always free shipping / Keep going. Never run out." → featured product → Coffee Essentials articles → newsletter.</li>
+<li><strong>PDP.</strong> Reviews summary (Vivace: 57 reviews, 4.77), price, "Character: Medium Body, Smooth Acidity / Tasting Notes: …", origin narrative (Colombia/Brazil), a pour-over brewing tip, review list, and shipping and returns. Rich Product, Offer and ShippingDetails schema. Free shipping on $35+. Shop Pay, Apple Pay and PayPal.</li>
+<li><strong>B2B.</strong> Separate Shopify stores:</li>
+<li>Foodservice: Our Coffee | Foodservice Programs | Contact | About | Login, covering cold brew for Nitrotap, Cold Italian Espresso and ESE pods.</li>
+<li>Contracted Wholesale: Become a Partner | Login, with a cart that has a "Purchase Order Number" field.</li>
+<li><strong>Visual.</strong> Dark roast-brown (#4f3833) with a teal accent, Inter body and Oswald condensed headings; energetic "go-getters" tone.</li>
+<li><strong>Bad.</strong> No homepage meta description. The global franchise network (Segafredo Zanetti Espresso) is invisible to US visitors. B2B is split across three domains.</li>
+</ul>
+<h3 id="34-nespresso-us-nespresso-professional-us">3.4 Nespresso US + Nespresso Professional US</h3>
+<p>URLs: https://www.nespresso.com/us/en · https://www.nespresso.com/pro/us/en</p>
+<ul>
+<li><strong>Nav</strong> (from embedded JSON): Coffee (Vertuo / Original, Starbucks by Nespresso, Blue Bottle, Iced) | Machines (Vertuo, Original, Compare Machines, Build your bundle, ReLove refurbished) | Accessories | Collections | Subscription &amp; Loyalty (Create / Manage subscription, AutoReplenish, Status and Benefits, Nespresso Club) | Sustainability &amp; Recycling (Order Recycling Bags, Find a Drop-off Location, B Corp, Circularity) | Store Locator | For Business. The footer has eGift Cards, Referral Rewards, Registered Machines and wallets (Apple Pay, Google Pay, PayPal, cards).</li>
+<li><strong>Subscription</strong> (verified only through search; markets vary). Credit-based plans where the monthly fee becomes coffee credit, often with a 10% bonus, plus AutoReplenish auto-delivery.</li>
+<li><strong>Nespresso Pro.</strong> Nav: Your Business (Office, Restaurant/Café, Hotel, Small Business) | Machines | Coffees | Accessories (serveware, dispensers, display solutions) | Services (Order, Delivery, Recurring Order, After Sales) | Contact (1.800.566.0571, chat, email). There is a customer gate ("Yes, I am already a customer / No, I'm not a customer yet" leading to fast registration). Account tools include My Company Information, My EasyOrders (saved orders), My Subscriptions, Reorder and Express Checkout. In other markets, Pro subscriptions bundle a machine, coffee and maintenance for a monthly fee.</li>
+<li><strong>Visual.</strong> Black and gold luxury, the proprietary "Nespresso Lucas" typeface, product-hero photography.</li>
+<li><strong>Bad.</strong> The server sends almost no content (title plus footer), so the site depends on JavaScript for SEO, scrapers and accessibility.</li>
+</ul>
+<h3 id="35-italian-roasters-strongest-three-plus-brief-notes">3.5 Italian roasters (strongest three, plus brief notes)</h3>
+<p><strong>Caffè Borbone</strong> (https://www.caffeborbone.com/en-us; Shopify Plus)</p>
+<ul>
+<li><strong>Nav.</strong> Products | Offers &amp; Promo | The Borbone World | Sustainability. The Coffee menu is organised by system: Nespresso home, Nespresso Professional, Dolce Gusto, A Modo Mio, Lavazza Blue and In Black, Bialetti, Caffitaly, Espresso Point, compostable pods.</li>
+<li><strong>Homepage.</strong> "More you buy, more you save!" (up to 20% off multiples) → "Your favourite blends. Even at the office." (Nespresso Professional compatibles) → Choose your coffee → iconic pods → Bluemoon machine → newsletter.</li>
+<li><strong>Merchandising.</strong> Colour-coded blends with intensity: Blue 8, Black 10, Red 9, Gold 7, Dek 8, Light 7.</li>
+<li><strong>Commerce tools.</strong> Recharge subscriptions, Klarna, Shop Pay, and a loyalty app with points, tiers and referral. Sustainability report, ESG rating, certifications.</li>
+<li><strong>Bad.</strong> The en-us store charges USD but its banner says "Free shipping in Italy for orders over €40". The B2B offer is a single teaser.</li>
+</ul>
+<p><strong>Kimbo</strong> (https://kimbo.it/ Shopify, Italian only; https://www.kimbo.co.uk/ UK subsidiary)</p>
+<ul>
+<li><strong>Homepage.</strong> "Scegli il tuo caffè" by format (capsules, compostable pods, beans, ground) → "Selezionati per te" → "Scegli le tue capsule" by compatible system → Sapiente specialty line → origins → newsletter.</li>
+<li><strong>Features.</strong> "Che caffè sei?" quiz, tasting kits, gift boxes, Professional pages (bars and pastry shops, specialty stores), training courses, certifications, sustainability report.</li>
+<li><strong>Kimbo UK.</strong> Sells catering pods and sachets, in-cup coffee and POS material, and sells barista courses as bookable products (BSA Level 1, VRQ Level 2, Latte Art, Brewing).</li>
+<li><strong>Visual.</strong> Very dark espresso brown (#330e00) with Inter.</li>
+<li><strong>Bad.</strong> No English site. A "test-collezione" collection URL is live in product links.</li>
+</ul>
+<p><strong>Caffè Vergnano</strong> (https://www.caffevergnano.com/en/ WordPress; US site https://www.caffevergnano.us/)</p>
+<ul>
+<li><strong>Nav.</strong> Vergnano World | Business | Products | Riserva Torino | Blog, with a region selector (Europe, Middle East, Asia, Americas; 17 country sites).</li>
+<li><strong>Business section.</strong> Cafes and Restaurants, Open a Caffè Vergnano 1882 Coffee Shop, Bar Women in Coffee, Vergnano Academy, Automated Distribution &amp; OCS, Street Coffee.</li>
+<li><strong>Cafés page.</strong> Introduces the "Espresso Perfect Serve": iconic black cup, helical spoon and "Caffeino" glass of water. It sells 1882 and Classic lines plus merchandising, and offers "Request a consultation" and "Download the brochure".</li>
+<li><strong>Franchise page.</strong></li>
+<li>concept story</li>
+<li>"Modular solutions tailored to your needs"</li>
+<li>brochure form with a Company/Private toggle</li>
+<li>four pillars: Dedicated designer, Made-in-Italy furnishings, Dedicated product offering, Ongoing support</li>
+<li>Academy training</li>
+<li>"Find the closest Caffè Vergnano 1882" locator with radius</li>
+<li><strong>Visual.</strong> Bronze/gold (#86704d) and red, video-led ("Make time count").</li>
+<li><strong>Bad.</strong></li>
+<li>Italian strings on English pages ("Scarica la brochure", "Compila il form").</li>
+<li>Three consent checkboxes on every brochure form.</li>
+<li>caffevergnano.us shows raw PHP in its <code>&lt;title&gt;</code>.</li>
+<li>Distributor microsites in Canada (Molisana Imports) and the UAE (Stree F&amp;B, Babadi) are brochure pages with only email contacts.</li>
+</ul>
+<p><strong>Also reviewed (weaker).</strong></p>
+<ul>
+<li><strong>Saquella</strong> (https://www.saquella.it/en/): audience-first nav Retail | Horeca | Vending | Company | Business | Contact, with Business subdivided into Bar, Restaurants, Hotel and Offices. No commerce.</li>
+<li><strong>Danesi</strong> (https://danesicaffe.it/): Italian-only WooCommerce with an "Ordina dal telefono" block that gives expert hours and a 10% newsletter discount. /en/ redirects to an unrelated Italian blog post.</li>
+<li><strong>Caffè Mauro</strong> (https://caffemauro.com/en/): thin brand site with a separate shop and an Italian meta description on the EN page.</li>
+</ul>
+<h3 id="36-distributors-and-importers-closest-analogues">3.6 Distributors and importers (closest analogues)</h3>
+<p><strong>Faema Canada</strong> (https://faema.ca/; Shopify; Canada's distributor of residential and commercial coffee and restaurant equipment "since 1957/1958")</p>
+<ul>
+<li><strong>Nav.</strong> For Home | For Business | About Us | Locations | Service | Contact Us. For Business is split into Coffee, Pizza, Baking, Pasta, Gelato, Juice, Water and Additional Solutions; For Home into Home Products, Consumables, Product Care, JURA, ROCKET.</li>
+<li><strong>Leasing</strong> (/pages/commercial-leasing, financed directly by Econolease):</li>
+<li>three options: Lease / lease-to-own (24–60 months), Rent-Try-Buy (52 weeks, 60% of payments credited toward buyout), Loan (26/39/52 weeks)</li>
+<li>"approval up to $50,000 OAC"</li>
+<li>explainer videos</li>
+<li>calculator inputs: equipment cost, payment type, established or start-up, term</li>
+<li>calculator outputs: payment, plus email or print of the estimate</li>
+<li><strong>Beans vs Capsules calculator</strong> (/pages/cost-benefit-calculator):</li>
+<li>Household or Professional mode, with presets for small, medium and large office, hotel lobby, dealership and clinic</li>
+<li>outputs: cost per cup, daily/monthly/yearly cost, annual and 5-year savings, pod waste per year</li>
+<li>CTAs: print, email, link to the 1 kg beans product, and a JURA Professional free office trial</li>
+<li><strong>Service centre.</strong></li>
+<li>walk-in residential repair</li>
+<li>"We come to you" on-site commercial service across the GTA</li>
+<li>diagnostics, descaling, gaskets, calibration, scheduled maintenance, genuine parts, warranty claims, certified refurbishment</li>
+<li>weakness: "Request service" opens an email template (brand, model, serial, residential/commercial, issue)</li>
+<li><strong>Trust and commerce.</strong> Customer and years counters, "notable customers" logo wall, "largest coffee equipment showroom in North America", Locations page, LocalBusiness and Product schema. Free shipping $75+, financing from 0%, Affirm, Apple Pay, open-box and certified-renewed products.</li>
+<li><strong>Visual.</strong> Red (#c8102e) and near-black, Jost and Assistant fonts; retail-utilitarian.</li>
+</ul>
+<p><strong>Chris' Coffee</strong> (https://www.chriscoffee.com/; Latham NY; "leading importer of Italian-made home espresso machines", roaster since 1975)</p>
+<ul>
+<li><strong>Nav.</strong> Home Espresso | Grinders | Commercial | Coffee | Accessories | Parts | Sale | B2B.</li>
+<li><strong>B2B page</strong> (/pages/local), titled "bean to brew":</li>
+<li>64,000 sq ft facility, roasting 2,300 lb/hr</li>
+<li>private-label packaging with low minimums and no plate charges</li>
+<li>Organic (QAI), Fair Trade, Kosher and SQF certifications</li>
+<li>"Equipment loans, rentals, sales"</li>
+<li>technicians on call 24 hours</li>
+<li>11 delivery and service vehicles covering a 90-mile radius</li>
+<li>19,000 customers</li>
+<li>commercial machine questionnaire</li>
+<li><strong>Repair page.</strong> Factory-trained techs; repair request form leads to an RMA after a signed Service &amp; Repair Agreement.</li>
+<li><strong>Also.</strong> Fractional (pre-measured) packs, open-box units, manuals and FAQs, phone (518) 452-5995 in the trust bar, free shipping $50+, 30-day returns, 10% off for newsletter sign-up, Affirm.</li>
+<li><strong>Bad.</strong> "Over 45 years" and "over 50 years" appear on the same page, the same consistency problem Guglielmo has.</li>
+</ul>
+<p><strong>Whole Latte Love</strong> (https://www.wholelattelove.com/; US equipment retailer since 1997)</p>
+<ul>
+<li><strong>Catalog.</strong> Deep machine taxonomy: Semi-Auto, Super-Auto, Prosumer, Single vs Dual Boiler, Machine Packages, Commercial, Refurbished. Parts &amp; Care has part diagrams, maintenance packages and water filters.</li>
+<li><strong>"Better Together Pricing".</strong> A bundler that pairs machine, grinder, accessories and coffee for exclusive discounts.</li>
+<li><strong>Support and media.</strong> Submit a Tech Ticket, support library, Machine Library, weekly livestreams, 1,000+ YouTube videos, CoffeeCast virtual product demo.</li>
+<li><strong>Commerce.</strong> "20K+ reviews", coffee subscription 10% off, free shipping $75+, price match, phone 585-924-7170.</li>
+<li><strong>Visual.</strong> Noe Display serif headings; promotion-heavy homepage.</li>
+</ul>
+<p><strong>Seattle Coffee Gear</strong> (https://www.seattlecoffeegear.com/)</p>
+<ul>
+<li><strong>Nav.</strong> Shop Gear | Shop Coffee | Commercial | Sale, plus phone and Live Chat. Coffee facets cover roast, taste profile and brew method (including "Superautomatic Friendly" and "European Favorites"). It carries Miscela d'Oro, an imported Italian brand.</li>
+<li><strong>Commercial.</strong> "Get started with a free consultation", commercial support, commercial machines, grinders and brewing.</li>
+<li><strong>Commerce.</strong> Subscribe &amp; Save 5%, Bundle &amp; Save, Affirm, free shipping $49+ with a cart progress message, 30-day price guarantee, retail stores, classes and events, podcast, Repairs &amp; Service, Store schema.</li>
+</ul>
+<p><strong>Wake Up Espressomaschinen</strong> (https://www.wakeup-espresso.com/; Vienna; listed by Guglielmo S.p.A. as its Austrian distributor; Shopify)</p>
+<ul>
+<li><strong>Nav.</strong> Kaffee (Guglielmo first, then Kremoso, Escaffè, Ionia, Trombetta, La Messicana; by format: beans, moka ground, espresso ground, cialde; Probiersets) | Espressomaschinen (single boiler, heat exchanger, dual boiler, lever, machine sets) | Kaffeemühlen | Zubehör | Über uns (Einschulungen, Maschinenservice, Gastro &amp; Büro, Versand &amp; Rabatte, Kontakt, FAQ) | Blog. The announcement bar shows "5+1 kg Rabatte · Einschulungen im Store · Gratis Versand ab 89 €".</li>
+<li><strong>Cards.</strong> Flavour tags ("schokoladig", "würzig", "kräftig") and staff picks ("Mario's Favorite", "Teams Favorite").</li>
+<li><strong>Long-form copy.</strong> Explains which machine type suits which drinker. Machines are "tested before shipping, grinder pre-set". Every machine includes personal onboarding by phone or WhatsApp video, and the founder is a technician.</li>
+<li><strong>Subscription and deals.</strong> Kaffee-Abo every 30 days, 3 months or 6 months with an extra discount, cancel anytime. 5+1 kg cartons. Yotpo reviews and Klarna.</li>
+<li><strong>Takeaway.</strong> The model for a Guglielmo specialist importer, using the same blends.</li>
+</ul>
+<p><strong>Other Guglielmo distributors</strong> (from caffeguglielmoshop.it/guglielmo-nel-mondo)</p>
+<ul>
+<li>Portugal, UK, Belgium, Poland, Czech Republic, Switzerland (two), Austria, Denmark, USA, South Korea, Canada, France and Germany (three).</li>
+<li><strong>caffeguglielmo.cz.</strong> Shoptet store with star ratings, a free-shipping threshold, "80 years of roasting", "first in Italy to join Beyond Fair Trade" and gift sets. Headline: "Looking for coffee for home or office?"</li>
+<li><strong>orizontline.ch.</strong> Vending and OCS, rental, water systems, repair centre, showroom, plus an online "Stato della riparazione" repair-status lookup.</li>
+<li><strong>mini-italia.ca.</strong> Montreal food importer; Guglielmo is not featured.</li>
+<li><strong>caffeguglielmouk.com.</strong> Does not resolve.</li>
+<li><strong>Parent shop caffeguglielmoshop.it.</strong> Menu by capsule system (ESE 44 mm, Espresso Point, Nespresso, A Modo Mio, Dolce Gusto), Fidelity Card points, "Il Pacco da giù" care package, an ISO 9001 certificate PDF, and an EN toggle.</li>
+</ul>
+<p><strong>Northeast importers we could not load.</strong></p>
+<ul>
+<li><strong>Ammirati Coffee</strong> (Pelham NY). illy's NY-metro distributor (2021 press release on illy.com) and Trucillo importer for NY/NJ/CT. Sells La Cimbali and super-automatic machines, maintenance and tech support. Its website did not resolve.</li>
+<li><strong>Miscela d'Oro USA</strong> (misceladorousa.com). Official US importer of the Messina roaster. Behind a Cloudflare challenge; per Trustpilot, 4.5 stars from 15 reviews.</li>
+</ul>
+<h3 id="37-dtc-best-in-class">3.7 DTC best-in-class</h3>
+<p><strong>Trade Coffee</strong> (https://www.drinktrade.com/)</p>
+<ul>
+<li><strong>Nav.</strong> Build my trial | Shop (Coffee, Equipment, Rare, Gifts, Redeem, Corporate Gifting) | Our Story / Roasters | Learn | Subscribe.</li>
+<li><strong>Homepage.</strong> "Take our quiz – about 2 min" or "Already know what you love?" → Discovery Trial ("3 bags, 3 roasters, first bag free, free shipping, cancel anytime") → how matching works → roasters → "435,000+ coffee drinkers".</li>
+<li><strong>Quiz.</strong> Brew method, milk/sugar, roast, flavour. Results map onto Trade's own "Trade Roast Level", and post-delivery ratings refine the next coffee.</li>
+<li><strong>Other.</strong> Trade Credit, Refer a Friend. Afterpay, Klarna, Okendo/Yotpo. GT Alpina serif and coral (#f45048).</li>
+</ul>
+<p><strong>Counter Culture</strong> (https://counterculturecoffee.com/)</p>
+<ul>
+<li><strong>Nav.</strong> Find your Fave (quiz) | Shop (build-your-own bundle, bundle sets, gifts) | Subscribe ("save up to 30%", office subscriptions, gift subscriptions) | Learn (Training Centers, Transparency Report, Brew Guides, Classes, Events) | Wholesale (Wholesale Login, Become a Partner, Store Locator, Maintenance Requests).</li>
+<li><strong>Tech Request</strong> (/pages/tech-service) triages "I'm a CCC Cafe Partner / I'm a Business (Non-Partner) / I make coffee at home". Partners get installation, calibration, scheduled PM and same-day emergency service.</li>
+<li><strong>Partner page.</strong> Account managers, equipment and bar-design consultation, tech services, training (Counter Intelligence Online and certification), with a testimonial in each block.</li>
+<li><strong>Other.</strong> Free shipping $30+, Bazaarvoice reviews, Founders Grotesk with bold orange/periwinkle/cobalt colour blocks.</li>
+</ul>
+<p><strong>Stumptown</strong> (https://www.stumptowncoffee.com/)</p>
+<ul>
+<li><strong>Nav.</strong> Coffee Quiz (first item) | Shop | Subscribe | Brew Guides | Locations | Wholesale ("Serve Stumptown").</li>
+<li><strong>Homepage.</strong> Campaign hero → Product Finder → merch → featured coffee → product grid.</li>
+<li><strong>Wholesale page.</strong> Segments (Cafes &amp; Restaurants, Office, Hospitality, Grocery, Retail &amp; Events) → Proud Partners stories → testimonials → benefits (training incl. on-demand videos and train-the-trainer; growth "from 1 location to 30+"; consultation on design, bar flow and equipment; menu development; POS, signage, sleeves, digital assets) → contact.</li>
+<li><strong>Other.</strong> Cart says "You are $45 away from free shipping!" and offers a 'Select a nonprofit' option. Visual is vintage Americana: SC Laurell and Windsor, warm off-white with gold.</li>
+</ul>
+<p><strong>Partners Coffee</strong> (https://www.partnerscoffee.com/)</p>
+<ul>
+<li><strong>Menu.</strong> Our Lineup | Company (About, Reviews, FAQ) | Wholesale (Learn &amp; Apply, Office Coffee, Log In to wholesale.partnerscoffee.com) | Education (Brew School, Brew Guides, Blog) | Cafes &amp; Retailers (Find Us, Catering) | Quiz.</li>
+<li><strong>Office program.</strong> Apply → wholesale pricing, free shipping and an "Office Coffee ordering portal".</li>
+<li><strong>Wholesale.</strong> Account managers, in-house techs (pre-install, install, preventive maintenance, early and late availability, discounted service rates for partners), own delivery fleet, education, cross-promotion.</li>
+<li><strong>Other.</strong> 6,100+ Okendo reviews, Affirm, Shop Pay.</li>
+</ul>
+<p><strong>La Colombe</strong> (https://www.lacolombe.com/)</p>
+<ul>
+<li><strong>Nav.</strong> Roasted Coffee (Bundle &amp; Save, Subscriptions, Member Pricing, Bulk Coffee) | Draft Latte | Cold Brew | Ready to Drink | Gifts &amp; Sets | Membership | Cafés.</li>
+<li><strong>Membership.</strong> Paid, $44 a year: free shipping with no minimum, 15% member pricing and cashback credits, 20% welcome discount, auto-renew.</li>
+<li><strong>Visual.</strong> Navy (#0f223e) with light blue and cream; script plus grotesk type.</li>
+</ul>
+<p><strong>Blue Bottle</strong> (blocked; from official FAQ snippets). Subscriptions can be changed, paused or cancelled anytime. Customers get an email before each shipment so they can skip. Subscription shipping is free, and multi-bag orders are up to 17% off.</p>
+<hr />
+<h2 id="4-feature-matrix">4. Feature matrix</h2>
+<p>Legend: ✓ = present and well executed · ◐ = partial, weak or only on a sister site · ✗ = absent. Cells are based on the pages fetched on 12 Oct 2026. Nespresso subscription and PDP details are partly from search (client-rendered site). For Lavazza, B2B cells include Lavazza Professional UK. For Kimbo, cells include Kimbo UK.</p>
+<p>Column key: <strong>LAV</strong> = Lavazza US; <strong>ILLY</strong> = illy US; <strong>SEG</strong> = Segafredo US; <strong>NES</strong> = Nespresso US; <strong>BOR</strong> = Caffè Borbone; <strong>KIM</strong> = Kimbo; <strong>VER</strong> = Caffè Vergnano; <strong>FAE</strong> = Faema Canada; <strong>WLL</strong> = Whole Latte Love; <strong>SCG</strong> = Seattle Coffee Gear; <strong>CHR</strong> = Chris' Coffee; <strong>WUP</strong> = Wake Up Espresso (AT); <strong>TRD</strong> = Trade Coffee; <strong>CCC</strong> = Counter Culture; <strong>STU</strong> = Stumptown; <strong>PAR</strong> = Partners Coffee; <strong>LAC</strong> = La Colombe; <strong>GUG</strong> = Guglielmo USA today</p>
+<p><strong>Shop &amp; Product</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shop by format (beans / ground / capsules / pods)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+</tr>
+<tr>
+<td>Shop/filter by machine system or compatibility</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>One consistent intensity or roast scale on cards + PDP</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Tasting notes / flavor profile on PDP</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Blend composition + origin on PDP</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Brew / preparation guidance on PDP (text or video)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Faceted PLP filters (intensity, roast, notes, size...)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Product ratings &amp; reviews on PDP</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Visible case / bulk / quantity-tier pricing</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Bundles, tasting kits or build-a-box</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Coffee quiz / product finder</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Subscription &amp; Loyalty</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subscribe &amp; save on PDP</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Self-serve flexibility (frequency, skip, pause, cancel)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Machine + coffee bundle or machine-and-capsule plan</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Loyalty points / rewards</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Referral program</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Gift cards / gift subscriptions / corporate gifting</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>B2B / Trade</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Home vs Business split visible in header</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Segment landing pages (cafe, restaurant, office, hotel)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+</tr>
+<tr>
+<td>Solution finder / short qualifying multi-step lead form</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Trade login + online reorder portal</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>B2B proof: case studies, client logos, partner quotes</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Training / academy for business customers</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>POS / marketing / merchandising support for partners</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Franchise or branded-cafe program page</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Equipment &amp; Service</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Equipment catalog with transparent prices (or clear quote CTA)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Commercial lease / rental / financing program</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Consumer financing (Affirm / Klarna / Afterpay)</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Online service / repair request (ticket, RMA)</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Preventive-maintenance or managed-service plans</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Machine registration, manuals, tutorials, parts</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Water filtration / treatment offer</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Refurbished / open-box / take-back / recycling</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Locator &amp; Community</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Store / cafe / stockist locator</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Physical showroom, training center or flagship</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Classes, events or livestreams</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Content &amp; Brand</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deep brand / origin / founder story</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Recipes &amp; brew-guide library</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Sustainability / certifications page</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Video content (how-to, brand film)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Editorial blog / magazine</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Conversion &amp; Trust</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Free-shipping threshold shown (ideally cart progress bar)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Express wallets (Apple Pay / Shop Pay / Google Pay)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Phone / chat / human help visible</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Trust proof (heritage, certifications, counters, review counts)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+</tr>
+<tr>
+<td>Email capture with first-order incentive</td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Technical / SEO</strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Homepage meta description</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Open Graph tags</td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Structured data (Organization / Product / LocalBusiness)</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Accessibility statement / alt-text hygiene</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Modern commerce stack (Shopify, SFCC, AEM or equivalent) and lean front end</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+<tr>
+<td>Localization (languages, regions, currency) done right</td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="yes" aria-label="yes">✓</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="part" aria-label="partial">◐</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+<td style="text-align: center;"><span class="no" aria-label="no">✗</span></td>
+</tr>
+</tbody>
+</table></div>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Site</th>
+<th style="text-align: center;">LAV</th>
+<th style="text-align: center;">ILLY</th>
+<th style="text-align: center;">SEG</th>
+<th style="text-align: center;">NES</th>
+<th style="text-align: center;">BOR</th>
+<th style="text-align: center;">KIM</th>
+<th style="text-align: center;">VER</th>
+<th style="text-align: center;">FAE</th>
+<th style="text-align: center;">WLL</th>
+<th style="text-align: center;">SCG</th>
+<th style="text-align: center;">CHR</th>
+<th style="text-align: center;">WUP</th>
+<th style="text-align: center;">TRD</th>
+<th style="text-align: center;">CCC</th>
+<th style="text-align: center;">STU</th>
+<th style="text-align: center;">PAR</th>
+<th style="text-align: center;">LAC</th>
+<th style="text-align: center;">GUG</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coverage score (✓=1, ◐=0.5) of 52</td>
+<td style="text-align: center;">41</td>
+<td style="text-align: center;">43</td>
+<td style="text-align: center;">25.5</td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">27</td>
+<td style="text-align: center;">27.5</td>
+<td style="text-align: center;">25.5</td>
+<td style="text-align: center;">34</td>
+<td style="text-align: center;">34.5</td>
+<td style="text-align: center;">39.5</td>
+<td style="text-align: center;">34</td>
+<td style="text-align: center;">32.5</td>
+<td style="text-align: center;">30</td>
+<td style="text-align: center;">36.5</td>
+<td style="text-align: center;">35</td>
+<td style="text-align: center;">37</td>
+<td style="text-align: center;">30</td>
+<td style="text-align: center;">11.5</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="5-ux-patterns-worth-stealing">5. UX patterns worth stealing</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Pattern</th>
+<th>Who does it best</th>
+<th>Why it works</th>
+<th>Apply at Guglielmo USA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Header audience switch (Home / Business) that swaps the whole nav</td>
+<td>Lavazza US</td>
+<td>One domain, two clear journeys; B2B is never more than 1 click away</td>
+<td>"For Home / For Business" pill in the utility bar; each mode has its own top nav and CTA</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Coffee menu organised by machine system</td>
+<td>Caffè Borbone; Kimbo; parent caffeguglielmoshop.it</td>
+<td>Shoppers think "what fits my machine", not "which blend"</td>
+<td>"Shop by your machine": pick system (36 mm capsule, 38 mm pod, ESE 44 mm, Nespresso-compatible, espresso machine, moka, drip) → filtered grid</td>
+</tr>
+<tr>
+<td>3</td>
+<td>"Suitable For" plus three icon facts on every card and PDP</td>
+<td>illy</td>
+<td>Removes compatibility doubt at a glance</td>
+<td>Icon row: Format · Fits · Intensity</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Intensity buckets as filter chips (Soft / Medium / Strong)</td>
+<td>illy</td>
+<td>Easier than a 1–13 slider; keeps facets short</td>
+<td>Mild 1–4 / Balanced 5–7 / Bold 8–10 on a single 1–10 scale</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Quiz tile embedded in the product grid</td>
+<td>Lavazza ("Find your coffee match", PLAY)</td>
+<td>Catches undecided browsers in context</td>
+<td>5-question "Trova il tuo caffè" quiz tile in the coffee grid</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Quiz → curated trial</td>
+<td>Trade (2-min quiz → 3-bag Discovery Trial, first bag free)</td>
+<td>Converts a quiz into a low-risk first order</td>
+<td>Quiz result offers a "Calabria Tasting Kit" plus subscribe toggle</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Points earned shown on PDP</td>
+<td>illy (+305 hearts), Lavazza ("Earns 25")</td>
+<td>Makes loyalty concrete at the moment of decision</td>
+<td>Phase 3 points line under price</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Subscription on PDP with packs and frequency selector</td>
+<td>illy</td>
+<td>Same page, no separate funnel</td>
+<td>Toggle "One-time / Subscribe &amp; save X%", frequency 2/4/6/8 weeks</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Machine + capsules plan</td>
+<td>Lavazza My Way (machine up to $130 off + 25% capsules)</td>
+<td>Machine at a discount, recurring capsule revenue</td>
+<td>Discounted capsule machine (Espresso Plus VAP, Tube) with a 6-month capsule subscription</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Visible quantity-tier messaging</td>
+<td>Borbone ("more you buy, more you save", up to 20%); Wake Up (5+1 kg)</td>
+<td>Turns bulk pricing into a reason to buy</td>
+<td>Tier table on PDP: 6 / 12 / 18 units with per-unit price</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Four-step B2B solution finder</td>
+<td>Lavazza Professional UK</td>
+<td>Qualifies leads in under a minute; reads like help, not a form</td>
+<td>Venue → cups/day → needs (coffee, machine, service, water, training) → contact</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Lease / rent-to-own calculator with emailable estimate</td>
+<td>Faema Canada (Econolease)</td>
+<td>Converts "call for price" into a monthly number; captures lead email</td>
+<td>Calculator on WEGA/BFC/Rocket pages and a Lease page</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Beans-vs-capsules cost calculator with business presets</td>
+<td>Faema Canada</td>
+<td>Quantifies the office pitch</td>
+<td>"What does office coffee cost per cup?" tool → proposal CTA</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Tech-request triage by customer type</td>
+<td>Counter Culture</td>
+<td>Routes partners to priority service, prospects to sales, consumers to support</td>
+<td>Service form: Partner / Business / Home → machine, serial, photos, urgency</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Wholesale page as a proof stack (segments → partner stories → benefits → contact)</td>
+<td>Stumptown; Partners</td>
+<td>Answers "what do I get" before asking for details</td>
+<td>Segments → Boston partner stories → pillars (coffee, equipment, service, water, training, POS) → finder</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Trade portal with PO number and reorder</td>
+<td>Segafredo contracted wholesale; Nespresso Pro EasyOrder</td>
+<td>Cuts phone and email order handling</td>
+<td>Phase 2 trade login with saved orders and PO field</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Founder-led expertise and onboarding</td>
+<td>Wake Up (machine tested, grinder pre-dialled, WhatsApp onboarding)</td>
+<td>Turns the importer's know-how into a feature</td>
+<td>"Set up by our techs" plus a 15-min video onboarding for every machine</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Free-shipping progress bar in cart</td>
+<td>Stumptown ("$45 away"); Seattle Coffee Gear</td>
+<td>Lifts average order value with zero friction</td>
+<td>Threshold message in mini-cart and on PDP</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Locator with filters by type and radius</td>
+<td>illy (illy Caffès / illy Shop); Vergnano (radius)</td>
+<td>Proves local presence; drives foot traffic for partners</td>
+<td>"Find Guglielmo": Cafés &amp; restaurants / Retailers / Distributors</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Perfect-serve kit</td>
+<td>Vergnano (cup, spoon, Caffeino water glass)</td>
+<td>Brand visibility in venues; justifies premium</td>
+<td>Partner kit using the existing Guglielmo cups and Caffeino glass</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="6-anti-patterns-to-avoid">6. Anti-patterns to avoid</h2>
+<ol>
+<li><strong>Inconsistent product scales.</strong> Lavazza shows 3/5, 5/10 and 7/13 on one homepage. Define one scale and use it everywhere.</li>
+<li><strong>Locale leakage.</strong> Borbone's en-us store prices in USD under an Italian free-shipping banner. Vergnano's EN pages show Italian strings and caffevergnano.us puts raw PHP in its title. Danesi's /en goes to an Italian blog post. Never let parent-site copy or untranslated strings leak into the US site.</li>
+<li><strong>Test or admin artefacts in production.</strong> Kimbo's "test-collezione" URL, Lavazza's <code>{multipleValueDisclaimer}</code> token in the markup, and Guglielmo's own "Order Adjustment" SKU and raw shortcodes. Add a pre-launch QA checklist.</li>
+<li><strong>"Call for price" and $0 machines.</strong> Faema and Chris' show a price, a monthly figure or a "Request quote" flow instead.</li>
+<li><strong>Long, unqualified B2B forms and gated brochures behind three consent boxes</strong> (Vergnano). Keep the first step short and progressive, and gate only high-value assets.</li>
+<li><strong>mailto-based service requests</strong> (Faema). Requests aren't tracked and photos and serials get lost. Use a real form feeding a ticket inbox.</li>
+<li><strong>Contradictory heritage claims.</strong> Chris' Coffee says "over 45" and "over 50 years" on one page. Guglielmo says 60 vs 70 years, and 7 vs 8 blends. Keep one source of truth for facts (founded 1943; L'Espresso USA since 2000).</li>
+<li><strong>Brochure-only distributor microsites</strong> (Vergnano Canada and UAE). They have no products, prices or path to buy. Distributors need commerce or at least "where to buy".</li>
+<li><strong>Client-rendered everything</strong> (Nespresso, parts of illy). Server-render product and category content for SEO and robustness.</li>
+<li><strong>Promo stacking</strong> (Lavazza: code, plus tiered dollars off, plus subscription percent). Choose one primary offer per season.</li>
+<li><strong>Catalog sprawl in the mega-menu.</strong> Faema mixes pizza ovens and gelato into coffee navigation; Whole Latte Love's mega-menu has 60+ links. Guglielmo should keep Brasilena, candy and cups in a "Gifts &amp; Italian pantry" group, not in the coffee tree.</li>
+<li><strong>Fragmented B2B domains without a bridge</strong> (Segafredo runs three Shopify stores). If a trade portal is separate, link it from the header and footer of the main site.</li>
+<li><strong>Over-showing out-of-stock items.</strong> Instead of 40 of 87 SKUs dead-ending, hide them from listings or show them with "Notify me" (Lavazza, illy).</li>
+</ol>
+<hr />
+<h2 id="7-recommended-feature-set-for-guglielmo-usa">7. Recommended feature set for Guglielmo USA</h2>
+<h3 id="must-have-launch">Must-have (launch)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Rationale</th>
+<th>Benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Home / Business switch in header with two parallel nav trees</td>
+<td>Serves both audiences; ends B2B being buried under "Join Us"</td>
+<td>Lavazza US; Faema Canada; Nespresso</td>
+</tr>
+<tr>
+<td>"Shop by your machine" selector + compatibility badge on every SKU</td>
+<td>36 mm capsules, 38 mm pods and 44 mm ESE pods make compatibility the #1 question</td>
+<td>Borbone; illy "Suitable For"; Kimbo</td>
+</tr>
+<tr>
+<td>Standard coffee PDP (1–10 intensity, roast, notes, Arabica/Robusta %, origin, brew methods, cost per cup)</td>
+<td>Blends currently get 1–2 sentences and no intensity</td>
+<td>illy; Lavazza; Segafredo</td>
+</tr>
+<tr>
+<td>Faceted listing filters (format, system, intensity, roast, decaf, size, home/office/bar)</td>
+<td>87 SKUs across several pod formats need filters</td>
+<td>Lavazza 9 facets; illy; Seattle Coffee Gear</td>
+</tr>
+<tr>
+<td>Subscribe &amp; Save on PDP with self-serve skip, pause and cancel</td>
+<td>No subscription today on a repeat-purchase category</td>
+<td>illy 20%; Lavazza 25%; Wake Up</td>
+</tr>
+<tr>
+<td>Visible volume-tier table (6/12/18, case packs)</td>
+<td>Makes the hidden 5–8% plugin discount persuasive</td>
+<td>Borbone; illy Case Packs; Wake Up 5+1</td>
+</tr>
+<tr>
+<td>Reviews + star ratings + review schema</td>
+<td>Zero reviews; every benchmark has social proof</td>
+<td>Segafredo (Judge.me); Partners (Okendo)</td>
+</tr>
+<tr>
+<td>Catalog hygiene: remove "Order Adjustment", back-in-stock alerts, "Request a quote" instead of $0</td>
+<td>About 40/87 out of stock, $0 machines</td>
+<td>Lavazza / illy "Notify me"; Faema; Chris' Coffee</td>
+</tr>
+<tr>
+<td>B2B solution finder (4 steps) replacing the long form</td>
+<td>Better lead quality and conversion</td>
+<td>Lavazza Professional UK; Chris' Coffee</td>
+</tr>
+<tr>
+<td>"Book a tasting / consultation" CTA on all business pages</td>
+<td>An importer's strongest hook is tasting on the client's own machine</td>
+<td>Vergnano; Seattle Coffee Gear; Stumptown</td>
+</tr>
+<tr>
+<td>Service request form with triage, serial and photos</td>
+<td>On-site service has no online entry point</td>
+<td>Counter Culture; Whole Latte Love; Chris' Coffee</td>
+</tr>
+<tr>
+<td>"Find Guglielmo" map (venues, retailers, distributors)</td>
+<td>Replaces the text list and 3-pin locator</td>
+<td>illy locator; Vergnano finder</td>
+</tr>
+<tr>
+<td>Real brand story (Calabria 1943, Copanello, L'Espresso USA 2000, Mimmo Elia) with consistent facts</td>
+<td>44-word page and conflicting claims</td>
+<td>illy; Wake Up; Chris' Coffee</td>
+</tr>
+<tr>
+<td>Contact and trust essentials (phone, verified address, hours, ISO 9001, certifications)</td>
+<td>Contact page has no phone or address</td>
+<td>Faema; Danesi phone block</td>
+</tr>
+<tr>
+<td>Apple Pay / Google Pay / PayPal + free-shipping progress bar</td>
+<td>Only PayPal plus card today</td>
+<td>Stumptown; Seattle Coffee Gear; Segafredo</td>
+</tr>
+<tr>
+<td>SEO baseline (meta, OG, Product/Organization/LocalBusiness schema, alt text, performance budget)</td>
+<td>None present; about 101 assets per page</td>
+<td>Faema; Segafredo</td>
+</tr>
+<tr>
+<td>Working newsletter with first-order incentive; remove broken shortcode pages</td>
+<td>Newsletter and referral pages are broken</td>
+<td>Chris' Coffee 10%; illy 20%</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="should-have-phase-2">Should-have (phase 2)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Rationale</th>
+<th>Benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coffee finder quiz ending in a subscribe CTA</td>
+<td>Guides newcomers through 7–8 blends and 4 formats</td>
+<td>Lavazza; Trade; Kimbo "Che caffè sei?"</td>
+</tr>
+<tr>
+<td>Machine + capsule starter bundles / machine-with-subscription</td>
+<td>Locks in capsule revenue per machine sold</td>
+<td>Lavazza My Way; Whole Latte Love Better Together; Wake Up</td>
+</tr>
+<tr>
+<td>Tasting / discovery kit</td>
+<td>Low-risk first order for homes and offices</td>
+<td>Kimbo Kit degustazione; Trade; Wake Up Probiersets</td>
+</tr>
+<tr>
+<td>Trade portal (login, reorder, saved orders, PO, account pricing, invoices)</td>
+<td>Cuts manual order handling for repeat wholesale</td>
+<td>Segafredo; Nespresso Pro EasyOrder; Partners</td>
+</tr>
+<tr>
+<td>Lease / rent-to-own page with calculator + Affirm/Klarna for Rocket</td>
+<td>Replaces "call for price" with a monthly number</td>
+<td>Faema Econolease; Chris' Coffee; Seattle Coffee Gear</td>
+</tr>
+<tr>
+<td>Service plans page (PM tiers, response time, coverage map, water treatment)</td>
+<td>Productizes service and water treatment</td>
+<td>Counter Culture; Chris' Coffee; Partners</td>
+</tr>
+<tr>
+<td>Segment pages with case studies, client logos, partner quotes</td>
+<td>Turns the restaurant list into B2B proof</td>
+<td>Stumptown; Faema; Lavazza Food Service Stories</td>
+</tr>
+<tr>
+<td>Guglielmo Point franchise landing page (concept, formats, support, investment range, steps, brochure, map)</td>
+<td>A bare long form offers nothing to evaluate</td>
+<td>Vergnano 1882; illy franchise page</td>
+</tr>
+<tr>
+<td>"Become a distributor / retailer" page with territory map</td>
+<td>Only 3 distributors today</td>
+<td>Vergnano distributor page; Guglielmo nel mondo</td>
+</tr>
+<tr>
+<td>Brew guides and recipes hub (incl. Brasilena mocktails, affogato)</td>
+<td>SEO plus product education per format</td>
+<td>illy Recipe Guide; Segafredo Brewing Manual</td>
+</tr>
+<tr>
+<td>Machine support hub (manuals, descaling videos, parts, registration)</td>
+<td>Fewer support calls; sells Puly cleaners and gaskets</td>
+<td>illy; Nespresso; Whole Latte Love</td>
+</tr>
+<tr>
+<td>Office beans-vs-capsules cost calculator</td>
+<td>Quantifies the office pitch and captures leads</td>
+<td>Faema; Lavazza Pro calculator</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="could-have-phase-3">Could-have (phase 3)</h3>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Rationale</th>
+<th>Benchmark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Loyalty points shown on PDP, 2x on subscriptions</td>
+<td>Rewards repeat buyers; mirrors the parent's Fidelity Card</td>
+<td>illy Lovers; My Lavazza; caffeguglielmoshop.it</td>
+</tr>
+<tr>
+<td>Referral program</td>
+<td>Word of mouth drives Italian-American communities</td>
+<td>illy; Nespresso; Trade</td>
+</tr>
+<tr>
+<td>Bookable barista training and classes</td>
+<td>Raises drink quality at partners; builds community</td>
+<td>Kimbo UK; Counter Culture; Wake Up</td>
+</tr>
+<tr>
+<td>Capsule recycling / machine take-back</td>
+<td>Answers the capsule-waste objection</td>
+<td>Nespresso; illy</td>
+</tr>
+<tr>
+<td>Gift cards, gift subscriptions, corporate gifting</td>
+<td>Capsules, cups and sweets are strong gifts</td>
+<td>Nespresso; Trade; Counter Culture</td>
+</tr>
+<tr>
+<td>Italian-American care package ("Il Pacco da giù" spirit)</td>
+<td>Distinctive, brand-owned gift</td>
+<td>caffeguglielmoshop.it</td>
+</tr>
+<tr>
+<td>Video / WhatsApp onboarding and virtual demo for machine buyers</td>
+<td>Brings importer expertise online</td>
+<td>Wake Up; Whole Latte Love CoffeeCast</td>
+</tr>
+<tr>
+<td>Repair status lookup</td>
+<td>Fewer "where's my machine" calls</td>
+<td>Orizont Line</td>
+</tr>
+<tr>
+<td>Refurbished / open-box machines</td>
+<td>Entry price point; monetizes trade-ins</td>
+<td>Chris' Coffee; Seattle Coffee Gear; Faema</td>
+</tr>
+<tr>
+<td>Perfect-serve partner kit (cup, spoon, Caffeino glass, POS)</td>
+<td>Brand visibility in venues</td>
+<td>Vergnano; Stumptown POS kit</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="8-recommended-information-architecture-combined-consumer-business-importer">8. Recommended information architecture (combined consumer + business importer)</h2>
+<h3 id="81-global-header">8.1 Global header</h3>
+<ul>
+<li><strong>Utility bar:</strong> For Home | For Business (switch, remembered per visitor) · Find Guglielmo · Trade Login · phone (617) · Free shipping over $X</li>
+<li><strong>Main bar:</strong> Logo · mode-specific top nav (below) · Search · Account · Cart</li>
+<li><strong>Persistent CTA:</strong> Home mode "Subscribe &amp; Save"; Business mode "Book a Tasting"</li>
+</ul>
+<h3 id="82-top-nav-home-mode">8.2 Top nav, Home mode</h3>
+<ol>
+<li><strong>Coffee</strong>
+   - Shop by machine: Guglielmo capsule machines (36 mm), pod machines (38 mm), ESE 44 mm pods, Nespresso-compatible (if sold), espresso machine, moka, drip
+   - By format: Whole Bean · Ground · Capsules · ESE &amp; Pods · Drip (American) · Decaf &amp; Organic
+   - By blend: Extra Bar · 5 Stelle · Espresso Bar · Espresso Classico · Caffetteria · Copacabana · Club 99 · Oro / Rosso / DEK 70 capsules
+   - Tasting Kit · Best Sellers · Coffee Finder (quiz)</li>
+<li><strong>Machines</strong>
+   - Capsule &amp; Pod Machines (by system)
+   - Home Espresso (Rocket)
+   - Grinders
+   - Machine + Coffee Bundles
+   - Care &amp; Cleaning (Puly, water softener, gaskets)
+   - "Commercial machines →" (switches to Business)</li>
+<li><strong>Subscribe</strong>
+   - How it works · Coffee subscription · Machine + capsule plan · Manage my subscription</li>
+<li><strong>Gifts &amp; Italian Pantry</strong>
+   - Cups &amp; Caffeino glass · Brasilena · Espresso candy · Gift sets · Gift cards (phase 3)</li>
+<li><strong>Learn</strong>
+   - Our Story (Calabria 1943 → Boston 2000) · Our Blends &amp; Intensity Guide · Brew Guides · Recipes · Machine Support (manuals, descaling, registration) · Journal</li>
+<li><strong>Find Guglielmo</strong>
+   - Cafés &amp; Restaurants map · Retailers · Distributors</li>
+</ol>
+<h3 id="83-top-nav-business-mode">8.3 Top nav, Business mode</h3>
+<ol>
+<li><strong>Solutions</strong>
+   - Cafés &amp; Espresso Bars · Restaurants &amp; Pizzerias · Offices (OCS) · Hotels &amp; Catering · Retail &amp; Grocery</li>
+<li><strong>Coffee Program</strong>
+   - Wholesale blends &amp; formats · Request a tasting · Perfect serve &amp; POS kit · Training</li>
+<li><strong>Equipment</strong>
+   - Commercial espresso (WEGA, BFC) · Office capsule systems (Multi Cap, Double Cap, Maxi Cap) · Grinders · Water treatment · Lease &amp; Financing (calculator)</li>
+<li><strong>Service &amp; Support</strong>
+   - Request service · Maintenance plans · Coverage area · Manuals &amp; parts · Repair status (phase 3)</li>
+<li><strong>Partner With Us</strong>
+   - Guglielmo Point franchise · Become a distributor / retailer · Case studies</li>
+<li><strong>CTAs:</strong> Trade Login / Reorder · primary button "Get a Proposal" (opens the solution finder)</li>
+</ol>
+<h3 id="84-footer">8.4 Footer</h3>
+<ul>
+<li><strong>Shop:</strong> Coffee · Machines · Subscribe · Gifts · Tasting Kit · Gift Cards</li>
+<li><strong>Business:</strong> Solutions · Equipment · Lease &amp; Financing · Service Plans · Franchise · Become a Distributor · Trade Login</li>
+<li><strong>Support:</strong> Contact · Shipping &amp; Returns · Subscription FAQ · Machine Support · Request Service · Order Status</li>
+<li><strong>Company:</strong> Our Story · Guglielmo in Italy (parent link) · Find Guglielmo · Press / The Buzz · Careers</li>
+<li><strong>Contact block (NAP):</strong> verified address · phone · email · hours · Google Map link</li>
+<li><strong>Trust row:</strong> founded 1943 · ISO 9001 (parent) · certifications · payment icons (Apple Pay, Google Pay, PayPal, cards)</li>
+<li><strong>Other:</strong> newsletter with incentive · social · legal (Terms, Privacy, Subscription Terms, Accessibility Statement)</li>
+</ul>
+<h3 id="85-key-flows-to-design">8.5 Key flows to design</h3>
+<ol>
+<li><strong>Consumer coffee purchase:</strong> Shop by machine → filtered listing → PDP with "Fits your machine" confirmation → One-time / Subscribe → cart with free-shipping bar → wallet checkout.</li>
+<li><strong>Subscription:</strong> PDP toggle or quiz result → frequency → account "Manage subscription" (skip, pause, swap blend, change date, cancel).</li>
+<li><strong>B2B lead:</strong> Business mode → Solution page → "Get a Proposal" finder (venue → cups/day → needs → contact) → confirmation with "Book a tasting" calendar → CRM routing.</li>
+<li><strong>Service request:</strong> Service &amp; Support → triage (Partner / Business / Home) → machine, serial, photos, urgency → ticket number → (phase 3) status lookup.</li>
+<li><strong>Franchise and distributor:</strong> landing page → brochure or download → short application → call booking.</li>
+<li><strong>Trade reorder (phase 2):</strong> Login → last orders → reorder with PO number → net-terms checkout.</li>
+</ol>
+<hr />
+<h2 id="9-sources-primary-urls-fetched">9. Sources (primary URLs fetched)</h2>
+<ul>
+<li>Lavazza: https://www.lavazzausa.com/en · https://www.lavazzausa.com/en/business · https://www.lavazzausa.com/en/my-way-coffee-subscription · https://www.lavazzausa.com/en/whole-bean-coffee · https://www.lavazzausa.com/en/whole-bean-coffee/espresso-barista-gran-crema · https://www.lavazzapro.co.uk/ · https://flavia.com/</li>
+<li>illy: https://www.illy.com/en-us · https://www.illy.com/en-us/coffee/whole-bean-coffee · https://www.illy.com/en-us/coffee/whole-bean-coffee/whole-bean-classico-coffee-medium-roast-500g/I0003859ST.html · https://www.illy.com/en-us/coffee-delivery/coffee-subscription-home · https://www.illy.com/en-us/professional-partners · https://www.illy.com/en-us/storesfind · https://www.illy.com/en-us/company/store-events/press/press-releases/illy-ammirati</li>
+<li>Segafredo: https://segafredocoffee.com/ · https://segafredocoffee.com/products/vivace-medium-roast · https://foodservice.segafredocoffee.com/ · https://wholesale.segafredocoffee.com/ · https://www.segafredo.it/en</li>
+<li>Nespresso: https://www.nespresso.com/us/en · https://www.nespresso.com/pro/us/en · https://www.contact.nespresso.com/faq/gb/en/detail/5787 (subscription model, UK)</li>
+<li>Italian roasters: https://www.caffeborbone.com/en-us · https://kimbo.it/ · https://www.kimbo.co.uk/ · https://www.caffevergnano.com/en/ · https://www.caffevergnano.com/en/business/cafes-and-restaurants/ · https://www.caffevergnano.com/en/business/why-choose-caffe-vergnano-1882/ · https://www.caffevergnano.us/ · https://www.caffevergnano.ca/ · https://www.caffevergnano.ae/ · https://www.saquella.it/en/ · https://danesicaffe.it/ · https://caffemauro.com/en/</li>
+<li>Distributors: https://faema.ca/ · https://faema.ca/pages/commercial-leasing · https://faema.ca/pages/cost-benefit-calculator · https://faema.ca/pages/service-centre · https://www.chriscoffee.com/ · https://www.chriscoffee.com/pages/local · https://www.chriscoffee.com/pages/repair-services · https://www.wholelattelove.com/ · https://www.seattlecoffeegear.com/ · https://www.1st-line.com/ · https://www.wakeup-espresso.com/ · https://www.caffeguglielmo.cz/ · https://www.orizontline.ch/ · https://www.mini-italia.ca/en · https://www.caffeguglielmoshop.it/ · https://www.caffeguglielmoshop.it/guglielmo-nel-mondo/</li>
+<li>DTC: https://www.drinktrade.com/ · https://www.drinktrade.com/blogs/education/coffee-quiz-answers-explained · https://counterculturecoffee.com/ · https://counterculturecoffee.com/pages/tech-service · https://counterculturecoffee.com/pages/partner-with-us · https://www.stumptowncoffee.com/ · https://www.stumptowncoffee.com/pages/wholesale · https://www.partnerscoffee.com/ · https://www.partnerscoffee.com/pages/wholesale · https://www.partnerscoffee.com/pages/office-coffee · https://www.lacolombe.com/ · https://www.lacolombe.com/pages/membership · https://www.bluebottlecoffee.com/us/eng/subscriptions (search snippet only)</li>
+</ul>
+  </article>
+</main>
+<footer class="foot"><div class="wrap"><span>Prepared for Guglielmo USA (L'Espresso USA) · October 2026</span><a href="../index.html">Back to the overview</a></div></footer>
+<script src="https://cdn.jsdelivr.net/npm/motion@12.23.24/dist/motion.js"></script>
+<script src="../assets/js/gusa-motion.js"></script>
+<script>GUSA.motion.init({ distance: 16 });</script>
+</body>
+</html>

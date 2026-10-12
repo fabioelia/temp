@@ -1,0 +1,2591 @@
+[
+  {
+    "file": "espresso-shot-double-pour-01.jpg",
+    "category": "espresso-shot",
+    "description": "Two shot glasses filling with amber-crema espresso from a double-spout portafilter on a commercial machine's steel drip tray; subject center, dark blurred machine body on the left and top-right leaves room for a darkened text overlay.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#171817",
+      "#3a2d24",
+      "#5f564d"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/espresso-cups-on-espresso-maker-BBFRIGifYQ8",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Kevin Butz (@kevin_butz) on Unsplash",
+    "source_id": "photo-1558416165-5fb04b79b0e7",
+    "bytes": 238072
+  },
+  {
+    "file": "espresso-shot-portafilter-pour-01.jpg",
+    "category": "espresso-shot",
+    "description": "Low-angle macro of a thick caramel-colored espresso stream falling from a chrome portafilter basket; pour sits in the right third, soft silver-grey bokeh fills the left half for headline text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2a2a24",
+      "#605846",
+      "#787667"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/latte-dripping-from-a-coffee-machine-gM-RfQsZK98",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Blake Verdoorn (@blakeverdoorn) on Unsplash",
+    "source_id": "photo-1432107294469-414527cb5c65",
+    "bytes": 165525
+  },
+  {
+    "file": "espresso-shot-topdown-stone-01.jpg",
+    "category": "espresso-shot",
+    "description": "Top-down view of a white espresso cup with tight golden crema on a dark slate surface; cup left of center, large clean dark area on the right for copy.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#393933",
+      "#24251f",
+      "#2e2e29"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-mug-fill-with-coffee-IE-gdqEg45M",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Matt Hoffman (@__matthoffman__) on Unsplash",
+    "source_id": "photo-1510591509098-f4fdc6d0ff04",
+    "bytes": 182900
+  },
+  {
+    "file": "espresso-shot-barista-glass-01.jpg",
+    "category": "espresso-shot",
+    "description": "Low-light bar scene: espresso streams into a small glass on the machine while a barista's hands work behind; moody near-black frame with negative space bottom-left and right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1186,
+    "tone": "dark",
+    "dominant_colors": [
+      "#13140f",
+      "#1b1611",
+      "#3c2922"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/close-up-photography-of-filling-clear-drinking-glass-with-dispenser-klub_Ke-268",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Jason Betz (@jason_betz) on Unsplash",
+    "source_id": "photo-1496582490020-60c1344c64aa",
+    "bytes": 121606
+  },
+  {
+    "file": "espresso-shot-naked-portafilter-01.jpg",
+    "category": "espresso-shot",
+    "description": "Bottomless portafilter extracting espresso into a white cup, shot from below a polished chrome machine against a bright white background; airy light image with open space top-left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1198,
+    "tone": "light",
+    "dominant_colors": [
+      "#534138",
+      "#beb5af",
+      "#d8dbda"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-in-clear-glass-mug-k-w7laFKa0g",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Charles Sims (@1charlessims) on Unsplash",
+    "source_id": "photo-1627902511858-6ad7e004fd35",
+    "bytes": 189668
+  },
+  {
+    "file": "espresso-shot-glass-saucer-light-01.jpg",
+    "category": "espresso-shot",
+    "description": "Layered espresso in a clear glass on a slate-blue saucer with a spoon, centered on a bright white tabletop; minimal and light with generous empty space on every side.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1030,
+    "tone": "light",
+    "dominant_colors": [
+      "#e6e5eb",
+      "#dbdbe1",
+      "#ecedf5"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/clear-glass-cup-on-saucer-xKS-1DP4g7A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Adi Goldstein (@adigold1) on Unsplash",
+    "source_id": "photo-1610889556528-9a770e32642f",
+    "bytes": 76869
+  },
+  {
+    "file": "espresso-shot-white-cup-light-01.jpg",
+    "category": "espresso-shot",
+    "description": "Single espresso in a white demitasse with a steel spoon on a white saucer, centered on a pale grey-white seamless background; minimalist, wide empty space all around.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "light",
+    "dominant_colors": [
+      "#e0e5e8",
+      "#dbe3e6",
+      "#dde5e7"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-teacup-on-saucer-l59fmhtprIE",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1508088405209-fbd63b6a4f50",
+    "bytes": 40764
+  },
+  {
+    "file": "espresso-shot-portafilter-closeup-01.jpg",
+    "category": "espresso-shot",
+    "description": "Vertical macro of espresso flowing from a dark portafilter into a cup, with a soft creamy out-of-focus foreground; subject in the upper half, blurred lower third.",
+    "orientation": "portrait",
+    "width": 934,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#010603",
+      "#7e6e56",
+      "#5a442b"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/espresso-pouring-from-portafilter-So7cyDtlmls",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1609050471053-8636409f9f5b",
+    "bytes": 95197
+  },
+  {
+    "file": "espresso-shot-drip-yellow-cup-01.jpg",
+    "category": "espresso-shot",
+    "description": "Vertical close-up of the last espresso drops falling from a chrome group head toward a yellow cup at the bottom edge; warm metallic tones, quieter blurred area mid-left.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#c0ae8c",
+      "#27211e",
+      "#503b2d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/espresso-dripping-from-metal-portafilter-RZJRWMnd0DM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Mohamed Shaffaf (@shaffuscanvas) on Unsplash",
+    "source_id": "photo-1616388761741-a5936c6f61f6",
+    "bytes": 124397
+  },
+  {
+    "file": "espresso-shot-wood-table-01.jpg",
+    "category": "espresso-shot",
+    "description": "Espresso in a short glass on a white saucer resting on a dark walnut bar top in warm side light; subject in the lower middle, dark empty upper half suits vertical text.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0d1013",
+      "#1f130c",
+      "#402815"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-cup-of-coffee-sitting-on-top-of-a-white-plate-3v0vppDjvMI",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Katt Galvan (@kattgalvan) on Unsplash",
+    "source_id": "photo-1705952285570-113e76f63fb0",
+    "bytes": 70046
+  },
+  {
+    "file": "espresso-shot-bottomless-topdown-01.jpg",
+    "category": "espresso-shot",
+    "description": "Overhead view into a bottomless portafilter as tiger-striped espresso converges into one golden stream; glossy, dark, centered composition.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#040302",
+      "#483322",
+      "#6f4c2c"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/clear-drinking-glass-with-brown-liquid-PrVcG2cXWao",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Patrick Untersee (@sparki) on Unsplash",
+    "source_id": "photo-1608397727084-c116c5e4e63e",
+    "bytes": 94101
+  },
+  {
+    "file": "espresso-shot-demitasse-dark-01.jpg",
+    "category": "espresso-shot",
+    "description": "Espresso in a white demitasse with a black spoon on a saucer, set high on a smooth olive-grey counter; muted tones with large empty space in the lower half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#393a2c",
+      "#292c22",
+      "#444233"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-cup-with-brown-liquid-dAYJfrtVjh0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1579992357154-faf4bde95b3d",
+    "bytes": 76889
+  },
+  {
+    "file": "cappuccino-latte-art-dark-01.jpg",
+    "category": "cappuccino",
+    "description": "Cappuccino with tulip latte art in a white cup and saucer, right of center on a dark speckled counter; deep dark negative space on the left and top for headline text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#030404",
+      "#353027",
+      "#5f4f3a"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/cup-of-coffee-on-saucer-ZLqxSzvVr7I",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Dani (@frokz) on Unsplash",
+    "source_id": "photo-1506372023823-741c83b836fe",
+    "bytes": 171286
+  },
+  {
+    "file": "cappuccino-pour-rosetta-01.jpg",
+    "category": "cappuccino",
+    "description": "Close-up of steamed milk pouring from a steel pitcher to finish a feathered rosetta in a white cup cradled in a barista's hand; dark background, subject fills center-right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#4e3f36",
+      "#0d0d0d",
+      "#2b2827"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/cappuccino-gURxlcD9I0U",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Armin Lotfi (@armin_lotfi) on Unsplash",
+    "source_id": "photo-1563311977-d285756282dc",
+    "bytes": 111842
+  },
+  {
+    "file": "cappuccino-pour-hand-01.jpg",
+    "category": "cappuccino",
+    "description": "Barista's hand holding a white cup as a thin milk stream draws latte art, warm wooden counter softly blurred behind; subject right of center, soft blurred space on the left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1007,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1a1511",
+      "#b49c84",
+      "#2d2b26"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-making-latte-art-nzyzAUsbV0M",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Fahmi Fakhrudin (@fahmipaping) on Unsplash",
+    "source_id": "photo-1541167760496-1628856ab772",
+    "bytes": 98338
+  },
+  {
+    "file": "cappuccino-topdown-wood-01.jpg",
+    "category": "cappuccino",
+    "description": "Top-down cappuccino with rosetta latte art on a white saucer with spoon, on rich dark-brown wood grain; nearly square, cup fills the center.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 1280,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2b1209",
+      "#502816",
+      "#dccab4"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-teacup-with-latte-RFLDagtOsMM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anubhav Arora (@_anubhavarora) on Unsplash",
+    "source_id": "photo-1572442388796-11668a67e53d",
+    "bytes": 225437
+  },
+  {
+    "file": "cappuccino-topdown-beans-01.jpg",
+    "category": "cappuccino",
+    "description": "Overhead flat lay of a cappuccino with tulip latte art centered on a full bed of dark roasted coffee beans; symmetric, full-bleed texture around the cup.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0e0e09",
+      "#3d2717",
+      "#261b10"
+    ],
+    "good_for": [
+      "card",
+      "background",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/top-view-photography-of-heart-latte-coffee-XOhI_kW_TaM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1512568400610-62da28bc8a13",
+    "bytes": 255307
+  },
+  {
+    "file": "cappuccino-topdown-round-table-01.jpg",
+    "category": "cappuccino",
+    "description": "Overhead view of a single cappuccino with rosetta on a weathered round wooden stool against a near-black floor; strong centered subject with dark space above and below.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#191f20",
+      "#111716",
+      "#59544e"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/cappuccino-coffee-in-mug-tA90pRfL2gM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1497636577773-f1231844b336",
+    "bytes": 103482
+  },
+  {
+    "file": "cappuccino-macchiato-glass-01.jpg",
+    "category": "cappuccino",
+    "description": "Layered latte macchiato in a ribbed glass on a cork coaster and wooden tray, dark moody background with a palm leaf at the top; open dark space in the upper half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#000000",
+      "#755f5c",
+      "#38241b"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-cup-of-coffee-sitting-on-top-of-a-wooden-tray-DcPwEkkV4RY",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Büşra İnce (@muverrihhanim) on Unsplash",
+    "source_id": "photo-1674642387251-04a5f9320aa4",
+    "bytes": 80672
+  },
+  {
+    "file": "cappuccino-four-cups-topdown-01.jpg",
+    "category": "cappuccino",
+    "description": "Overhead view of four cappuccinos with different latte art on a small round wooden table against a dark charcoal floor; centered, with dark space top and bottom.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#333333",
+      "#1d2323",
+      "#171d1d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/aerial-photography-of-cafe-latte-on-table-ikU3J1nr52w",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1529892485617-25f63cd7b1e9",
+    "bytes": 110285
+  },
+  {
+    "file": "bar-espresso-machine-steam-01.jpg",
+    "category": "bar",
+    "description": "Chrome-and-copper commercial espresso machine engulfed in steam with portafilters locked in and a barista's hand at right, warm dark café light; the steam cloud gives a soft area top-center for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#090d0a",
+      "#706053",
+      "#332a20"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-and-silver-industrial-machine-EI50hwMVp28",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Krists Luhaers (@kristsll) on Unsplash",
+    "source_id": "photo-1581068106019-5aa70c6ab424",
+    "bytes": 161543
+  },
+  {
+    "file": "bar-barista-tamping-01.jpg",
+    "category": "bar",
+    "description": "Barista's hands tamping fresh grounds in a brass-toned portafilter in warm golden light; tamper top-center, portafilter lower-right, blurred warm background on the left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0d0b03",
+      "#3c1e04",
+      "#f8e9c9"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-holding-silver-steel-cup-sBS-Ufi0f1g",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Enis Yavuz (@enisyavuz) on Unsplash",
+    "source_id": "photo-1599579089328-852ca6423ef0",
+    "bytes": 128992
+  },
+  {
+    "file": "bar-grouphead-pour-01.jpg",
+    "category": "bar",
+    "description": "Espresso pouring from a group head into a white cup on the drip tray of a commercial machine with pressure gauge and milk jug, warm brown tones; subject left-center, darker space on the right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1222,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0d1213",
+      "#58473e",
+      "#302923"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-cup-on-brown-wooden-table-KWZ-rg9o76A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by tabitha turner (@tabithaturnervisuals) on Unsplash",
+    "source_id": "photo-1595928642581-f50f4f3453a5",
+    "bytes": 157861
+  },
+  {
+    "file": "bar-latte-art-hands-01.jpg",
+    "category": "bar",
+    "description": "Tight crop of a barista's hands finishing a rosetta in a white cup with a black pitcher against a near-black background; cup in the lower-left, dark space upper-right.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 933,
+    "tone": "dark",
+    "dominant_colors": [
+      "#010101",
+      "#110a06",
+      "#876a51"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/man-making-coffee-QfTpbOey94s",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Pete Willis (@peetwillis) on Unsplash",
+    "source_id": "photo-1579265898841-79c7890d69cf",
+    "bytes": 72701
+  },
+  {
+    "file": "bar-barista-pouring-01.jpg",
+    "category": "bar",
+    "description": "Overhead view of a barista in a grey knit sweater pouring latte art into a small cup over a steel counter; natural light, subject right of center, plain counter on the left.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 933,
+    "tone": "mid",
+    "dominant_colors": [
+      "#9c8b71",
+      "#16140a",
+      "#aa9f8d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-pouring-cup-of-coffee-in-white-ceramic-cup-X4RJG4aNi8o",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Brooke Cagle (@brookecagle) on Unsplash",
+    "source_id": "photo-1507915135761-41a0a222c709",
+    "bytes": 134874
+  },
+  {
+    "file": "bar-cafe-interior-warm-01.jpg",
+    "category": "bar",
+    "description": "Empty modern café interior with a long black leather banquette, round wooden tables and a vertical wood-slat wall in warm light; leading lines toward bright windows at right, dark ceiling area top-left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1206,
+    "tone": "dark",
+    "dominant_colors": [
+      "#060905",
+      "#a18669",
+      "#7b5d3f"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/round-brown-wooden-tables-beside-black-leather-sofa-yr9l_xQPDL0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by 99.films (@99films) on Unsplash",
+    "source_id": "photo-1565650839149-2c48a094196c",
+    "bytes": 239367
+  },
+  {
+    "file": "bar-caffe-storefront-01.jpg",
+    "category": "bar",
+    "description": "Old-world Italian street front with a vintage 'CAFFE' sign and lamp above a scalloped awning and a glowing pastry window on an ochre plaster wall; sign in the upper third.",
+    "orientation": "portrait",
+    "width": 986,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#211f1d",
+      "#5f4737",
+      "#8d7464"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-bakery-with-a-sign-above-it-that-says-cafe-hrD-pG8X3jo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Evgeny Matveev (@eugene_rus) on Unsplash",
+    "source_id": "photo-1702132341930-1813b0a0ea31",
+    "bytes": 180205
+  },
+  {
+    "file": "bar-barista-portrait-01.jpg",
+    "category": "bar",
+    "description": "Candid tattooed barista in a canvas apron and cap pouring latte art at a wooden bar, a colleague blurred behind; natural light, subject fills the left two-thirds.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1f2220",
+      "#968478",
+      "#c3bdb5"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/man-pouring-latte-on-coffee-vhQUnmnOLys",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Brent Gorwin (@brentg) on Unsplash",
+    "source_id": "photo-1532713107108-dfb5d8d2fc42",
+    "bytes": 130772
+  },
+  {
+    "file": "bar-espresso-cup-pour-01.jpg",
+    "category": "bar",
+    "description": "Espresso streaming from a commercial group head into a white cup on a stainless drip tray, dark brushed-steel background; cup in the middle third, dark space above.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#100e0c",
+      "#342b27",
+      "#858080"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-ceramic-mug-with-coffee-p2Vwn3Jj3V8",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Victoria Shes (@victoriakosmo) on Unsplash",
+    "source_id": "photo-1552833755-fdb50eeb8cf1",
+    "bytes": 111100
+  },
+  {
+    "file": "bar-red-cup-pour-01.jpg",
+    "category": "bar",
+    "description": "Square shot of a barista's hands pouring steamed milk into a red cup under the group heads of a warm-lit commercial espresso machine; busy, energetic, fills the frame.",
+    "orientation": "square",
+    "width": 1400,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#031316",
+      "#6f381c",
+      "#d1944d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-holding-cup-of-drink-_dMHv6bNi5A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Sebastian Coman Photography (@sebastiancoman) on Unsplash",
+    "source_id": "photo-1576670392954-38b1fdb78b1d",
+    "bytes": 272253
+  },
+  {
+    "file": "beans-roasting-drum-01.jpg",
+    "category": "beans",
+    "description": "Freshly roasted beans pour from a vintage drum roaster into the stirring cooling tray as the roaster opens the door, lamp-lit warm sepia workshop; plain wall top-right for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1202,
+    "tone": "dark",
+    "dominant_colors": [
+      "#232428",
+      "#5c493e",
+      "#3c3431"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-pouring-coffee-beans-on-a-machine-6HR8vpjYUHo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Yanapi Senaud (@yaanapi) on Unsplash",
+    "source_id": "photo-1511537190424-bbbab87ac5eb",
+    "bytes": 330310
+  },
+  {
+    "file": "beans-cooling-tray-scoop-01.jpg",
+    "category": "beans",
+    "description": "Roasted beans cascade from a perforated chute into a cooling tray while a hand pulls a sample with a steel scoop; rich warm browns fill the frame, darker band along the top.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1201,
+    "tone": "dark",
+    "dominant_colors": [
+      "#121c16",
+      "#2c291e",
+      "#4c3d2c"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-roasting-in-playa-del-carmen-YC6RVdoTtIk",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Tim Mossholder (@timmossholder) on Unsplash",
+    "source_id": "photo-1607681034540-2c46cc71896d",
+    "bytes": 347156
+  },
+  {
+    "file": "beans-burlap-sack-dark-01.jpg",
+    "category": "beans",
+    "description": "Dark roasted beans overflowing an open jute sack against a matte black background; subject lower-right, generous black space top-left for headline text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0e0d0d",
+      "#1e1918",
+      "#362d28"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/shallow-focus-photography-of-coffee-beans-in-sack-obV_LM0KjxY",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Tina Guina (@kittinskie) on Unsplash",
+    "source_id": "photo-1524350876685-274059332603",
+    "bytes": 223124
+  },
+  {
+    "file": "beans-cupped-hands-01.jpg",
+    "category": "beans",
+    "description": "Two cupped hands holding roasted coffee beans in a low-key spotlight against near-black; subject centered in the lower half, dark space all around.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#131313",
+      "#161615",
+      "#1a1916"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/stack-of-coffee-beans-on-persons-hand-1LaCrYx5J7I",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Jakub Kapusnak (@foodiesfeed) on Unsplash",
+    "source_id": "photo-1500912708295-4cf8b060f381",
+    "bytes": 145268
+  },
+  {
+    "file": "beans-green-coffee-macro-01.jpg",
+    "category": "beans",
+    "description": "Shallow-focus macro of unroasted green coffee beans filling the frame in soft olive-grey tones; blurred upper band works for overlaid text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1f1f15",
+      "#a59882",
+      "#897e67"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-beans-close-up-photography-Yx1XkPYUBss",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Battlecreek Coffee Roasters (@battlecreekcoffeeroasters) on Unsplash",
+    "source_id": "photo-1561986845-fbeb7f7913d8",
+    "bytes": 190444
+  },
+  {
+    "file": "beans-roasted-macro-01.jpg",
+    "category": "beans",
+    "description": "Full-frame flat texture of medium-roasted coffee beans in varied browns; uniform all-over pattern, ideal behind a dark overlay.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 934,
+    "tone": "dark",
+    "dominant_colors": [
+      "#231d17",
+      "#482f23",
+      "#634636"
+    ],
+    "good_for": [
+      "card",
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-coffee-beans-on-brown-wooden-table-lcfH0p6emhw",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anastasiia Chepinska (@anastasiiachepinska) on Unsplash",
+    "source_id": "photo-1580933073521-dc49ac0d4e6a",
+    "bytes": 309271
+  },
+  {
+    "file": "beans-green-among-roasted-01.jpg",
+    "category": "beans",
+    "description": "Top-down macro of a single pale green coffee bean nestled among glossy dark roasted beans; green bean slightly below center, dark texture everywhere else.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#010100",
+      "#160f06",
+      "#0a0601"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-coffee-beans-with-green-leaf-WqCkUU30Gvk",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Sabin Popa (@sabin_mihai) on Unsplash",
+    "source_id": "photo-1599231110146-c7cb40d0c6ff",
+    "bytes": 125436
+  },
+  {
+    "file": "beans-sack-portrait-01.jpg",
+    "category": "beans",
+    "description": "Roasted beans in an open natural burlap sack with stenciled stripes in soft daylight; plain grey background in the top-left corner.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#4f4535",
+      "#231f18",
+      "#5c5242"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-burlap-sack-filled-with-roasted-coffee-beans-Epc4ygprEx4",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Tina Schmidt (@ts00) on Unsplash",
+    "source_id": "photo-1759850845347-6212839b541c",
+    "bytes": 203375
+  },
+  {
+    "file": "beans-roaster-cooling-portrait-01.jpg",
+    "category": "beans",
+    "description": "Freshly roasted beans swirling in a roaster's perforated cooling tray under warm light; dynamic diagonal of beans with dark edges.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0e0805",
+      "#60452e",
+      "#3f2915"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-close-up-of-a-machine-making-coffee-beans-_7CVm353m7A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Scott Soltys-Curry (@heyscottcurry) on Unsplash",
+    "source_id": "photo-1680381615265-6cce996f6e4f",
+    "bytes": 233284
+  },
+  {
+    "file": "beans-hand-pan-01.jpg",
+    "category": "beans",
+    "description": "A hand lifting roasted beans from a worn aluminium pan on a rustic stone counter; earthy and textured, subject on the right.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 927,
+    "tone": "mid",
+    "dominant_colors": [
+      "#16282b",
+      "#b7957b",
+      "#dbc7b8"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-beans-on-gray-steel-wok-rKYRJu0n06Y",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Milo Miloezger (@miloezger) on Unsplash",
+    "source_id": "photo-1525088553748-01d6e210e00b",
+    "bytes": 235426
+  },
+  {
+    "file": "origin-hand-picking-cherries-01.jpg",
+    "category": "origin",
+    "description": "Close-up of a farmer's hand picking ripe red coffee cherries from a branch among green leaves and unripe fruit; dense, vibrant, natural light, no clear copy space (use a gradient).",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1202,
+    "tone": "mid",
+    "dominant_colors": [
+      "#383007",
+      "#918941",
+      "#7b672d"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-person-holding-a-bunch-of-berries-Ni7Cfu8AIMI",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Carlos Felipe Ramírez Mesa (@cafera13) on Unsplash",
+    "source_id": "photo-1662559102063-a665b04771fd",
+    "bytes": 297617
+  },
+  {
+    "file": "origin-ripe-cherries-cluster-01.jpg",
+    "category": "origin",
+    "description": "A cluster of ripening coffee cherries from deep red to green along a branch framed by glossy dark-green leaves; subject center, darker foliage on both sides.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1201,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0e2a13",
+      "#011604",
+      "#345136"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-bunch-of-coffee-beans-growing-on-a-tree-OE1zLjHsfm0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Quang Nguyen Vinh (@quangpraha) on Unsplash",
+    "source_id": "photo-1677123617592-5c30e34f40e9",
+    "bytes": 216119
+  },
+  {
+    "file": "origin-cherries-soft-light-01.jpg",
+    "category": "origin",
+    "description": "Branches heavy with orange, red and green coffee cherries seen through soft out-of-focus leaves; dreamy warm greens with blurred foreground edges and calmer right half.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1201,
+    "tone": "dark",
+    "dominant_colors": [
+      "#22251e",
+      "#524e22",
+      "#2a2c1e"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/round-green-and-red-berries-h28p96ICizo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Clint McKoy (@clintmckoy) on Unsplash",
+    "source_id": "photo-1515694590185-73647ba02c10",
+    "bytes": 140654
+  },
+  {
+    "file": "origin-red-cherries-closeup-01.jpg",
+    "category": "origin",
+    "description": "Macro of glossy ripe red coffee cherries on a branch with large green leaves and bokeh behind; subject fills the center.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 1050,
+    "tone": "mid",
+    "dominant_colors": [
+      "#3f3e15",
+      "#7c7a4e",
+      "#999b78"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-close-up-of-some-berries-JzAWr74kO3E",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Elle inlom (@elliethailand64) on Unsplash",
+    "source_id": "photo-1667900692644-bdc14c0d5463",
+    "bytes": 182496
+  },
+  {
+    "file": "origin-picker-basket-01.jpg",
+    "category": "origin",
+    "description": "A picker's hands stripping coffee cherries into a basket of red fruit at waist height, framed by sunlit coffee leaves; vertical, documentary.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#16190f",
+      "#335b3e",
+      "#65aa83"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-person-picking-coffee-beans-from-a-tree-0-SWia-_xjA",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Gerson Cifuentes (@gtk1x) on Unsplash",
+    "source_id": "photo-1642613630414-1d9938f4fe02",
+    "bytes": 178422
+  },
+  {
+    "file": "origin-plantation-hills-01.jpg",
+    "category": "origin",
+    "description": "Lush green coffee-growing hillside with shade trees and palms under a pale overcast sky; sky fills the top quarter for text.",
+    "orientation": "portrait",
+    "width": 1050,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#15241c",
+      "#2d3e2b",
+      "#45573a"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/aerial-photography-of-forest-2GrRlrLReQc",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Reiseuhu (@reiseuhu) on Unsplash",
+    "source_id": "photo-1559556064-4161b6be179b",
+    "bytes": 360577
+  },
+  {
+    "file": "calabria-italy-tropea-sunset-beach-01.jpg",
+    "category": "calabria-italy",
+    "description": "Golden-hour panorama of Tropea beach with rows of umbrellas, the cliff-top old town at left and the Santa Maria dell'Isola rock in the middle, sun setting over the sea at right; wide warm sky band for a headline.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 888,
+    "tone": "mid",
+    "dominant_colors": [
+      "#a8876a",
+      "#58412e",
+      "#7a4d28"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/people-on-beach-during-daytime-soONiTEauYE",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Petr Slováček (@grwood) on Unsplash",
+    "source_id": "photo-1596665758190-d8b3a3a9ee44",
+    "bytes": 234487
+  },
+  {
+    "file": "calabria-italy-tropea-santa-maria-isola-01.jpg",
+    "category": "calabria-italy",
+    "description": "The Santa Maria dell'Isola sanctuary atop its white limestone rock in Tropea, surrounded by turquoise Tyrrhenian sea under cumulus clouds; open sky across the top third.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1202,
+    "tone": "light",
+    "dominant_colors": [
+      "#0ba1da",
+      "#a2cce5",
+      "#c2d0d9"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-and-brown-concrete-building-near-body-of-water-during-daytime-6b-lpGAHdw0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nemanja Peric (@21nemi) on Unsplash",
+    "source_id": "photo-1602582703401-4b37c2840322",
+    "bytes": 376283
+  },
+  {
+    "file": "calabria-italy-tropea-cliff-town-01.jpg",
+    "category": "calabria-italy",
+    "description": "Tropea's pastel old-town houses perched on sheer sandstone cliffs above the beach under dramatic clouds, prickly-pear cactus in the foreground; sky in the upper third.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1194,
+    "tone": "mid",
+    "dominant_colors": [
+      "#363b1f",
+      "#878686",
+      "#a6a29e"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-castle-with-water-in-the-background-kIgAzv_YdNE",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Rainhard Wiesinger (@opernfan17x) on Unsplash",
+    "source_id": "photo-1640295349543-1698f50f018e",
+    "bytes": 425933
+  },
+  {
+    "file": "calabria-italy-tropea-beach-aerial-01.jpg",
+    "category": "calabria-italy",
+    "description": "Elevated view of Tropea's crescent beach, turquoise water and coastal road beneath the cliff-top town on the right; calm sea and sky on the left for copy.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1350,
+    "tone": "mid",
+    "dominant_colors": [
+      "#47888a",
+      "#2c5258",
+      "#d2b193"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/an-aerial-view-of-a-beach-with-a-cliff-in-the-background-Emjmmy2_uuo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anastasia (@ananoelleeeee) on Unsplash",
+    "source_id": "photo-1694504999979-984263ea6b4a",
+    "bytes": 492369
+  },
+  {
+    "file": "calabria-italy-coast-castle-dusk-01.jpg",
+    "category": "calabria-italy",
+    "description": "Cliff-top castle and red-roofed houses tumbling down to a small harbor with boats at golden dusk (Calabrian coast, likely Scilla's Castello Ruffo); calm sea and pale sky fill the upper half.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#161515",
+      "#ababa0",
+      "#d1c9b5"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-scenic-view-of-a-town-on-the-edge-of-a-cliff-ldWyiSkcSU8",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Francesco Liotti (@francesco_liotti) on Unsplash",
+    "source_id": "photo-1724579242674-d84bea771ece",
+    "bytes": 201882
+  },
+  {
+    "file": "calabria-italy-peperoncino-basket-01.jpg",
+    "category": "calabria-italy",
+    "description": "Weathered hands of an older woman with rings stringing red Calabrian chili peppers above a wicker basket full of peperoncini; intimate and warm, darker area on the left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#181a19",
+      "#76544c",
+      "#212422"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-person-holding-a-basket-of-red-peppers-WYdZFWcPYhM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Francesca Magurno (@framagu) on Unsplash",
+    "source_id": "photo-1668946406806-d3e52ecb1afb",
+    "bytes": 236092
+  },
+  {
+    "file": "calabria-italy-coastline-bay-01.jpg",
+    "category": "calabria-italy",
+    "description": "Sweeping view of a turquoise Calabrian bay with a rocky headland, beaches and green hills under clear blue sky; empty sky along the top for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#0275a5",
+      "#114159",
+      "#57afe5"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-view-of-a-beach-with-a-boat-in-the-water-4GgBxc3CgeQ",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Krzysztof Maksimiuk (@kmaksimi) on Unsplash",
+    "source_id": "photo-1701870856515-82eba2ec6736",
+    "bytes": 346153
+  },
+  {
+    "file": "calabria-italy-lemon-tree-sunlight-01.jpg",
+    "category": "calabria-italy",
+    "description": "Backlit lemons hanging among leaves in warm golden haze; lemon right of center, glowing soft area top-left (generic Mediterranean mood, not shot in Italy).",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1201,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2a2718",
+      "#897640",
+      "#5e5129"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-lemon-tree-with-some-fruit-growing-on-it-Pq8iU7D_FM4",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Gilley Aguilar (@gilleyaguilar) on Unsplash",
+    "source_id": "photo-1717106678334-bd2047ab250b",
+    "bytes": 266900
+  },
+  {
+    "file": "calabria-italy-lemon-branch-01.jpg",
+    "category": "calabria-italy",
+    "description": "Ripe lemons on a leafy branch in front of softly blurred pastel southern-European buildings; branch fills the lower two-thirds, soft blur above for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1201,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1b2615",
+      "#484121",
+      "#877453"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-tree-filled-with-lots-of-ripe-lemons-AVJgKCgux4M",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Markus Spiske (@markusspiske) on Unsplash",
+    "source_id": "photo-1683267819645-f2c6c505619f",
+    "bytes": 239698
+  },
+  {
+    "file": "calabria-italy-shutters-geraniums-01.jpg",
+    "category": "calabria-italy",
+    "description": "Salmon-pink stucco facade with green shutters and a wrought-iron balcony of red geraniums beside terracotta roofs; balcony right of center, plain wall top-left for copy.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#eaaf82",
+      "#201f14",
+      "#784422"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-building-with-a-balcony-with-flowers-on-the-balconies-MYqDO3l9Z7g",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Tobias Arweiler (@tarweiler) on Unsplash",
+    "source_id": "photo-1688733962163-d5be9e96895e",
+    "bytes": 266490
+  },
+  {
+    "file": "calabria-italy-stone-steps-plants-01.jpg",
+    "category": "calabria-italy",
+    "description": "Old stone stairway in an Italian hill village lined with terracotta pots, herbs and a small wooden table with wine bottles; warm daylight, vertical.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#43483c",
+      "#bfac96",
+      "#e0cab7"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-set-of-steps-leading-up-to-a-building-with-potted-plants-DxaQEh6kvus",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Dean Milenkovic (@deanmilenkovic) on Unsplash",
+    "source_id": "photo-1677425901730-97e6ea23684d",
+    "bytes": 215226
+  },
+  {
+    "file": "calabria-italy-street-cafe-tables-01.jpg",
+    "category": "calabria-italy",
+    "description": "Narrow Italian lane between ochre buildings with café tables, red umbrellas and chairs in the shade; strip of sky at top, deep perspective.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#160d09",
+      "#8e683a",
+      "#f6f7f2"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-street-with-tables-and-chairs-and-umbrellas-gPpI_QSqnFI",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Lucas Klein (@lucasklein) on Unsplash",
+    "source_id": "photo-1653221455190-6a7d866fbab1",
+    "bytes": 168802
+  },
+  {
+    "file": "calabria-italy-tropea-sunset-portrait-01.jpg",
+    "category": "calabria-italy",
+    "description": "Tropea's cliff-top houses and long beach at sunset with a pastel peach sky filling the upper half, cactus flowers in the foreground; ideal mobile hero with text on top.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#100c09",
+      "#e6c8b9",
+      "#bca48c"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-scenic-view-of-a-beach-at-sunset-pjsL2h13KFo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Daniel J. Schwarz (@danieljschwarz) on Unsplash",
+    "source_id": "photo-1681844931449-e0992a27d157",
+    "bytes": 170697
+  },
+  {
+    "file": "boston-community-north-end-street-01.jpg",
+    "category": "boston-community",
+    "description": "Narrow North End street lined with red-brick walk-ups, black fire escapes and a green copper bay window, parked cars along the curb; bright overcast sky strip center-top.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2e241f",
+      "#b2917c",
+      "#703d2b"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Wikimedia Commons (found via Openverse; originally published on Unsplash)",
+    "source_url": "https://commons.wikimedia.org/w/index.php?curid=62242706",
+    "license": "CC0 1.0 Public Domain Dedication",
+    "credit": "Akhil Dakinedi (@a_kill_), CC0 via Wikimedia Commons",
+    "source_id": "ov-21324da3-0bef-4ac2-bc47-129f7f201cab",
+    "bytes": 545454
+  },
+  {
+    "file": "boston-community-north-square-01.jpg",
+    "category": "boston-community",
+    "description": "North Square in Boston's North End: red-brick buildings with green copper bay windows and striped awnings around a cobbled plaza with chain posts; overcast sky top-right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1350,
+    "tone": "mid",
+    "dominant_colors": [
+      "#233a49",
+      "#785655",
+      "#c4d6dd"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-group-of-buildings-with-a-car-parked-in-front-of-them--qXtUaebY3w",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Casey Lovegrove (@clovegrove7) on Unsplash",
+    "source_id": "photo-1688150271789-ec7180a5703a",
+    "bytes": 530816
+  },
+  {
+    "file": "boston-community-bay-windows-01.jpg",
+    "category": "boston-community",
+    "description": "Low-angle view of ornate green copper bay windows on a North End brick corner building with a bakery sign at right; streaked blue sky across the top.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1012,
+    "tone": "mid",
+    "dominant_colors": [
+      "#252928",
+      "#88a1b3",
+      "#393a3b"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-and-white-concrete-building-under-blue-sky-during-daytime-y-S4t-BtrHw",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Wei Zeng (@fotowei) on Unsplash",
+    "source_id": "photo-1629259377841-ab95e8693be0",
+    "bytes": 327422
+  },
+  {
+    "file": "boston-community-street-golden-light-01.jpg",
+    "category": "boston-community",
+    "description": "Boston brick street at golden hour with gas lamps, parked cars and a glass tower rising behind; vertical, warm light on the facades, sky at top.",
+    "orientation": "portrait",
+    "width": 1050,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#121314",
+      "#4d403b",
+      "#d6cbb7"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-city-street-lined-with-tall-buildings-and-parked-cars-_6F_F1kJ6nU",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Leo (@ocuole) on Unsplash",
+    "source_id": "photo-1679957802061-27f80e18657f",
+    "bytes": 251001
+  },
+  {
+    "file": "boston-community-brick-rowhouses-autumn-01.jpg",
+    "category": "boston-community",
+    "description": "Cobblestone lane of red-brick rowhouses with black shutters and lanterns, carpeted in yellow autumn leaves (Beacon Hill style); leading lines toward the right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#10100e",
+      "#291f17",
+      "#77603f"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-brick-building-near-green-trees-during-daytime-UpYF6ibFud0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Matt Collamer (@breakyourboundaries4) on Unsplash",
+    "source_id": "photo-1608845920884-3c88800feebc",
+    "bytes": 475767
+  },
+  {
+    "file": "boston-community-skyline-blue-hour-01.jpg",
+    "category": "boston-community",
+    "description": "Boston's Back Bay skyline with the Prudential Tower lit at blue hour, reflected in the still Charles River; deep blue sky across the upper third.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1196,
+    "tone": "dark",
+    "dominant_colors": [
+      "#142936",
+      "#008fc4",
+      "#004d74"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/city-skyline-during-night-time-Ic8B165N1og",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Zixi Zhou (@furicz) on Unsplash",
+    "source_id": "photo-1589401901631-356b7ae2f5d1",
+    "bytes": 219691
+  },
+  {
+    "file": "boston-community-coffee-toast-01.jpg",
+    "category": "boston-community",
+    "description": "Overhead view of three hands toasting two lattes and an iced coffee over a café table; warm dark tones, cups centered, dark corners.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#12130f",
+      "#7d6349",
+      "#95856f"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/three-person-holding-beverage-cups-6VhPY27jdps",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1495474472287-4d71bcdd2085",
+    "bytes": 191862
+  },
+  {
+    "file": "boston-community-sharing-cappuccino-01.jpg",
+    "category": "boston-community",
+    "description": "Couple at a wooden café table with hands touching beside two cappuccinos, faces cropped out; warm natural light, space top-right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#282012",
+      "#666d63",
+      "#75461a"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/two-mugs-with-coffee-on-table-g86airJZ4Gs",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Priscilla Du Preez (@priscilladupreez) on Unsplash",
+    "source_id": "photo-1542338332-76971ae8c292",
+    "bytes": 231209
+  },
+  {
+    "file": "boston-community-family-table-01.jpg",
+    "category": "boston-community",
+    "description": "Angled view of a shared Italian restaurant meal: pizza margherita, pasta with truffle, condiments, an orange spritz and blue glasses with hands reaching in; busy, convivial.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 848,
+    "tone": "mid",
+    "dominant_colors": [
+      "#22221a",
+      "#70421b",
+      "#b97738"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/pizza-and-pasta-restaurant-meal-tpwBvCO28Jg",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Zoshua Colah (@zoshuacolah) on Unsplash",
+    "source_id": "photo-1791409287886-15a1076136aa",
+    "bytes": 232782
+  },
+  {
+    "file": "home-moka-pot-brewing-01.jpg",
+    "category": "home",
+    "description": "Close-up inside an open aluminium moka pot as fresh coffee bubbles up the spout on the stove; silver tones, dark blurred surroundings on the left for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1198,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1b1c1b",
+      "#9e9683",
+      "#726f65"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-in-silver-cup-with-coffee-Kc_OvVVpnUo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Thanos Amoutzias (@taaanos) on Unsplash",
+    "source_id": "photo-1605339102319-efcb12ae4eb7",
+    "bytes": 199249
+  },
+  {
+    "file": "home-espresso-machine-pour-dark-01.jpg",
+    "category": "home",
+    "description": "A home espresso machine pouring a double shot into a glass cup against a deep navy-black background; subject left-center, empty dark space on the right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#12171d",
+      "#11161c",
+      "#111a21"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-coffeemaker-IjnAc0vyqGs",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Tim St. Martin (@timeighty5) on Unsplash",
+    "source_id": "photo-1524686788093-aa1f9c0f7c4f",
+    "bytes": 123115
+  },
+  {
+    "file": "home-moka-pot-stove-01.jpg",
+    "category": "home",
+    "description": "Classic moka pot on a gas hob beside a jar of ground coffee in a sunlit kitchen with a hint of steam; warm and homely, soft wall area in the top half.",
+    "orientation": "portrait",
+    "width": 931,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2c2119",
+      "#a6937f",
+      "#7d6652"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/gray-and-black-moka-pot-on-top-of-gray-gas-range-oven-dPzqzWI6AO8",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Eric BARBEAU (@ericbarbeau) on Unsplash",
+    "source_id": "photo-1452415005154-c06158558480",
+    "bytes": 126385
+  },
+  {
+    "file": "home-morning-light-cup-01.jpg",
+    "category": "home",
+    "description": "A steaming mug on a wooden table casting a long shadow in bright morning window light; airy, high-key, lots of light space.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#70655c",
+      "#564738",
+      "#e9fdfe"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/steaming-mug-on-wooden-table-u1QfqxhsrXQ",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Aimee Giles (@aim52) on Unsplash",
+    "source_id": "photo-1662038271111-5b1c0b4157e8",
+    "bytes": 69540
+  },
+  {
+    "file": "home-coffee-corner-window-01.jpg",
+    "category": "home",
+    "description": "Home coffee corner by a window: espresso machine, cups and a plant on a wooden cart in warm lamp glow and soft daylight; vertical, cozy.",
+    "orientation": "portrait",
+    "width": 934,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#0e110c",
+      "#3c372c",
+      "#747567"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-and-silver-coffee-maker-on-brown-wooden-table-ioVRpz0gX5w",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1607273177147-e7304c4d5d6c",
+    "bytes": 138555
+  },
+  {
+    "file": "home-capsules-hands-01.jpg",
+    "category": "home",
+    "description": "Two cupped hands holding a pile of unbranded orange-and-silver coffee capsules against a dark background; subject centered, dark negative space around.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#100f0d",
+      "#865f49",
+      "#a08271"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-holding-plastic-packs-qjx79hnul8c",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by KOUS9 STUDIO (@kous9) on Unsplash",
+    "source_id": "photo-1543272771-6f5b292b642d",
+    "bytes": 169606
+  },
+  {
+    "file": "home-nonna-moka-stove-01.jpg",
+    "category": "home",
+    "description": "Smiling older woman in a summer dress making moka coffee on a gas stove in a lived-in Mediterranean kitchen; candid documentary feel, vertical.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#43412c",
+      "#74694b",
+      "#8e8060"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/woman-using-stovetop-coffee-maker-7HFj-lfueIw",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Bozhidar Monovski (@bozhidarmonovski) on Unsplash",
+    "source_id": "photo-1790939656218-ce545880030f",
+    "bytes": 153292
+  },
+  {
+    "file": "business-office-kitchenette-01.jpg",
+    "category": "business",
+    "description": "Modern office break-room kitchenette with matte-black cabinets, under-cabinet lighting and a bean-to-cup machine in a wood-trimmed alcove beside a grey-carpet corridor; clean and light, open wall at right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2d2118",
+      "#a4917f",
+      "#cbc6be"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-kitchen-with-black-cabinets-and-a-white-counter-top-OI6D_VKxSMw",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Craig Lovelidge (@craigology) on Unsplash",
+    "source_id": "photo-1637665691265-3d653ffd7c77",
+    "bytes": 213842
+  },
+  {
+    "file": "business-executive-cappuccino-01.jpg",
+    "category": "business",
+    "description": "Man in a dark suit and patterned tie holding a cappuccino on its saucer at a polished wooden table, face cropped; dark textured wall on the left for copy.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#151718",
+      "#4d3e37",
+      "#665146"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/man-holding-cup-filled-with-coffee-on-table-TTPMpLl_2lc",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Andrew Neel (@andrewtneel) on Unsplash",
+    "source_id": "photo-1467664631004-58beab1ece0d",
+    "bytes": 219396
+  },
+  {
+    "file": "business-hotel-room-espresso-01.jpg",
+    "category": "business",
+    "description": "Quiet hotel-room corner at dusk: a small espresso cup on a round wooden table under a warm desk lamp, armchair and sheer curtain at left; moody with space in the upper middle.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#251309",
+      "#9c9073",
+      "#836741"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/indoor-corner-with-round-table-lamp-cup-and-window-2yb36WKoB9U",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by N1CE (@n1ce) on Unsplash",
+    "source_id": "photo-1778855400144-2cceefcfa940",
+    "bytes": 214675
+  },
+  {
+    "file": "business-hotel-breakfast-tray-01.jpg",
+    "category": "business",
+    "description": "Breakfast in bed: a rattan tray with two cappuccinos, pastries, bread, jam and orange juice on rumpled white hotel sheets; soft light, plain wall above for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#969f8f",
+      "#58513d",
+      "#a9bab0"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-tray-of-breakfast-on-a-bed-with-white-sheets-gtEzYq0B7-A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Cory Bjork (@corybjork) on Unsplash",
+    "source_id": "photo-1641924676578-ed2792eb24de",
+    "bytes": 228660
+  },
+  {
+    "file": "business-waitress-serving-cappuccino-01.jpg",
+    "category": "business",
+    "description": "Waitress in an apron serving a cappuccino and carrot cake at a café counter stacked with saucers; dark background, hands and cup in focus on the right.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1350,
+    "tone": "dark",
+    "dominant_colors": [
+      "#17201c",
+      "#0a100f",
+      "#413d35"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-waitress-serves-cake-and-coffee-tALGo5tBS3M",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Haberdoedas (@haberdoedas) on Unsplash",
+    "source_id": "photo-1744793981680-1914b08bf994",
+    "bytes": 207485
+  },
+  {
+    "file": "business-table-coffees-topdown-01.jpg",
+    "category": "business",
+    "description": "Overhead view of an assortment of espresso, cappuccino and latte cups with biscuits, sugar jars and a milk jug on warm teak; ideal for meeting or office coffee service.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 1050,
+    "tone": "mid",
+    "dominant_colors": [
+      "#8b5f36",
+      "#4c2f13",
+      "#c0905f"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/flatlay-photography-of-five-latte-cups-mpSMThAU4OY",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Cyril Saulnier (@c_reel) on Unsplash",
+    "source_id": "photo-1492158244976-29b84ba93025",
+    "bytes": 172661
+  },
+  {
+    "file": "business-bartender-grand-cafe-01.jpg",
+    "category": "business",
+    "description": "Bartender in a white shirt, black waistcoat and bow tie behind the gleaming curved bar of a grand café with globe lamps and bottles; warm golden light, vertical.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#15130c",
+      "#845f24",
+      "#b68e47"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-man-wearing-a-bow-tie-standing-in-front-of-a-bar-RrG7ejcYm78",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anthony LE (@antho_le) on Unsplash",
+    "source_id": "photo-1694346164070-5eddce829c58",
+    "bytes": 212115
+  },
+  {
+    "file": "food-pairing-cornetti-cappuccino-topdown-01.jpg",
+    "category": "food-pairing",
+    "description": "Overhead view of a cappuccino with leaf latte art beside two sugar-dusted cornetti filled with apricot jam and custard on a rustic board over white marble; bright, open marble top-left.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "light",
+    "dominant_colors": [
+      "#cfcecb",
+      "#91755b",
+      "#e1e5e7"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-pastry-and-a-cup-of-coffee-on-a-table-Xt8ARul4H8o",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Andrea Riezzo (@andriezzo) on Unsplash",
+    "source_id": "photo-1648141294401-ede697a33c02",
+    "bytes": 215402
+  },
+  {
+    "file": "food-pairing-cannoli-box-01.jpg",
+    "category": "food-pairing",
+    "description": "Four Sicilian cannoli with ricotta, pistachio, chocolate and candied fruit in a kraft pastry box held over greenery; warm close-up.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "mid",
+    "dominant_colors": [
+      "#222e18",
+      "#633e1d",
+      "#c5a074"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/delicious-cannoli-are-packed-in-a-box-QduBEmJQpxU",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Konrad Nowacki (@knowacki) on Unsplash",
+    "source_id": "photo-1752079432431-43f97209f979",
+    "bytes": 262158
+  },
+  {
+    "file": "food-pairing-cornetti-cappuccino-01.jpg",
+    "category": "food-pairing",
+    "description": "Two powdered cornetti on a speckled plate with a cappuccino on its saucer, soft window light and fairy lights on cream linen; vertical, gentle.",
+    "orientation": "portrait",
+    "width": 935,
+    "height": 1400,
+    "tone": "light",
+    "dominant_colors": [
+      "#d5b68c",
+      "#d9cebc",
+      "#e6e2db"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-teacup-beside-tray-of-croissant-yTNfArvUDjI",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Marialaura Gionfriddo (@gionsnow) on Unsplash",
+    "source_id": "photo-1574282341541-0b3ed53adcd2",
+    "bytes": 96988
+  },
+  {
+    "file": "food-pairing-biscotti-espresso-01.jpg",
+    "category": "food-pairing",
+    "description": "Overhead flat lay of chocolate-dipped biscotti, espresso in vintage floral cups, reading glasses and an open book on a white table with a hand lifting a cup; light, airy.",
+    "orientation": "portrait",
+    "width": 934,
+    "height": 1400,
+    "tone": "light",
+    "dominant_colors": [
+      "#d7c6bc",
+      "#7f6150",
+      "#dfe0e0"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-person-is-holding-a-cup-of-coffee-and-some-cookies-AO8a6TuLYzM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Esther Kontny (@esther_kontny) on Unsplash",
+    "source_id": "photo-1672707069464-ca9c580043cf",
+    "bytes": 175121
+  },
+  {
+    "file": "textures-dark-wood-planks-01.jpg",
+    "category": "textures",
+    "description": "Full-frame weathered dark-brown wood planks with horizontal grain; even, low-contrast background.",
+    "orientation": "landscape",
+    "width": 1600,
+    "height": 1066,
+    "tone": "dark",
+    "dominant_colors": [
+      "#36332e",
+      "#1b1e1b",
+      "#403a35"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-wooden-board-6vvIBTvL90A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Joshua Bartell (@jjbart7) on Unsplash",
+    "source_id": "photo-1546484396-fb3fc6f95f98",
+    "bytes": 311297
+  },
+  {
+    "file": "textures-warm-wood-planks-01.jpg",
+    "category": "textures",
+    "description": "Horizontal reddish-brown wooden boards with visible grain and small nail holes; warm rustic background.",
+    "orientation": "landscape",
+    "width": 1600,
+    "height": 1066,
+    "tone": "dark",
+    "dominant_colors": [
+      "#77554c",
+      "#3c3236",
+      "#624845"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-wooden-surface-5fIoyoKlz7A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Jon Moore (@thejmoore) on Unsplash",
+    "source_id": "photo-1506968430777-bf7784a87f23",
+    "bytes": 373994
+  },
+  {
+    "file": "textures-white-marble-01.jpg",
+    "category": "textures",
+    "description": "White marble with soft grey veining, evenly lit; bright neutral background.",
+    "orientation": "landscape",
+    "width": 1600,
+    "height": 1066,
+    "tone": "light",
+    "dominant_colors": [
+      "#d9dde0",
+      "#dfe1e4",
+      "#ced3d6"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/white-marble-surface-with-grey-veins-fcWAwPKpkTU",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Madison Bracaglia (@rosellastudio) on Unsplash",
+    "source_id": "photo-1551554781-c46200ea959d",
+    "bytes": 181088
+  },
+  {
+    "file": "textures-black-marble-01.jpg",
+    "category": "textures",
+    "description": "Dark charcoal stone with fine white veins and cracks; dramatic dark background (vertical).",
+    "orientation": "portrait",
+    "width": 934,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#171d1a",
+      "#131915",
+      "#232b2a"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-close-up-of-a-black-marble-surface-osuiatBDTww",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Annie Spratt (@anniespratt) on Unsplash",
+    "source_id": "photo-1550053808-52a75a05955d",
+    "bytes": 285577
+  },
+  {
+    "file": "textures-linen-01.jpg",
+    "category": "textures",
+    "description": "Natural oatmeal linen weave, flat and evenly lit; soft light background.",
+    "orientation": "landscape",
+    "width": 1600,
+    "height": 1242,
+    "tone": "light",
+    "dominant_colors": [
+      "#afa99c",
+      "#c9c2b7",
+      "#cfc9be"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/beige-linen-fabric-texture-background-xTaOPMa6wAE",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Annie Spratt (@anniespratt) on Unsplash",
+    "source_id": "photo-1528458909336-e7a0adfed0a5",
+    "bytes": 395391
+  },
+  {
+    "file": "textures-burlap-01.jpg",
+    "category": "textures",
+    "description": "Macro of coarse brown jute burlap weave; warm rustic coffee-sack background.",
+    "orientation": "landscape",
+    "width": 1600,
+    "height": 1066,
+    "tone": "dark",
+    "dominant_colors": [
+      "#1c120b",
+      "#37271a",
+      "#463527"
+    ],
+    "good_for": [
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-and-black-woven-textile-QfDS5sQ1GXc",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Elijah Ekdahl (@elijahekdahl) on Unsplash",
+    "source_id": "photo-1579564523433-436738cbd43c",
+    "bytes": 377989
+  },
+  {
+    "file": "textures-latte-foam-macro-01.jpg",
+    "category": "textures",
+    "description": "Extreme close-up of latte-art milk foam swirls in cream and caramel; abstract warm texture (vertical).",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#664b0b",
+      "#9d7c42",
+      "#866010"
+    ],
+    "good_for": [
+      "card",
+      "background"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-latte-art-a-close-up-view-of-a-beverage-HcECn8tQEKY",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Panchanok Juntanarach (@mindddd) on Unsplash",
+    "source_id": "photo-1742549626436-bf3c11dab212",
+    "bytes": 165079
+  },
+  {
+    "file": "details-portafilter-grounds-01.jpg",
+    "category": "details",
+    "description": "Portafilter mounded with fresh espresso grounds resting on a black tamping mat at the edge of a wooden bar, bright blurred background; subject lower-left, light space top-right.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 933,
+    "tone": "mid",
+    "dominant_colors": [
+      "#0f1414",
+      "#6f6351",
+      "#f8f9fa"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/coffee-powder-in-container-zX-JQsqXdeo",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by David Lundgren (@davelundgren) on Unsplash",
+    "source_id": "photo-1548270311-23fa25d5de0e",
+    "bytes": 82996
+  },
+  {
+    "file": "details-tamped-puck-01.jpg",
+    "category": "details",
+    "description": "Top-down view of a freshly tamped espresso puck in a chrome portafilter on a dark wooden counter; vertical, centered.",
+    "orientation": "portrait",
+    "width": 1082,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#3a3023",
+      "#745d3f",
+      "#5c5341"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-close-up-of-a-metal-cup-on-a-wooden-table-ykj9ezr3cl4",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Michael (@donniebrasc0) on Unsplash",
+    "source_id": "photo-1637718231880-cf4634e75c95",
+    "bytes": 256298
+  },
+  {
+    "file": "details-grinder-dosing-01.jpg",
+    "category": "details",
+    "description": "Hand holding a white-handled portafilter under a grinder as fine grounds heap up, warm wooden background; subject on the left.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 933,
+    "tone": "mid",
+    "dominant_colors": [
+      "#2a2c30",
+      "#b9896a",
+      "#4c433f"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-pouring-brown-powder-on-silver-cup-pkj935eY62A",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nguyen Tong Hai Van (@ngtghaivan) on Unsplash",
+    "source_id": "photo-1629248990514-c350da4e7bc9",
+    "bytes": 104224
+  },
+  {
+    "file": "details-manual-grinder-01.jpg",
+    "category": "details",
+    "description": "Vintage wooden hand-crank coffee mill engraved 'Coffee' on a dark tabletop against a deep teal wall; centered subject with wide teal space on both sides for text.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "dark",
+    "dominant_colors": [
+      "#3b5550",
+      "#405c56",
+      "#2c4542"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/brown-and-black-coffee-grinder-2AWQLHn7VLI",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Ashkan Forouzani (@ashkfor121) on Unsplash",
+    "source_id": "photo-1573066380308-24ff4c273dbc",
+    "bytes": 110224
+  },
+  {
+    "file": "details-portafilter-tools-01.jpg",
+    "category": "details",
+    "description": "Barista station from above: tamped portafilter with spiral distribution marks, tamper and leveling tools on a walnut stand beside a blurred chrome machine.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 933,
+    "tone": "mid",
+    "dominant_colors": [
+      "#16110f",
+      "#a19b92",
+      "#c3c7c5"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/espresso-machine-portafilter-filled-with-coffee-grounds-pRzbLPQOnwM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Marko Alpner (@marko_alpner) on Unsplash",
+    "source_id": "photo-1771423424255-bbd49b82dbbe",
+    "bytes": 126525
+  },
+  {
+    "file": "details-kraft-coffee-bag-01.jpg",
+    "category": "details",
+    "description": "Plain unbranded kraft-paper coffee bag with a valve standing on a white table against a tan wall with a crisp shadow; minimalist, large empty space for copy or a logo mock-up.",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1200,
+    "tone": "light",
+    "dominant_colors": [
+      "#eabe8e",
+      "#f4f5f0",
+      "#cf9c67"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-brown-paper-bag-sitting-on-top-of-a-white-table-wizWrRZJXSg",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by With Mahdy (@withmahdy) on Unsplash",
+    "source_id": "photo-1695245503558-5cdb37f49092",
+    "bytes": 96263
+  },
+  {
+    "file": "details-box-handover-01.jpg",
+    "category": "details",
+    "description": "Hands passing a sealed cardboard shipping box from a courier in denim to a customer, faces cropped; delivery/subscription concept, vertical.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#121d24",
+      "#44687d",
+      "#808c93"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/person-giving-brown-box-BFdSCxmqvYc",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by RoseBox رز باکس (@rosebox) on Unsplash",
+    "source_id": "photo-1566576721346-d4a3b4eaeb55",
+    "bytes": 72944
+  },
+  {
+    "file": "bar-cafe-counter-pendants-01.jpg",
+    "category": "bar",
+    "description": "Bright café counter with Edison-bulb pendants, white-brick wall with wooden shelves, chalkboard menu, grinders and a multi-group espresso machine while a barista works; airy, light upper area.",
+    "orientation": "landscape",
+    "width": 1400,
+    "height": 788,
+    "tone": "mid",
+    "dominant_colors": [
+      "#271f18",
+      "#898076",
+      "#aca9a6"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-kitchen-appliance-on-kitchen-island-with-pendant-lights-Kwdp-0pok-I",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nafinia Putra (@nputra) on Unsplash",
+    "source_id": "photo-1453614512568-c4024d13c247",
+    "bytes": 180228
+  },
+  {
+    "file": "bar-latte-pour-dark-portrait-01.jpg",
+    "category": "bar",
+    "description": "Tattooed barista pouring milk from a steel pitcher into a latte glass with heart art over a dark wooden bar; dramatic dark background, subject centered in the upper half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#050b08",
+      "#19150c",
+      "#392c1d"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/man-pouring-milk-in-coffee-2z3MOB3kfJU",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Nathan Dumlao (@nate_dumlao) on Unsplash",
+    "source_id": "photo-1514066558159-fc8c737ef259",
+    "bytes": 89524
+  },
+  {
+    "file": "home-espresso-machine-corner-01.jpg",
+    "category": "home",
+    "description": "Home barista station with a semi-automatic espresso machine, pour-over set and kettle on a wooden table under a white lamp, framed by plants; warm, vertical.",
+    "orientation": "portrait",
+    "width": 1120,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#8a7461",
+      "#20200f",
+      "#35391f"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/black-and-silver-coffee-maker-on-brown-wooden-table-9aNpX5wfaU0",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Luke Porter (@lukeporter) on Unsplash",
+    "source_id": "photo-1620051787208-a45bc64e32ff",
+    "bytes": 152196
+  },
+  {
+    "file": "business-commercial-espresso-machine-01.jpg",
+    "category": "business",
+    "description": "Front close-up of a stainless two-group commercial espresso machine with touch-button panel and locked portafilters, warm café bokeh behind (brand marks cropped out).",
+    "orientation": "landscape",
+    "width": 1800,
+    "height": 1027,
+    "tone": "dark",
+    "dominant_colors": [
+      "#0f1313",
+      "#51412f",
+      "#3a2a1e"
+    ],
+    "good_for": [
+      "hero",
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/silver-espresso-machine-hvcQJUFkvNg",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Isabela Kronemberger (@kronemberger) on Unsplash",
+    "source_id": "photo-1531937465322-9909ce13f8ca",
+    "bytes": 203828
+  },
+  {
+    "file": "food-pairing-cannoli-fork-01.jpg",
+    "category": "food-pairing",
+    "description": "A hand cutting into a cream-filled cannolo with a fork on a striped plate in a warm, dim pastry shop; dark background in the upper half.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "dark",
+    "dominant_colors": [
+      "#2e1406",
+      "#0d0803",
+      "#b38974"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-hand-uses-a-fork-to-eat-a-cannoli-sBCa7efmN9Y",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Brelyn Bashrum (@brelynkk) on Unsplash",
+    "source_id": "photo-1777333033326-d20ad009b24e",
+    "bytes": 153128
+  },
+  {
+    "file": "food-pairing-tiramisu-jars-01.jpg",
+    "category": "food-pairing",
+    "description": "Tiramisu in glass cups topped with cocoa-dusted mascarpone peaks on a wooden board with meringues and gold spoons; dark rustic backdrop across the top.",
+    "orientation": "portrait",
+    "width": 933,
+    "height": 1400,
+    "tone": "mid",
+    "dominant_colors": [
+      "#1c1611",
+      "#8e6143",
+      "#53301b"
+    ],
+    "good_for": [
+      "card",
+      "inline"
+    ],
+    "source": "Unsplash",
+    "source_url": "https://unsplash.com/photos/a-wooden-table-topped-with-desserts-on-top-of-plates-wb1qOsAjFPM",
+    "license": "Unsplash License (free for commercial use; attribution appreciated, not required)",
+    "credit": "Photo by Anna Jakutajc-Wojtalik (@annajakwoj) on Unsplash",
+    "source_id": "photo-1710106519622-8c49d0bcff2f",
+    "bytes": 199788
+  }
+]

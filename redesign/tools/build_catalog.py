@@ -10,7 +10,7 @@ def clean(t):
 BLEND_BY_SLUG={
  '5-stelle':'5-stelle','extra-bar':'extra-bar','espresso-bar':'espresso-bar','espresso-classico':'espresso-classico',
  'caffetteria':'caffetteria','copacabana':'copacabana','club-99':'club-99','oro70':'oro70','rosso70':'rosso70','dek70':'dek70',
- 'cz-capsules':'catanzaro','organic':'organic','special-edition':'silver-signature','decaf':'decaf','premium':'premium-drip','french-roast':'french-roast',
+ 'cz-capsules':'catanzaro-cz','organic':'organic','special-edition':'silver-signature','decaf':'decaf','premium':'premium-blend-drip','french-roast':'french-roast-drip',
 }
 out=[]
 for p in d:
