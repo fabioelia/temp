@@ -1,0 +1,1471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dub Studio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect x=%274%27 y=%2710%27 width=%2756%27 height=%2744%27 rx=%2710%27 fill=%27%23ff8a3d%27/%3E%3Cpath d=%27M26 22v20l16-10z%27 fill=%27white%27/%3E%3C/svg%3E">
+<meta name="description" content="Dub video into another language in your browser, live or for a whole file. Whisper speech recognition, on-device or Claude translation, and Kokoro or browser voices cast per character.">
+<style>
+  :root {
+    --bg: #0f1216; --panel: #171b21; --panel-2: #1e242c; --border: #2a323d; --text: #e6e9ee;
+    --muted: #8b95a5; --accent: #ff8a3d; --accent-2: #3ddc97; --danger: #ff6b6b; --warn: #ffb454;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #f3f5f8; --panel: #ffffff; --panel-2: #eef1f5; --border: #d7dde6; --text: #1b2330; --muted: #5d6879;
+      --accent: #d9650f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1216; --panel: #171b21; --panel-2: #1e242c; --border: #2a323d; --text: #e6e9ee; --muted: #8b95a5; --accent: #ff8a3d;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+  }
+  a { color: var(--accent); }
+  header {
+    padding: 18px 24px 10px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { font-size: 20px; margin: 0; letter-spacing: .2px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  main.layout { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 18px; padding: 18px 24px 40px; }
+  @media (max-width: 1000px) { main.layout { grid-template-columns: 1fr; padding: 14px 16px 40px; } header { padding: 14px 16px 8px; } }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); }
+  .controls { display: flex; flex-direction: column; gap: 16px; padding: 16px; align-self: start; }
+  .stage { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .card { padding: 14px 16px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 8px; }
+  section.block { display: flex; flex-direction: column; gap: 8px; }
+  label.row { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+  label.check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+  .hint { font-size: 12px; color: var(--muted); }
+  .hint.warn { color: var(--warn); }
+  input[type=text], input[type=password], select, textarea {
+    width: 100%; min-width: 0; background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 7px; padding: 6px 8px; font: inherit; font-size: 13px;
+  }
+  textarea { resize: vertical; }
+  input[type=range] { width: 100%; accent-color: var(--accent); }
+  button {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 12px; font: inherit; font-size: 13px; cursor: pointer;
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.live { border-color: var(--accent-2); }
+  button.live.on { background: var(--accent-2); color: #08130e; font-weight: 600; }
+  .btns { display: flex; flex-wrap: wrap; gap: 8px; }
+  .drop {
+    border: 1.5px dashed var(--border); border-radius: var(--radius); padding: 14px; text-align: center; cursor: pointer;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .drop.over { border-color: var(--accent); }
+  .drop input { display: none; }
+  video { width: 100%; max-height: 52vh; background: #000; border-radius: 8px; display: block; }
+  .player-empty { aspect-ratio: 16 / 9; display: grid; place-items: center; background: var(--panel-2); border-radius: 8px; color: var(--muted); font-size: 14px; text-align: center; padding: 16px; }
+  .subtitle { min-height: 2.6em; margin-top: 8px; font-size: 16px; text-align: center; }
+  .subtitle .who { font-weight: 600; margin-right: 6px; }
+  .progress { height: 6px; background: var(--panel-2); border-radius: 3px; overflow: hidden; }
+  .progress > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .progress.indeterminate > div { width: 30%; animation: slide 1.2s infinite ease-in-out; }
+  @keyframes slide { from { margin-left: -30%; } to { margin-left: 100%; } }
+  .status-line { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+  .error { color: var(--danger); font-size: 13px; white-space: pre-wrap; }
+  .error:empty { display: none; }
+  .cast { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; }
+  .actor { border: 1px solid var(--border); border-radius: 9px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--panel-2); }
+  .actor .top { display: flex; gap: 6px; align-items: center; }
+  .actor .swatch { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .actor .top input { font-weight: 600; }
+  .actor label.row { grid-template-columns: 60px minmax(0, 1fr); }
+  .actor .val { font-variant-numeric: tabular-nums; }
+  .script { display: flex; flex-direction: column; gap: 2px; max-height: 60vh; overflow: auto; }
+  .line { display: grid; grid-template-columns: 58px 130px minmax(0, 1fr) 70px; gap: 8px; align-items: start; padding: 6px 4px; border-radius: 6px; }
+  .line.now { background: var(--panel-2); outline: 1px solid var(--accent); }
+  .line .t { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; cursor: pointer; padding-top: 4px; }
+  .line select { font-size: 12px; padding: 3px 4px; }
+  .line .orig { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+  .line textarea { padding: 4px 6px; min-height: 2.2em; }
+  .line .st { font-size: 11px; color: var(--muted); text-align: right; padding-top: 4px; }
+  .line .st.ok { color: var(--accent-2); }
+  .line .st.tight { color: var(--warn); }
+  @media (max-width: 700px) {
+    .line { grid-template-columns: 50px minmax(0, 1fr); }
+    .line > :nth-child(3) { grid-column: 1 / -1; }
+    .line > :nth-child(4) { grid-column: 1 / -1; text-align: left; }
+  }
+  .empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+  details summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+  .log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--muted); max-height: 160px; overflow: auto; white-space: pre-wrap; margin-top: 6px; }
+  .log .error { color: var(--danger); }
+  .note { font-size: 12px; color: var(--muted); border-left: 3px solid var(--accent); padding: 4px 10px; }
+  .downloads { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+  .downloads .dl { display: flex; justify-content: space-between; gap: 8px; }
+  .downloads .dl .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dub Studio</h1>
+  <span class="sub">Re-voice video in another language: live while it plays, or as a finished dub track. Runs in your browser.</span>
+</header>
+
+<main class="layout">
+  <aside class="panel controls">
+    <section class="block">
+      <h2>1 · Video</h2>
+      <div class="drop" id="drop">
+        <strong>Drop a video or audio file</strong>
+        <span class="hint">or click to browse · mp4, webm, mkv, mov, mp3, wav …</span>
+        <input type="file" id="fileInput" accept="video/*,audio/*,.mkv">
+      </div>
+      <div class="hint" id="mediaInfo">No file loaded.</div>
+      <div class="btns">
+        <button id="importBtn" title="Use a transcript exported as JSON from Speaker Transcriber. Its speakers become your cast.">Import transcript JSON…</button>
+        <input type="file" id="importInput" accept=".json,application/json" hidden>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>2 · Languages</h2>
+      <label class="row"><span>Spoken in</span><select id="srcLang"></select></label>
+      <label class="row"><span>Dub into</span><select id="tgtLang"></select></label>
+      <label class="row"><span>Translator</span>
+        <select id="mtEngine">
+          <option value="local">On device (Whisper + Opus-MT)</option>
+          <option value="claude">Claude (needs an API key)</option>
+        </select></label>
+      <div id="claudeBox" class="block" hidden>
+        <label class="row"><span>API key</span><input type="password" id="apiKey" placeholder="sk-ant-…" autocomplete="off" spellcheck="false"></label>
+        <label class="check"><input type="checkbox" id="rememberKey"> Remember the key in this browser</label>
+        <div class="hint">Claude translates whole scenes at once, so lines keep their tone and fit the time each character has to speak. Only the transcript text is sent to the Anthropic API; audio and video stay on this machine.</div>
+      </div>
+      <div class="hint" id="mtHint"></div>
+    </section>
+
+    <section class="block">
+      <h2>3 · Voices</h2>
+      <label class="row"><span>Voice engine</span>
+        <select id="ttsEngine">
+          <option value="kokoro">Kokoro (natural, English only)</option>
+          <option value="browser">Browser voices (any language)</option>
+        </select></label>
+      <div class="hint" id="ttsHint"></div>
+      <label class="row"><span>Original level</span><input type="range" id="duck" min="0" max="1" step="0.05" value="0.25"></label>
+      <div class="hint">How loud the original track stays while a dubbed line plays. Music and effects are kept.</div>
+      <label class="check"><input type="checkbox" id="vocalCut" checked> <span>Suppress original dialogue <span class="hint">(cancels the centre channel of stereo audio, where dialogue usually sits)</span></span></label>
+      <label class="row"><span>Dub level</span><input type="range" id="dubVol" min="0" max="1.5" step="0.05" value="1"></label>
+    </section>
+
+    <section class="block">
+      <h2>4 · Dub</h2>
+      <div class="btns">
+        <button class="primary" id="prepareBtn" disabled title="Transcribe, translate and voice the whole file, then play it back dubbed">Prepare full dub</button>
+        <button id="cancelBtn" disabled>Cancel</button>
+      </div>
+      <div class="btns">
+        <button class="live" id="liveVideoBtn" disabled title="Dub the loaded video live as it plays">Live: this video</button>
+        <button class="live" id="liveTabBtn" title="Dub audio from another browser tab, e.g. a streaming site">Live: browser tab</button>
+        <button class="live" id="liveMicBtn" title="Dub what the microphone hears">Live: mic</button>
+      </div>
+      <label class="check"><input type="checkbox" id="pitchPick" checked> <span>Live: pick a cast voice by how high or low the speaker sounds</span></label>
+      <div class="hint">Live dubbing runs about 1–3 s behind the speaker. For the best result, prepare a full dub, which also lets you edit lines and voices before you watch.</div>
+    </section>
+
+    <section class="block">
+      <h2>5 · Export</h2>
+      <div class="btns">
+        <button id="exportWav" disabled title="Only the dubbed voices, time-aligned to the video (Kokoro voices only)">Dub track (WAV)</button>
+        <button id="exportSrt" disabled>Subtitles (SRT)</button>
+        <button id="exportJson" disabled>Dub project (JSON)</button>
+        <button id="recordBtn" disabled title="Plays the video once from the start and records picture plus the dubbed mix">Record dubbed video</button>
+      </div>
+      <div class="hint">Mux the WAV with the original video using:<br><code>ffmpeg -i episode.mp4 -i dub.wav -filter_complex "[0:a]volume=0.25[o];[o][1:a]amix=inputs=2:normalize=0" -map 0:v -c:v copy episode-dubbed.mp4</code></div>
+    </section>
+
+    <details>
+      <summary>Advanced</summary>
+      <div class="block" style="margin-top:8px">
+        <label class="row"><span>Whisper model</span><select id="asrModel"></select></label>
+        <label class="row"><span>Compute</span>
+          <select id="device">
+            <option value="auto">Auto (WebGPU if available)</option>
+            <option value="webgpu">WebGPU</option>
+            <option value="wasm">WebAssembly (CPU)</option>
+          </select></label>
+        <label class="row"><span>Claude model</span><input type="text" id="claudeModel" value="claude-opus-5-5" spellcheck="false"></label>
+        <div class="hint" id="gpuHint"></div>
+      </div>
+    </details>
+  </aside>
+
+  <div class="stage">
+    <section class="panel card">
+      <div id="playerWrap"><div class="player-empty">Load a video you have the rights to use, then prepare a dub or start live dubbing.</div></div>
+      <div class="subtitle" id="subtitle"></div>
+      <div class="block" style="margin-top:6px">
+        <div class="progress" id="progress"><div></div></div>
+        <div class="status-line"><span id="stage">Idle</span><span id="progressText"></span></div>
+        <div class="error" id="error"></div>
+        <div class="downloads" id="downloads"></div>
+      </div>
+    </section>
+
+    <section class="panel card">
+      <h2>Cast</h2>
+      <div class="hint" style="margin-bottom:8px">Each character gets their own synthetic voice. Shape it with a style preset, pitch and pace, and press ▶ to audition.</div>
+      <div class="btns" style="margin-bottom:10px"><button id="addActor">+ Add character</button></div>
+      <div class="cast" id="cast"></div>
+    </section>
+
+    <section class="panel card">
+      <h2>Script</h2>
+      <div class="hint" style="margin-bottom:8px">Edit any translated line, or pick who says it. Edited lines are re-voiced when you press play.</div>
+      <div class="script" id="script"><div class="empty">Nothing yet.</div></div>
+    </section>
+
+    <section class="panel card">
+      <details><summary>Log</summary><div class="log" id="log"></div></details>
+    </section>
+  </div>
+</main>
+
+<!-- ===================== Speech recognition + translation worker ===================== -->
+<script type="text/plain" id="asrWorkerSrc">
+const SR = 16000;
+let TF = null, asr = null, mt = null;
+const post = (m, t) => self.postMessage(m, t || []);
+
+async function lib(url) {
+  if (TF) return TF;
+  TF = await import(url);
+  TF.env.allowLocalModels = false;
+  try { if (typeof caches === 'undefined') TF.env.useBrowserCache = false; else await caches.open('transformers-cache'); }
+  catch (e) { TF.env.useBrowserCache = false; }
+  return TF;
+}
+
+async function loadAsr(id, cfg) {
+  const T = await lib(cfg.libUrl);
+  const key = JSON.stringify([cfg.model, cfg.device]);
+  if (asr && asr.key === key) return asr.device;
+  if (asr) { try { await asr.pipe.dispose(); } catch (e) {} asr = null; }
+  const progress_callback = (p) => post({ id, type: 'download', ...p });
+  const tries = cfg.device === 'webgpu'
+    ? [['webgpu', cfg.big ? { encoder_model: 'fp32', decoder_model_merged: 'q4' } : 'fp32'], ['wasm', 'q8']]
+    : [['wasm', 'q8']];
+  let err;
+  for (const [device, dtype] of tries) {
+    try {
+      post({ id, type: 'status', message: `Loading ${cfg.model} (${device})` });
+      const pipe = await T.pipeline('automatic-speech-recognition', cfg.model, { device, dtype, progress_callback });
+      asr = { key, pipe, device };
+      return device;
+    } catch (e) { err = e; post({ id, type: 'log', message: `Loading on ${device} failed: ${e.message || e}` }); }
+  }
+  throw err;
+}
+
+async function loadMt(id, cfg) {
+  const T = await lib(cfg.libUrl);
+  if (mt && mt.model === cfg.model) return;
+  if (mt) { try { await mt.pipe.dispose(); } catch (e) {} mt = null; }
+  post({ id, type: 'status', message: `Loading ${cfg.model}` });
+  const pipe = await T.pipeline('translation', cfg.model, { dtype: 'q8', device: 'wasm', progress_callback: (p) => post({ id, type: 'download', ...p }) });
+  mt = { model: cfg.model, pipe };
+}
+
+function genOpts(opts) {
+  const g = {};
+  if (opts.multilingual) {
+    if (opts.language && opts.language !== 'auto') g.language = opts.language;
+    g.task = opts.task || 'transcribe';
+  }
+  return g;
+}
+
+async function transcribeFile(id, { audio, opts }) {
+  const pipe = asr.pipe;
+  const chunk_length_s = 30, stride_length_s = 5;
+  const win = chunk_length_s * SR, jump = win - 2 * stride_length_s * SR;
+  const total = audio.length > win ? 1 + Math.ceil((audio.length - win) / jump) : 1;
+  let done = 0;
+  const orig = pipe.model.generate;
+  pipe.model.generate = async function (...a) {
+    post({ id, type: 'progress', value: done / total, message: `Listening: part ${done + 1} of ${total}` });
+    const r = await orig.apply(this, a); done++; return r;
+  };
+  try {
+    const out = await pipe(audio, { chunk_length_s, stride_length_s, return_timestamps: true, ...genOpts(opts) });
+    return (out.chunks || []).map((c) => ({ text: c.text, start: c.timestamp?.[0] ?? 0, end: c.timestamp?.[1] }));
+  } finally { pipe.model.generate = orig; }
+}
+
+async function transcribeClip(id, { audio, opts }) {
+  const out = await asr.pipe(audio, genOpts(opts));
+  return (out.text || '').trim();
+}
+
+async function translate(id, { texts, prefix }) {
+  const res = [];
+  for (let i = 0; i < texts.length; i++) {
+    const t = texts[i];
+    if (!t.trim()) { res.push(''); continue; }
+    const out = await mt.pipe((prefix || '') + t, { max_new_tokens: 256 });
+    res.push((out[0]?.translation_text || '').trim());
+    if (texts.length > 1) post({ id, type: 'progress', value: (i + 1) / texts.length, message: `Translating line ${i + 1} of ${texts.length}` });
+  }
+  return res;
+}
+
+self.onmessage = async (ev) => {
+  const { id, type, payload } = ev.data;
+  try {
+    let result;
+    if (type === 'loadAsr') result = await loadAsr(id, payload);
+    else if (type === 'loadMt') result = await loadMt(id, payload);
+    else if (type === 'transcribeFile') result = await transcribeFile(id, payload);
+    else if (type === 'transcribeClip') result = await transcribeClip(id, payload);
+    else if (type === 'translate') result = await translate(id, payload);
+    else throw new Error('Unknown message ' + type);
+    post({ id, type: 'done', result });
+  } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
+};
+</script>
+
+<!-- ===================== Voice synthesis worker (Kokoro) ===================== -->
+<script type="text/plain" id="ttsWorkerSrc">
+let tts = null, device = null;
+const post = (m, t) => self.postMessage(m, t || []);
+self.onmessage = async (ev) => {
+  const { id, type, payload } = ev.data;
+  try {
+    if (type === 'load') {
+      if (!tts) {
+        const { KokoroTTS } = await import(payload.libUrl);
+        const tries = payload.device === 'webgpu' ? [['webgpu', 'fp32'], ['wasm', 'q8']] : [['wasm', 'q8']];
+        let err;
+        for (const [d, dtype] of tries) {
+          try {
+            post({ id, type: 'status', message: `Loading Kokoro voices (${d})` });
+            tts = await KokoroTTS.from_pretrained(payload.model, { dtype, device: d, progress_callback: (p) => post({ id, type: 'download', ...p }) });
+            device = d; break;
+          } catch (e) { err = e; post({ id, type: 'log', message: `Kokoro on ${d} failed: ${e.message || e}` }); }
+        }
+        if (!tts) throw err;
+      }
+      post({ id, type: 'done', result: device });
+    } else if (type === 'synth') {
+      const out = await tts.generate(payload.text, { voice: payload.voice, speed: payload.speed });
+      const audio = out.audio instanceof Float32Array ? out.audio : Float32Array.from(out.audio);
+      post({ id, type: 'done', result: { audio, sr: out.sampling_rate } }, [audio.buffer]);
+    } else throw new Error('Unknown message ' + type);
+  } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
+};
+</script>
+
+<!-- ===================== Live capture worklet ===================== -->
+<script type="text/plain" id="captureWorkletSrc">
+class Tap extends AudioWorkletProcessor {
+  constructor() { super(); this.buf = new Float32Array(2048); this.n = 0; }
+  process(inputs) {
+    const inp = inputs[0];
+    if (inp && inp.length) {
+      const ch = inp.length, len = inp[0].length;
+      for (let i = 0; i < len; i++) {
+        let s = 0; for (let c = 0; c < ch; c++) s += inp[c][i];
+        this.buf[this.n++] = s / ch;
+        if (this.n === this.buf.length) { this.port.postMessage(this.buf.slice()); this.n = 0; }
+      }
+    }
+    return true;
+  }
+}
+registerProcessor('dub-tap', Tap);
+</script>
+
+<script type="module">
+// ---------- constants ----------
+const TRANSFORMERS_URL = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.0/dist/transformers.min.js';
+const KOKORO_URL = 'https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/dist/kokoro.web.js';
+const KOKORO_MODEL = 'onnx-community/Kokoro-82M-v1.0-ONNX';
+const ANTHROPIC_SDK_URL = 'https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.129.0/+esm';
+const SR = 16000;
+const KEY_STORE = 'dub-studio.apiKey';
+const SETTINGS_STORE = 'dub-studio.settings';
+
+const LANGS = [
+  ['ja', 'Japanese'], ['en', 'English'], ['es', 'Spanish'], ['pt', 'Portuguese'], ['fr', 'French'], ['de', 'German'],
+  ['it', 'Italian'], ['zh', 'Chinese'], ['ko', 'Korean'], ['ru', 'Russian'], ['hi', 'Hindi'], ['ar', 'Arabic'],
+  ['id', 'Indonesian'], ['nl', 'Dutch'], ['vi', 'Vietnamese'], ['tr', 'Turkish'], ['pl', 'Polish'], ['uk', 'Ukrainian'],
+  ['sv', 'Swedish'], ['ro', 'Romanian'], ['cs', 'Czech'], ['da', 'Danish'], ['fi', 'Finnish'], ['hu', 'Hungarian'], ['th', 'Thai'],
+];
+const LANG_NAME = Object.fromEntries(LANGS);
+// On-device translation goes source → English with Whisper, then English → target with Opus-MT.
+const OPUS_FROM_EN = {
+  es: ['Xenova/opus-mt-en-es'], fr: ['Xenova/opus-mt-en-fr'], de: ['Xenova/opus-mt-en-de'], it: ['Xenova/opus-mt-en-it'],
+  pt: ['Xenova/opus-mt-en-ROMANCE', '>>pt_br<< '], ro: ['Xenova/opus-mt-en-ro'], zh: ['Xenova/opus-mt-en-zh'],
+  ru: ['Xenova/opus-mt-en-ru'], hi: ['Xenova/opus-mt-en-hi'], ar: ['Xenova/opus-mt-en-ar'], id: ['Xenova/opus-mt-en-id'],
+  nl: ['Xenova/opus-mt-en-nl'], vi: ['Xenova/opus-mt-en-vi'], uk: ['Xenova/opus-mt-en-uk'], sv: ['Xenova/opus-mt-en-sv'],
+  cs: ['Xenova/opus-mt-en-cs'], da: ['Xenova/opus-mt-en-da'], fi: ['Xenova/opus-mt-en-fi'], hu: ['Xenova/opus-mt-en-hu'],
+};
+const ASR_MODELS = [
+  { id: 'Xenova/whisper-base', label: 'Whisper base · ≈75 MB · fast' },
+  { id: 'Xenova/whisper-tiny', label: 'Whisper tiny · ≈40 MB · fastest' },
+  { id: 'Xenova/whisper-small', label: 'Whisper small · ≈250 MB · more accurate' },
+  { id: 'onnx-community/whisper-large-v3-turbo', label: 'Whisper large-v3-turbo · ≈1.3 GB · best, WebGPU (no built-in translation)', big: true, noTranslate: true },
+];
+
+// Original voice styles. Kokoro renders with `voice` at speed tempo/pitch, then playback at `pitch`
+// raises or lowers the voice while keeping the requested pace.
+const PRESETS = [
+  { id: 'hero', label: 'Young hero · bright, eager', kokoro: 'am_puck', pitch: 1.08, tempo: 1.05, refHz: 190 },
+  { id: 'rival', label: 'Proud rival · low, clipped', kokoro: 'am_fenrir', pitch: 0.95, tempo: 1.02, refHz: 130 },
+  { id: 'mentor', label: 'Old mentor · slow, warm', kokoro: 'bm_george', pitch: 0.9, tempo: 0.9, refHz: 115 },
+  { id: 'kid', label: 'Kid · high, quick', kokoro: 'af_sky', pitch: 1.18, tempo: 1.08, refHz: 300 },
+  { id: 'heroine', label: 'Heroine · clear, confident', kokoro: 'af_bella', pitch: 1.03, tempo: 1.02, refHz: 230 },
+  { id: 'villain', label: 'Villain · deep, deliberate', kokoro: 'am_onyx', pitch: 0.86, tempo: 0.92, refHz: 100 },
+  { id: 'sidekick', label: 'Comic sidekick · fast, nasal', kokoro: 'am_eric', pitch: 1.12, tempo: 1.12, refHz: 170 },
+  { id: 'narrator', label: 'Narrator · steady, broadcast', kokoro: 'bm_lewis', pitch: 0.98, tempo: 0.95, refHz: 120 },
+  { id: 'elder-f', label: 'Elder woman · soft, measured', kokoro: 'bf_emma', pitch: 0.94, tempo: 0.92, refHz: 190 },
+];
+const KOKORO_VOICES = ['af_heart', 'af_alloy', 'af_aoede', 'af_bella', 'af_jessica', 'af_kore', 'af_nicole', 'af_nova', 'af_river', 'af_sarah', 'af_sky',
+  'am_adam', 'am_echo', 'am_eric', 'am_fenrir', 'am_liam', 'am_michael', 'am_onyx', 'am_puck', 'am_santa',
+  'bf_alice', 'bf_emma', 'bf_isabella', 'bf_lily', 'bm_daniel', 'bm_fable', 'bm_george', 'bm_lewis'];
+const PALETTE = ['#ff8a3d', '#5b9cff', '#3ddc97', '#c77dff', '#ffd23f', '#ff6b9a', '#4dd0e1', '#a3e048', '#f4a261'];
+
+// ---------- state ----------
+const $ = (id) => document.getElementById(id);
+const els = Object.fromEntries([...document.querySelectorAll('[id]')].map((e) => [e.id, e]));
+const state = {
+  file: null, url: null, duration: 0,
+  lines: [], cast: [], nextActor: 0,
+  running: false, cancelled: false,
+  live: null, recording: null,
+};
+let gpu = { available: false };
+let video = null;
+
+// ---------- small helpers ----------
+function el(tag, props = {}, children = []) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    if (k === 'class') e.className = v;
+    else if (k === 'style') e.style.cssText = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else if (k === 'value') e.value = v;
+    else if (k in e && typeof v !== 'string') e[k] = v;
+    else e.setAttribute(k, v);
+  }
+  for (const c of [].concat(children)) if (c != null) e.append(c);
+  return e;
+}
+const fmtTime = (s) => { s = Math.max(0, s || 0); const m = Math.floor(s / 60); return `${m}:${String(Math.floor(s % 60)).padStart(2, '0')}`; };
+const fmtStamp = (s, sep) => { s = Math.max(0, s); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = Math.floor(s % 60), ms = Math.round((s % 1) * 1000) % 1000; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}${sep}${String(ms).padStart(3, '0')}`; };
+const fmtBytes = (b) => b > 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b > 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.round(b / 1e3) + ' kB';
+function logLine(msg, cls) {
+  const d = el('div', { class: cls || '' }, `[${new Date().toLocaleTimeString()}] ${msg}`);
+  els.log.append(d); els.log.scrollTop = els.log.scrollHeight;
+  (cls === 'error' ? console.warn : console.log)('[dub]', msg);
+}
+function showError(msg) { els.error.textContent = msg || ''; if (msg) logLine(msg, 'error'); }
+function setStage(t) { els.stage.textContent = t; }
+function setProgress(v, text = '') {
+  els.progress.classList.toggle('indeterminate', v == null);
+  els.progress.firstElementChild.style.width = v == null ? '' : `${Math.round(Math.max(0, Math.min(1, v)) * 100)}%`;
+  els.progressText.textContent = text;
+}
+function download(name, data, mime) {
+  const blob = data instanceof Blob ? data : new Blob([data], { type: mime });
+  const a = el('a', { href: URL.createObjectURL(blob), download: name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+}
+const baseName = () => (state.file?.name || 'dub').replace(/\.[^.]+$/, '');
+function storeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function storeSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ } }
+
+// ---------- workers ----------
+class WorkerClient {
+  constructor(srcId, name) { this.srcId = srcId; this.name = name; this.w = null; this.seq = 0; this.pending = new Map(); this.downloads = new Map(); }
+  get worker() {
+    if (!this.w) {
+      const url = URL.createObjectURL(new Blob([document.getElementById(this.srcId).textContent], { type: 'text/javascript' }));
+      this.w = new Worker(url, { type: 'module', name: this.name });
+      this.w.onmessage = (ev) => this.onMessage(ev.data);
+      this.w.onerror = (e) => { for (const p of this.pending.values()) p.reject(new Error(e.message || 'Worker crashed')); this.pending.clear(); };
+    }
+    return this.w;
+  }
+  call(type, payload, { onProgress, transfer } = {}) {
+    const id = ++this.seq;
+    return new Promise((resolve, reject) => {
+      this.pending.set(id, { resolve, reject, onProgress });
+      this.worker.postMessage({ id, type, payload }, transfer || []);
+    });
+  }
+  onMessage(m) {
+    const p = this.pending.get(m.id);
+    if (m.type === 'download') { onDownload(m); return; }
+    if (m.type === 'log') { logLine(m.message); return; }
+    if (m.type === 'status') { setStage(m.message); logLine(m.message); return; }
+    if (!p) return;
+    if (m.type === 'progress') { p.onProgress ? p.onProgress(m) : setProgress(m.value, m.message); return; }
+    this.pending.delete(m.id);
+    if (m.type === 'done') p.resolve(m.result); else p.reject(new Error(m.message));
+  }
+  terminate() { if (this.w) { this.w.terminate(); this.w = null; } for (const p of this.pending.values()) p.reject(new Error('Cancelled')); this.pending.clear(); }
+}
+const asrWorker = new WorkerClient('asrWorkerSrc', 'dub-asr');
+const ttsWorker = new WorkerClient('ttsWorkerSrc', 'dub-tts');
+
+const downloads = new Map();
+function onDownload(m) {
+  if (!m.file) return;
+  const key = `${m.name}/${m.file}`;
+  if (m.status === 'progress' || m.status === 'progress_total') downloads.set(key, { loaded: m.loaded, total: m.total });
+  else if (m.status === 'done') downloads.delete(key);
+  els.downloads.textContent = '';
+  for (const [k, d] of downloads) {
+    if (!d.total || d.total < 2e6) continue;
+    els.downloads.append(el('div', { class: 'dl' }, [el('span', { class: 'name' }, `${k.split('/').slice(-2).join('/')} (${fmtBytes(d.total)})`), el('span', {}, `${Math.round(d.loaded / d.total * 100)}%`)]));
+  }
+}
+
+// ---------- model loading ----------
+function asrConfig() {
+  const m = ASR_MODELS.find((x) => x.id === els.asrModel.value) || ASR_MODELS[0];
+  const device = els.device.value === 'auto' ? (gpu.available ? 'webgpu' : 'wasm') : els.device.value;
+  return { libUrl: TRANSFORMERS_URL, model: m.id, big: !!m.big, noTranslate: !!m.noTranslate, device };
+}
+async function ensureAsr() {
+  const cfg = asrConfig();
+  const dev = await asrWorker.call('loadAsr', cfg);
+  return { ...cfg, device: dev };
+}
+let kokoroDevice = null;
+async function ensureKokoro() {
+  if (kokoroDevice) return kokoroDevice;
+  const device = els.device.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
+  kokoroDevice = await ttsWorker.call('load', { libUrl: KOKORO_URL, model: KOKORO_MODEL, device });
+  logLine(`Kokoro ready on ${kokoroDevice}.`);
+  return kokoroDevice;
+}
+
+// ---------- translation plan ----------
+// Decide how text gets from the spoken language into the dub language.
+function plan() {
+  const src = els.srcLang.value, tgt = els.tgtLang.value, cfg = asrConfig();
+  if (els.mtEngine.value === 'claude') return { asrTask: 'transcribe', mt: 'claude', src, tgt };
+  if (src === tgt) return { asrTask: 'transcribe', mt: null, src, tgt };
+  const toEnglish = cfg.noTranslate ? null : 'translate';
+  if (tgt === 'en') {
+    if (!toEnglish) return { error: `${cfg.model} cannot translate. Pick Whisper base or small, or use Claude.` };
+    return { asrTask: 'translate', mt: null, src, tgt };
+  }
+  const opus = OPUS_FROM_EN[tgt];
+  if (!opus) return { error: `On-device translation into ${LANG_NAME[tgt]} is not available. Choose Claude as the translator.` };
+  if (src === 'en') return { asrTask: 'transcribe', mt: 'opus', opus, src, tgt };
+  if (!toEnglish) return { error: `${cfg.model} cannot translate. Pick Whisper base or small, or use Claude.` };
+  return { asrTask: 'translate', mt: 'opus', opus, src, tgt };
+}
+function updateHints() {
+  const p = plan();
+  els.claudeBox.hidden = els.mtEngine.value !== 'claude';
+  if (p.error) { els.mtHint.textContent = p.error; els.mtHint.className = 'hint warn'; }
+  else {
+    els.mtHint.className = 'hint';
+    els.mtHint.textContent = p.mt === 'claude' ? `Whisper writes down the ${LANG_NAME[p.src] || 'original'} dialogue; Claude translates it scene by scene.`
+      : p.mt === 'opus' ? `Whisper ${p.asrTask === 'translate' ? 'translates speech to English' : 'transcribes English'}, then Opus-MT translates into ${LANG_NAME[p.tgt]} on this device.`
+      : p.asrTask === 'translate' ? 'Whisper translates speech straight into English on this device.' : 'Same language: lines are re-voiced without translation.';
+  }
+  const kok = els.ttsEngine.value === 'kokoro';
+  if (kok && els.tgtLang.value !== 'en') {
+    els.ttsHint.textContent = `Kokoro speaks English only, so ${LANG_NAME[els.tgtLang.value]} lines will use browser voices.`;
+    els.ttsHint.className = 'hint warn';
+  } else {
+    els.ttsHint.className = 'hint';
+    els.ttsHint.textContent = kok ? 'Kokoro (82M) runs on this device: about 330 MB to download once, then cached.'
+      : `Uses the voices installed in your browser and OS. Quality varies; Chrome and Edge include good online voices.`;
+  }
+  els.exportWav.disabled = !(state.lines.length && useKokoro());
+}
+const useKokoro = () => els.ttsEngine.value === 'kokoro' && els.tgtLang.value === 'en';
+
+// ---------- Claude translation ----------
+let anthropic = null, anthropicKey = null;
+async function claudeClient() {
+  const key = els.apiKey.value.trim();
+  if (!key) throw new Error('Enter an Anthropic API key to translate with Claude.');
+  if (!anthropic || anthropicKey !== key) {
+    const { default: Anthropic } = await import(ANTHROPIC_SDK_URL);
+    anthropic = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true });
+    anthropicKey = key;
+  }
+  return anthropic;
+}
+const TRANSLATION_SCHEMA = {
+  type: 'object',
+  properties: {
+    lines: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { id: { type: 'integer' }, text: { type: 'string' } },
+        required: ['id', 'text'], additionalProperties: false,
+      },
+    },
+  },
+  required: ['lines'], additionalProperties: false,
+};
+// lines: [{ id, speaker, seconds, text }]
+async function claudeTranslate(lines, { src, tgt, effort = 'medium' }) {
+  const client = await claudeClient();
+  const system = `You write dubbing scripts. Translate each line of dialogue from ${src === 'auto' ? 'its original language' : LANG_NAME[src]} into natural, speakable ${LANG_NAME[tgt]}, the way a professional dub adapter would: keep each character's tone, energy and personality, keep names and attack or technique names consistent across the scene, and adapt idioms rather than translating word for word. Each line lists the seconds the character has on screen; write something that can be spoken comfortably in that time (roughly 14 characters per second), shortening if needed. Return only spoken words: no stage directions, speaker labels or notes. Return every id you were given, in order.`;
+  const user = JSON.stringify({ lines: lines.map((l) => ({ id: l.id, speaker: l.speaker, seconds: Number(l.seconds.toFixed(1)), text: l.text })) });
+  const res = await client.beta.messages.create({
+    model: els.claudeModel.value.trim() || 'claude-opus-5-5',
+    max_tokens: 16000,
+    betas: ['server-side-fallback-2026-07-01'],
+    fallbacks: 'default',
+    output_config: { effort, format: { type: 'json_schema', schema: TRANSLATION_SCHEMA } },
+    system,
+    messages: [{ role: 'user', content: user }],
+  });
+  if (res.stop_reason === 'refusal') throw new Error('Claude declined to translate this batch' + (res.stop_details?.explanation ? `: ${res.stop_details.explanation}` : '.'));
+  if (res.stop_reason === 'max_tokens') throw new Error('Claude ran out of output space; try a shorter file.');
+  const text = res.content.filter((b) => b.type === 'text').map((b) => b.text).join('');
+  const parsed = JSON.parse(text);
+  return new Map(parsed.lines.map((l) => [l.id, l.text]));
+}
+
+// ---------- file loading ----------
+async function loadFile(file) {
+  if (!file) return;
+  stopLive();
+  state.file = file; state.lines = []; state.duration = 0;
+  if (state.url) URL.revokeObjectURL(state.url);
+  state.url = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith('video') || /\.(mp4|m4v|webm|mkv|mov)$/i.test(file.name);
+  video = el(isVideo ? 'video' : 'audio', { controls: true, src: state.url, preload: 'metadata', playsInline: true });
+  if (!isVideo) video.style.width = '100%';
+  els.playerWrap.replaceChildren(video);
+  video.addEventListener('loadedmetadata', () => { state.duration = video.duration; els.mediaInfo.textContent = `${file.name} · ${fmtTime(video.duration)} · ${fmtBytes(file.size)}`; });
+  video.addEventListener('play', () => { audio.resume(); scheduler.reset(); });
+  video.addEventListener('seeking', () => scheduler.reset());
+  video.addEventListener('pause', () => scheduler.stopAll());
+  video.addEventListener('ratechange', () => scheduler.reset());
+  attachMedia(video);
+  els.mediaInfo.textContent = `${file.name} · ${fmtBytes(file.size)}`;
+  els.prepareBtn.disabled = false; els.liveVideoBtn.disabled = false; els.recordBtn.disabled = true;
+  renderScript(); refreshExports();
+  logLine(`Loaded ${file.name}.`);
+}
+
+async function decodeFile(file) {
+  setStage('Decoding audio'); setProgress(null);
+  const buf = await file.arrayBuffer();
+  const ctx = new AudioContext();
+  let decoded;
+  try { decoded = await ctx.decodeAudioData(buf); }
+  catch (e) { throw new Error(`This browser could not decode the audio in ${file.name}. Try converting it to mp4 or webm first (${e.message || e}).`); }
+  finally { ctx.close(); }
+  const len = Math.ceil(decoded.duration * SR);
+  const off = new OfflineAudioContext(1, len, SR);
+  const src = off.createBufferSource(); src.buffer = decoded; src.connect(off.destination); src.start();
+  const r = await off.startRendering();
+  return r.getChannelData(0);
+}
+
+// ---------- audio graph ----------
+// media → [plain | centre-cancelled] → duck gain → master → speakers (+ recorder)
+// dub voices → dub gain → master
+const audio = {
+  ctx: null, master: null, duck: null, dubGain: null, plain: null, cut: null, mediaSrc: null, recDest: null,
+  init() {
+    if (this.ctx) return this.ctx;
+    const ctx = this.ctx = new AudioContext();
+    this.master = ctx.createGain(); this.master.connect(ctx.destination);
+    this.duck = ctx.createGain(); this.duck.connect(this.master);
+    this.dubGain = ctx.createGain(); this.dubGain.gain.value = Number(els.dubVol.value); this.dubGain.connect(this.master);
+    this.plain = ctx.createGain(); this.plain.connect(this.duck);
+    // Centre cancel: (L − R) removes what is identical in both channels (usually dialogue);
+    // a low-passed mid keeps bass and drums that would otherwise vanish too.
+    this.cut = ctx.createGain(); this.cut.connect(this.duck);
+    this.cutIn = ctx.createGain();
+    const split = ctx.createChannelSplitter(2), side = ctx.createGain(), inv = ctx.createGain(), merge = ctx.createChannelMerger(2);
+    inv.gain.value = -1; side.gain.value = 0.7;
+    this.cutIn.connect(split);
+    split.connect(side, 0); split.connect(inv, 1); inv.connect(side);
+    side.connect(merge, 0, 0); side.connect(merge, 0, 1);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 160;
+    const mono = ctx.createGain(); mono.gain.value = 0.5; mono.channelCountMode = 'explicit'; mono.channelCount = 1;
+    this.cutIn.connect(mono); mono.connect(lp); lp.connect(merge, 0, 0); lp.connect(merge, 0, 1);
+    merge.connect(this.cut);
+    this.applyVocalCut();
+    return ctx;
+  },
+  resume() { this.init(); if (this.ctx.state !== 'running') this.ctx.resume(); },
+  applyVocalCut() {
+    if (!this.ctx) return;
+    const on = els.vocalCut.checked;
+    this.plain.gain.value = on ? 0 : 1; this.cut.gain.value = on ? 1 : 0;
+  },
+  // Duck the original between t0 and t1 (AudioContext time).
+  duckAt(t0, t1) {
+    if (!this.ctx) return;
+    const g = this.duck.gain, low = Number(els.duck.value);
+    g.cancelScheduledValues(t0);
+    g.setTargetAtTime(low, t0 - 0.05 > this.ctx.currentTime ? t0 - 0.05 : this.ctx.currentTime, 0.04);
+    g.setTargetAtTime(1, t1 + 0.1, 0.12);
+  },
+  unduck() { if (this.ctx) { this.duck.gain.cancelScheduledValues(this.ctx.currentTime); this.duck.gain.setTargetAtTime(1, this.ctx.currentTime, 0.05); } },
+};
+function attachMedia(media) {
+  audio.init();
+  try {
+    if (audio.mediaSrc) audio.mediaSrc.disconnect();
+    audio.mediaSrc = audio.ctx.createMediaElementSource(media);
+    audio.mediaSrc.connect(audio.plain); audio.mediaSrc.connect(audio.cutIn);
+  } catch (e) { logLine('Could not route the video audio: ' + e.message, 'error'); }
+}
+
+// ---------- browser voices ----------
+let systemVoices = [];
+function loadSystemVoices() { systemVoices = speechSynthesis.getVoices() || []; renderCast(); }
+function voicesFor(lang) { return systemVoices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(lang)); }
+function pickSystemVoice(actor) {
+  const lang = els.tgtLang.value, list = voicesFor(lang);
+  return list.find((v) => v.name === actor.sysVoice) || list[actor.id % Math.max(1, list.length)] || null;
+}
+function speakBrowser(actor, text, slot, onEnd) {
+  const u = new SpeechSynthesisUtterance(text);
+  const v = pickSystemVoice(actor);
+  if (v) u.voice = v;
+  u.lang = v?.lang || els.tgtLang.value;
+  u.pitch = Math.max(0, Math.min(2, 1 + (actor.pitch - 1) * 2.5));
+  let rate = actor.tempo;
+  if (slot) rate = Math.max(rate, text.length / (14 * slot));
+  u.rate = Math.max(0.5, Math.min(2, rate));
+  u.volume = Math.min(1, Number(els.dubVol.value));
+  if (onEnd) { u.onend = onEnd; u.onerror = onEnd; }
+  speechSynthesis.speak(u);
+  return u;
+}
+
+// ---------- cast ----------
+function newActor(name, presetId) {
+  const id = state.nextActor++;
+  const preset = PRESETS.find((p) => p.id === presetId) || PRESETS[id % PRESETS.length];
+  const a = { id, name: name || `Character ${id + 1}`, preset: preset.id, kokoro: preset.kokoro, pitch: preset.pitch, tempo: preset.tempo, refHz: preset.refHz, sysVoice: '', color: PALETTE[id % PALETTE.length] };
+  state.cast.push(a);
+  return a;
+}
+const actorById = (id) => state.cast.find((a) => a.id === id) || state.cast[0];
+function invalidateActor(a) { for (const l of state.lines) if (l.actor === a.id) l.dub = null; renderScript(); }
+function renderCast() {
+  els.cast.textContent = '';
+  for (const a of state.cast) {
+    const name = el('input', { type: 'text', value: a.name, onchange: (e) => { a.name = e.target.value.trim() || a.name; renderScript(); } });
+    const presetSel = el('select', { onchange: (e) => {
+      const p = PRESETS.find((x) => x.id === e.target.value); if (!p) return;
+      Object.assign(a, { preset: p.id, kokoro: p.kokoro, pitch: p.pitch, tempo: p.tempo, refHz: p.refHz });
+      renderCast(); invalidateActor(a);
+    } }, PRESETS.map((p) => el('option', { value: p.id, selected: p.id === a.preset }, p.label)));
+    let voiceSel;
+    if (useKokoro()) {
+      voiceSel = el('select', { onchange: (e) => { a.kokoro = e.target.value; invalidateActor(a); } },
+        KOKORO_VOICES.map((v) => el('option', { value: v, selected: v === a.kokoro }, v)));
+    } else {
+      const list = voicesFor(els.tgtLang.value);
+      voiceSel = el('select', { onchange: (e) => { a.sysVoice = e.target.value; } },
+        list.length ? list.map((v) => el('option', { value: v.name, selected: v === pickSystemVoice(a) }, v.name)) : [el('option', {}, 'No voices for this language')]);
+    }
+    const slider = (label, key, min, max) => {
+      const val = el('span', { class: 'val' }, a[key].toFixed(2));
+      return el('label', { class: 'row' }, [el('span', {}, [label, ' ', val]), el('input', { type: 'range', min, max, step: 0.01, value: a[key],
+        oninput: (e) => { a[key] = Number(e.target.value); val.textContent = a[key].toFixed(2); },
+        onchange: () => invalidateActor(a) })]);
+    };
+    const remove = el('button', { title: 'Remove character', onclick: () => {
+      if (state.cast.length < 2) return;
+      state.cast = state.cast.filter((x) => x !== a);
+      for (const l of state.lines) if (l.actor === a.id) { l.actor = state.cast[0].id; l.dub = null; }
+      renderCast(); renderScript();
+    } }, '✕');
+    const test = el('button', { title: 'Audition this voice', onclick: () => audition(a) }, '▶');
+    els.cast.append(el('div', { class: 'actor' }, [
+      el('div', { class: 'top' }, [el('span', { class: 'swatch', style: `background:${a.color}` }), name, test, remove]),
+      el('label', { class: 'row' }, [el('span', {}, 'Style'), presetSel]),
+      el('label', { class: 'row' }, [el('span', {}, 'Voice'), voiceSel]),
+      slider('Pitch', 'pitch', 0.7, 1.4),
+      slider('Pace', 'tempo', 0.7, 1.4),
+    ]));
+  }
+}
+const SAMPLE = { en: "I won't give up. Not now, not ever!", es: '¡No pienso rendirme. Ni ahora, ni nunca!', pt: 'Eu não vou desistir. Nem agora, nem nunca!', fr: "Je n'abandonnerai pas. Ni maintenant, ni jamais !", de: 'Ich gebe nicht auf. Nicht jetzt, niemals!', it: 'Non mi arrenderò. Né ora, né mai!', ja: '絶対に諦めない！' };
+async function audition(a) {
+  const text = SAMPLE[els.tgtLang.value] || SAMPLE.en;
+  audio.resume();
+  if (useKokoro()) {
+    try {
+      setStage('Preparing voice'); setProgress(null);
+      const d = await synthKokoro(a, text, null);
+      playBuffer(d, audio.ctx.currentTime + 0.05, 0);
+      setStage('Idle'); setProgress(0);
+    } catch (e) { showError(friendlyError(e)); }
+  } else { speechSynthesis.cancel(); speakBrowser(a, text, null); }
+}
+
+// ---------- synthesis ----------
+async function synthKokoro(actor, text, slot) {
+  await ensureKokoro();
+  const pitch = actor.pitch;
+  let speed = Math.max(0.5, Math.min(2, actor.tempo / pitch));
+  let r = await ttsWorker.call('synth', { text, voice: actor.kokoro, speed });
+  let dur = r.audio.length / r.sr / pitch;
+  if (slot && dur > slot * 1.05) {
+    const f = Math.min(1.5, dur / slot);
+    speed = Math.max(0.5, Math.min(2, speed * f));
+    r = await ttsWorker.call('synth', { text, voice: actor.kokoro, speed });
+    dur = r.audio.length / r.sr / pitch;
+  }
+  const trimmed = trimSilence(r.audio, r.sr);
+  return { audio: trimmed, sr: r.sr, rate: pitch, dur: trimmed.length / r.sr / pitch, slot, text, actor: actor.id, voice: actor.kokoro };
+}
+function trimSilence(a, sr) {
+  const th = 0.004; let s = 0, e = a.length;
+  while (s < e && Math.abs(a[s]) < th) s++;
+  while (e > s && Math.abs(a[e - 1]) < th) e--;
+  s = Math.max(0, s - Math.round(sr * 0.02)); e = Math.min(a.length, e + Math.round(sr * 0.06));
+  return a.subarray(s, e);
+}
+function slotFor(i) {
+  const l = state.lines[i], next = state.lines[i + 1];
+  const natural = Math.max(0.6, l.end - l.start);
+  const limit = next ? next.start - l.start - 0.05 : natural + 1.5;
+  return Math.max(natural, Math.min(limit, natural + 0.8));
+}
+function dubFresh(l) {
+  const a = actorById(l.actor);
+  return l.dub && l.dub.text === l.text && l.dub.actor === a.id && l.dub.voice === a.kokoro;
+}
+async function synthLine(i) {
+  const l = state.lines[i];
+  if (!l.text.trim()) { l.dub = null; return; }
+  if (dubFresh(l)) return;
+  l.dub = await synthKokoro(actorById(l.actor), l.text, slotFor(i));
+}
+
+// ---------- playback scheduler (prepared dubs) ----------
+const scheduler = {
+  playing: new Map(), // line index → node | utterance
+  fired: new Set(),
+  raf: 0,
+  reset() { this.stopAll(); this.fired.clear(); if (video && !video.paused) this.loop(); },
+  stopAll() {
+    for (const n of this.playing.values()) { try { n.stop ? n.stop() : null; } catch (e) {} }
+    if (this.playing.size) speechSynthesis.cancel();
+    this.playing.clear(); audio.unduck(); cancelAnimationFrame(this.raf);
+  },
+  loop() {
+    cancelAnimationFrame(this.raf);
+    const tick = () => {
+      if (!video || video.paused || state.live) return;
+      this.update(video.currentTime);
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  },
+  update(t) {
+    const lines = state.lines;
+    let cur = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const l = lines[i];
+      if (l.start > t + 0.3) break;
+      if (t >= l.start - 0.02 && t < l.start + (l.dub?.dur || l.end - l.start)) cur = i;
+      if (this.fired.has(i) || !l.text.trim()) continue;
+      const lead = l.start - t;
+      if (lead > 0.25) continue;
+      const len = l.dub?.dur || (l.end - l.start);
+      if (lead < -Math.max(0.4, len - 0.3)) { this.fired.add(i); continue; }
+      this.fired.add(i);
+      this.fire(i, lead);
+    }
+    highlight(cur);
+  },
+  fire(i, lead) {
+    const l = state.lines[i], a = actorById(l.actor);
+    const rate = video.playbackRate || 1;
+    if (useKokoro()) {
+      if (!dubFresh(l)) {
+        // Voice it now (edited line or not prepared yet); it plays late rather than not at all.
+        synthLine(i).then(() => { if (!video.paused && Math.abs(video.currentTime - l.start) < 2) this.fire(i, l.start - video.currentTime); renderLine(i); }).catch((e) => logLine(e.message, 'error'));
+        return;
+      }
+      const when = audio.ctx.currentTime + Math.max(0, lead / rate);
+      const offset = lead < 0 ? (-lead) * l.dub.rate : 0;
+      const node = playBuffer(l.dub, when, offset);
+      this.playing.set(i, node);
+      node.onended = () => this.playing.delete(i);
+    } else {
+      const fire = () => {
+        if (!video || video.paused) return;
+        audio.duckAt(audio.ctx.currentTime, audio.ctx.currentTime + slotFor(i));
+        const u = speakBrowser(a, l.text, slotFor(i) / rate, () => this.playing.delete(i));
+        this.playing.set(i, u);
+      };
+      if (lead > 0) setTimeout(fire, lead * 1000 / rate); else fire();
+    }
+  },
+};
+function playBuffer(d, when, offset) {
+  const ctx = audio.ctx;
+  const b = ctx.createBuffer(1, d.audio.length, d.sr);
+  b.copyToChannel(d.audio, 0);
+  const src = ctx.createBufferSource();
+  src.buffer = b; src.playbackRate.value = d.rate * (video?.playbackRate || 1);
+  src.connect(audio.dubGain);
+  src.start(when, Math.min(offset || 0, b.duration - 0.01));
+  const playDur = (b.duration - (offset || 0)) / src.playbackRate.value;
+  audio.duckAt(when, when + playDur);
+  return src;
+}
+
+// ---------- full dub ----------
+async function prepare() {
+  if (!state.file || state.running) return;
+  const p = plan();
+  if (p.error) { showError(p.error); return; }
+  showError('');
+  state.running = true; state.cancelled = false; syncButtons();
+  const t0 = performance.now();
+  try {
+    audio.resume();
+    if (video) video.pause();
+    // 1. Lines: from an imported transcript, or by listening.
+    if (!state.lines.length) {
+      const pcm = await decodeFile(state.file);
+      check();
+      const cfg = await ensureAsr();
+      logLine(`Whisper ready on ${cfg.device}.`);
+      setStage('Listening'); setProgress(0);
+      const items = await asrWorker.call('transcribeFile', { audio: pcm, opts: { language: p.src, task: p.asrTask, multilingual: true } }, { transfer: [pcm.buffer] });
+      check();
+      if (!state.cast.length) { newActor('Character 1', 'hero'); renderCast(); }
+      state.lines = linesFromItems(items).map((l) => ({ ...l, actor: state.cast[0].id, auto: true }));
+      for (const l of state.lines) { if (p.asrTask === 'translate' || !p.mt) l.text = l.orig; }
+      if (p.asrTask === 'translate') for (const l of state.lines) l.origIsTranslation = true;
+      logLine(`Heard ${state.lines.length} lines.`);
+      renderScript();
+    }
+    // 2. Translation.
+    const todo = state.lines.filter((l) => !l.translated && l.orig.trim());
+    if (p.mt && todo.length) await translateLines(todo, p);
+    for (const l of state.lines) { if (!l.text) l.text = l.orig; l.translated = true; }
+    renderScript();
+    check();
+    // 3. Voices.
+    if (useKokoro()) {
+      setStage('Recording voices');
+      for (let i = 0; i < state.lines.length; i++) {
+        check();
+        setProgress(i / state.lines.length, `Voicing line ${i + 1} of ${state.lines.length}`);
+        await synthLine(i);
+        renderLine(i);
+      }
+    }
+    setStage(`Dub ready in ${Math.round((performance.now() - t0) / 1000)} s · press play`); setProgress(1, '');
+    logLine(`Prepared ${state.lines.length} lines.`);
+  } catch (e) {
+    if (state.cancelled) { setStage('Cancelled'); setProgress(0); }
+    else { showError(friendlyError(e)); setStage('Failed'); }
+  } finally {
+    state.running = false; syncButtons(); refreshExports();
+  }
+}
+function check() { if (state.cancelled) throw new Error('Cancelled'); }
+function cancel() {
+  state.cancelled = true;
+  asrWorker.terminate(); ttsWorker.terminate(); kokoroDevice = null;
+  setStage('Cancelling…');
+}
+function friendlyError(e) {
+  const m = (e && e.message) || String(e);
+  if (/401|authentication|invalid x-api-key/i.test(m)) return 'The Anthropic API key was rejected. Check it and try again.';
+  if (/Failed to fetch|NetworkError|load failed/i.test(m)) return `A download failed: check your connection, then try again. (${m})`;
+  if (/out of memory|OOM|allocation/i.test(m)) return `Ran out of memory. Pick a smaller Whisper model or use WebAssembly. (${m})`;
+  return m;
+}
+
+// Split Whisper segments into dub lines: break on sentence ends and long pauses, cap length.
+function linesFromItems(items) {
+  const out = [];
+  let cur = null;
+  for (const it of items) {
+    const text = (it.text || '').trim();
+    if (!text || /^[\s.♪…\-\[\]()]+$/.test(text)) continue;
+    const start = Number(it.start) || 0, end = Number(it.end ?? start + 2);
+    const gap = cur ? start - cur.end : 99;
+    if (!cur || gap > 0.6 || cur.end - cur.start > 7 || /[.!?。！？]$/.test(cur.orig)) {
+      cur = { start, end, orig: text, text: '' }; out.push(cur);
+    } else { cur.orig += ' ' + text; cur.end = end; }
+  }
+  return out;
+}
+
+async function translateLines(todo, p) {
+  if (p.mt === 'claude') {
+    setStage('Translating with Claude');
+    const BATCH = 60;
+    for (let s = 0; s < todo.length; s += BATCH) {
+      check();
+      const batch = todo.slice(s, s + BATCH);
+      setProgress(s / todo.length, `Translating lines ${s + 1}–${s + batch.length} of ${todo.length}`);
+      const map = await claudeTranslate(batch.map((l) => ({ id: state.lines.indexOf(l), speaker: actorById(l.actor).name, seconds: slotFor(state.lines.indexOf(l)), text: l.orig })), p);
+      for (const l of batch) { const t = map.get(state.lines.indexOf(l)); if (t != null) { l.text = t; l.translated = true; } }
+      renderScript();
+    }
+  } else if (p.mt === 'opus') {
+    const [model, prefix] = p.opus;
+    await asrWorker.call('loadMt', { libUrl: TRANSFORMERS_URL, model });
+    setStage('Translating on device');
+    const texts = await asrWorker.call('translate', { texts: todo.map((l) => l.orig), prefix });
+    todo.forEach((l, i) => { l.text = texts[i]; l.translated = true; });
+  }
+}
+
+// ---------- live dubbing ----------
+async function startLive(kind) {
+  if (state.live) { stopLive(); return; }
+  if (state.running) return;
+  const p = plan();
+  if (p.error) { showError(p.error); return; }
+  showError('');
+  audio.resume();
+  const ctx = audio.ctx;
+  let source, stream = null;
+  try {
+    if (kind === 'video') {
+      if (!video) return;
+      source = audio.mediaSrc;
+    } else if (kind === 'tab') {
+      stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false }, preferCurrentTab: false, selfBrowserSurface: 'exclude' });
+      if (!stream.getAudioTracks().length) { stream.getTracks().forEach((t) => t.stop()); throw new Error('No audio was shared. Pick a tab and turn on "Share tab audio".'); }
+      stream.getVideoTracks().forEach((t) => t.stop());
+      source = ctx.createMediaStreamSource(stream);
+    } else {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+      source = ctx.createMediaStreamSource(stream);
+    }
+    setStage('Loading models'); setProgress(null);
+    await ensureAsr();
+    if (p.mt === 'opus') await asrWorker.call('loadMt', { libUrl: TRANSFORMERS_URL, model: p.opus[0] });
+    if (p.mt === 'claude') await claudeClient();
+    if (useKokoro()) await ensureKokoro();
+    if (!state.cast.length) newActor('Character 1', 'hero');
+    if (els.pitchPick.checked && state.cast.length === 1) {
+      newActor('Higher voice', 'heroine'); newActor('Lower voice', 'villain');
+      logLine('Added a higher and a lower voice to the cast so live lines can be matched by pitch.');
+    }
+    renderCast();
+    // Warm up both models so the first live line is not slowed by start-up costs.
+    setStage('Warming up');
+    await asrWorker.call('transcribeClip', { audio: new Float32Array(SR), opts: { language: p.src, task: p.asrTask, multilingual: true } });
+    if (useKokoro()) await ttsWorker.call('synth', { text: 'Ready.', voice: state.cast[0].kokoro, speed: 1 });
+
+    if (!audio.workletReady) {
+      const url = URL.createObjectURL(new Blob([els.captureWorkletSrc.textContent], { type: 'text/javascript' }));
+      await ctx.audioWorklet.addModule(url);
+      audio.workletReady = true;
+    }
+    const tap = new AudioWorkletNode(ctx, 'dub-tap', { numberOfInputs: 1, numberOfOutputs: 1, channelCount: 2 });
+    const sink = ctx.createGain(); sink.gain.value = 0; tap.connect(sink); sink.connect(ctx.destination);
+    source.connect(tap);
+    const live = state.live = { kind, stream, source, tap, sink, plan: p, vad: new Vad(ctx.sampleRate, (pcm, t) => onUtterance(pcm, t)), queue: Promise.resolve(), pending: 0, voiceEnd: 0, startedAt: performance.now() };
+    tap.port.onmessage = (ev) => live.vad.push(ev.data);
+    if (stream) stream.getTracks().forEach((t) => t.addEventListener('ended', stopLive));
+    if (kind === 'video') { scheduler.stopAll(); state.lines = []; renderScript(); video.play(); }
+    else if (kind === 'tab') logLine('Live tab dubbing: lower the volume of the other tab so you mainly hear the dub.');
+    const btn = { video: els.liveVideoBtn, tab: els.liveTabBtn, mic: els.liveMicBtn }[kind];
+    btn.classList.add('on'); btn.textContent = 'Stop live dub';
+    setStage('Live: listening…'); setProgress(0, '');
+    syncButtons();
+  } catch (e) {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    showError(friendlyError(e)); setStage('Idle'); setProgress(0);
+    state.live = null; syncButtons();
+  }
+}
+function stopLive() {
+  const live = state.live;
+  if (!live) return;
+  state.live = null;
+  try { live.source.disconnect(live.tap); } catch (e) {}
+  try { live.tap.disconnect(); live.sink.disconnect(); } catch (e) {}
+  if (live.stream) live.stream.getTracks().forEach((t) => t.stop());
+  for (const [b, label] of [[els.liveVideoBtn, 'Live: this video'], [els.liveTabBtn, 'Live: browser tab'], [els.liveMicBtn, 'Live: mic']]) { b.classList.remove('on'); b.textContent = label; }
+  setStage('Live dub stopped'); syncButtons(); refreshExports();
+}
+
+// Energy-based voice activity detector on 16 kHz audio.
+class Vad {
+  constructor(inRate, onUtterance) {
+    this.ratio = inRate / SR; this.pos = 0; this.onUtterance = onUtterance;
+    this.frame = new Float32Array(480); this.fn = 0; // 30 ms frames
+    this.pre = []; this.speech = null; this.silent = 0; this.floor = 0.003; this.clock = 0;
+  }
+  push(chunk) {
+    // linear resample to 16 kHz
+    for (; this.pos < chunk.length - 1; this.pos += this.ratio) {
+      const i = Math.floor(this.pos), f = this.pos - i;
+      this.frame[this.fn++] = chunk[i] * (1 - f) + chunk[i + 1] * f;
+      if (this.fn === 480) { this.onFrame(this.frame.slice()); this.fn = 0; }
+    }
+    this.pos -= chunk.length - 1;
+  }
+  onFrame(f) {
+    this.clock += 0.03;
+    let s = 0; for (let i = 0; i < f.length; i++) s += f[i] * f[i];
+    const rms = Math.sqrt(s / f.length);
+    // Noise floor follows quiet stretches quickly and creeps up under constant sound (music, hum),
+    // so only speech that stands out from the background counts as voiced.
+    if (rms < this.floor) this.floor = this.floor * 0.9 + rms * 0.1; else this.floor = Math.min(this.floor * 1.004, 0.2);
+    const voiced = rms > Math.max(0.006, this.floor * 2.5);
+    if (this.speech) {
+      this.speech.push(f);
+      this.silent = voiced ? 0 : this.silent + 1;
+      const len = this.speech.length * 0.03;
+      if (this.silent >= 15 || len > 7) this.flush(); // 450 ms pause, or 7 s max
+    } else {
+      this.pre.push(f); if (this.pre.length > 8) this.pre.shift();
+      if (voiced) { this.speech = [...this.pre]; this.pre = []; this.silent = 0; this.startClock = this.clock - this.speech.length * 0.03; }
+    }
+  }
+  flush() {
+    const frames = this.speech; this.speech = null; this.silent = 0;
+    const voicedLen = frames.length * 0.03;
+    if (voicedLen < 0.45) return;
+    const pcm = new Float32Array(frames.length * 480);
+    frames.forEach((f, i) => pcm.set(f, i * 480));
+    this.onUtterance(pcm, this.startClock);
+  }
+}
+
+// Rough speaking pitch (Hz) from autocorrelation over voiced frames; used to pick a cast voice live.
+function medianPitch(pcm) {
+  const est = [], N = 1024;
+  for (let s = 0; s + N < pcm.length; s += 1600) {
+    const x = pcm.subarray(s, s + N);
+    let e = 0; for (let i = 0; i < N; i++) e += x[i] * x[i];
+    if (e / N < 1e-4) continue;
+    let best = 0, lag = 0;
+    for (let L = 40; L <= 200; L++) { // 80–400 Hz
+      let c = 0; for (let i = 0; i + L < N; i++) c += x[i] * x[i + L];
+      if (c > best) { best = c; lag = L; }
+    }
+    if (lag && best / e > 0.35) est.push(SR / lag);
+  }
+  if (!est.length) return null;
+  est.sort((a, b) => a - b);
+  return est[est.length >> 1];
+}
+
+const JUNK = /^(thank you( for watching)?[.!]?|thanks for watching[.!]?|you|subtitles? by.*|\[.*\]|\(.*\)|♪.*)$/i;
+function onUtterance(pcm, clock) {
+  const live = state.live;
+  if (!live) return;
+  if (live.pending > 3) { logLine('Live: falling behind, skipped a line.'); return; }
+  live.pending++;
+  const mediaTime = live.kind === 'video' && video ? video.currentTime - pcm.length / SR : null;
+  const hz = medianPitch(pcm);
+  live.queue = live.queue.then(async () => {
+    if (state.live !== live) return;
+    const t0 = performance.now();
+    try {
+      const p = live.plan;
+      const heardAt = () => ((performance.now() - t0) / 1000).toFixed(1);
+      const heard = await asrWorker.call('transcribeClip', { audio: pcm, opts: { language: p.src, task: p.asrTask, multilingual: true } }, { transfer: [pcm.buffer] });
+      if (!heard || JUNK.test(heard) || /^[\s.,!?♪…-]*$/.test(heard)) return;
+      let text = heard;
+      const seconds = pcm.length / SR;
+      if (p.mt === 'opus') text = (await asrWorker.call('translate', { texts: [heard], prefix: p.opus[1] }))[0];
+      else if (p.mt === 'claude') text = (await claudeTranslate([{ id: 0, speaker: 'Speaker', seconds, text: heard }], { ...p, effort: 'low' })).get(0) || heard;
+      if (state.live !== live || !text.trim()) return;
+      const tHeard = heardAt();
+      let actor = state.cast[0];
+      if (els.pitchPick.checked && hz && state.cast.length > 1) actor = state.cast.reduce((b, a) => Math.abs(Math.log(a.refHz / hz)) < Math.abs(Math.log(b.refHz / hz)) ? a : b);
+      const line = { start: mediaTime ?? (performance.now() - live.startedAt) / 1000 - seconds, end: 0, orig: p.asrTask === 'translate' ? '' : heard, text, actor: actor.id, translated: true, live: true };
+      line.end = line.start + seconds;
+      state.lines.push(line);
+      const idx = state.lines.length - 1;
+      // Voice it and play right away, queued after the previous live line.
+      const ctx = audio.ctx;
+      if (useKokoro()) {
+        // One render only (no re-fit pass) to keep latency down; a line that runs long plays slightly faster.
+        line.dub = await synthKokoro(actor, text, null);
+        const over = line.dub.dur / (seconds + 0.6);
+        if (over > 1) { line.dub.rate *= Math.min(1.2, over); line.dub.dur = line.dub.audio.length / line.dub.sr / line.dub.rate; }
+        line.dub.slot = seconds + 0.6;
+        if (state.live !== live) return;
+        if ((performance.now() - t0) / 1000 > 5 && !live.slowWarned) {
+          live.slowWarned = true;
+          logLine('Live: Kokoro is slow on this device. For lower latency switch the voice engine to browser voices, or use a browser with WebGPU.');
+        }
+        const when = Math.max(ctx.currentTime + 0.02, live.voiceEnd);
+        playBuffer(line.dub, when, 0);
+        live.voiceEnd = when + line.dub.dur + 0.05;
+      } else {
+        speakBrowser(actor, text, seconds);
+      }
+      setStage(`Live · ${hz ? Math.round(hz) + ' Hz → ' : ''}${actor.name} · understood in ${tHeard} s, speaking after ${heardAt()} s`);
+      showSubtitle(actor, text);
+      appendLine(idx);
+    } catch (e) { logLine('Live: ' + friendlyError(e), 'error'); }
+    finally { live.pending--; }
+  });
+}
+
+// ---------- script rendering ----------
+function renderScript() {
+  els.script.textContent = '';
+  if (!state.lines.length) { els.script.append(el('div', { class: 'empty' }, state.file ? 'Prepare a dub or start live dubbing to fill the script.' : 'Nothing yet.')); return; }
+  for (let i = 0; i < state.lines.length; i++) els.script.append(lineRow(i));
+}
+function appendLine(i) {
+  if (els.script.firstElementChild?.classList.contains('empty')) els.script.textContent = '';
+  els.script.append(lineRow(i));
+  els.script.scrollTop = els.script.scrollHeight;
+}
+function renderLine(i) { const row = els.script.children[i]; if (row && row.dataset.idx == i) row.replaceWith(lineRow(i)); }
+function lineRow(i) {
+  const l = state.lines[i];
+  const a = actorById(l.actor);
+  const who = el('select', { style: `border-left:4px solid ${a?.color || '#888'}`, onchange: (e) => {
+    if (e.target.value === 'new') { const n = newActor(); renderCast(); l.actor = n.id; }
+    else l.actor = Number(e.target.value);
+    l.dub = null; renderLine(i);
+  } }, [...state.cast.map((c) => el('option', { value: c.id, selected: c.id === l.actor }, c.name)), el('option', { value: 'new' }, '+ New character')]);
+  const txt = el('textarea', { rows: Math.min(4, Math.max(1, Math.ceil(l.text.length / 70))), value: l.text, oninput: (e) => { l.text = e.target.value; }, onchange: () => { l.dub = null; renderLine(i); } });
+  const fit = l.dub ? l.dub.dur / Math.max(0.3, l.dub.slot || (l.end - l.start)) : null;
+  const st = el('div', { class: 'st' + (l.dub ? (fit > 1.15 ? ' tight' : ' ok') : '') },
+    l.dub ? `${l.dub.dur.toFixed(1)} s${fit > 1.15 ? ' · long' : ''}` : (useKokoro() && l.text ? 'not voiced' : ''));
+  if (l.dub) st.append(el('div', {}, el('button', { title: 'Play this line', style: 'padding:1px 6px;margin-top:3px', onclick: () => { audio.resume(); playBuffer(l.dub, audio.ctx.currentTime + 0.02, 0); } }, '▶')));
+  return el('div', { class: 'line', 'data-idx': String(i) }, [
+    el('div', { class: 't', title: 'Jump here', onclick: () => { if (video && !l.live) { video.currentTime = Math.max(0, l.start - 0.5); video.play(); } } }, fmtTime(l.start)),
+    who,
+    el('div', {}, [l.orig && l.orig !== l.text ? el('div', { class: 'orig' }, l.orig) : null, txt]),
+    st,
+  ]);
+}
+let lastHi = -1;
+function highlight(i) {
+  if (i === lastHi) return;
+  els.script.children[lastHi]?.classList.remove('now');
+  lastHi = i;
+  const row = els.script.children[i];
+  if (row && row.dataset.idx == i) { row.classList.add('now'); const box = els.script; if (row.offsetTop < box.scrollTop || row.offsetTop > box.scrollTop + box.clientHeight - 40) box.scrollTop = row.offsetTop - 40; }
+  const l = state.lines[i];
+  if (l) showSubtitle(actorById(l.actor), l.text); else els.subtitle.textContent = '';
+}
+function showSubtitle(a, text) { els.subtitle.replaceChildren(el('span', { class: 'who', style: `color:${a.color}` }, a.name + ':'), text); }
+
+// ---------- import / export ----------
+async function importTranscript(file) {
+  try {
+    const j = JSON.parse(await file.text());
+    if (!Array.isArray(j.turns)) throw new Error('Expected a Speaker Transcriber JSON export (with "turns").');
+    state.cast = []; state.nextActor = 0;
+    const map = new Map();
+    const presets = ['hero', 'rival', 'heroine', 'mentor', 'kid', 'villain', 'sidekick', 'narrator', 'elder-f'];
+    for (const s of j.speakers || []) map.set(s.id, newActor(s.name, presets[map.size % presets.length]).id);
+    state.lines = [];
+    for (const t of j.turns) {
+      if (!map.has(t.speaker)) map.set(t.speaker, newActor(t.name, presets[map.size % presets.length]).id);
+      const actor = map.get(t.speaker);
+      // Long turns are split at sentence ends so each dubbed line stays in sync.
+      const parts = (t.words && t.words.length) ? splitWords(t.words) : [{ start: t.start, end: t.end, text: t.text }];
+      for (const p of parts) if (p.text.trim()) state.lines.push({ start: p.start, end: p.end, orig: p.text.trim(), text: '', actor });
+    }
+    state.lines.sort((a, b) => a.start - b.start);
+    renderCast(); renderScript(); refreshExports();
+    logLine(`Imported ${state.lines.length} lines and ${state.cast.length} characters from ${file.name}. Press "Prepare full dub" to translate and voice them.`);
+    if (!state.file) logLine('Now load the matching video.');
+  } catch (e) { showError('Import failed: ' + e.message); }
+}
+function splitWords(words) {
+  const out = []; let cur = null;
+  for (const w of words) {
+    if (!cur) { cur = { start: w.start, end: w.end, text: '' }; out.push(cur); }
+    cur.text += w.text; cur.end = w.end;
+    if (/[.!?。！？]\s*$/.test(w.text) && cur.end - cur.start > 1.2) cur = null;
+  }
+  return out;
+}
+function refreshExports() {
+  const has = state.lines.some((l) => l.text);
+  els.exportSrt.disabled = !has; els.exportJson.disabled = !state.lines.length;
+  els.exportWav.disabled = !(has && useKokoro() && state.duration);
+  els.recordBtn.disabled = !(has && video && !state.live);
+}
+function toSrt() {
+  return state.lines.filter((l) => l.text.trim()).map((l, i) => `${i + 1}\n${fmtStamp(l.start, ',')} --> ${fmtStamp(l.start + Math.max(l.end - l.start, l.dub?.dur || 0), ',')}\n${actorById(l.actor).name}: ${l.text.trim()}\n`).join('\n');
+}
+function toJson() {
+  return JSON.stringify({
+    format: 'dub-studio', version: 1, file: state.file?.name || null, source: els.srcLang.value, target: els.tgtLang.value,
+    cast: state.cast.map(({ id, name, preset, kokoro, pitch, tempo, sysVoice }) => ({ id, name, preset, kokoro, pitch, tempo, sysVoice })),
+    lines: state.lines.map((l) => ({ start: l.start, end: l.end, actor: l.actor, original: l.orig, text: l.text })),
+  }, null, 2);
+}
+async function exportWav() {
+  if (state.running) return;
+  state.running = true; syncButtons();
+  try {
+    const sr = 24000, n = Math.ceil(state.duration * sr);
+    setStage('Voicing remaining lines');
+    for (let i = 0; i < state.lines.length; i++) { setProgress(i / state.lines.length, `Line ${i + 1} of ${state.lines.length}`); await synthLine(i); }
+    setStage('Mixing dub track'); setProgress(null);
+    const mix = new Float32Array(n);
+    for (const l of state.lines) {
+      const d = l.dub; if (!d) continue;
+      const start = Math.round(l.start * sr), step = d.rate * d.sr / sr;
+      for (let j = 0, pos = 0; pos < d.audio.length - 1 && start + j < n; j++, pos += step) {
+        const k = Math.floor(pos), f = pos - k;
+        mix[start + j] += d.audio[k] * (1 - f) + d.audio[k + 1] * f;
+      }
+    }
+    download(`${baseName()}.dub.wav`, wavBlob(mix, sr));
+    setStage('Dub track exported'); setProgress(1);
+  } catch (e) { showError(friendlyError(e)); }
+  finally { state.running = false; syncButtons(); }
+}
+function wavBlob(f32, sr) {
+  const header = new DataView(new ArrayBuffer(44)), bytes = f32.length * 2;
+  const w = (o, s) => [...s].forEach((c, i) => header.setUint8(o + i, c.charCodeAt(0)));
+  w(0, 'RIFF'); header.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt ');
+  header.setUint32(16, 16, true); header.setUint16(20, 1, true); header.setUint16(22, 1, true);
+  header.setUint32(24, sr, true); header.setUint32(28, sr * 2, true); header.setUint16(32, 2, true); header.setUint16(34, 16, true);
+  w(36, 'data'); header.setUint32(40, bytes, true);
+  const parts = [header];
+  const CH = 1 << 20;
+  for (let s = 0; s < f32.length; s += CH) {
+    const seg = f32.subarray(s, s + CH), pcm = new Int16Array(seg.length);
+    for (let i = 0; i < seg.length; i++) { const v = Math.max(-1, Math.min(1, seg[i])); pcm[i] = v < 0 ? v * 0x8000 : v * 0x7fff; }
+    parts.push(pcm);
+  }
+  return new Blob(parts, { type: 'audio/wav' });
+}
+async function recordDub() {
+  if (!video || state.live) return;
+  if (state.recording) { state.recording.stop(); return; }
+  const cap = video.captureStream || video.mozCaptureStream;
+  if (!cap || typeof MediaRecorder === 'undefined') { showError('This browser cannot record video. Export the WAV and mux it with ffmpeg instead.'); return; }
+  audio.resume();
+  if (!audio.recDest) { audio.recDest = audio.ctx.createMediaStreamDestination(); audio.master.connect(audio.recDest); }
+  const vtracks = cap.call(video).getVideoTracks();
+  const stream = new MediaStream([...vtracks, ...audio.recDest.stream.getAudioTracks()]);
+  const mime = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4'].find((m) => MediaRecorder.isTypeSupported(m)) || '';
+  const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : {});
+  const chunks = [];
+  rec.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+  rec.onstop = () => {
+    state.recording = null; els.recordBtn.textContent = 'Record dubbed video'; video.removeEventListener('ended', onEnd);
+    download(`${baseName()}.dubbed.${(rec.mimeType || 'video/webm').includes('mp4') ? 'mp4' : 'webm'}`, new Blob(chunks, { type: rec.mimeType || 'video/webm' }));
+    setStage('Recording saved');
+  };
+  const onEnd = () => rec.state !== 'inactive' && rec.stop();
+  video.addEventListener('ended', onEnd);
+  state.recording = rec;
+  els.recordBtn.textContent = 'Stop recording';
+  video.currentTime = 0;
+  rec.start(1000);
+  await video.play();
+  setStage('Recording: plays in real time; keep this tab visible');
+}
+
+// ---------- wiring ----------
+function syncButtons() {
+  const busy = state.running || !!state.live;
+  els.prepareBtn.disabled = !state.file || busy;
+  els.cancelBtn.disabled = !state.running;
+  els.liveVideoBtn.disabled = !video || state.running || (state.live && state.live.kind !== 'video');
+  els.liveTabBtn.disabled = state.running || (state.live && state.live.kind !== 'tab');
+  els.liveMicBtn.disabled = state.running || (state.live && state.live.kind !== 'mic');
+  els.importBtn.disabled = busy;
+  refreshExports();
+}
+function saveSettings() {
+  const s = {}; for (const k of ['srcLang', 'tgtLang', 'mtEngine', 'ttsEngine', 'asrModel', 'device', 'claudeModel']) s[k] = els[k].value;
+  for (const k of ['duck', 'dubVol']) s[k] = els[k].value;
+  for (const k of ['vocalCut', 'pitchPick', 'rememberKey']) s[k] = els[k].checked;
+  storeSet(SETTINGS_STORE, JSON.stringify(s));
+  storeSet(KEY_STORE, els.rememberKey.checked && els.apiKey.value.trim() ? els.apiKey.value.trim() : null);
+}
+function loadSettings() {
+  let s = {}; try { s = JSON.parse(storeGet(SETTINGS_STORE)) || {}; } catch (e) {}
+  for (const [k, v] of Object.entries(s)) { if (!els[k]) continue; if (typeof v === 'boolean') els[k].checked = v; else els[k].value = v; }
+  const key = storeGet(KEY_STORE); if (key) els.apiKey.value = key;
+}
+async function detectGPU() {
+  try { if (navigator.gpu) { const ad = await navigator.gpu.requestAdapter(); gpu = { available: !!ad }; } } catch (e) {}
+  els.gpuHint.textContent = gpu.available ? 'WebGPU available: speech recognition and voices run on your graphics card.' : 'WebGPU not available; models run on the CPU. Whisper tiny/base keeps live dubbing responsive.';
+}
+
+function init() {
+  for (const [c, n] of LANGS) { els.srcLang.append(el('option', { value: c }, n)); els.tgtLang.append(el('option', { value: c }, n)); }
+  els.srcLang.prepend(el('option', { value: 'auto' }, 'Detect automatically'));
+  els.srcLang.value = 'ja'; els.tgtLang.value = 'en';
+  for (const m of ASR_MODELS) els.asrModel.append(el('option', { value: m.id }, m.label));
+  loadSettings();
+
+  els.drop.addEventListener('click', () => els.fileInput.click());
+  els.drop.addEventListener('dragover', (e) => { e.preventDefault(); els.drop.classList.add('over'); });
+  els.drop.addEventListener('dragleave', () => els.drop.classList.remove('over'));
+  els.drop.addEventListener('drop', (e) => { e.preventDefault(); els.drop.classList.remove('over'); loadFile(e.dataTransfer.files[0]); });
+  els.fileInput.addEventListener('change', () => loadFile(els.fileInput.files[0]));
+  els.importBtn.addEventListener('click', () => els.importInput.click());
+  els.importInput.addEventListener('change', () => { importTranscript(els.importInput.files[0]); els.importInput.value = ''; });
+
+  const onLangChange = () => {
+    for (const l of state.lines) { if (l.auto) continue; l.translated = false; l.text = ''; l.dub = null; }
+    if (state.lines.some((l) => l.auto)) { state.lines = []; logLine('Languages changed: press "Prepare full dub" to redo the script.'); }
+    updateHints(); renderCast(); renderScript(); saveSettings();
+  };
+  for (const k of ['srcLang', 'tgtLang', 'mtEngine', 'asrModel']) els[k].addEventListener('change', onLangChange);
+  els.ttsEngine.addEventListener('change', () => { updateHints(); renderCast(); renderScript(); saveSettings(); });
+  for (const k of ['device', 'claudeModel', 'rememberKey', 'pitchPick']) els[k].addEventListener('change', saveSettings);
+  els.apiKey.addEventListener('change', saveSettings);
+  els.vocalCut.addEventListener('change', () => { audio.applyVocalCut(); saveSettings(); });
+  els.dubVol.addEventListener('input', () => { if (audio.dubGain) audio.dubGain.gain.value = Number(els.dubVol.value); saveSettings(); });
+  els.duck.addEventListener('change', saveSettings);
+
+  els.prepareBtn.addEventListener('click', prepare);
+  els.cancelBtn.addEventListener('click', cancel);
+  els.liveVideoBtn.addEventListener('click', () => startLive('video'));
+  els.liveTabBtn.addEventListener('click', () => startLive('tab'));
+  els.liveMicBtn.addEventListener('click', () => startLive('mic'));
+  els.addActor.addEventListener('click', () => { newActor(); renderCast(); renderScript(); });
+  els.exportSrt.addEventListener('click', () => download(`${baseName()}.${els.tgtLang.value}.srt`, toSrt(), 'text/plain'));
+  els.exportJson.addEventListener('click', () => download(`${baseName()}.dub.json`, toJson(), 'application/json'));
+  els.exportWav.addEventListener('click', exportWav);
+  els.recordBtn.addEventListener('click', recordDub);
+
+  if ('speechSynthesis' in window) { loadSystemVoices(); speechSynthesis.addEventListener('voiceschanged', loadSystemVoices); }
+  newActor('Character 1', 'hero');
+  renderCast(); updateHints(); syncButtons(); detectGPU();
+  if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, audio, loadFile };
+}
+init();
+</script>
+</body>
+</html>
