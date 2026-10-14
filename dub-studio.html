@@ -255,6 +255,15 @@
             <input type="file" id="labClipInput" accept="audio/*,video/*" multiple hidden>
             <button id="labRecordClip">Record sample</button>
           </div>
+          <div class="btns">
+            <button id="labExtractBtn" title="Find the different voices in a video and use one of them as training audio">Extract from a video…</button>
+            <input type="file" id="labVideoInput" accept="video/*,audio/*,.mkv" hidden>
+            <button id="labExtractLoaded" disabled title="Use the video loaded in the Video section">Use loaded video</button>
+          </div>
+          <label class="row"><span>Scan</span>
+            <select id="labScanMin"><option value="3">first 3 minutes</option><option value="5" selected>first 5 minutes</option><option value="10">first 10 minutes</option><option value="20">first 20 minutes</option></select></label>
+          <label class="check"><input type="checkbox" id="labIsolate" checked> <span>Separate voices from music and effects <span class="hint">(Open-Unmix UMX-L, ≈110 MB; its weights are licensed for non-commercial use, so swap in a licensed separator for production)</span></span></label>
+          <div class="voices" id="labFound"></div>
           <div class="clips" id="labClips"></div>
           <div class="hint" id="labClipHint">1–5 minutes of clean, solo speech works best: no music, no other voices.</div>
         </div>
@@ -283,6 +292,23 @@
       <h2 style="margin-top:14px">Trained voices</h2>
       <div class="btns" style="margin-bottom:8px"><button id="labImportBtn">Import voice…</button><input type="file" id="labImportInput" accept=".json,application/json" hidden></div>
       <div class="voices" id="labVoices"><div class="empty">None yet. Trained voices appear in every character's voice list.</div></div>
+    </section>
+
+    <section class="panel card">
+      <h2>Speak</h2>
+      <div class="hint" style="margin-bottom:8px">Type anything and hear it in a stock or trained voice. Kokoro reads English.</div>
+      <textarea id="speakText" rows="4" placeholder="Type the lines to speak…">Hello there. This line was generated on this device, with no recording session.</textarea>
+      <div class="lab" style="margin-top:10px">
+        <label class="row"><span>Voice</span><select id="speakVoice"></select></label>
+        <label class="row"><span>Pitch <b id="speakPitchVal">1.00</b></span><input type="range" id="speakPitch" min="0.7" max="1.4" step="0.01" value="1"></label>
+        <label class="row"><span>Pace <b id="speakPaceVal">1.00</b></span><input type="range" id="speakPace" min="0.6" max="1.6" step="0.01" value="1"></label>
+      </div>
+      <div class="btns" style="margin-top:10px">
+        <button class="primary" id="speakBtn">Speak</button>
+        <button id="speakStop" disabled>Stop</button>
+        <button id="speakDownload" disabled>Download WAV</button>
+        <span class="hint" id="speakStatus"></span>
+      </div>
     </section>
 
     <section class="panel card">
@@ -479,6 +505,142 @@ self.onmessage = async (ev) => {
       const audio = out.audio instanceof Float32Array ? out.audio : Float32Array.from(out.audio);
       post({ id, type: 'done', result: { audio, sr: out.sampling_rate } }, [audio.buffer]);
     } else throw new Error('Unknown message ' + type);
+  } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
+};
+</script>
+
+<!-- ===================== Vocal separation worker (Open-Unmix, ONNX Runtime Web) ===================== -->
+<script type="text/plain" id="sepWorkerSrc">
+const N = 4096, HOP = 1024, BINS = N / 2 + 1, SR = 44100;
+let ort = null, sess = null;
+const post = (m, t) => self.postMessage(m, t || []);
+
+// ---- radix-2 FFT (in place) ----
+const rev = new Uint32Array(N), cosT = new Float64Array(N / 2), sinT = new Float64Array(N / 2), win = new Float64Array(N);
+(() => {
+  const bits = Math.log2(N);
+  for (let i = 0; i < N; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= ((i >> b) & 1) << (bits - 1 - b); rev[i] = r; }
+  for (let i = 0; i < N / 2; i++) { cosT[i] = Math.cos(2 * Math.PI * i / N); sinT[i] = Math.sin(2 * Math.PI * i / N); }
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / N); // periodic Hann
+})();
+function fft(re, im, inverse) {
+  for (let i = 0; i < N; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let size = 2; size <= N; size <<= 1) {
+    const half = size >> 1, step = N / size;
+    for (let s = 0; s < N; s += size) for (let k = 0; k < half; k++) {
+      const c = cosT[k * step], sn = inverse ? sinT[k * step] : -sinT[k * step];
+      const a = s + k, b = a + half, tr = re[b] * c - im[b] * sn, ti = re[b] * sn + im[b] * c;
+      re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+    }
+  }
+}
+// Centered STFT with reflect padding; returns frames × bins (re, im).
+function stft(x) {
+  const pad = N / 2, len = x.length, frames = 1 + Math.floor(len / HOP);
+  const at = (i) => { if (i < 0) i = -i; if (i >= len) i = 2 * len - 2 - i; return x[Math.max(0, Math.min(len - 1, i))]; };
+  const RE = new Float32Array(frames * BINS), IM = new Float32Array(frames * BINS), re = new Float64Array(N), im = new Float64Array(N);
+  for (let t = 0; t < frames; t++) {
+    const o = t * HOP - pad;
+    for (let i = 0; i < N; i++) { re[i] = at(o + i) * win[i]; im[i] = 0; }
+    fft(re, im, false);
+    for (let f = 0; f < BINS; f++) { RE[t * BINS + f] = re[f]; IM[t * BINS + f] = im[f]; }
+  }
+  return { RE, IM, frames };
+}
+function istft(RE, IM, frames, len) {
+  const pad = N / 2, out = new Float64Array(len + N), norm = new Float64Array(len + N), re = new Float64Array(N), im = new Float64Array(N);
+  for (let t = 0; t < frames; t++) {
+    for (let f = 0; f < BINS; f++) { re[f] = RE[t * BINS + f]; im[f] = IM[t * BINS + f]; }
+    for (let f = 1; f < N / 2; f++) { re[N - f] = re[f]; im[N - f] = -im[f]; }
+    fft(re, im, true);
+    const o = t * HOP;
+    for (let i = 0; i < N; i++) { out[o + i] += re[i] / N * win[i]; norm[o + i] += win[i] * win[i]; }
+  }
+  const y = new Float32Array(len);
+  for (let i = 0; i < len; i++) { const n = norm[i + pad]; y[i] = n > 1e-8 ? out[i + pad] / n : 0; }
+  return y;
+}
+
+async function load(id, p) {
+  if (sess) return sess.device;
+  ort = await import(p.ortUrl);
+  ort.env.wasm.wasmPaths = p.wasmBase;
+  ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.min(8, navigator.hardwareConcurrency || 4) : 1;
+  let bytes;
+  try { const c = await caches.open('dub-studio-models'); const hit = await c.match(p.modelUrl); if (hit) bytes = new Uint8Array(await hit.arrayBuffer()); } catch (e) {}
+  if (!bytes) {
+    post({ id, type: 'status', message: 'Downloading the vocal separation model' });
+    const r = await fetch(p.modelUrl);
+    if (!r.ok) throw new Error(`Could not download the separation model (${r.status}).`);
+    const total = Number(r.headers.get('content-length')) || 0, reader = r.body.getReader(), parts = [];
+    let loaded = 0;
+    for (;;) { const { done, value } = await reader.read(); if (done) break; parts.push(value); loaded += value.length; post({ id, type: 'download', status: 'progress', name: 'separator', file: p.modelUrl.split('/').pop(), loaded, total }); }
+    bytes = new Uint8Array(loaded); let o = 0; for (const v of parts) { bytes.set(v, o); o += v.length; }
+    post({ id, type: 'download', status: 'done', name: 'separator', file: p.modelUrl.split('/').pop() });
+    try { const c = await caches.open('dub-studio-models'); await c.put(p.modelUrl, new Response(bytes)); } catch (e) {}
+  }
+  let err;
+  for (const ep of p.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm']) {
+    try { sess = await ort.InferenceSession.create(bytes, { executionProviders: [ep], graphOptimizationLevel: 'all' }); sess.device = ep; return ep; }
+    catch (e) { err = e; post({ id, type: 'log', message: `Separator on ${ep} failed: ${e.message || e}` }); }
+  }
+  throw err;
+}
+
+// The exported graph takes a fixed number of frames (100 here, about 2.3 s), so long spectrograms
+// run as overlapping windows that are cross-faded with triangular weights.
+async function runWindows(mag, T) {
+  const dims = sess.inputMetadata?.[0]?.shape || [];
+  const W = typeof dims[3] === 'number' && dims[3] > 0 ? dims[3] : 100, HOPW = Math.max(1, Math.floor(W * 0.75));
+  const est = new Float32Array(mag.length), wsum = new Float32Array(T), x = new Float32Array(2 * BINS * W);
+  const tri = Float32Array.from({ length: W }, (_, i) => 1 - Math.abs((i + 0.5) / W * 2 - 1) + 1e-3);
+  for (let s0 = 0; s0 < T; s0 += HOPW) {
+    x.fill(0);
+    const n = Math.min(W, T - s0);
+    for (let cf = 0; cf < 2 * BINS; cf++) x.set(mag.subarray(cf * T + s0, cf * T + s0 + n), cf * W);
+    const y = (await sess.run({ [sess.inputNames[0]]: new ort.Tensor('float32', x, [1, 2, BINS, W]) }))[sess.outputNames[0]].data;
+    for (let cf = 0; cf < 2 * BINS; cf++) for (let t = 0; t < n; t++) est[cf * T + s0 + t] += y[cf * W + t] * tri[t];
+    for (let t = 0; t < n; t++) wsum[s0 + t] += tri[t];
+    if (s0 + W >= T) break;
+  }
+  for (let cf = 0; cf < 2 * BINS; cf++) for (let t = 0; t < T; t++) est[cf * T + t] /= wsum[t] || 1;
+  return est;
+}
+
+// Vocals of a stereo 44.1 kHz signal, in 30 s blocks with 2 s of context on each side.
+async function separate(id, { left, right }) {
+  const len = left.length, BLOCK = 30 * SR, CTX = 2 * SR;
+  const outL = new Float32Array(len), outR = new Float32Array(len);
+  for (let s = 0; s < len; s += BLOCK) {
+    const a = Math.max(0, s - CTX), b = Math.min(len, s + BLOCK + CTX);
+    const chans = [left.subarray(a, b), right.subarray(a, b)].map(stft);
+    const T = chans[0].frames, mag = new Float32Array(2 * BINS * T);
+    for (let c = 0; c < 2; c++) for (let t = 0; t < T; t++) for (let f = 0; f < BINS; f++) {
+      const k = t * BINS + f; mag[(c * BINS + f) * T + t] = Math.hypot(chans[c].RE[k], chans[c].IM[k]);
+    }
+    const est = await runWindows(mag, T);
+    for (let c = 0; c < 2; c++) {
+      const { RE, IM } = chans[c];
+      for (let t = 0; t < T; t++) for (let f = 0; f < BINS; f++) {
+        const k = t * BINS + f, m = Math.hypot(RE[k], IM[k]), g = m > 1e-9 ? est[(c * BINS + f) * T + t] / m : 0;
+        RE[k] *= g; IM[k] *= g;
+      }
+      const y = istft(RE, IM, T, b - a), keepA = s - a, keepB = Math.min(len, s + BLOCK) - a;
+      (c ? outR : outL).set(y.subarray(keepA, keepB), s);
+    }
+    post({ id, type: 'progress', value: Math.min(1, (s + BLOCK) / len), message: `Isolating voices: ${Math.round(Math.min(len, s + BLOCK) / SR)} of ${Math.round(len / SR)} s` });
+  }
+  return { left: outL, right: outR };
+}
+
+self.onmessage = async (ev) => {
+  const { id, type, payload } = ev.data;
+  try {
+    let result, transfer;
+    if (type === 'load') result = await load(id, payload);
+    else if (type === 'separate') { result = await separate(id, payload); transfer = [result.left.buffer, result.right.buffer]; }
+    else throw new Error('Unknown message ' + type);
+    post({ id, type: 'done', result }, transfer);
   } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
 };
 </script>
@@ -777,7 +939,7 @@ async function loadFile(file) {
   attachMedia(video);
   els.mediaInfo.textContent = `${file.name} · ${fmtBytes(file.size)}`;
   els.prepareBtn.disabled = false; els.liveVideoBtn.disabled = false; els.recordBtn.disabled = true;
-  renderScript(); refreshExports();
+  renderScript(); refreshExports(); syncLab();
   logLine(`Loaded ${file.name}.`);
 }
 
@@ -1796,7 +1958,7 @@ async function idbDo(mode, fn) {
 }
 async function loadLabVoices() {
   try { lab.voices = (await idbDo('readonly', (s) => s.getAll())) || []; } catch (e) { lab.voices = []; logLine('Saved voices unavailable: ' + e.message); }
-  renderLabVoices(); renderCast();
+  renderLabVoices(); renderCast(); renderSpeakVoices();
 }
 async function saveLabVoice() {
   const r = lab.result; if (!r || !lab.consent?.verified) return;
@@ -1852,6 +2014,194 @@ function renderLabVoices() {
   }
 }
 
+// --- extraction from video ---
+const ORT_URL = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/ort.webgpu.min.mjs';
+const ORT_WASM = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.29.0/dist/';
+const SEPARATOR_URL = 'https://huggingface.co/nsosu/demucs-onnx/resolve/main/umxl_vocals.onnx';
+const sepWorker = new WorkerClient('sepWorkerSrc', 'dub-sep');
+const SEP_SR = 44100;
+async function decodeRange(file, startSec, durSec, rate, channels) {
+  const ctx = new AudioContext();
+  try {
+    const d = await ctx.decodeAudioData(await file.arrayBuffer());
+    const len = Math.max(1, Math.floor(Math.min(durSec, d.duration - startSec) * rate));
+    const off = new OfflineAudioContext(channels, len, rate);
+    const src = off.createBufferSource(); src.buffer = d; src.connect(off.destination); src.start(0, startSec, len / rate);
+    const r = await off.startRendering();
+    return { chans: Array.from({ length: channels }, (_, c) => r.getChannelData(Math.min(c, r.numberOfChannels - 1))), duration: d.duration };
+  } finally { ctx.close(); }
+}
+// Speech regions from frame energy (works well on separated vocals; on a full mix loud music also counts).
+function speechRegions(pcm) {
+  const F = 480, n = Math.floor(pcm.length / F), rms = new Float32Array(n);
+  for (let i = 0; i < n; i++) { let e = 0; for (let j = i * F; j < (i + 1) * F; j++) e += pcm[j] * pcm[j]; rms[i] = Math.sqrt(e / F); }
+  const sorted = Float32Array.from(rms).sort(), floor = sorted[Math.floor(n * 0.2)] || 0, top = sorted[Math.floor(n * 0.95)] || 0;
+  const th = Math.max(0.004, floor * 2.5, top * 0.08), regions = [];
+  let cur = null, gap = 0;
+  for (let i = 0; i < n; i++) {
+    if (rms[i] > th) { if (!cur) cur = { s: i, e: i }; cur.e = i; gap = 0; }
+    else if (cur && ++gap > 8) { regions.push(cur); cur = null; }
+  }
+  if (cur) regions.push(cur);
+  return regions.map((r) => ({ start: r.s * F / SR, end: (r.e + 1) * F / SR })).filter((r) => r.end - r.start >= 0.6);
+}
+// Group 2 s windows of speech by voice print: assign to the nearest voice or start a new one, then refine.
+function clusterWindows(wins, threshold = 0.4, mergeAt = 0.5) {
+  let cents = [];
+  for (const w of wins) {
+    let best = -1, bs = -1; cents.forEach((c, k) => { const v = cosine(w.emb, c.v); if (v > bs) { bs = v; best = k; } });
+    if (bs >= threshold) { const c = cents[best]; c.sum.forEach((x, i) => { c.sum[i] += w.emb[i]; }); c.v = unitMean([c.sum]); }
+    else cents.push({ sum: Float32Array.from(w.emb), v: w.emb });
+  }
+  for (let it = 0; it < 4; it++) {
+    for (const w of wins) { let best = -1, bs = -1; cents.forEach((c, k) => { const v = cosine(w.emb, c.v); if (v > bs) { bs = v; best = k; } }); w.k = best; w.sim = bs; }
+    cents = cents.map((c, k) => { const m = wins.filter((w) => w.k === k); return m.length ? { v: unitMean(m.map((w) => w.emb)) } : null; });
+    const keep = cents.map((c, k) => c ? k : -1).filter((k) => k >= 0), remap = new Map(keep.map((k, i) => [k, i]));
+    cents = keep.map((k) => cents[k]); for (const w of wins) w.k = remap.get(w.k);
+  }
+  // Merge voices whose centres are close (the same person split by emotion or overlap), then reassign.
+  for (let merged = true; merged && cents.length > 1;) {
+    merged = false;
+    let bi = -1, bj = -1, bs = mergeAt;
+    for (let i = 0; i < cents.length; i++) for (let j = i + 1; j < cents.length; j++) { const v = cosine(cents[i].v, cents[j].v); if (v > bs) { bs = v; bi = i; bj = j; } }
+    if (bi >= 0) {
+      for (const w of wins) if (w.k === bj) w.k = bi;
+      cents[bi] = { v: unitMean(wins.filter((w) => w.k === bi).map((w) => w.emb)) };
+      cents.splice(bj, 1); for (const w of wins) if (w.k > bj) w.k--;
+      merged = true;
+    }
+  }
+  for (const w of wins) { let best = -1, bs = -1; cents.forEach((c, k) => { const v = cosine(w.emb, c.v); if (v > bs) { bs = v; best = k; } }); w.k = best; w.sim = bs; }
+  return cents.map((c, k) => {
+    const m = wins.filter((w) => w.k === k);
+    return { centroid: c.v, windows: m, seconds: m.reduce((n, w) => n + (w.end - w.start), 0) / 2 + 1 };
+  }).sort((a, b) => b.seconds - a.seconds);
+}
+async function extractVoices(file) {
+  if (lab.training || lab.extracting) return;
+  lab.extracting = true; syncLab(); showError('');
+  els.labFound.textContent = '';
+  try {
+    const minutes = Number(els.labScanMin.value), isolate = els.labIsolate.checked;
+    setStage(`Decoding ${file.name}`); setProgress(null);
+    let voice16;
+    if (isolate) {
+      const { chans } = await decodeRange(file, 0, minutes * 60, SEP_SR, 2);
+      const device = els.device.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
+      const ep = await sepWorker.call('load', { ortUrl: ORT_URL, wasmBase: ORT_WASM, modelUrl: SEPARATOR_URL, device });
+      logLine(`Vocal separator ready on ${ep}.`);
+      setStage('Separating voices from music'); setProgress(0);
+      const left = chans[0].slice(), right = chans[1].slice();
+      const v = await sepWorker.call('separate', { left, right }, { transfer: [left.buffer, right.buffer] });
+      const mono = new Float32Array(v.left.length); for (let i = 0; i < mono.length; i++) mono[i] = (v.left[i] + v.right[i]) / 2;
+      voice16 = resample(mono, SEP_SR, SR);
+    } else {
+      voice16 = (await decodeRange(file, 0, minutes * 60, SR, 1)).chans[0].slice();
+    }
+    setStage('Finding the voices'); setProgress(null);
+    await ensureEmb();
+    const wins = [];
+    for (const r of speechRegions(voice16)) {
+      const len = r.end - r.start;
+      if (len < 2) { if (len >= 0.8) wins.push({ start: r.start, end: r.end }); continue; }
+      for (let t = r.start; t + 2 <= r.end + 0.01; t += 1) wins.push({ start: t, end: Math.min(r.end, t + 2) });
+    }
+    if (!wins.length) throw new Error('No speech found in that part of the video.');
+    for (let i = 0; i < wins.length; i++) {
+      if (i % 10 === 0) setProgress(i / wins.length, `Voice-printing ${i + 1}/${wins.length}`);
+      wins[i].emb = await embed16k(voice16.slice(Math.floor(wins[i].start * SR), Math.floor(wins[i].end * SR)));
+    }
+    const voices = clusterWindows(wins).filter((v) => v.seconds >= 2);
+    lab.lastWindows = wins;
+    lab.found = { file: file.name, voice16, voices };
+    renderFound();
+    setStage(`Found ${voices.length} voice${voices.length === 1 ? '' : 's'} in ${file.name}`); setProgress(1, '');
+  } catch (e) { showError(friendlyError(e)); setStage('Extraction failed'); setProgress(0); }
+  finally { lab.extracting = false; syncLab(); }
+}
+// Audio of one found voice: its windows that clearly match it, merged into segments.
+function voiceAudio(v, maxSec = 300) {
+  const segs = v.windows.filter((w) => w.sim >= 0.45).map((w) => [w.start, w.end]).sort((a, b) => a[0] - b[0]), merged = [];
+  for (const sg of segs) { const last = merged.at(-1); if (last && sg[0] <= last[1] + 0.05) last[1] = Math.max(last[1], sg[1]); else merged.push([...sg]); }
+  const pcm = lab.found.voice16, parts = []; let total = 0;
+  for (const [a, b] of merged) { if (total > maxSec) break; parts.push(pcm.subarray(Math.floor(a * SR), Math.floor(b * SR))); total += b - a; }
+  const out = new Float32Array(parts.reduce((n, x) => n + x.length, 0)); let o = 0; for (const x of parts) { out.set(x, o); o += x.length; }
+  return out;
+}
+function renderFound() {
+  els.labFound.textContent = '';
+  const f = lab.found; if (!f) return;
+  f.voices.forEach((v, i) => {
+    const label = `Voice ${String.fromCharCode(65 + i)}`;
+    els.labFound.append(el('div', { class: 'v' }, [
+      el('span', { class: 'name', style: `color:${PALETTE[i % PALETTE.length]}` }, label),
+      el('span', { class: 'hint' }, `${Math.round(v.seconds)} s`),
+      el('button', { title: 'Hear a sample of this voice', onclick: () => {
+        audio.resume();
+        const top = [...v.windows].sort((a, b) => b.sim - a.sim).slice(0, 3).sort((a, b) => a.start - b.start);
+        const parts = top.map((w) => f.voice16.subarray(Math.floor(w.start * SR), Math.floor(w.end * SR)));
+        const a = new Float32Array(parts.reduce((n, x) => n + x.length, 0)); let o = 0; for (const x of parts) { a.set(x, o); o += x.length; }
+        playBuffer({ audio: a, sr: SR, rate: 1 }, audio.ctx.currentTime + 0.05, 0);
+      } }, '▶'),
+      el('button', { onclick: () => { lab.clips.push({ name: `${f.file} · ${label}`, pcm: voiceAudio(v) }); labClipsChanged(); } }, 'Use for training'),
+    ]));
+  });
+}
+
+// --- Speak panel ---
+const speak = { stop: false, last: null, nodes: [] };
+function renderSpeakVoices() {
+  const cur = els.speakVoice.value || 'af_heart';
+  els.speakVoice.replaceChildren(
+    ...(lab.voices.length ? [el('optgroup', { label: 'Trained voices' }, lab.voices.map((v) => el('option', { value: v.id }, `★ ${v.name}`)))] : []),
+    el('optgroup', { label: 'Stock voices' }, KOKORO_VOICES.map((v) => el('option', { value: v }, v))));
+  els.speakVoice.value = [...els.speakVoice.options].some((o) => o.value === cur) ? cur : 'af_heart';
+}
+function splitSentences(text) {
+  const out = [];
+  for (const para of text.split(/\n+/)) {
+    let buf = '';
+    for (const part of para.split(/(?<=[.!?…])\s+/)) {
+      if (buf && (buf + ' ' + part).length > 220) { out.push(buf); buf = part; } else buf = buf ? `${buf} ${part}` : part;
+    }
+    if (buf.trim()) out.push(buf.trim());
+  }
+  return out;
+}
+async function runSpeak() {
+  const text = els.speakText.value.trim(); if (!text) return;
+  speak.stop = false; speak.last = null;
+  els.speakBtn.disabled = true; els.speakStop.disabled = false; els.speakDownload.disabled = true;
+  const actor = { kokoro: els.speakVoice.value, pitch: Number(els.speakPitch.value), tempo: Number(els.speakPace.value) };
+  try {
+    audio.resume();
+    const sentences = splitSentences(text), outs = [];
+    let when = audio.ctx.currentTime + 0.1;
+    for (let i = 0; i < sentences.length && !speak.stop; i++) {
+      els.speakStatus.textContent = `Voicing ${i + 1} of ${sentences.length}…`;
+      const d = await synthKokoro(actor, sentences[i], null);
+      if (speak.stop) break;
+      when = Math.max(when, audio.ctx.currentTime + 0.02);
+      speak.nodes.push(playBuffer(d, when, 0));
+      when += d.dur + 0.25;
+      outs.push(resample(d.audio, Math.round(d.sr * d.rate), d.sr), new Float32Array(Math.round(0.25 * d.sr)));
+    }
+    if (outs.length) {
+      const all = new Float32Array(outs.reduce((n, x) => n + x.length, 0)); let o = 0; for (const x of outs) { all.set(x, o); o += x.length; }
+      speak.last = all;
+      els.speakStatus.textContent = `${(all.length / 24000).toFixed(1)} s`;
+    }
+  } catch (e) { showError(friendlyError(e)); els.speakStatus.textContent = ''; }
+  finally { els.speakBtn.disabled = false; els.speakStop.disabled = true; els.speakDownload.disabled = !speak.last; }
+}
+function initSpeak() {
+  renderSpeakVoices();
+  for (const [k, v] of [['speakPitch', 'speakPitchVal'], ['speakPace', 'speakPaceVal']]) els[k].addEventListener('input', () => { els[v].textContent = Number(els[k].value).toFixed(2); });
+  els.speakBtn.addEventListener('click', runSpeak);
+  els.speakStop.addEventListener('click', () => { speak.stop = true; for (const n of speak.nodes) { try { n.stop(); } catch (e) {} } speak.nodes = []; audio.unduck(); });
+  els.speakDownload.addEventListener('click', () => speak.last && download(`speech-${els.speakVoice.selectedOptions[0]?.textContent.replace(/[^\w-]+/g, '_') || 'voice'}.wav`, wavBlob(speak.last, 24000)));
+}
+
 function renderLab() {
   // recordings
   els.labClips.textContent = '';
@@ -1884,6 +2234,7 @@ function syncLab() {
   els.labConsentBtn.disabled = !els.labName.value.trim() || busy || (labRec && labRec.kind !== 'consent');
   els.labRecordClip.disabled = busy || (labRec && labRec.kind !== 'clip');
   els.labAddClips.disabled = busy; els.labNewCode.disabled = busy || !!labRec;
+  els.labExtractBtn.disabled = busy || !!lab.extracting; els.labExtractLoaded.disabled = busy || !!lab.extracting || !state.file;
   els.labTrainBtn.disabled = busy || !lab.consent?.verified || secs < 20;
   els.labTrainBtn.title = !lab.consent?.verified ? 'Record and verify the talent\'s consent first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
   els.labStopBtn.disabled = !lab.training;
@@ -1904,7 +2255,10 @@ function initLab() {
   els.labSaveBtn.addEventListener('click', saveLabVoice);
   els.labImportBtn.addEventListener('click', () => els.labImportInput.click());
   els.labImportInput.addEventListener('change', () => { importLabVoice(els.labImportInput.files[0]); els.labImportInput.value = ''; });
-  newCode(); renderLab(); loadLabVoices();
+  els.labExtractBtn.addEventListener('click', () => els.labVideoInput.click());
+  els.labVideoInput.addEventListener('change', () => { const f = els.labVideoInput.files[0]; els.labVideoInput.value = ''; if (f) extractVoices(f); });
+  els.labExtractLoaded.addEventListener('click', () => state.file && extractVoices(state.file));
+  newCode(); renderLab(); initSpeak(); loadLabVoices();
 }
 
 // ---------- wiring ----------
@@ -1978,7 +2332,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); syncButtons(); detectGPU(); initLab();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, verifyConsent, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb, statementText };
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, verifyConsent, extractVoices, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb, statementText };
 }
 init();
 </script>
