@@ -276,6 +276,12 @@
         </div>
         <div class="step">
           <h3>3 · Train</h3>
+          <label class="row"><span>Method</span>
+            <select id="labMethod">
+              <option value="neural">Deep training (recommended)</option>
+              <option value="search">Quick match (voice search)</option>
+            </select></label>
+          <div class="hint" id="labMethodHint"></div>
           <label class="row"><span>Steps <b id="labStepsVal">300</b></span><input type="range" id="labSteps" min="50" max="1500" step="50" value="300"></label>
           <div class="btns">
             <button class="primary" id="labTrainBtn" disabled>Train voice</button>
@@ -498,6 +504,13 @@ self.onmessage = async (ev) => {
     } else if (type === 'registerVoice') {
       custom.set(payload.name, { data: payload.data, lang: payload.lang || 'a' });
       post({ id, type: 'done', result: true });
+    } else if (type === 'tokenize') {
+      // Kokoro's own text normalisation + phonemizer + tokenizer, without running the model.
+      let ids = null;
+      const g = tts.generate_from_ids;
+      tts.generate_from_ids = async (inp) => { ids = Array.from(inp.data, Number); return { audio: new Float32Array(0), sampling_rate: 24000 }; };
+      try { await tts.generate(payload.text, { voice: payload.voice || 'af_heart' }); } finally { tts.generate_from_ids = g; }
+      post({ id, type: 'done', result: ids ? ids.slice(1, -1) : [] });
     } else if (type === 'synth') {
       const out = await tts.generate(payload.text, { voice: payload.voice, speed: payload.speed });
       const audio = out.audio instanceof Float32Array ? out.audio : Float32Array.from(out.audio);
@@ -637,6 +650,310 @@ self.onmessage = async (ev) => {
     let result, transfer;
     if (type === 'load') result = await load(id, payload);
     else if (type === 'separate') { result = await separate(id, payload); transfer = [result.left.buffer, result.right.buffer]; }
+    else throw new Error('Unknown message ' + type);
+    post({ id, type: 'done', result }, transfer);
+  } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
+};
+</script>
+
+<!-- ===================== Neural voice worker: Kokoro split graphs + on-device training ===================== -->
+<script type="text/plain" id="nvWorkerSrc">
+// Runs the split Kokoro graphs (frontend, prosody, decoder) and the exported training step
+// (forward + gradients) with ONNX Runtime Web. Adam runs here in JS on the two trainable deltas.
+let ort = null, manifest = null, base = '', P = 0, W = 48;
+const sess = {}, shared = {};
+const dataset = [];
+let trainState = null, stopFlag = false;
+const post = (m, t) => self.postMessage(m, t || []);
+
+// ---------- model loading ----------
+async function cachedBytes(url, label) {
+  let c = null;
+  try { c = await caches.open('dub-studio-models'); const hit = await c.match(url); if (hit) return new Uint8Array(await hit.arrayBuffer()); } catch (e) {}
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Could not download ${url.split('/').pop()} (${r.status}). Is the models/ folder next to the page?`);
+  const total = Number(r.headers.get('content-length')) || 0, reader = r.body.getReader(), parts = [];
+  let loaded = 0;
+  for (;;) { const { done, value } = await reader.read(); if (done) break; parts.push(value); loaded += value.length; post({ type: 'download', status: 'progress', name: 'voice-model', file: label, loaded, total }); }
+  post({ type: 'download', status: 'done', name: 'voice-model', file: label });
+  const out = new Uint8Array(loaded); let o = 0; for (const v of parts) { out.set(v, o); o += v.length; }
+  if (c) try { await c.put(url, new Response(out)); } catch (e) {}
+  return out;
+}
+async function joined(names) {
+  const bufs = [];
+  for (const n of names) bufs.push(await cachedBytes(new URL(n, base).href, n));
+  if (bufs.length === 1) return bufs[0];
+  const out = new Uint8Array(bufs.reduce((s, b) => s + b.length, 0)); let o = 0; for (const b of bufs) { out.set(b, o); o += b.length; }
+  return out;
+}
+async function load(p) {
+  if (!ort) {
+    ort = await import(p.ortUrl);
+    ort.env.wasm.wasmPaths = p.wasmBase;
+    ort.env.wasm.numThreads = self.crossOriginIsolated ? Math.min(8, navigator.hardwareConcurrency || 4) : 1;
+  }
+  base = p.base;
+  if (!manifest) {
+    manifest = await (await fetch(new URL('manifest.json', base))).json();
+    P = manifest.train.params; W = manifest.train.crop_frames;
+  }
+  const devices = {};
+  for (const name of p.graphs) {
+    if (sess[name]) { devices[name] = sess[name].ep; continue; }
+    const g = manifest.graphs[name];
+    post({ type: 'status', message: `Loading voice model: ${name}` });
+    const model = await joined(g.parts);
+    const externalData = [];
+    for (const ext of g.external) {
+      if (!shared[ext]) shared[ext] = await joined(manifest.external[ext]);
+      externalData.push({ path: ext, data: shared[ext] });
+    }
+    // LSTMs (frontend, prosody) are CPU-only in ORT Web; the decoder and training step use WebGPU.
+    const eps = (name === 'decoder' || name === 'train_step') && p.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm'];
+    let err;
+    for (const ep of eps) {
+      try { sess[name] = await ort.InferenceSession.create(model, { executionProviders: [ep], externalData, graphOptimizationLevel: 'all' }); sess[name].ep = ep; break; }
+      catch (e) { err = e; post({ type: 'log', message: `Voice model ${name} on ${ep} failed: ${e.message || e}` }); }
+    }
+    if (!sess[name]) throw err;
+    devices[name] = sess[name].ep;
+  }
+  return { devices, params: P, crop: W };
+}
+const T32 = (data, dims) => new ort.Tensor('float32', data, dims);
+
+// ---------- Kokoro inference on the split graphs ----------
+async function frontend(ids, style, speed) {
+  const L = ids.length + 2, input = new BigInt64Array(L);
+  ids.forEach((v, i) => { input[i + 1] = BigInt(v); });
+  const o = await sess.frontend.run({ input_ids: new ort.Tensor('int64', input, [1, L]), style: T32(style, [1, 256]), speed: T32(new Float32Array([speed]), [1]) });
+  const dur = o.dur.data, pd = new Int32Array(L);
+  for (let i = 0; i < L; i++) pd[i] = Math.max(1, Math.round(dur[i]));
+  return { L, pd, t_en: o.t_en.data, d: o.d.data, dDim: o.d.dims[2] };
+}
+// Per-frame token index from integer durations.
+function frameTokens(pd) { const T = pd.reduce((a, b) => a + b, 0), idx = new Int32Array(T); let t = 0; pd.forEach((n, i) => { for (let k = 0; k < n; k++) idx[t++] = i; }); return idx; }
+function gatherCols(src, C, L, idx) { // src [C, L] row-major -> [C, T]
+  const T = idx.length, out = new Float32Array(C * T);
+  for (let c = 0; c < C; c++) { const so = c * L, oo = c * T; for (let t = 0; t < T; t++) out[oo + t] = src[so + idx[t]]; }
+  return out;
+}
+function gatherRowsT(src, L, D, idx) { // src [L, D] -> [D, T]
+  const T = idx.length, out = new Float32Array(D * T);
+  for (let t = 0; t < T; t++) { const so = idx[t] * D; for (let k = 0; k < D; k++) out[k * T + t] = src[so + k]; }
+  return out;
+}
+async function prosody(en, D, T, sPros) {
+  const o = await sess.prosody.run({ en: T32(en, [1, D, T]), s: T32(sPros, [1, 128]) });
+  return { F0: o.F0.data, N: o.N.data };
+}
+async function decode(asr, F0, N, T, s, biasDelta) {
+  const o = await sess.decoder.run({ asr: T32(asr, [1, 512, T]), F0: T32(F0, [1, 2 * T]), N: T32(N, [1, 2 * T]), s: T32(s, [1, 128]), bias_delta: T32(biasDelta, [P]) });
+  return o.audio.data;
+}
+async function render({ ids, style, speed = 1, styleDelta, biasDelta, f0Ratio = 1, useTrained = false }) {
+  if (useTrained && trainState) { styleDelta = trainState.style; biasDelta = trainState.bias; }
+  const f = await frontend(ids, style, speed), idx = frameTokens(f.pd), T = idx.length;
+  const pr = await prosody(gatherRowsT(f.d, f.L, f.dDim, idx), f.dDim, T, style.subarray(128, 256));
+  if (f0Ratio !== 1) for (let i = 0; i < pr.F0.length; i++) pr.F0[i] *= f0Ratio;
+  const s = Float32Array.from(style.subarray(0, 128));
+  if (styleDelta) for (let i = 0; i < 128; i++) s[i] += styleDelta[i];
+  const audio = await decode(gatherCols(f.t_en, 512, f.L, idx), pr.F0, pr.N, T, s, biasDelta || new Float32Array(P));
+  return { audio: Float32Array.from(audio), f, F0: pr.F0, T };
+}
+
+// ---------- DSP: FFT, mel, MFCC, DTW, YIN ----------
+const fftCache = new Map();
+function fftTables(n) {
+  if (fftCache.has(n)) return fftCache.get(n);
+  const bits = Math.log2(n), rev = new Uint32Array(n), cos = new Float64Array(n / 2), sin = new Float64Array(n / 2);
+  for (let i = 0; i < n; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= ((i >> b) & 1) << (bits - 1 - b); rev[i] = r; }
+  for (let i = 0; i < n / 2; i++) { cos[i] = Math.cos(2 * Math.PI * i / n); sin[i] = Math.sin(2 * Math.PI * i / n); }
+  const t = { rev, cos, sin }; fftCache.set(n, t); return t;
+}
+function fft(re, im) {
+  const n = re.length, { rev, cos, sin } = fftTables(n);
+  for (let i = 0; i < n; i++) { const j = rev[i]; if (j > i) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let size = 2; size <= n; size <<= 1) {
+    const half = size >> 1, step = n / size;
+    for (let s0 = 0; s0 < n; s0 += size) for (let k = 0; k < half; k++) {
+      const c = cos[k * step], sn = -sin[k * step], a = s0 + k, b = a + half;
+      const tr = re[b] * c - im[b] * sn, ti = re[b] * sn + im[b] * c;
+      re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+    }
+  }
+}
+const hz2mel = (f) => 2595 * Math.log10(1 + f / 700), mel2hz = (m) => 700 * (10 ** (m / 2595) - 1);
+function melBank(sr, nfft, nMels) { // HTK scale, no normalisation (torchaudio MelSpectrogram defaults)
+  const bins = nfft / 2 + 1, fb = new Float32Array(nMels * bins), mMax = hz2mel(sr / 2), pts = [];
+  for (let i = 0; i < nMels + 2; i++) pts.push(mel2hz(mMax * i / (nMels + 1)));
+  for (let m = 0; m < nMels; m++) for (let k = 0; k < bins; k++) {
+    const f = k * sr / nfft, lo = pts[m], c = pts[m + 1], hi = pts[m + 2];
+    fb[m * bins + k] = Math.max(0, Math.min((f - lo) / (c - lo), (hi - f) / (hi - c)));
+  }
+  return fb;
+}
+// Power-mel frames, centered with reflect padding: returns { frames, nMels, data[frames*nMels] }.
+function melPower(x, sr, nfft, win, hop, nMels) {
+  const pad = nfft / 2, len = x.length, frames = 1 + Math.floor(len / hop), bins = nfft / 2 + 1;
+  const fb = melBank(sr, nfft, nMels), w = new Float64Array(nfft), off = (nfft - win) >> 1;
+  for (let i = 0; i < win; i++) w[off + i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * i / win);
+  const at = (i) => { if (i < 0) i = -i; if (i >= len) i = 2 * len - 2 - i; return x[Math.max(0, Math.min(len - 1, i))]; };
+  const re = new Float64Array(nfft), im = new Float64Array(nfft), out = new Float32Array(frames * nMels), pw = new Float64Array(bins);
+  for (let t = 0; t < frames; t++) {
+    const o = t * hop - pad;
+    for (let i = 0; i < nfft; i++) { re[i] = at(o + i) * w[i]; im[i] = 0; }
+    fft(re, im);
+    for (let k = 0; k < bins; k++) pw[k] = re[k] * re[k] + im[k] * im[k];
+    for (let m = 0; m < nMels; m++) { let s = 0; const r = m * bins; for (let k = 0; k < bins; k++) s += fb[r + k] * pw[k]; out[t * nMels + m] = s; }
+  }
+  return { frames, nMels, data: out };
+}
+function mfcc(x) { // 40 Hz frames: 19 cepstral coefficients (c1..c19), mean/variance normalised
+  const M = melPower(x, 24000, 2048, 1200, 600, 40), F = M.frames, K = 19, out = new Float32Array(F * K);
+  for (let t = 0; t < F; t++) for (let k = 1; k <= K; k++) {
+    let s = 0; for (let m = 0; m < 40; m++) s += Math.log(M.data[t * 40 + m] + 1e-10) * Math.cos(Math.PI * k * (m + 0.5) / 40);
+    out[t * K + k - 1] = s;
+  }
+  for (let k = 0; k < K; k++) {
+    let mu = 0, v = 0; for (let t = 0; t < F; t++) mu += out[t * K + k]; mu /= F;
+    for (let t = 0; t < F; t++) v += (out[t * K + k] - mu) ** 2; const sd = Math.sqrt(v / F) + 1e-5;
+    for (let t = 0; t < F; t++) out[t * K + k] = (out[t * K + k] - mu) / sd;
+  }
+  return { F, K, data: out };
+}
+// DTW with cosine distance; returns for every row of A the mean matched column of B.
+function dtwMap(A, B) {
+  const n = A.F, m = B.F, K = A.K, norm = (X, i) => { let s = 0; for (let k = 0; k < K; k++) s += X.data[i * K + k] ** 2; return Math.sqrt(s) + 1e-9; };
+  const na = Float32Array.from({ length: n }, (_, i) => norm(A, i)), nb = Float32Array.from({ length: m }, (_, j) => norm(B, j));
+  const D = new Float32Array(n * m);
+  for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) {
+    let d = 0; for (let k = 0; k < K; k++) d += A.data[i * K + k] * B.data[j * K + k];
+    const c = 1 - d / (na[i] * nb[j]);
+    const best = i === 0 && j === 0 ? 0 : Math.min(i > 0 ? D[(i - 1) * m + j] : Infinity, j > 0 ? D[i * m + j - 1] : Infinity, i > 0 && j > 0 ? D[(i - 1) * m + j - 1] : Infinity);
+    D[i * m + j] = c + best;
+  }
+  const sum = new Float64Array(n), cnt = new Float64Array(n);
+  let i = n - 1, j = m - 1;
+  for (;;) {
+    sum[i] += j; cnt[i]++;
+    if (i === 0 && j === 0) break;
+    const a = i > 0 && j > 0 ? D[(i - 1) * m + j - 1] : Infinity, b = i > 0 ? D[(i - 1) * m + j] : Infinity, c = j > 0 ? D[i * m + j - 1] : Infinity;
+    if (a <= b && a <= c) { i--; j--; } else if (b <= c) i--; else j--;
+  }
+  return Float64Array.from(sum, (s, k) => s / Math.max(1, cnt[k]));
+}
+// YIN pitch at 80 Hz (hop 300 on 24 kHz), unvoiced = 0. The difference function's cross term
+// sum_{i<W} x[i]·x[i+τ] is computed for all τ at once with an FFT cross-correlation.
+function yin(x, sr = 24000, hop = 300, frame = 1200, fmin = 50, fmax = 500, thr = 0.15) {
+  const len = x.length, frames = 1 + Math.floor(len / hop), maxLag = Math.floor(sr / fmin), minLag = Math.floor(sr / fmax);
+  const Wn = frame - maxLag, n = 2048;
+  const ar = new Float64Array(n), ai = new Float64Array(n), br = new Float64Array(n), bi = new Float64Array(n);
+  const d = new Float64Array(maxLag + 1), dn = new Float64Array(maxLag + 1), out = new Float32Array(frames);
+  const at = (i) => (i < 0 || i >= len ? 0 : x[i]);
+  for (let t = 0; t < frames; t++) {
+    const o = t * hop - frame / 2;
+    let e = 0; for (let i = 0; i < frame; i++) e += at(o + i) ** 2;
+    if (e / frame < 1e-5) { out[t] = 0; continue; }
+    ar.fill(0); ai.fill(0); br.fill(0); bi.fill(0);
+    for (let i = 0; i < Wn; i++) ar[i] = at(o + i);
+    for (let i = 0; i < frame; i++) br[i] = at(o + i);
+    fft(ar, ai); fft(br, bi);
+    // C = conj(A)·B; inverse FFT via conj(fft(conj(C))) / n
+    for (let k = 0; k < n; k++) { const re = ar[k] * br[k] + ai[k] * bi[k], im = ar[k] * bi[k] - ai[k] * br[k]; ar[k] = re; ai[k] = -im; }
+    fft(ar, ai);
+    let e0 = 0; for (let i = 0; i < Wn; i++) e0 += at(o + i) ** 2;
+    let el = e0, cum = 0; dn[0] = 1;
+    for (let lag = 1; lag <= maxLag; lag++) {
+      el += at(o + lag + Wn - 1) ** 2 - at(o + lag - 1) ** 2;
+      d[lag] = Math.max(0, e0 + el - 2 * (ar[lag] / n));
+      cum += d[lag];
+      dn[lag] = cum > 0 ? d[lag] * lag / cum : 1;
+    }
+    let lag = 0;
+    for (let k = minLag; k <= maxLag; k++) if (dn[k] < thr) { while (k + 1 <= maxLag && dn[k + 1] < dn[k]) k++; lag = k; break; }
+    out[t] = lag ? sr / lag : 0;
+  }
+  const sm = Float32Array.from(out); // median-of-3 on voiced frames to remove octave blips
+  for (let t = 1; t < frames - 1; t++) if (out[t] > 0 && out[t - 1] > 0 && out[t + 1] > 0) sm[t] = [out[t - 1], out[t], out[t + 1]].sort((p, q) => p - q)[1];
+  return sm;
+}
+// StyleTTS2 energy: log of the L2 norm of the (linear) mel power across bins, at 80 Hz.
+function energyN(x) {
+  const M = melPower(x, 24000, 2048, 1200, 300, 80), out = new Float32Array(M.frames);
+  for (let t = 0; t < M.frames; t++) { let s = 0; for (let m = 0; m < 80; m++) s += (M.data[t * 80 + m] + 1e-5) ** 2; out[t] = Math.log(Math.sqrt(s)); }
+  return out;
+}
+
+// ---------- teacher-forcing data from a real recording ----------
+async function prep({ ids, style, audio }) {
+  const T = Math.floor(audio.length / 600), real = audio.subarray(0, 600 * T);
+  if (T < W + 2) return { skipped: 'too short' };
+  const base = await render({ ids, style });
+  const f = base.f, A = mfcc(base.audio), B = mfcc(real);
+  const realOf = dtwMap(A, B), ts = A.F;
+  const bounds = [0]; for (const n of f.pd) bounds.push(bounds.at(-1) + n);
+  const rb = [0];
+  for (let k = 1; k < bounds.length - 1; k++) rb.push(Math.round(realOf[Math.min(bounds[k], ts - 1)]));
+  rb.push(T);
+  for (let k = 1; k < rb.length; k++) rb[k] = Math.max(rb[k], rb[k - 1]);
+  const durs = new Int32Array(f.L); for (let k = 0; k < f.L; k++) durs[k] = rb[k + 1] - rb[k];
+  for (let guard = 0; guard < 10000; guard++) {
+    let lo = 0, hi = 0; for (let k = 1; k < f.L; k++) { if (durs[k] < durs[lo]) lo = k; if (durs[k] > durs[hi]) hi = k; }
+    if (durs[lo] >= 1) break; durs[lo]++; durs[hi]--;
+  }
+  const idx = frameTokens(durs);
+  const asr = gatherCols(f.t_en, 512, f.L, idx);
+  const F0 = new Float32Array(2 * T), N = new Float32Array(2 * T), yf = yin(real), nf = energyN(real);
+  let nMin = Infinity; for (const v of nf) nMin = Math.min(nMin, v);
+  for (let t = 0; t < 2 * T; t++) { F0[t] = t < yf.length ? yf[t] : 0; N[t] = t < nf.length ? nf[t] : nMin; }
+  const item = { asr, F0, N, T, audio: Float32Array.from(real), s: Float32Array.from(style.subarray(0, 128)) };
+  dataset.push(item);
+  const realSpeech = durs.slice(1, -1).reduce((a, b) => a + b, 0), predSpeech = f.pd.slice(1, -1).reduce((a, b) => a + b, 0);
+  return { T, items: dataset.length, f0Real: F0.filter((v) => v > 0), f0Pred: base.F0.filter((v) => v > 10), realSpeech, predSpeech };
+}
+
+// ---------- training (Adam on bias_delta and style_delta) ----------
+async function train({ steps, lrBias = 2e-3, lrStyle = 1e-2, resume = false }, id) {
+  if (!dataset.length) throw new Error('No training data prepared.');
+  if (!trainState || !resume) trainState = { bias: new Float32Array(P), style: new Float32Array(128), mb: new Float32Array(P), vb: new Float32Array(P), ms: new Float32Array(128), vs: new Float32Array(128), t: 0 };
+  const st = trainState, b1 = 0.9, b2 = 0.999, eps = 1e-8;
+  const adam = (p, g, m, v, lr) => {
+    const c1 = 1 - b1 ** st.t, c2 = 1 - b2 ** st.t;
+    for (let i = 0; i < p.length; i++) { m[i] = b1 * m[i] + (1 - b1) * g[i]; v[i] = b2 * v[i] + (1 - b2) * g[i] * g[i]; p[i] -= lr * (m[i] / c1) / (Math.sqrt(v[i] / c2) + eps); }
+  };
+  stopFlag = false;
+  const t0 = performance.now();
+  for (let step = 1; step <= steps && !stopFlag; step++) {
+    const d = dataset[Math.floor(Math.random() * dataset.length)];
+    const a = Math.floor(Math.random() * (d.T - W + 1));
+    const feeds = {
+      asr: T32(gatherWindow(d.asr, 512, d.T, a, W), [1, 512, W]),
+      F0: T32(d.F0.slice(2 * a, 2 * (a + W)), [1, 2 * W]), N: T32(d.N.slice(2 * a, 2 * (a + W)), [1, 2 * W]),
+      s_base: T32(d.s, [1, 128]), target: T32(d.audio.slice(600 * a, 600 * (a + W)), [1, 600 * W]),
+      bias_delta: T32(Float32Array.from(st.bias), [P]), style_delta: T32(Float32Array.from(st.style), [1, 128]),
+    };
+    const o = await sess.train_step.run(feeds);
+    st.t++;
+    adam(st.bias, o.grad_bias.data, st.mb, st.vb, lrBias);
+    adam(st.style, o.grad_style.data, st.ms, st.vs, lrStyle);
+    post({ id, type: 'progress', step, steps, loss: o.loss.data[0], secPerStep: (performance.now() - t0) / 1000 / step });
+  }
+  return { bias: Float32Array.from(st.bias), style: Float32Array.from(st.style), steps: st.t };
+}
+function gatherWindow(src, C, T, a, w) { const out = new Float32Array(C * w); for (let c = 0; c < C; c++) out.set(src.subarray(c * T + a, c * T + a + w), c * w); return out; }
+
+self.onmessage = async (ev) => {
+  const { id, type, payload } = ev.data;
+  try {
+    let result, transfer = [];
+    if (type === 'load') result = await load(payload);
+    else if (type === 'render') { const r = await render(payload); result = { audio: r.audio }; transfer = [r.audio.buffer]; }
+    else if (type === 'prep') result = await prep(payload);
+    else if (type === 'reset') { dataset.length = 0; trainState = null; result = true; }
+    else if (type === 'train') result = await train(payload, id);
+    else if (type === 'stop') { stopFlag = true; result = true; }
     else throw new Error('Unknown message ' + type);
     post({ id, type: 'done', result }, transfer);
   } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
@@ -1101,6 +1418,8 @@ async function audition(a) {
 // ---------- synthesis ----------
 async function synthKokoro(actor, text, slot) {
   await ensureKokoro();
+  const neural = lab.voices.find((v) => v.id === actor.kokoro && v.kind === 'neural');
+  if (neural) return synthNeural(neural, actor, text, slot);
   await ensureVoiceRegistered(actor.kokoro);
   const pitch = actor.pitch;
   let speed = Math.max(0.5, Math.min(2, actor.tempo / pitch));
@@ -1114,6 +1433,20 @@ async function synthKokoro(actor, text, slot) {
   }
   const trimmed = trimSilence(r.audio, r.sr);
   return { audio: trimmed, sr: r.sr, rate: pitch, dur: trimmed.length / r.sr / pitch, slot, text, actor: actor.id, voice: actor.kokoro };
+}
+// Trained (neural) voices: Kokoro's frontend with the base voice, then the adapted decoder.
+async function synthNeural(v, actor, text, slot) {
+  await ensureNv(['frontend', 'prosody', 'decoder']);
+  const ids = await tokenize(text, v.base);
+  if (!ids.length) return { audio: new Float32Array(0), sr: 24000, rate: 1, dur: 0, slot, text, actor: actor.id, voice: actor.kokoro };
+  const style = styleRow(await stockTable(v.base), ids.length);
+  const pitch = actor.pitch ?? 1;
+  let speed = Math.max(0.5, Math.min(2, (v.speed || 1) * (actor.tempo ?? 1) / pitch));
+  const go = (sp) => nvWorker.call('render', { ids, style, speed: sp, styleDelta: v.styleDelta, biasDelta: v.biasDelta, f0Ratio: v.f0Ratio || 1 });
+  let r = await go(speed), dur = r.audio.length / 24000 / pitch;
+  if (slot && dur > slot * 1.05) { speed = Math.max(0.5, Math.min(2, speed * Math.min(1.5, dur / slot))); r = await go(speed); }
+  const trimmed = trimSilence(r.audio, 24000);
+  return { audio: trimmed, sr: 24000, rate: pitch, dur: trimmed.length / 24000 / pitch, slot, text, actor: actor.id, voice: actor.kokoro };
 }
 function trimSilence(a, sr) {
   const th = 0.004; let s = 0, e = a.length;
@@ -1877,6 +2210,113 @@ async function trainVoice() {
   } catch (e) { showError(friendlyError(e)); setStage('Training failed'); }
   finally { lab.training = null; syncLab(); renderLabStatus(); }
 }
+// --- deep training (gradient descent on Kokoro's decoder style layers) ---
+const NV_BASE = new URL('models/kokoro-train/', location.href).href;
+const nvWorker = new WorkerClient('nvWorkerSrc', 'dub-nv');
+const nvLoaded = new Set();
+async function ensureNv(graphs) {
+  const need = graphs.filter((g) => !nvLoaded.has(g));
+  if (!need.length) return;
+  const device = els.device.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
+  const r = await nvWorker.call('load', { ortUrl: ORT_URL, wasmBase: ORT_WASM, base: NV_BASE, graphs: need, device });
+  need.forEach((g) => nvLoaded.add(g));
+  logLine(`Voice models ready: ${Object.entries(r.devices).map(([k, v]) => `${k} on ${v}`).join(', ')}.`);
+}
+async function tokenize(text, voice) { await ensureKokoro(); return ttsWorker.call('tokenize', { text, voice }); }
+async function stockTable(name) {
+  if (!lab.stock) lab.stock = new Map();
+  if (!lab.stock.has(name)) lab.stock.set(name, await fetchStockVoice(name));
+  return lab.stock.get(name);
+}
+const styleRow = (table, n) => table.slice(256 * Math.min(Math.max(n - 1, 0), 509), 256 * Math.min(Math.max(n - 1, 0), 509) + 256);
+const median = (a) => { if (!a.length) return 0; const s = Float32Array.from(a).sort(); return s[s.length >> 1]; };
+// Whisper segments -> sentences of 2–12 s for teacher forcing.
+function utterancesFrom(items, pcm) {
+  const out = []; let cur = null;
+  for (const it of items) {
+    const text = (it.text || '').trim(); if (!text) continue;
+    const start = Number(it.start) || 0, end = Number(it.end ?? start + 2);
+    if (cur && start - cur.end < 0.6 && end - cur.start <= 12) { cur.text += ' ' + text; cur.end = end; }
+    else { cur = { start, end, text }; out.push(cur); }
+  }
+  return out.filter((u) => u.end - u.start >= 1.5).map((u) => ({ text: u.text, pcm: pcm.slice(Math.max(0, Math.floor((u.start - 0.1) * SR)), Math.min(pcm.length, Math.ceil((u.end + 0.15) * SR))) }));
+}
+async function trainNeural() {
+  if (lab.training || !release().ok) return;
+  const t = lab.training = { stop: false, history: [], neural: true, started: performance.now() };
+  lab.result = null; syncLab(); showError('');
+  try {
+    setStage('Loading the training models'); setProgress(null);
+    await ensureKokoro(); await ensureEmb(); await ensureAsr();
+    await ensureNv(['frontend', 'prosody', 'decoder', 'train_step']);
+    if (!lab.targetEmb) lab.targetEmb = await voicePrint(lab.clips.map((x) => x.pcm));
+    // 1. Starting voice: the closest stock voice on the talent's side of the pitch range.
+    setStage('Choosing a starting voice');
+    const hz = medianPitch(speechOnly(lab.clips[0].pcm));
+    const names = KOKORO_VOICES.filter((v) => hz == null || (hz > 170 ? v[1] === 'f' : hz < 140 ? v[1] === 'm' : true));
+    let base = null;
+    for (let i = 0; i < names.length && !t.stop; i++) {
+      setProgress(i / names.length, names[i]);
+      const r = await ttsWorker.call('synth', { text: PROBES[0], voice: names[i], speed: 1 });
+      const sim = cosine(await embed16k(resample(r.audio, r.sr, SR)), lab.targetEmb);
+      if (!base || sim > base.sim) base = { name: names[i], sim };
+    }
+    const table = await stockTable(base.name);
+    logLine(`Deep training starts from ${base.name} (similarity ${base.sim.toFixed(3)}).`);
+    // 2. Sentences: Whisper transcripts, aligned to the audio, with real pitch and energy.
+    await nvWorker.call('reset');
+    const utts = [];
+    for (let i = 0; i < lab.clips.length && !t.stop; i++) {
+      setStage(`Transcribing recording ${i + 1} of ${lab.clips.length}`); setProgress(0);
+      const items = await asrWorker.call('transcribeFile', { audio: lab.clips[i].pcm.slice(), opts: { language: 'en', task: 'transcribe', multilingual: true } });
+      utts.push(...utterancesFrom(items, lab.clips[i].pcm));
+    }
+    const f0Real = [], f0Pred = []; let realSpeech = 0, predSpeech = 0, used = 0;
+    for (let i = 0; i < utts.length && !t.stop; i++) {
+      setStage('Aligning sentences to the audio'); setProgress(i / utts.length, `sentence ${i + 1} of ${utts.length}`);
+      const ids = await tokenize(utts[i].text, base.name);
+      if (ids.length < 3) continue;
+      const r = await nvWorker.call('prep', { ids, style: styleRow(table, ids.length), audio: resample(utts[i].pcm, SR, 24000) });
+      if (r.skipped) continue;
+      used++; f0Real.push(...r.f0Real); f0Pred.push(...r.f0Pred); realSpeech += r.realSpeech; predSpeech += r.predSpeech;
+    }
+    if (!used) throw new Error('No usable sentences were found. Deep training needs clear English speech of at least a few seconds per sentence.');
+    const f0Ratio = Math.max(0.6, Math.min(1.6, median(f0Pred) ? median(f0Real) / median(f0Pred) : 1));
+    const speed = Math.max(0.75, Math.min(1.3, realSpeech ? predSpeech / realSpeech : 1));
+    logLine(`Prepared ${used} sentences. Pitch ×${f0Ratio.toFixed(2)}, pace ×${speed.toFixed(2)} relative to ${base.name}.`);
+    // 3. Train, checking the voice-print match on a sentence that is not in the training audio.
+    const probe = await tokenize(PROBES[1], base.name), probeStyle = styleRow(table, probe.length);
+    const evalSim = async (useTrained) => {
+      const r = await nvWorker.call('render', { ids: probe, style: probeStyle, speed, f0Ratio, useTrained });
+      return cosine(await embed16k(resample(r.audio, 24000, SR)), lab.targetEmb);
+    };
+    t.baseline = { name: base.name, toTarget: await evalSim(false) };
+    t.history.push(t.baseline.toTarget); t.bestScore = { toTarget: t.baseline.toTarget }; drawLabChart();
+    const steps = Number(els.labSteps.value);
+    let done = 0, state = null;
+    setStage('Training voice');
+    while (done < steps && !t.stop) {
+      const chunk = Math.min(25, steps - done);
+      state = await nvWorker.call('train', { steps: chunk, resume: done > 0 }, { onProgress: (m) => {
+        const left = (steps - done - m.step) * m.secPerStep;
+        setProgress((done + m.step) / steps, `step ${done + m.step}/${steps} · loss ${m.loss.toFixed(3)} · ${m.secPerStep.toFixed(2)} s/step · ~${Math.max(1, Math.round(left / 60))} min left`);
+      } });
+      done = state.steps; t.step = done; t.state = state;
+      if (done % 50 === 0 || done >= steps || t.stop) {
+        const sim = await evalSim(true);
+        t.history.push(sim); t.bestScore = { toTarget: sim }; drawLabChart(); renderLabStatus();
+      }
+    }
+    if (!state) throw new Error('Training stopped before the first step.');
+    const unseen = await tokenize(PROBES[2], base.name);
+    const r = await nvWorker.call('render', { ids: unseen, style: styleRow(table, unseen.length), speed, f0Ratio, useTrained: true });
+    const heldOut = cosine(await embed16k(resample(r.audio, 24000, SR)), lab.targetEmb);
+    lab.result = { kind: 'neural', base: base.name, styleDelta: state.style, biasDelta: state.bias, f0Ratio, speed, score: t.history.at(-1), heldOut, baseline: t.baseline, steps: done };
+    setStage(`Deep training finished · match ${heldOut.toFixed(3)} on an unseen sentence (starting voice ${t.baseline.toTarget.toFixed(3)})`); setProgress(1, '');
+  } catch (e) { showError(friendlyError(e)); setStage('Training failed'); }
+  finally { lab.training = null; syncLab(); renderLabStatus(); }
+}
+
 function drawLabChart() {
   const c = els.labChart, g = c.getContext('2d'), h = lab.training?.history || [];
   const W = c.width, H = c.height, css = getComputedStyle(document.documentElement);
@@ -1899,6 +2339,16 @@ function renderLabStatus() {
   else if (r) els.labStatus.textContent = `Trained: match ${r.heldOut?.toFixed(3)} on an unseen sentence vs ${r.baseline.toTarget.toFixed(3)} for the closest stock voice (${r.baseline.name}). Listen, then save.`;
 }
 async function previewLab() {
+  if (lab.result?.kind === 'neural' || lab.training?.neural) {
+    const r = lab.result;
+    const v = r ? { kind: 'neural', base: r.base, styleDelta: r.styleDelta, biasDelta: r.biasDelta, f0Ratio: r.f0Ratio, speed: r.speed }
+      : { kind: 'neural', base: lab.training.baseline?.name, styleDelta: lab.training.state?.style, biasDelta: lab.training.state?.bias, f0Ratio: 1, speed: 1 };
+    if (!v.base) return;
+    audio.resume();
+    const d = await synthNeural(v, { id: -1, pitch: 1, tempo: 1 }, 'Hello! This is how I sound after training. What do you think?', null);
+    playBuffer(d, audio.ctx.currentTime + 0.05, 0);
+    return;
+  }
   const data = lab.training?.best || lab.result?.data; if (!data) return;
   await useVoiceData('lab:preview', data);
   audio.resume();
@@ -1926,7 +2376,8 @@ async function saveLabVoice() {
   const r = lab.result, rel = release(); if (!r || !rel.ok) return;
   const name = els.labName.value.trim();
   const v = {
-    id: 'lab:' + crypto.randomUUID(), name, lang: 'a', data: r.data, createdAt: new Date().toISOString(),
+    id: 'lab:' + crypto.randomUUID(), name, lang: 'a', createdAt: new Date().toISOString(),
+    ...(r.kind === 'neural' ? { kind: 'neural', base: r.base, styleDelta: r.styleDelta, biasDelta: r.biasDelta, f0Ratio: r.f0Ratio, speed: r.speed } : { kind: 'search', data: r.data }),
     match: r.heldOut, baseline: { voice: r.baseline.name, match: r.baseline.toTarget }, steps: r.steps,
     training: { clips: lab.clips.length, seconds: Math.round(lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR) },
     consent: { type: 'release', releaseRef: rel.releaseRef, approvedBy: rel.approvedBy, studio: rel.studio, approvedAt: new Date().toISOString() },
@@ -1939,6 +2390,7 @@ async function ensureVoiceRegistered(id) {
   if (!id.startsWith('lab:') || lab.registered.has(id)) return;
   const v = lab.voices.find((x) => x.id === id);
   if (!v) throw new Error('A trained voice used in the cast is missing. Re-import it or pick another voice.');
+  if (v.kind === 'neural') return;
   await useVoiceData(id, v.data);
 }
 const b64 = { enc: async (blob) => { const u = new Uint8Array(await blob.arrayBuffer()); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); },
@@ -1946,7 +2398,8 @@ const b64 = { enc: async (blob) => { const u = new Uint8Array(await blob.arrayBu
 async function exportLabVoice(v) {
   const consent = { ...v.consent };
   if (consent.audio instanceof Blob) consent.audio = await b64.enc(consent.audio);
-  const out = { format: 'dub-studio-voice', version: 1, ...v, data: await b64.enc(new Blob([v.data])), consent };
+  const arr = (x) => x ? b64.enc(new Blob([x])) : undefined;
+  const out = { format: 'dub-studio-voice', version: 2, ...v, data: await arr(v.data), styleDelta: await arr(v.styleDelta), biasDelta: await arr(v.biasDelta), consent };
   download(`${v.name.replace(/[^\w-]+/g, '_')}.voice.json`, JSON.stringify(out), 'application/json');
 }
 async function importLabVoice(file) {
@@ -1954,9 +2407,9 @@ async function importLabVoice(file) {
     const j = JSON.parse(await file.text());
     if (j.format !== 'dub-studio-voice') throw new Error('Not a Dub Studio voice file.');
     if (!j.consent?.releaseRef && !j.consent?.statement) throw new Error('This voice has no release record, so it cannot be imported.');
-    const data = new Float32Array(b64.dec(j.data).buffer);
-    if (data.length !== VOICE_LEN) throw new Error('The voice data is damaged.');
-    const v = { ...j, data, consent: { ...j.consent } };
+    const f32 = (x) => x ? new Float32Array(b64.dec(x).buffer) : undefined;
+    const v = { ...j, data: f32(j.data), styleDelta: f32(j.styleDelta), biasDelta: f32(j.biasDelta), consent: { ...j.consent } };
+    if (v.kind === 'neural' ? !(v.styleDelta?.length === 128 && v.biasDelta?.length && v.base) : v.data?.length !== VOICE_LEN) throw new Error('The voice data is damaged.');
     if (typeof v.consent.audio === 'string') v.consent.audio = new Blob([b64.dec(v.consent.audio)], { type: 'audio/wav' });
     delete v.format; delete v.version;
     await idbDo('readwrite', (s) => s.put(v));
@@ -1970,8 +2423,8 @@ function renderLabVoices() {
   for (const v of lab.voices) {
     els.labVoices.append(el('div', { class: 'v' }, [
       el('span', { class: 'name' }, `★ ${v.name}`),
-      el('span', { class: 'hint' }, `match ${v.match?.toFixed(2) ?? '?'} · ${v.training?.seconds ?? '?'} s audio · ${v.consent?.releaseRef ? `release ${v.consent.releaseRef}` : `consent ${v.consent?.recordedAt?.slice(0, 10) ?? '?'}`}`),
-      el('button', { onclick: async () => { await ensureKokoro(); await ensureVoiceRegistered(v.id); audio.resume(); const r = await ttsWorker.call('synth', { text: 'Hi, this is my trained voice.', voice: v.id, speed: 1 }); playBuffer({ audio: r.audio, sr: r.sr, rate: 1 }, audio.ctx.currentTime + 0.05, 0); } }, '▶'),
+      el('span', { class: 'hint' }, `${v.kind === 'neural' ? 'deep-trained' : 'quick match'} · match ${v.match?.toFixed(2) ?? '?'} · ${v.training?.seconds ?? '?'} s audio · ${v.consent?.releaseRef ? `release ${v.consent.releaseRef}` : `consent ${v.consent?.recordedAt?.slice(0, 10) ?? '?'}`}`),
+      el('button', { onclick: async () => { try { audio.resume(); const d = await synthKokoro({ id: -1, kokoro: v.id, pitch: 1, tempo: 1 }, 'Hi, this is my trained voice.', null); playBuffer(d, audio.ctx.currentTime + 0.05, 0); } catch (e) { showError(friendlyError(e)); } } }, '▶'),
       v.consent?.audio instanceof Blob ? el('button', { title: 'Play the consent recording', onclick: () => { const a = new Audio(URL.createObjectURL(v.consent.audio)); a.play(); } }, 'Consent') : null,
       el('button', { onclick: () => exportLabVoice(v) }, 'Export'),
       el('button', { onclick: async () => { if (!confirm(`Delete the trained voice "${v.name}"?`)) return; await idbDo('readwrite', (s) => s.delete(v.id)); lab.registered.delete(v.id); loadLabVoices(); } }, 'Delete'),
@@ -2189,7 +2642,7 @@ function syncLab() {
   els.labTrainBtn.disabled = busy || !relOk || secs < 20;
   els.labTrainBtn.title = !relOk ? 'Add the talent\'s release details first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
   els.labStopBtn.disabled = !lab.training;
-  els.labListenBtn.disabled = !(lab.training?.best || lab.result);
+  els.labListenBtn.disabled = !(lab.training?.best || lab.training?.state || lab.result);
   els.labSaveBtn.disabled = !lab.result || !!lab.training;
 }
 function initLab() {
@@ -2199,8 +2652,12 @@ function initLab() {
   for (const k of ['labName', 'labOrg', 'labRelease', 'labApprover']) els[k].addEventListener('input', renderLab);
   els.labAttest.addEventListener('change', renderLab);
   els.labSteps.addEventListener('input', () => { els.labStepsVal.textContent = els.labSteps.value; });
-  els.labTrainBtn.addEventListener('click', trainVoice);
-  els.labStopBtn.addEventListener('click', () => { if (lab.training) lab.training.stop = true; });
+  els.labTrainBtn.addEventListener('click', () => (els.labMethod.value === 'neural' ? trainNeural() : trainVoice()));
+  els.labStopBtn.addEventListener('click', () => { if (lab.training) { lab.training.stop = true; if (lab.training.neural) nvWorker.call('stop').catch(() => {}); } });
+  const methodHint = () => { els.labMethodHint.textContent = els.labMethod.value === 'neural'
+    ? 'Learns from the talent\'s own sentences with real gradient training of Kokoro\'s decoder (≈200 MB of models, downloaded once). Training audio must be English speech.'
+    : 'Searches Kokoro\'s existing voice space. Fast, but only approximates the talent.'; };
+  els.labMethod.addEventListener('change', methodHint); methodHint();
   els.labListenBtn.addEventListener('click', () => previewLab().catch((e) => showError(friendlyError(e))));
   els.labSaveBtn.addEventListener('click', saveLabVoice);
   els.labImportBtn.addEventListener('click', () => els.labImportInput.click());
