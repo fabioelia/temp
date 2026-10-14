@@ -682,7 +682,8 @@ async function cachedBytes(url, label) {
 }
 async function joined(names) {
   const bufs = [];
-  for (const n of names) bufs.push(await cachedBytes(new URL(n, base).href, n));
+  // ?v=<build> so updated model files never come from a stale cache entry
+  for (const n of names) bufs.push(await cachedBytes(new URL(n, base).href + '?v=' + (manifest.build || '0'), n));
   if (bufs.length === 1) return bufs[0];
   const out = new Uint8Array(bufs.reduce((s, b) => s + b.length, 0)); let o = 0; for (const b of bufs) { out.set(b, o); o += b.length; }
   return out;
@@ -695,7 +696,7 @@ async function load(p) {
   }
   base = p.base;
   if (!manifest) {
-    manifest = await (await fetch(new URL('manifest.json', base))).json();
+    manifest = await (await fetch(new URL('manifest.json', base), { cache: 'no-cache' })).json();
     P = manifest.train.params; W = manifest.train.crop_frames;
   }
   const devices = {};
@@ -711,15 +712,32 @@ async function load(p) {
     }
     // LSTMs (frontend, prosody) are CPU-only in ORT Web; the decoder and training step use WebGPU.
     const eps = (name === 'decoder' || name === 'train_step') && p.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm'];
-    let err;
-    for (const ep of eps) {
-      try { sess[name] = await ort.InferenceSession.create(model, { executionProviders: [ep], externalData, graphOptimizationLevel: 'all' }); sess[name].ep = ep; break; }
-      catch (e) { err = e; post({ type: 'log', message: `Voice model ${name} on ${ep} failed: ${e.message || e}` }); }
-    }
-    if (!sess[name]) throw err;
+    sources[name] = { model, externalData };
+    await createSession(name, eps);
     devices[name] = sess[name].ep;
   }
   return { devices, params: P, crop: W };
+}
+const sources = {};
+async function createSession(name, eps) {
+  const { model, externalData } = sources[name];
+  let err;
+  for (const ep of eps) {
+    try { sess[name] = await ort.InferenceSession.create(model, { executionProviders: [ep], externalData, graphOptimizationLevel: 'all' }); sess[name].ep = ep; return; }
+    catch (e) { err = e; post({ type: 'log', message: `Voice model ${name} on ${ep} failed: ${e.message || e}` }); }
+  }
+  throw err;
+}
+// Run a graph; if WebGPU fails at run time (device limits, driver issues), rebuild it on the CPU and retry.
+async function run(name, feeds) {
+  try { return await sess[name].run(feeds); }
+  catch (e) {
+    if (sess[name].ep !== 'webgpu') throw e;
+    post({ type: 'log', message: `Voice model ${name} failed on WebGPU (${(e.message || e).toString().slice(0, 160)}); continuing on the CPU.` });
+    try { await sess[name].release(); } catch (_) {}
+    await createSession(name, ['wasm']);
+    return sess[name].run(feeds);
+  }
 }
 const T32 = (data, dims) => new ort.Tensor('float32', data, dims);
 
@@ -727,7 +745,7 @@ const T32 = (data, dims) => new ort.Tensor('float32', data, dims);
 async function frontend(ids, style, speed) {
   const L = ids.length + 2, input = new BigInt64Array(L);
   ids.forEach((v, i) => { input[i + 1] = BigInt(v); });
-  const o = await sess.frontend.run({ input_ids: new ort.Tensor('int64', input, [1, L]), style: T32(style, [1, 256]), speed: T32(new Float32Array([speed]), [1]) });
+  const o = await run('frontend', { input_ids: new ort.Tensor('int64', input, [1, L]), style: T32(style, [1, 256]), speed: T32(new Float32Array([speed]), [1]) });
   const dur = o.dur.data, pd = new Int32Array(L);
   for (let i = 0; i < L; i++) pd[i] = Math.max(1, Math.round(dur[i]));
   return { L, pd, t_en: o.t_en.data, d: o.d.data, dDim: o.d.dims[2] };
@@ -745,11 +763,11 @@ function gatherRowsT(src, L, D, idx) { // src [L, D] -> [D, T]
   return out;
 }
 async function prosody(en, D, T, sPros) {
-  const o = await sess.prosody.run({ en: T32(en, [1, D, T]), s: T32(sPros, [1, 128]) });
+  const o = await run('prosody', { en: T32(en, [1, D, T]), s: T32(sPros, [1, 128]) });
   return { F0: o.F0.data, N: o.N.data };
 }
 async function decode(asr, F0, N, T, s, biasDelta) {
-  const o = await sess.decoder.run({ asr: T32(asr, [1, 512, T]), F0: T32(F0, [1, 2 * T]), N: T32(N, [1, 2 * T]), s: T32(s, [1, 128]), bias_delta: T32(biasDelta, [P]) });
+  const o = await run('decoder', { asr: T32(asr, [1, 512, T]), F0: T32(F0, [1, 2 * T]), N: T32(N, [1, 2 * T]), s: T32(s, [1, 128]), bias_delta: T32(biasDelta, [P]) });
   return o.audio.data;
 }
 async function render({ ids, style, speed = 1, styleDelta, biasDelta, f0Ratio = 1, useTrained = false }) {
@@ -934,7 +952,7 @@ async function train({ steps, lrBias = 2e-3, lrStyle = 1e-2, resume = false }, i
       s_base: T32(d.s, [1, 128]), target: T32(d.audio.slice(600 * a, 600 * (a + W)), [1, 600 * W]),
       bias_delta: T32(Float32Array.from(st.bias), [P]), style_delta: T32(Float32Array.from(st.style), [1, 128]),
     };
-    const o = await sess.train_step.run(feeds);
+    const o = await run('train_step', feeds);
     st.t++;
     adam(st.bias, o.grad_bias.data, st.mb, st.vb, lrBias);
     adam(st.style, o.grad_style.data, st.ms, st.vs, lrStyle);

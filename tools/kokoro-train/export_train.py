@@ -171,11 +171,16 @@ class TrainStep(nn.Module):
         self.fcs = adain_fcs(dec)
         self.names = [n + '.bias' for n, _ in self.fcs]
         self.sizes = [m.bias.numel() for _, m in self.fcs]
+        self.offsets = [sum(self.sizes[:i]) for i in range(len(self.sizes))]
         self.register_buffer('base_bias', torch.cat([m.bias.detach() for _, m in self.fcs]))
         self.loss = MelLoss()
+    def pieces(self, full):
+        # One Slice per layer rather than a 58-way Split (and a 58-way Concat in the backward pass):
+        # WebGPU shaders may bind at most 10 storage buffers on some devices (e.g. Apple Silicon).
+        return [full.narrow(0, o, n) for o, n in zip(self.offsets, self.sizes)]
     def forward(self, asr, F0, N, s_base, target, bias_delta, style_delta):
         def f(bd, sd):
-            biases = torch.split(self.base_bias + bd, self.sizes)
+            biases = self.pieces(self.base_bias + bd)
             y = torch.func.functional_call(self.dec, dict(zip(self.names, biases)), (asr, F0, N, s_base + sd), strict=False)
             y = y.reshape(1, -1)[:, :target.shape[1]]
             return self.loss(y, target)
@@ -189,7 +194,7 @@ class DecodeStep(nn.Module):
         self.t = TrainStep(dec)
     def forward(self, asr, F0, N, s, bias_delta):
         t = self.t
-        biases = torch.split(t.base_bias + bias_delta, t.sizes)
+        biases = t.pieces(t.base_bias + bias_delta)
         y = torch.func.functional_call(t.dec, dict(zip(t.names, biases)), (asr, F0, N, s), strict=False)
         return y.reshape(1, -1)
 

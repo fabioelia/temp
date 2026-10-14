@@ -84,6 +84,12 @@ for k, m in models.items():
                              'external': ['decoder_weights.bin'] if k in ('decoder', 'train_step') else []}
 manifest['train'] = json.load(open(f'{SRC}/train_meta.json'))
 manifest['bytes'] = sum(os.path.getsize(f'{OUT}/{f}') for f in os.listdir(OUT))
+# Build id: the page uses it to cache-bust model files whenever they change.
+h = hashlib.sha1()
+for f in sorted(os.listdir(OUT)):
+    with open(f'{OUT}/{f}', 'rb') as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b''): h.update(chunk)
+manifest['build'] = h.hexdigest()[:12]
 json.dump(manifest, open(f'{OUT}/manifest.json', 'w'), indent=1)
 print('total MB', manifest['bytes'] / 1e6)
 for f in sorted(os.listdir(OUT)): print(f'  {f}  {os.path.getsize(f"{OUT}/{f}") / 1e6:.1f} MB')
