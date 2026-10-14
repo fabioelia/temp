@@ -282,7 +282,7 @@
               <option value="search">Quick match (voice search)</option>
             </select></label>
           <div class="hint" id="labMethodHint"></div>
-          <label class="row"><span>Steps <b id="labStepsVal">300</b></span><input type="range" id="labSteps" min="50" max="1500" step="50" value="300"></label>
+          <label class="row"><span>Steps <b id="labStepsVal">200</b></span><input type="range" id="labSteps" min="50" max="1500" step="50" value="200"></label>
           <div class="btns">
             <button class="primary" id="labTrainBtn" disabled>Train voice</button>
             <button id="labStopBtn" disabled>Stop</button>
@@ -2311,7 +2311,7 @@ async function trainNeural() {
     t.baseline = { name: base.name, toTarget: await evalSim(false) };
     t.history.push(t.baseline.toTarget); t.bestScore = { toTarget: t.baseline.toTarget }; drawLabChart();
     const steps = Number(els.labSteps.value);
-    let done = 0, state = null;
+    let done = 0, state = null, best = null;
     setStage('Training voice');
     while (done < steps && !t.stop) {
       const chunk = Math.min(25, steps - done);
@@ -2322,14 +2322,19 @@ async function trainNeural() {
       done = state.steps; t.step = done; t.state = state;
       if (done % 50 === 0 || done >= steps || t.stop) {
         const sim = await evalSim(true);
-        t.history.push(sim); t.bestScore = { toTarget: sim }; drawLabChart(); renderLabStatus();
+        t.history.push(sim); drawLabChart();
+        // Keep the best checkpoint: with a few minutes of audio, similarity on unseen text peaks
+        // after a few hundred steps and then falls while the training loss keeps dropping.
+        if (!best || sim > best.sim) best = { sim, style: Float32Array.from(state.style), bias: Float32Array.from(state.bias), steps: done };
+        t.bestScore = { toTarget: best.sim }; renderLabStatus();
       }
     }
     if (!state) throw new Error('Training stopped before the first step.');
+    if (best) { state = { ...state, style: best.style, bias: best.bias }; logLine(`Keeping the checkpoint from step ${best.steps} (match ${best.sim.toFixed(3)}).`); }
     const unseen = await tokenize(PROBES[2], base.name);
-    const r = await nvWorker.call('render', { ids: unseen, style: styleRow(table, unseen.length), speed, f0Ratio, useTrained: true });
+    const r = await nvWorker.call('render', { ids: unseen, style: styleRow(table, unseen.length), speed, f0Ratio, styleDelta: state.style, biasDelta: state.bias });
     const heldOut = cosine(await embed16k(resample(r.audio, 24000, SR)), lab.targetEmb);
-    lab.result = { kind: 'neural', base: base.name, styleDelta: state.style, biasDelta: state.bias, f0Ratio, speed, score: t.history.at(-1), heldOut, baseline: t.baseline, steps: done };
+    lab.result = { kind: 'neural', base: base.name, styleDelta: state.style, biasDelta: state.bias, f0Ratio, speed, score: best ? best.sim : t.history.at(-1), heldOut, baseline: t.baseline, steps: best ? best.steps : done };
     setStage(`Deep training finished · match ${heldOut.toFixed(3)} on an unseen sentence (starting voice ${t.baseline.toTarget.toFixed(3)})`); setProgress(1, '');
   } catch (e) { showError(friendlyError(e)); setStage('Training failed'); }
   finally { lab.training = null; syncLab(); renderLabStatus(); }
