@@ -22,5 +22,21 @@ A single self-contained HTML page that **dubs video into another language in the
 - **Live modes:** dub the loaded video, another browser tab (via screen-share audio) or the microphone in real time (about 1–3 s behind with WebGPU). The voice for each live line is chosen by how high or low the speaker sounds.
 - **Characters from Speaker Transcriber:** import a JSON export from `speaker-transcriber.html` and its named speakers become the cast, each with their own voice.
 - **Export:** time-aligned dub track (WAV), translated subtitles (SRT), the dub project (JSON), or a real-time recording of the dubbed video (WebM).
+- **Voice Lab:** train a custom voice from a voice actor's recordings, on device (WebGPU, including Apple Silicon). See below.
 
-Voices are generic synthetic voices. The app does not clone or imitate real people's voices. Use it with video you have the rights to.
+### Voice Lab
+
+Trains a Kokoro voice that sounds like a specific, consenting voice actor, without leaving the browser.
+
+1. **Recordings:** upload or record 1–5 minutes of the talent's clean solo speech.
+2. **Consent:** the talent reads a generated statement live into the microphone: their name, your studio, and a random four-word code. Whisper checks the words, and a WeSpeaker voice print checks that it is the same voice as the recordings (cosine ≥ 0.5). Training stays locked until both pass, and the consent audio is stored with the voice.
+3. **Training:** Kokoro voices are tables of style vectors. Training starts from the closest blend of stock voices and then runs an adaptive random walk (a (1+1) evolution strategy) through that space. Each candidate speaks probe sentences, gets voice-printed, and is kept when it sits closer to the talent. The final score is measured on a sentence the search never used. A few hundred steps take minutes with WebGPU.
+4. **Use:** saved voices live in the browser (IndexedDB), appear in every character's voice list, and export or import as `.voice.json` with their consent record.
+
+What to expect: the trained voice moves toward the talent's timbre and pitch, but it is not a studio-grade clone. Kokoro speaks English only, and very unusual voices (children, creatures, heavy effects) land further away. Consent is checked in the page, so a product that must enforce it should repeat the check on a server.
+
+Stock and preset voices are generic synthetic voices. Use the app with video you have the rights to and voices whose owners have agreed.
+
+## test-media/
+
+Small, openly licensed clips for testing both tools: a *Tears of Steel* excerpt with subtitles in eight languages, Japanese read speech from FLEURS, and LibriSpeech readers for measuring Voice Lab training. Sources and licenses are in [`test-media/SOURCES.md`](test-media/SOURCES.md).

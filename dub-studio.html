@@ -107,6 +107,22 @@
   .log { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--muted); max-height: 160px; overflow: auto; white-space: pre-wrap; margin-top: 6px; }
   .log .error { color: var(--danger); }
   .note { font-size: 12px; color: var(--muted); border-left: 3px solid var(--accent); padding: 4px 10px; }
+  .lab { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+  .lab .step { border: 1px solid var(--border); border-radius: 9px; padding: 12px; background: var(--panel-2); display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .lab h3 { margin: 0; font-size: 14px; }
+  .clips { display: flex; flex-direction: column; gap: 4px; font-size: 12px; }
+  .clips .clip { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+  .clips .clip span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .statement { font-size: 14px; line-height: 1.5; background: var(--panel); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; }
+  .statement b { color: var(--accent); }
+  .checks { font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
+  .checks .ok { color: var(--accent-2); } .checks .bad { color: var(--danger); }
+  canvas.chart { width: 100%; height: 90px; background: var(--panel); border: 1px solid var(--border); border-radius: 7px; }
+  .voices { display: flex; flex-direction: column; gap: 6px; }
+  .voices .v { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+  .voices .v .name { font-weight: 600; flex: 1; min-width: 120px; }
+  .rec-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--danger); margin-right: 6px; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: .2; } }
   .downloads { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
   .downloads .dl { display: flex; justify-content: space-between; gap: 8px; }
   .downloads .dl .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -227,6 +243,49 @@
     </section>
 
     <section class="panel card">
+      <h2>Voice Lab · train a voice from consenting talent</h2>
+      <div class="hint" style="margin-bottom:10px">Train a custom Kokoro voice from recordings of a real voice actor, entirely on this device (WebGPU on Apple Silicon). Training only unlocks after that person records a consent statement live, and the app confirms it is the same voice as the training audio. Trained voices speak English.</div>
+      <div class="lab">
+        <div class="step">
+          <h3>1 · Talent and recordings</h3>
+          <label class="row"><span>Talent name</span><input type="text" id="labName" placeholder="Full name of the voice actor"></label>
+          <label class="row"><span>Studio</span><input type="text" id="labOrg" placeholder="Your company or production"></label>
+          <div class="btns">
+            <button id="labAddClips">Add recordings…</button>
+            <input type="file" id="labClipInput" accept="audio/*,video/*" multiple hidden>
+            <button id="labRecordClip">Record sample</button>
+          </div>
+          <div class="clips" id="labClips"></div>
+          <div class="hint" id="labClipHint">1–5 minutes of clean, solo speech works best: no music, no other voices.</div>
+        </div>
+        <div class="step">
+          <h3>2 · Consent, spoken by the talent</h3>
+          <div class="statement" id="labStatement">Enter the talent's name to generate a statement.</div>
+          <div class="btns">
+            <button id="labConsentBtn" disabled>Record consent</button>
+            <button id="labNewCode" title="Generate a new verification code">New code</button>
+          </div>
+          <div class="checks" id="labChecks"></div>
+        </div>
+        <div class="step">
+          <h3>3 · Train</h3>
+          <label class="row"><span>Steps <b id="labStepsVal">300</b></span><input type="range" id="labSteps" min="50" max="1500" step="50" value="300"></label>
+          <div class="btns">
+            <button class="primary" id="labTrainBtn" disabled>Train voice</button>
+            <button id="labStopBtn" disabled>Stop</button>
+            <button id="labListenBtn" disabled>▶ Listen</button>
+            <button id="labSaveBtn" disabled>Save voice</button>
+          </div>
+          <canvas class="chart" id="labChart" width="600" height="180"></canvas>
+          <div class="hint" id="labStatus">Match score is the voice-print similarity to the talent (1.0 = identical).</div>
+        </div>
+      </div>
+      <h2 style="margin-top:14px">Trained voices</h2>
+      <div class="btns" style="margin-bottom:8px"><button id="labImportBtn">Import voice…</button><input type="file" id="labImportInput" accept=".json,application/json" hidden></div>
+      <div class="voices" id="labVoices"><div class="empty">None yet. Trained voices appear in every character's voice list.</div></div>
+    </section>
+
+    <section class="panel card">
       <h2>Script</h2>
       <div class="hint" style="margin-bottom:8px">Edit any translated line, or pick who says it. Edited lines are re-voiced when you press play.</div>
       <div class="script" id="script"><div class="empty">Nothing yet.</div></div>
@@ -292,6 +351,38 @@ function genOpts(opts) {
   return g;
 }
 
+let emb = null;
+async function loadEmb(id, cfg) {
+  const T = await lib(cfg.libUrl);
+  if (emb) return emb.device;
+  post({ id, type: 'status', message: 'Loading voice-matching model' });
+  const processor = await T.AutoProcessor.from_pretrained(cfg.model, { progress_callback: (p) => post({ id, type: 'download', ...p }) });
+  let model, device = 'wasm';
+  for (const d of cfg.device === 'webgpu' ? ['webgpu', 'wasm'] : ['wasm']) {
+    try { model = await T.AutoModel.from_pretrained(cfg.model, { device: d, dtype: 'fp32' }); device = d; break; }
+    catch (e) { post({ id, type: 'log', message: `Voice-matching model on ${d} failed: ${e.message || e}` }); }
+  }
+  if (!model) throw new Error('Could not load the voice-matching model.');
+  emb = { processor, model, device };
+  return device;
+}
+// One unit-length speaker embedding (WeSpeaker ResNet34) for 16 kHz mono audio.
+async function embed(id, { audio }) {
+  let a = audio;
+  if (a.length < SR) { const p = new Float32Array(SR); p.set(a); a = p; }
+  const inputs = await emb.processor(a);
+  const out = await emb.model(inputs);
+  const t = out.embeddings || out.last_hidden_state || out[Object.keys(out)[0]];
+  let data = t.data;
+  if (t.dims.length === 3) {
+    const [, n, d] = t.dims, m = new Float32Array(d);
+    for (let i = 0; i < n; i++) for (let j = 0; j < d; j++) m[j] += data[i * d + j] / n;
+    data = m;
+  }
+  let s = 0; for (const x of data) s += x * x; s = Math.sqrt(s) || 1;
+  return Float32Array.from(data, (x) => x / s);
+}
+
 async function transcribeFile(id, { audio, opts }) {
   const pipe = asr.pipe;
   const chunk_length_s = 30, stride_length_s = 5;
@@ -335,6 +426,8 @@ self.onmessage = async (ev) => {
     else if (type === 'transcribeFile') result = await transcribeFile(id, payload);
     else if (type === 'transcribeClip') result = await transcribeClip(id, payload);
     else if (type === 'translate') result = await translate(id, payload);
+    else if (type === 'loadEmb') result = await loadEmb(id, payload);
+    else if (type === 'embed') result = await embed(id, payload);
     else throw new Error('Unknown message ' + type);
     post({ id, type: 'done', result });
   } catch (e) { post({ id, type: 'error', message: (e && e.message) || String(e) }); }
@@ -345,6 +438,20 @@ self.onmessage = async (ev) => {
 <script type="text/plain" id="ttsWorkerSrc">
 let tts = null, device = null;
 const post = (m, t) => self.postMessage(m, t || []);
+// Trained voices are Kokoro style tables (510 × 256 floats, one row per input length), like the stock voice files.
+const custom = new Map();
+function hookCustomVoices(t) {
+  const validate = t._validate_voice.bind(t), fromIds = t.generate_from_ids.bind(t);
+  t._validate_voice = (v) => custom.has(v) ? custom.get(v).lang : validate(v);
+  t.generate_from_ids = async (ids, opts = {}) => {
+    const v = custom.get(opts.voice);
+    if (!v) return fromIds(ids, opts);
+    const Tensor = ids.constructor;
+    const off = 256 * Math.min(Math.max(ids.dims.at(-1) - 2, 0), 509);
+    const { waveform } = await t.model({ input_ids: ids, style: new Tensor('float32', v.data.slice(off, off + 256), [1, 256]), speed: new Tensor('float32', [opts.speed ?? 1], [1]) });
+    return { audio: waveform.data, sampling_rate: 24000 };
+  };
+}
 self.onmessage = async (ev) => {
   const { id, type, payload } = ev.data;
   try {
@@ -361,8 +468,12 @@ self.onmessage = async (ev) => {
           } catch (e) { err = e; post({ id, type: 'log', message: `Kokoro on ${d} failed: ${e.message || e}` }); }
         }
         if (!tts) throw err;
+        hookCustomVoices(tts);
       }
       post({ id, type: 'done', result: device });
+    } else if (type === 'registerVoice') {
+      custom.set(payload.name, { data: payload.data, lang: payload.lang || 'a' });
+      post({ id, type: 'done', result: true });
     } else if (type === 'synth') {
       const out = await tts.generate(payload.text, { voice: payload.voice, speed: payload.speed });
       const audio = out.audio instanceof Float32Array ? out.audio : Float32Array.from(out.audio);
@@ -782,8 +893,10 @@ function renderCast() {
     } }, PRESETS.map((p) => el('option', { value: p.id, selected: p.id === a.preset }, p.label)));
     let voiceSel;
     if (useKokoro()) {
-      voiceSel = el('select', { onchange: (e) => { a.kokoro = e.target.value; invalidateActor(a); } },
-        KOKORO_VOICES.map((v) => el('option', { value: v, selected: v === a.kokoro }, v)));
+      voiceSel = el('select', { onchange: (e) => { a.kokoro = e.target.value; invalidateActor(a); } }, [
+        ...(lab.voices.length ? [el('optgroup', { label: 'Trained voices' }, lab.voices.map((v) => el('option', { value: v.id, selected: v.id === a.kokoro }, `★ ${v.name}`)))] : []),
+        el('optgroup', { label: 'Stock voices' }, KOKORO_VOICES.map((v) => el('option', { value: v, selected: v === a.kokoro }, v))),
+      ]);
     } else {
       const list = voicesFor(els.tgtLang.value);
       voiceSel = el('select', { onchange: (e) => { a.sysVoice = e.target.value; } },
@@ -828,6 +941,7 @@ async function audition(a) {
 // ---------- synthesis ----------
 async function synthKokoro(actor, text, slot) {
   await ensureKokoro();
+  await ensureVoiceRegistered(actor.kokoro);
   const pitch = actor.pitch;
   let speed = Math.max(0.5, Math.min(2, actor.tempo / pitch));
   let r = await ttsWorker.call('synth', { text, voice: actor.kokoro, speed });
@@ -1392,6 +1506,407 @@ async function recordDub() {
   setStage('Recording: plays in real time; keep this tab visible');
 }
 
+// ---------- Voice Lab ----------
+// Training searches Kokoro's voice-style space for the table that sounds most like the talent:
+// every candidate voice speaks a few probe sentences, a WeSpeaker voice print is taken of each,
+// and the candidate is kept when its prints sit closer to the talent's. It starts from the best
+// blend of stock voices and refines with an adaptive random walk (a (1+λ) evolution strategy).
+const EMB_MODEL = 'onnx-community/wespeaker-voxceleb-resnet34-LM';
+const VOICE_LEN = 510 * 256;
+const PROBES = ['Get ready, the next round starts right now.', 'I never thought we would make it this far together.', 'Where did you hide the map? Tell me the truth.'];
+const CODE_WORDS = ['amber', 'anchor', 'apple', 'arrow', 'basket', 'beacon', 'bicycle', 'blossom', 'bridge', 'canyon', 'carpet', 'castle', 'cedar', 'cherry', 'cloud', 'comet', 'copper', 'coral', 'desert', 'dolphin', 'eagle', 'ember', 'falcon', 'feather', 'forest', 'garden', 'glacier', 'harbor', 'hammer', 'island', 'jacket', 'jungle', 'kettle', 'ladder', 'lantern', 'lemon', 'marble', 'meadow', 'mirror', 'monkey', 'orange', 'orchid', 'pencil', 'pepper', 'piano', 'planet', 'pocket', 'rabbit', 'river', 'rocket', 'saddle', 'silver', 'spider', 'tiger', 'tomato', 'tunnel', 'velvet', 'violin', 'walnut', 'window', 'winter', 'yellow', 'zebra', 'thunder'];
+const SAME_SPEAKER = 0.5; // WeSpeaker cosine; same speaker is typically 0.6–0.9, different speakers well below 0.4
+const lab = { clips: [], targetEmb: null, targetHz: null, code: [], consent: null, training: null, result: null, voices: [], registered: new Set(), stock: null };
+const cosine = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
+const unitMean = (vs) => { const m = new Float32Array(vs[0].length); for (const v of vs) for (let i = 0; i < m.length; i++) m[i] += v[i]; let s = 0; for (const x of m) s += x * x; s = Math.sqrt(s) || 1; return m.map((x) => x / s); };
+function resample(a, from, to) {
+  if (from === to) return a;
+  const n = Math.floor(a.length * to / from), out = new Float32Array(n), r = from / to;
+  for (let i = 0; i < n; i++) { const p = i * r, k = Math.floor(p), f = p - k; out[i] = a[k] * (1 - f) + (a[k + 1] ?? a[k]) * f; }
+  return out;
+}
+async function ensureEmb() {
+  const device = els.device.value === 'wasm' ? 'wasm' : (gpu.available ? 'webgpu' : 'wasm');
+  return asrWorker.call('loadEmb', { libUrl: TRANSFORMERS_URL, model: EMB_MODEL, device });
+}
+const embed16k = (pcm) => asrWorker.call('embed', { audio: pcm });
+async function decodeTo16k(file) {
+  const ctx = new AudioContext();
+  try {
+    const d = await ctx.decodeAudioData(await file.arrayBuffer());
+    const off = new OfflineAudioContext(1, Math.ceil(d.duration * SR), SR);
+    const src = off.createBufferSource(); src.buffer = d; src.connect(off.destination); src.start();
+    return (await off.startRendering()).getChannelData(0);
+  } finally { ctx.close(); }
+}
+// Keep only the speech in a recording (drops pauses so voice prints are not diluted by silence).
+function speechOnly(pcm) {
+  const f = 480, keep = [];
+  let peak = 0; for (let i = 0; i < pcm.length; i += f) { let e = 0; for (let j = i; j < Math.min(pcm.length, i + f); j++) e += pcm[j] * pcm[j]; peak = Math.max(peak, Math.sqrt(e / f)); }
+  const th = Math.max(0.004, peak * 0.08);
+  for (let i = 0; i < pcm.length; i += f) {
+    const fr = pcm.subarray(i, Math.min(pcm.length, i + f)); let e = 0; for (const x of fr) e += x * x;
+    if (Math.sqrt(e / fr.length) > th) keep.push(fr);
+  }
+  const out = new Float32Array(keep.reduce((n, x) => n + x.length, 0)); let o = 0; for (const x of keep) { out.set(x, o); o += x.length; }
+  return out;
+}
+// Voice print of a set of recordings: mean of 6 s windows, at most 5 minutes of speech.
+async function voicePrint(pcms) {
+  await ensureEmb();
+  const vecs = [];
+  for (const pcm of pcms) {
+    const sp = speechOnly(pcm);
+    for (let s = 0; s + 2 * SR <= sp.length && vecs.length < 50; s += 6 * SR) vecs.push(await embed16k(sp.slice(s, s + 6 * SR)));
+  }
+  if (!vecs.length) throw new Error('Not enough speech in the recordings: add at least a few seconds of clear speech.');
+  return unitMean(vecs);
+}
+
+async function recordMic(onLevel) {
+  audio.resume();
+  const ctx = audio.ctx;
+  if (!audio.workletReady) {
+    await ctx.audioWorklet.addModule(URL.createObjectURL(new Blob([els.captureWorkletSrc.textContent], { type: 'text/javascript' })));
+    audio.workletReady = true;
+  }
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: true, autoGainControl: true } });
+  const src = ctx.createMediaStreamSource(stream);
+  const tap = new AudioWorkletNode(ctx, 'dub-tap', { numberOfInputs: 1, numberOfOutputs: 1, channelCount: 1 });
+  const sink = ctx.createGain(); sink.gain.value = 0; tap.connect(sink); sink.connect(ctx.destination); src.connect(tap);
+  const chunks = [];
+  tap.port.onmessage = (ev) => { chunks.push(ev.data); if (onLevel) { let m = 0; for (const x of ev.data) m = Math.max(m, Math.abs(x)); onLevel(m); } };
+  return {
+    stop() {
+      try { src.disconnect(); tap.disconnect(); sink.disconnect(); } catch (e) {}
+      stream.getTracks().forEach((t) => t.stop());
+      const all = new Float32Array(chunks.reduce((n, c) => n + c.length, 0)); let o = 0; for (const c of chunks) { all.set(c, o); o += c.length; }
+      return resample(all, ctx.sampleRate, SR);
+    },
+  };
+}
+
+// --- step 1: recordings ---
+function labClipsChanged() {
+  lab.targetEmb = null; lab.targetHz = null;
+  if (lab.consent) { lab.consent.verified = false; lab.consent.similarity = null; }
+  renderLab();
+  if (lab.consent?.pcm) verifyConsent();
+}
+async function addLabFiles(files) {
+  for (const f of files) {
+    try { const pcm = await decodeTo16k(f); lab.clips.push({ name: f.name, pcm }); }
+    catch (e) { showError(`Could not read ${f.name}: ${e.message}`); }
+  }
+  labClipsChanged();
+}
+let labRec = null;
+async function toggleLabRecord(kind) {
+  const btn = kind === 'clip' ? els.labRecordClip : els.labConsentBtn;
+  if (labRec) {
+    const r = labRec; labRec = null;
+    const pcm = r.rec.stop();
+    els.labRecordClip.textContent = 'Record sample'; els.labConsentBtn.textContent = 'Record consent';
+    syncLab();
+    if (r.kind === 'clip') { lab.clips.push({ name: `Mic sample ${lab.clips.filter((c) => c.mic).length + 1}`, pcm, mic: true }); labClipsChanged(); }
+    else { lab.consent = { pcm, recordedAt: new Date().toISOString(), statement: statementText() }; verifyConsent(); }
+    return;
+  }
+  try {
+    const rec = await recordMic();
+    labRec = { kind, rec };
+    btn.replaceChildren(el('span', { class: 'rec-dot' }), 'Stop');
+    syncLab();
+  } catch (e) { showError('Microphone unavailable: ' + e.message); }
+}
+
+// --- step 2: consent ---
+function newCode() {
+  const pick = new Set(); const r = new Uint32Array(8); crypto.getRandomValues(r);
+  for (const x of r) { if (pick.size < 4) pick.add(CODE_WORDS[x % CODE_WORDS.length]); }
+  lab.code = [...pick];
+  lab.consent = null; renderLab();
+}
+function statementText() {
+  const name = els.labName.value.trim(), org = els.labOrg.value.trim() || 'this studio';
+  return `I, ${name}, agree that ${org} may create a synthetic version of my voice for dubbing. My verification code is ${lab.code.join(' ')}.`;
+}
+const words = (t) => t.toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean);
+async function verifyConsent() {
+  const c = lab.consent; if (!c) return;
+  c.verified = false;
+  try {
+    setStage('Checking consent recording'); setProgress(null);
+    if (c.pcm.length < 3 * SR) throw new Error('The consent recording is too short. Read the whole statement.');
+    if (!c.transcript) {
+      await ensureAsr();
+      c.transcript = await asrWorker.call('transcribeClip', { audio: c.pcm.slice(), opts: { language: 'en', task: 'transcribe', multilingual: true } });
+    }
+    const heard = new Set(words(c.transcript));
+    c.codeHits = lab.code.filter((w) => heard.has(w)).length;
+    const nameParts = words(els.labName.value).filter((w) => w.length > 1);
+    c.nameOk = nameParts.length > 0 && nameParts.some((w) => heard.has(w));
+    c.agreeOk = heard.has('agree') && heard.has('voice');
+    if (lab.clips.length) {
+      if (!lab.targetEmb) lab.targetEmb = await voicePrint(lab.clips.map((x) => x.pcm));
+      c.similarity = cosine(await voicePrint([c.pcm]), lab.targetEmb);
+    }
+    c.verified = c.codeHits >= 3 && c.nameOk && c.agreeOk && c.similarity != null && c.similarity >= SAME_SPEAKER;
+    setStage(c.verified ? 'Consent verified' : 'Consent not verified'); setProgress(0);
+  } catch (e) { showError(friendlyError(e)); setStage('Idle'); setProgress(0); }
+  renderLab();
+}
+
+// --- step 3: training ---
+async function fetchStockVoice(name) {
+  const r = await fetch(`https://huggingface.co/${KOKORO_MODEL}/resolve/main/voices/${name}.bin`);
+  if (!r.ok) throw new Error(`Could not download voice ${name}`);
+  return new Float32Array(await r.arrayBuffer());
+}
+async function useVoiceData(name, data) {
+  await ttsWorker.call('registerVoice', { name, data, lang: 'a' });
+  lab.registered.add(name);
+}
+// How much a candidate sounds like the talent: mean voice-print similarity over the probe sentences,
+// plus a small reward for sounding like the same person across sentences (broken voices drift).
+async function scoreVoice(data, probes) {
+  await useVoiceData('lab:probe', data);
+  const prints = [];
+  for (const text of probes) {
+    const r = await ttsWorker.call('synth', { text, voice: 'lab:probe', speed: 1 });
+    const a = r.audio;
+    let peak = 0; for (let i = 0; i < a.length; i += 7) peak = Math.max(peak, Math.abs(a[i]));
+    const secs = a.length / r.sr;
+    if (!(peak > 0.02) || secs > text.length * 0.2 || secs < text.length * 0.025) return { score: -1 };
+    prints.push(await embed16k(resample(a, r.sr, SR)));
+  }
+  const toTarget = prints.reduce((s, p) => s + cosine(p, lab.targetEmb), 0) / prints.length;
+  let self = 1, n = 0;
+  if (prints.length > 1) { self = 0; for (let i = 0; i < prints.length; i++) for (let j = i + 1; j < prints.length; j++) { self += cosine(prints[i], prints[j]); n++; } self /= n; }
+  return { score: 0.85 * toTarget + 0.15 * self, toTarget };
+}
+async function trainVoice() {
+  if (lab.training || !lab.consent?.verified) return;
+  const steps = Number(els.labSteps.value);
+  const t = lab.training = { stop: false, history: [], best: null, started: performance.now() };
+  lab.result = null; syncLab();
+  try {
+    setStage('Preparing voice training'); setProgress(null);
+    await ensureKokoro(); await ensureEmb();
+    if (!lab.targetEmb) lab.targetEmb = await voicePrint(lab.clips.map((x) => x.pcm));
+    const hz = medianPitch(speechOnly(lab.clips[0].pcm));
+    // Candidate starting voices: the stock voices on the talent's side of the pitch range.
+    const names = KOKORO_VOICES.filter((v) => v.startsWith('a') || v.startsWith('b')).filter((v) => hz == null || (hz > 170 ? v[1] === 'f' : hz < 140 ? v[1] === 'm' : true));
+    if (!lab.stock) lab.stock = new Map();
+    for (const n of KOKORO_VOICES) if (!lab.stock.has(n)) lab.stock.set(n, await fetchStockVoice(n));
+    // Per-element spread of the stock voices sets the scale of each mutation.
+    const all = [...lab.stock.values()], spread = new Float32Array(VOICE_LEN), lo = new Float32Array(VOICE_LEN), hi = new Float32Array(VOICE_LEN);
+    for (let i = 0; i < VOICE_LEN; i++) {
+      let m = 0, mn = Infinity, mx = -Infinity; for (const v of all) { m += v[i]; mn = Math.min(mn, v[i]); mx = Math.max(mx, v[i]); }
+      m /= all.length; let q = 0; for (const v of all) q += (v[i] - m) ** 2;
+      spread[i] = Math.sqrt(q / all.length); lo[i] = mn - spread[i]; hi[i] = mx + spread[i];
+    }
+    const probes = PROBES.slice(0, lab.probeCount || 2);
+    setStage('Comparing stock voices');
+    const ranked = [];
+    for (let i = 0; i < names.length; i++) {
+      if (t.stop) break;
+      setProgress(i / names.length, `${names[i]} (${i + 1}/${names.length})`);
+      ranked.push({ name: names[i], ...(await scoreVoice(lab.stock.get(names[i]), probes)) });
+    }
+    ranked.sort((a, b) => b.score - a.score);
+    t.baseline = ranked[0];
+    logLine(`Closest stock voices: ${ranked.slice(0, 3).map((r) => `${r.name} ${r.toTarget?.toFixed(3)}`).join(', ')}`);
+    // Start from a similarity-weighted blend of the three closest.
+    const top = ranked.slice(0, 3).filter((r) => r.score > -1), w = top.map((r) => Math.exp((r.score - top[0].score) * 20)), ws = w.reduce((a, b) => a + b, 0);
+    let best = new Float32Array(VOICE_LEN);
+    top.forEach((r, k) => { const v = lab.stock.get(r.name); for (let i = 0; i < VOICE_LEN; i++) best[i] += v[i] * w[k] / ws; });
+    let bestScore = await scoreVoice(best, probes);
+    if (bestScore.score < t.baseline.score) { best = lab.stock.get(t.baseline.name).slice(); bestScore = t.baseline; }
+    t.best = best; t.bestScore = bestScore; t.history.push(bestScore.toTarget);
+    drawLabChart();
+    // Adaptive random walk: grow the step after a success, shrink it after a run of failures.
+    let sigma = 0.25, fails = 0;
+    const gauss = () => { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+    setStage('Training voice');
+    // Kokoro keeps one style row per input length and only the rows for the probe sentences are heard,
+    // so each step moves every row by the same 256-dim offset: the whole voice shifts coherently.
+    const colSpread = new Float32Array(256);
+    for (let i = 0; i < VOICE_LEN; i++) colSpread[i % 256] += spread[i] / 510;
+    for (let step = 1; step <= steps && !t.stop; step++) {
+      const cand = new Float32Array(VOICE_LEN), dir = new Float32Array(256);
+      for (let c = 0; c < 256; c++) dir[c] = sigma * colSpread[c] * gauss();
+      for (let i = 0; i < VOICE_LEN; i++) cand[i] = Math.min(hi[i], Math.max(lo[i], best[i] + dir[i % 256]));
+      const sc = await scoreVoice(cand, probes);
+      if (sc.score > bestScore.score) { best = cand; bestScore = sc; sigma = Math.min(0.8, sigma * 1.3); fails = 0; }
+      else if (++fails >= 6) { sigma = Math.max(0.02, sigma * 0.8); fails = 0; }
+      t.best = best; t.bestScore = bestScore; t.history.push(bestScore.toTarget); t.step = step; t.steps = steps;
+      const el2 = (performance.now() - t.started) / 1000, rate = step / el2;
+      setProgress(step / steps, `step ${step}/${steps} · ${(1 / rate).toFixed(1)} s/step · ~${Math.round((steps - step) / rate / 60)} min left`);
+      if (step % 2 === 0 || step === steps) { drawLabChart(); renderLabStatus(); }
+    }
+    // Final check on a sentence the search never used, so the score is not flattering itself.
+    const held = await scoreVoice(best, [PROBES[2]]);
+    lab.result = { data: best, score: bestScore.toTarget, heldOut: held.toTarget, baseline: t.baseline, steps: t.step || 0 };
+    await useVoiceData('lab:preview', best);
+    setStage(`Training finished · match ${held.toTarget?.toFixed(3)} on an unseen sentence (closest stock voice ${t.baseline.toTarget?.toFixed(3)})`); setProgress(1, '');
+  } catch (e) { showError(friendlyError(e)); setStage('Training failed'); }
+  finally { lab.training = null; syncLab(); renderLabStatus(); }
+}
+function drawLabChart() {
+  const c = els.labChart, g = c.getContext('2d'), h = lab.training?.history || [];
+  const W = c.width, H = c.height, css = getComputedStyle(document.documentElement);
+  g.clearRect(0, 0, W, H);
+  if (h.length < 1) return;
+  const vals = h.filter((x) => x != null), min = Math.min(...vals, lab.training?.baseline?.toTarget ?? 1) - 0.02, max = Math.max(...vals) + 0.02;
+  const y = (v) => H - 10 - (v - min) / (max - min || 1) * (H - 20), x = (i) => 8 + i / Math.max(1, h.length - 1) * (W - 16);
+  if (lab.training?.baseline?.toTarget != null) {
+    g.strokeStyle = css.getPropertyValue('--muted'); g.setLineDash([6, 6]); g.beginPath();
+    g.moveTo(0, y(lab.training.baseline.toTarget)); g.lineTo(W, y(lab.training.baseline.toTarget)); g.stroke(); g.setLineDash([]);
+  }
+  g.strokeStyle = css.getPropertyValue('--accent'); g.lineWidth = 3; g.beginPath();
+  h.forEach((v, i) => (i ? g.lineTo(x(i), y(v)) : g.moveTo(x(i), y(v)))); g.stroke();
+  g.fillStyle = css.getPropertyValue('--text'); g.font = '22px system-ui';
+  g.fillText(`match ${vals.at(-1).toFixed(3)}`, 12, 28);
+}
+function renderLabStatus() {
+  const t = lab.training, r = lab.result;
+  if (t?.bestScore?.toTarget != null) els.labStatus.textContent = `Match ${t.bestScore.toTarget.toFixed(3)} · closest stock voice ${t.baseline.name} at ${t.baseline.toTarget?.toFixed(3)} (dashed line).`;
+  else if (r) els.labStatus.textContent = `Trained: match ${r.heldOut?.toFixed(3)} on an unseen sentence vs ${r.baseline.toTarget.toFixed(3)} for the closest stock voice (${r.baseline.name}). Listen, then save.`;
+}
+async function previewLab() {
+  const data = lab.training?.best || lab.result?.data; if (!data) return;
+  await useVoiceData('lab:preview', data);
+  audio.resume();
+  const r = await ttsWorker.call('synth', { text: 'Hello! This is how I sound after training. What do you think?', voice: 'lab:preview', speed: 1 });
+  playBuffer({ audio: r.audio, sr: r.sr, rate: 1 }, audio.ctx.currentTime + 0.05, 0);
+}
+
+// --- saved voices (IndexedDB) ---
+function idb() {
+  return new Promise((res, rej) => {
+    const q = indexedDB.open('dub-studio', 1);
+    q.onupgradeneeded = () => q.result.createObjectStore('voices', { keyPath: 'id' });
+    q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+  });
+}
+async function idbDo(mode, fn) {
+  const db = await idb();
+  return new Promise((res, rej) => { const tx = db.transaction('voices', mode); const r = fn(tx.objectStore('voices')); tx.oncomplete = () => res(r?.result); tx.onerror = () => rej(tx.error); });
+}
+async function loadLabVoices() {
+  try { lab.voices = (await idbDo('readonly', (s) => s.getAll())) || []; } catch (e) { lab.voices = []; logLine('Saved voices unavailable: ' + e.message); }
+  renderLabVoices(); renderCast();
+}
+async function saveLabVoice() {
+  const r = lab.result; if (!r || !lab.consent?.verified) return;
+  const name = els.labName.value.trim();
+  const v = {
+    id: 'lab:' + crypto.randomUUID(), name, lang: 'a', data: r.data, createdAt: new Date().toISOString(),
+    match: r.heldOut, baseline: { voice: r.baseline.name, match: r.baseline.toTarget }, steps: r.steps,
+    training: { clips: lab.clips.length, seconds: Math.round(lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR) },
+    consent: { statement: lab.consent.statement, transcript: lab.consent.transcript, codeWordsHeard: lab.consent.codeHits, similarity: lab.consent.similarity, recordedAt: lab.consent.recordedAt, studio: els.labOrg.value.trim() || null, audio: wavBlob(lab.consent.pcm, SR) },
+  };
+  try { await idbDo('readwrite', (s) => s.put(v)); } catch (e) { showError('Could not save the voice: ' + e.message); return; }
+  logLine(`Saved trained voice "${name}".`);
+  await loadLabVoices();
+}
+async function ensureVoiceRegistered(id) {
+  if (!id.startsWith('lab:') || lab.registered.has(id)) return;
+  const v = lab.voices.find((x) => x.id === id);
+  if (!v) throw new Error('A trained voice used in the cast is missing. Re-import it or pick another voice.');
+  await useVoiceData(id, v.data);
+}
+const b64 = { enc: async (blob) => { const u = new Uint8Array(await blob.arrayBuffer()); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); },
+  dec: (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0)) };
+async function exportLabVoice(v) {
+  const out = { format: 'dub-studio-voice', version: 1, ...v, data: await b64.enc(new Blob([v.data])), consent: { ...v.consent, audio: await b64.enc(v.consent.audio) } };
+  download(`${v.name.replace(/[^\w-]+/g, '_')}.voice.json`, JSON.stringify(out), 'application/json');
+}
+async function importLabVoice(file) {
+  try {
+    const j = JSON.parse(await file.text());
+    if (j.format !== 'dub-studio-voice') throw new Error('Not a Dub Studio voice file.');
+    if (!j.consent?.audio || !j.consent?.statement) throw new Error('This voice has no consent record, so it cannot be imported.');
+    const data = new Float32Array(b64.dec(j.data).buffer);
+    if (data.length !== VOICE_LEN) throw new Error('The voice data is damaged.');
+    const v = { ...j, data, consent: { ...j.consent, audio: new Blob([b64.dec(j.consent.audio)], { type: 'audio/wav' }) } };
+    delete v.format; delete v.version;
+    await idbDo('readwrite', (s) => s.put(v));
+    logLine(`Imported voice "${v.name}".`);
+    await loadLabVoices();
+  } catch (e) { showError('Import failed: ' + e.message); }
+}
+function renderLabVoices() {
+  els.labVoices.textContent = '';
+  if (!lab.voices.length) { els.labVoices.append(el('div', { class: 'empty' }, 'None yet. Trained voices appear in every character\'s voice list.')); return; }
+  for (const v of lab.voices) {
+    els.labVoices.append(el('div', { class: 'v' }, [
+      el('span', { class: 'name' }, `★ ${v.name}`),
+      el('span', { class: 'hint' }, `match ${v.match?.toFixed(2) ?? '?'} · ${v.training?.seconds ?? '?'} s audio · consent ${v.consent?.recordedAt?.slice(0, 10) ?? '?'}`),
+      el('button', { onclick: async () => { await ensureKokoro(); await ensureVoiceRegistered(v.id); audio.resume(); const r = await ttsWorker.call('synth', { text: 'Hi, this is my trained voice.', voice: v.id, speed: 1 }); playBuffer({ audio: r.audio, sr: r.sr, rate: 1 }, audio.ctx.currentTime + 0.05, 0); } }, '▶'),
+      el('button', { title: 'Play the consent recording', onclick: () => { const a = new Audio(URL.createObjectURL(v.consent.audio)); a.play(); } }, 'Consent'),
+      el('button', { onclick: () => exportLabVoice(v) }, 'Export'),
+      el('button', { onclick: async () => { if (!confirm(`Delete the trained voice "${v.name}"?`)) return; await idbDo('readwrite', (s) => s.delete(v.id)); lab.registered.delete(v.id); loadLabVoices(); } }, 'Delete'),
+    ]));
+  }
+}
+
+function renderLab() {
+  // recordings
+  els.labClips.textContent = '';
+  for (const c of lab.clips) {
+    els.labClips.append(el('div', { class: 'clip' }, [el('span', {}, c.name), el('span', {}, [`${(c.pcm.length / SR).toFixed(1)} s `, el('button', { style: 'padding:0 6px', onclick: () => { lab.clips = lab.clips.filter((x) => x !== c); labClipsChanged(); } }, '✕')])]));
+  }
+  const secs = lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR;
+  els.labClipHint.textContent = lab.clips.length ? `${Math.round(secs)} s of audio${secs < 20 ? ' · add at least 20 s' : secs < 60 ? ' · 1 minute or more gives a better match' : ''}` : '1–5 minutes of clean, solo speech works best: no music, no other voices.';
+  // statement
+  const name = els.labName.value.trim();
+  if (!lab.code.length) newCode();
+  if (name) els.labStatement.replaceChildren('“I, ', el('b', {}, name), `, agree that ${els.labOrg.value.trim() || 'this studio'} may create a synthetic version of my voice for dubbing. My verification code is `, el('b', {}, lab.code.join(' ')), '.”');
+  else els.labStatement.textContent = 'Enter the talent\'s name to generate a statement.';
+  // checks
+  els.labChecks.textContent = '';
+  const c = lab.consent;
+  const row = (ok, text) => els.labChecks.append(el('div', { class: ok ? 'ok' : 'bad' }, `${ok ? '✓' : '✗'} ${text}`));
+  if (c && c.transcript != null) {
+    els.labChecks.append(el('div', { class: 'hint' }, `Heard: “${c.transcript}”`));
+    row(c.nameOk, 'Talent name spoken');
+    row(c.agreeOk, 'Agreement spoken');
+    row(c.codeHits >= 3, `Verification code (${c.codeHits}/4 words)`);
+    if (c.similarity != null) row(c.similarity >= SAME_SPEAKER, `Same voice as the recordings (similarity ${c.similarity.toFixed(2)})`);
+    else row(false, 'Add training recordings to compare voices');
+  }
+  syncLab();
+}
+function syncLab() {
+  const secs = lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR, busy = !!lab.training || state.running;
+  els.labConsentBtn.disabled = !els.labName.value.trim() || busy || (labRec && labRec.kind !== 'consent');
+  els.labRecordClip.disabled = busy || (labRec && labRec.kind !== 'clip');
+  els.labAddClips.disabled = busy; els.labNewCode.disabled = busy || !!labRec;
+  els.labTrainBtn.disabled = busy || !lab.consent?.verified || secs < 20;
+  els.labTrainBtn.title = !lab.consent?.verified ? 'Record and verify the talent\'s consent first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
+  els.labStopBtn.disabled = !lab.training;
+  els.labListenBtn.disabled = !(lab.training?.best || lab.result);
+  els.labSaveBtn.disabled = !lab.result || !!lab.training;
+}
+function initLab() {
+  els.labAddClips.addEventListener('click', () => els.labClipInput.click());
+  els.labClipInput.addEventListener('change', () => { addLabFiles([...els.labClipInput.files]); els.labClipInput.value = ''; });
+  els.labRecordClip.addEventListener('click', () => toggleLabRecord('clip'));
+  els.labConsentBtn.addEventListener('click', () => toggleLabRecord('consent'));
+  els.labNewCode.addEventListener('click', newCode);
+  for (const k of ['labName', 'labOrg']) els[k].addEventListener('input', () => { lab.consent = null; renderLab(); });
+  els.labSteps.addEventListener('input', () => { els.labStepsVal.textContent = els.labSteps.value; });
+  els.labTrainBtn.addEventListener('click', trainVoice);
+  els.labStopBtn.addEventListener('click', () => { if (lab.training) lab.training.stop = true; });
+  els.labListenBtn.addEventListener('click', () => previewLab().catch((e) => showError(friendlyError(e))));
+  els.labSaveBtn.addEventListener('click', saveLabVoice);
+  els.labImportBtn.addEventListener('click', () => els.labImportInput.click());
+  els.labImportInput.addEventListener('change', () => { importLabVoice(els.labImportInput.files[0]); els.labImportInput.value = ''; });
+  newCode(); renderLab(); loadLabVoices();
+}
+
 // ---------- wiring ----------
 function syncButtons() {
   const busy = state.running || !!state.live;
@@ -1461,9 +1976,9 @@ function init() {
 
   if ('speechSynthesis' in window) { loadSystemVoices(); speechSynthesis.addEventListener('voiceschanged', loadSystemVoices); }
   newActor('Character 1', 'hero');
-  renderCast(); updateHints(); syncButtons(); detectGPU();
+  renderCast(); updateHints(); syncButtons(); detectGPU(); initLab();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, audio, loadFile };
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, verifyConsent, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb, statementText };
 }
 init();
 </script>
