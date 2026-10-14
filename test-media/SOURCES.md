@@ -12,7 +12,7 @@ Small, openly licensed clips for testing Dub Studio and Speaker Transcriber. Eve
 
 ## About the LibriSpeech voices
 
-The Voice Lab only trains after the talent reads a consent statement live into the microphone and the app confirms it is the same voice as the training audio. Dataset readers can't do that, so the LibriSpeech clips are for measuring training quality from a script or the console, not for the normal UI flow. To try the whole flow yourself, record your own training audio and consent.
+Use these to measure Voice Lab training quality: train on `*-train.ogg`, then compare the trained voice with `*-heldout.ogg`, which training never sees. They are public research recordings, not your talent, so keep any voices trained from them out of production.
 
 ## Longer material
 

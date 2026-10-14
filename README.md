@@ -26,14 +26,14 @@ A single self-contained HTML page that **dubs video into another language in the
 
 ### Voice Lab
 
-Trains a Kokoro voice that sounds like a specific, consenting voice actor, without leaving the browser.
+Trains a Kokoro voice that sounds like a specific voice actor from your roster, without leaving the browser.
 
 1. **Recordings:** upload or record 1–5 minutes of the talent's clean solo speech, or **extract it from a video**: the app separates voices from music and effects (Open-Unmix UMX-L in ONNX Runtime Web, with the STFT done in JavaScript), finds speech, voice-prints 2 s windows with WeSpeaker, and groups them into voices. Listen to each voice and pick one to use as training audio. Note that the UMX-L weights are licensed upstream for non-commercial use (CC BY-NC-SA 4.0); for production, point `SEPARATOR_URL` at a separator you have a commercial license for.
-2. **Consent:** the talent reads a generated statement live into the microphone: their name, your studio, and a random four-word code. Whisper checks the words, and a WeSpeaker voice print checks that it is the same voice as the recordings (cosine ≥ 0.5). Training stays locked until both pass, and the consent audio is stored with the voice.
+2. **Release on file:** enter the talent's release or contract reference and who approved it, and confirm the release covers a synthetic voice. Training unlocks once this is filled in, and the reference is saved with the voice and its exports.
 3. **Training:** Kokoro voices are tables of style vectors. Training starts from the closest blend of stock voices and then runs an adaptive random walk (a (1+1) evolution strategy) through that space. Each candidate speaks probe sentences, gets voice-printed, and is kept when it sits closer to the talent. The final score is measured on a sentence the search never used. A few hundred steps take minutes with WebGPU.
-4. **Use:** saved voices live in the browser (IndexedDB), appear in every character's voice list and in the **Speak** panel (type text, hear it, download a WAV), and export or import as `.voice.json` with their consent record.
+4. **Use:** saved voices live in the browser (IndexedDB), appear in every character's voice list and in the **Speak** panel (type text, hear it, download a WAV), and export or import as `.voice.json` with their release record.
 
-What to expect: the trained voice moves toward the talent's timbre and pitch, but it is not a studio-grade clone. Kokoro speaks English only, and very unusual voices (children, creatures, heavy effects) land further away. Consent is checked in the page, so a product that must enforce it should repeat the check on a server.
+What to expect: the trained voice moves toward the talent's timbre and pitch, but it is not a studio-grade clone. Kokoro speaks English only, and very unusual voices (children, creatures, heavy effects) land further away.
 
 Stock and preset voices are generic synthetic voices. Use the app with video you have the rights to and voices whose owners have agreed.
 

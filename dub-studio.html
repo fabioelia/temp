@@ -116,7 +116,7 @@
   .statement { font-size: 14px; line-height: 1.5; background: var(--panel); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; }
   .statement b { color: var(--accent); }
   .checks { font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
-  .checks .ok { color: var(--accent-2); } .checks .bad { color: var(--danger); }
+  .checks .ok, .hint.ok { color: var(--accent-2); } .checks .bad { color: var(--danger); }
   canvas.chart { width: 100%; height: 90px; background: var(--panel); border: 1px solid var(--border); border-radius: 7px; }
   .voices { display: flex; flex-direction: column; gap: 6px; }
   .voices .v { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
@@ -243,8 +243,8 @@
     </section>
 
     <section class="panel card">
-      <h2>Voice Lab · train a voice from consenting talent</h2>
-      <div class="hint" style="margin-bottom:10px">Train a custom Kokoro voice from recordings of a real voice actor, entirely on this device (WebGPU on Apple Silicon). Training only unlocks after that person records a consent statement live, and the app confirms it is the same voice as the training audio. Trained voices speak English.</div>
+      <h2>Voice Lab · train a voice from your talent</h2>
+      <div class="hint" style="margin-bottom:10px">Train a custom Kokoro voice from recordings of a voice actor, entirely on this device (WebGPU on Apple Silicon). Each voice records the talent's release reference, which travels with the voice when it is exported. Trained voices speak English.</div>
       <div class="lab">
         <div class="step">
           <h3>1 · Talent and recordings</h3>
@@ -268,13 +268,11 @@
           <div class="hint" id="labClipHint">1–5 minutes of clean, solo speech works best: no music, no other voices.</div>
         </div>
         <div class="step">
-          <h3>2 · Consent, spoken by the talent</h3>
-          <div class="statement" id="labStatement">Enter the talent's name to generate a statement.</div>
-          <div class="btns">
-            <button id="labConsentBtn" disabled>Record consent</button>
-            <button id="labNewCode" title="Generate a new verification code">New code</button>
-          </div>
-          <div class="checks" id="labChecks"></div>
+          <h3>2 · Release on file</h3>
+          <label class="row"><span>Release ref</span><input type="text" id="labRelease" placeholder="Contract or release ID"></label>
+          <label class="row"><span>Approved by</span><input type="text" id="labApprover" placeholder="Your name"></label>
+          <label class="check"><input type="checkbox" id="labAttest"> <span>This person has signed a release that covers a synthetic version of their voice.</span></label>
+          <div class="hint" id="labReleaseHint">Saved with the voice and included in its exports.</div>
         </div>
         <div class="step">
           <h3>3 · Train</h3>
@@ -1676,9 +1674,7 @@ async function recordDub() {
 const EMB_MODEL = 'onnx-community/wespeaker-voxceleb-resnet34-LM';
 const VOICE_LEN = 510 * 256;
 const PROBES = ['Get ready, the next round starts right now.', 'I never thought we would make it this far together.', 'Where did you hide the map? Tell me the truth.'];
-const CODE_WORDS = ['amber', 'anchor', 'apple', 'arrow', 'basket', 'beacon', 'bicycle', 'blossom', 'bridge', 'canyon', 'carpet', 'castle', 'cedar', 'cherry', 'cloud', 'comet', 'copper', 'coral', 'desert', 'dolphin', 'eagle', 'ember', 'falcon', 'feather', 'forest', 'garden', 'glacier', 'harbor', 'hammer', 'island', 'jacket', 'jungle', 'kettle', 'ladder', 'lantern', 'lemon', 'marble', 'meadow', 'mirror', 'monkey', 'orange', 'orchid', 'pencil', 'pepper', 'piano', 'planet', 'pocket', 'rabbit', 'river', 'rocket', 'saddle', 'silver', 'spider', 'tiger', 'tomato', 'tunnel', 'velvet', 'violin', 'walnut', 'window', 'winter', 'yellow', 'zebra', 'thunder'];
-const SAME_SPEAKER = 0.5; // WeSpeaker cosine; same speaker is typically 0.6–0.9, different speakers well below 0.4
-const lab = { clips: [], targetEmb: null, targetHz: null, code: [], consent: null, training: null, result: null, voices: [], registered: new Set(), stock: null };
+const lab = { clips: [], targetEmb: null, targetHz: null, training: null, result: null, voices: [], registered: new Set(), stock: null };
 const cosine = (a, b) => { let s = 0; for (let i = 0; i < a.length; i++) s += a[i] * b[i]; return s; };
 const unitMean = (vs) => { const m = new Float32Array(vs[0].length); for (const v of vs) for (let i = 0; i < m.length; i++) m[i] += v[i]; let s = 0; for (const x of m) s += x * x; s = Math.sqrt(s) || 1; return m.map((x) => x / s); };
 function resample(a, from, to) {
@@ -1751,9 +1747,7 @@ async function recordMic(onLevel) {
 // --- step 1: recordings ---
 function labClipsChanged() {
   lab.targetEmb = null; lab.targetHz = null;
-  if (lab.consent) { lab.consent.verified = false; lab.consent.similarity = null; }
   renderLab();
-  if (lab.consent?.pcm) verifyConsent();
 }
 async function addLabFiles(files) {
   for (const f of files) {
@@ -1763,60 +1757,28 @@ async function addLabFiles(files) {
   labClipsChanged();
 }
 let labRec = null;
-async function toggleLabRecord(kind) {
-  const btn = kind === 'clip' ? els.labRecordClip : els.labConsentBtn;
+async function toggleLabRecord() {
+  const btn = els.labRecordClip;
   if (labRec) {
     const r = labRec; labRec = null;
     const pcm = r.rec.stop();
-    els.labRecordClip.textContent = 'Record sample'; els.labConsentBtn.textContent = 'Record consent';
+    els.labRecordClip.textContent = 'Record sample';
     syncLab();
-    if (r.kind === 'clip') { lab.clips.push({ name: `Mic sample ${lab.clips.filter((c) => c.mic).length + 1}`, pcm, mic: true }); labClipsChanged(); }
-    else { lab.consent = { pcm, recordedAt: new Date().toISOString(), statement: statementText() }; verifyConsent(); }
+    lab.clips.push({ name: `Mic sample ${lab.clips.filter((c) => c.mic).length + 1}`, pcm, mic: true }); labClipsChanged();
     return;
   }
   try {
     const rec = await recordMic();
-    labRec = { kind, rec };
+    labRec = { rec };
     btn.replaceChildren(el('span', { class: 'rec-dot' }), 'Stop');
     syncLab();
   } catch (e) { showError('Microphone unavailable: ' + e.message); }
 }
 
-// --- step 2: consent ---
-function newCode() {
-  const pick = new Set(); const r = new Uint32Array(8); crypto.getRandomValues(r);
-  for (const x of r) { if (pick.size < 4) pick.add(CODE_WORDS[x % CODE_WORDS.length]); }
-  lab.code = [...pick];
-  lab.consent = null; renderLab();
-}
-function statementText() {
-  const name = els.labName.value.trim(), org = els.labOrg.value.trim() || 'this studio';
-  return `I, ${name}, agree that ${org} may create a synthetic version of my voice for dubbing. My verification code is ${lab.code.join(' ')}.`;
-}
-const words = (t) => t.toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}\s]/gu, ' ').split(/\s+/).filter(Boolean);
-async function verifyConsent() {
-  const c = lab.consent; if (!c) return;
-  c.verified = false;
-  try {
-    setStage('Checking consent recording'); setProgress(null);
-    if (c.pcm.length < 3 * SR) throw new Error('The consent recording is too short. Read the whole statement.');
-    if (!c.transcript) {
-      await ensureAsr();
-      c.transcript = await asrWorker.call('transcribeClip', { audio: c.pcm.slice(), opts: { language: 'en', task: 'transcribe', multilingual: true } });
-    }
-    const heard = new Set(words(c.transcript));
-    c.codeHits = lab.code.filter((w) => heard.has(w)).length;
-    const nameParts = words(els.labName.value).filter((w) => w.length > 1);
-    c.nameOk = nameParts.length > 0 && nameParts.some((w) => heard.has(w));
-    c.agreeOk = heard.has('agree') && heard.has('voice');
-    if (lab.clips.length) {
-      if (!lab.targetEmb) lab.targetEmb = await voicePrint(lab.clips.map((x) => x.pcm));
-      c.similarity = cosine(await voicePrint([c.pcm]), lab.targetEmb);
-    }
-    c.verified = c.codeHits >= 3 && c.nameOk && c.agreeOk && c.similarity != null && c.similarity >= SAME_SPEAKER;
-    setStage(c.verified ? 'Consent verified' : 'Consent not verified'); setProgress(0);
-  } catch (e) { showError(friendlyError(e)); setStage('Idle'); setProgress(0); }
-  renderLab();
+// --- step 2: release on file ---
+function release() {
+  const talent = els.labName.value.trim(), ref = els.labRelease.value.trim(), by = els.labApprover.value.trim();
+  return { talent, releaseRef: ref, approvedBy: by, studio: els.labOrg.value.trim() || null, ok: !!(talent && ref && by && els.labAttest.checked) };
 }
 
 // --- step 3: training ---
@@ -1848,7 +1810,7 @@ async function scoreVoice(data, probes) {
   return { score: 0.85 * toTarget + 0.15 * self, toTarget };
 }
 async function trainVoice() {
-  if (lab.training || !lab.consent?.verified) return;
+  if (lab.training || !release().ok) return;
   const steps = Number(els.labSteps.value);
   const t = lab.training = { stop: false, history: [], best: null, started: performance.now() };
   lab.result = null; syncLab();
@@ -1961,13 +1923,13 @@ async function loadLabVoices() {
   renderLabVoices(); renderCast(); renderSpeakVoices();
 }
 async function saveLabVoice() {
-  const r = lab.result; if (!r || !lab.consent?.verified) return;
+  const r = lab.result, rel = release(); if (!r || !rel.ok) return;
   const name = els.labName.value.trim();
   const v = {
     id: 'lab:' + crypto.randomUUID(), name, lang: 'a', data: r.data, createdAt: new Date().toISOString(),
     match: r.heldOut, baseline: { voice: r.baseline.name, match: r.baseline.toTarget }, steps: r.steps,
     training: { clips: lab.clips.length, seconds: Math.round(lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR) },
-    consent: { statement: lab.consent.statement, transcript: lab.consent.transcript, codeWordsHeard: lab.consent.codeHits, similarity: lab.consent.similarity, recordedAt: lab.consent.recordedAt, studio: els.labOrg.value.trim() || null, audio: wavBlob(lab.consent.pcm, SR) },
+    consent: { type: 'release', releaseRef: rel.releaseRef, approvedBy: rel.approvedBy, studio: rel.studio, approvedAt: new Date().toISOString() },
   };
   try { await idbDo('readwrite', (s) => s.put(v)); } catch (e) { showError('Could not save the voice: ' + e.message); return; }
   logLine(`Saved trained voice "${name}".`);
@@ -1982,17 +1944,20 @@ async function ensureVoiceRegistered(id) {
 const b64 = { enc: async (blob) => { const u = new Uint8Array(await blob.arrayBuffer()); let s = ''; for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode(...u.subarray(i, i + 0x8000)); return btoa(s); },
   dec: (str) => Uint8Array.from(atob(str), (c) => c.charCodeAt(0)) };
 async function exportLabVoice(v) {
-  const out = { format: 'dub-studio-voice', version: 1, ...v, data: await b64.enc(new Blob([v.data])), consent: { ...v.consent, audio: await b64.enc(v.consent.audio) } };
+  const consent = { ...v.consent };
+  if (consent.audio instanceof Blob) consent.audio = await b64.enc(consent.audio);
+  const out = { format: 'dub-studio-voice', version: 1, ...v, data: await b64.enc(new Blob([v.data])), consent };
   download(`${v.name.replace(/[^\w-]+/g, '_')}.voice.json`, JSON.stringify(out), 'application/json');
 }
 async function importLabVoice(file) {
   try {
     const j = JSON.parse(await file.text());
     if (j.format !== 'dub-studio-voice') throw new Error('Not a Dub Studio voice file.');
-    if (!j.consent?.audio || !j.consent?.statement) throw new Error('This voice has no consent record, so it cannot be imported.');
+    if (!j.consent?.releaseRef && !j.consent?.statement) throw new Error('This voice has no release record, so it cannot be imported.');
     const data = new Float32Array(b64.dec(j.data).buffer);
     if (data.length !== VOICE_LEN) throw new Error('The voice data is damaged.');
-    const v = { ...j, data, consent: { ...j.consent, audio: new Blob([b64.dec(j.consent.audio)], { type: 'audio/wav' }) } };
+    const v = { ...j, data, consent: { ...j.consent } };
+    if (typeof v.consent.audio === 'string') v.consent.audio = new Blob([b64.dec(v.consent.audio)], { type: 'audio/wav' });
     delete v.format; delete v.version;
     await idbDo('readwrite', (s) => s.put(v));
     logLine(`Imported voice "${v.name}".`);
@@ -2005,9 +1970,9 @@ function renderLabVoices() {
   for (const v of lab.voices) {
     els.labVoices.append(el('div', { class: 'v' }, [
       el('span', { class: 'name' }, `★ ${v.name}`),
-      el('span', { class: 'hint' }, `match ${v.match?.toFixed(2) ?? '?'} · ${v.training?.seconds ?? '?'} s audio · consent ${v.consent?.recordedAt?.slice(0, 10) ?? '?'}`),
+      el('span', { class: 'hint' }, `match ${v.match?.toFixed(2) ?? '?'} · ${v.training?.seconds ?? '?'} s audio · ${v.consent?.releaseRef ? `release ${v.consent.releaseRef}` : `consent ${v.consent?.recordedAt?.slice(0, 10) ?? '?'}`}`),
       el('button', { onclick: async () => { await ensureKokoro(); await ensureVoiceRegistered(v.id); audio.resume(); const r = await ttsWorker.call('synth', { text: 'Hi, this is my trained voice.', voice: v.id, speed: 1 }); playBuffer({ audio: r.audio, sr: r.sr, rate: 1 }, audio.ctx.currentTime + 0.05, 0); } }, '▶'),
-      el('button', { title: 'Play the consent recording', onclick: () => { const a = new Audio(URL.createObjectURL(v.consent.audio)); a.play(); } }, 'Consent'),
+      v.consent?.audio instanceof Blob ? el('button', { title: 'Play the consent recording', onclick: () => { const a = new Audio(URL.createObjectURL(v.consent.audio)); a.play(); } }, 'Consent') : null,
       el('button', { onclick: () => exportLabVoice(v) }, 'Export'),
       el('button', { onclick: async () => { if (!confirm(`Delete the trained voice "${v.name}"?`)) return; await idbDo('readwrite', (s) => s.delete(v.id)); lab.registered.delete(v.id); loadLabVoices(); } }, 'Delete'),
     ]));
@@ -2210,33 +2175,19 @@ function renderLab() {
   }
   const secs = lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR;
   els.labClipHint.textContent = lab.clips.length ? `${Math.round(secs)} s of audio${secs < 20 ? ' · add at least 20 s' : secs < 60 ? ' · 1 minute or more gives a better match' : ''}` : '1–5 minutes of clean, solo speech works best: no music, no other voices.';
-  // statement
-  const name = els.labName.value.trim();
-  if (!lab.code.length) newCode();
-  if (name) els.labStatement.replaceChildren('“I, ', el('b', {}, name), `, agree that ${els.labOrg.value.trim() || 'this studio'} may create a synthetic version of my voice for dubbing. My verification code is `, el('b', {}, lab.code.join(' ')), '.”');
-  else els.labStatement.textContent = 'Enter the talent\'s name to generate a statement.';
-  // checks
-  els.labChecks.textContent = '';
-  const c = lab.consent;
-  const row = (ok, text) => els.labChecks.append(el('div', { class: ok ? 'ok' : 'bad' }, `${ok ? '✓' : '✗'} ${text}`));
-  if (c && c.transcript != null) {
-    els.labChecks.append(el('div', { class: 'hint' }, `Heard: “${c.transcript}”`));
-    row(c.nameOk, 'Talent name spoken');
-    row(c.agreeOk, 'Agreement spoken');
-    row(c.codeHits >= 3, `Verification code (${c.codeHits}/4 words)`);
-    if (c.similarity != null) row(c.similarity >= SAME_SPEAKER, `Same voice as the recordings (similarity ${c.similarity.toFixed(2)})`);
-    else row(false, 'Add training recordings to compare voices');
-  }
+  const rel = release();
+  els.labReleaseHint.textContent = rel.ok ? `✓ Release ${rel.releaseRef}, approved by ${rel.approvedBy}. Saved with the voice.` : 'Fill in the talent name, release reference and approver, and tick the box to unlock training.';
+  els.labReleaseHint.className = rel.ok ? 'hint ok' : 'hint';
   syncLab();
 }
 function syncLab() {
   const secs = lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR, busy = !!lab.training || state.running;
-  els.labConsentBtn.disabled = !els.labName.value.trim() || busy || (labRec && labRec.kind !== 'consent');
-  els.labRecordClip.disabled = busy || (labRec && labRec.kind !== 'clip');
-  els.labAddClips.disabled = busy; els.labNewCode.disabled = busy || !!labRec;
+  els.labRecordClip.disabled = busy;
+  els.labAddClips.disabled = busy;
   els.labExtractBtn.disabled = busy || !!lab.extracting; els.labExtractLoaded.disabled = busy || !!lab.extracting || !state.file;
-  els.labTrainBtn.disabled = busy || !lab.consent?.verified || secs < 20;
-  els.labTrainBtn.title = !lab.consent?.verified ? 'Record and verify the talent\'s consent first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
+  const relOk = release().ok;
+  els.labTrainBtn.disabled = busy || !relOk || secs < 20;
+  els.labTrainBtn.title = !relOk ? 'Add the talent\'s release details first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
   els.labStopBtn.disabled = !lab.training;
   els.labListenBtn.disabled = !(lab.training?.best || lab.result);
   els.labSaveBtn.disabled = !lab.result || !!lab.training;
@@ -2244,10 +2195,9 @@ function syncLab() {
 function initLab() {
   els.labAddClips.addEventListener('click', () => els.labClipInput.click());
   els.labClipInput.addEventListener('change', () => { addLabFiles([...els.labClipInput.files]); els.labClipInput.value = ''; });
-  els.labRecordClip.addEventListener('click', () => toggleLabRecord('clip'));
-  els.labConsentBtn.addEventListener('click', () => toggleLabRecord('consent'));
-  els.labNewCode.addEventListener('click', newCode);
-  for (const k of ['labName', 'labOrg']) els[k].addEventListener('input', () => { lab.consent = null; renderLab(); });
+  els.labRecordClip.addEventListener('click', toggleLabRecord);
+  for (const k of ['labName', 'labOrg', 'labRelease', 'labApprover']) els[k].addEventListener('input', renderLab);
+  els.labAttest.addEventListener('change', renderLab);
   els.labSteps.addEventListener('input', () => { els.labStepsVal.textContent = els.labSteps.value; });
   els.labTrainBtn.addEventListener('click', trainVoice);
   els.labStopBtn.addEventListener('click', () => { if (lab.training) lab.training.stop = true; });
@@ -2258,7 +2208,7 @@ function initLab() {
   els.labExtractBtn.addEventListener('click', () => els.labVideoInput.click());
   els.labVideoInput.addEventListener('change', () => { const f = els.labVideoInput.files[0]; els.labVideoInput.value = ''; if (f) extractVoices(f); });
   els.labExtractLoaded.addEventListener('click', () => state.file && extractVoices(state.file));
-  newCode(); renderLab(); initSpeak(); loadLabVoices();
+  renderLab(); initSpeak(); loadLabVoices();
 }
 
 // ---------- wiring ----------
@@ -2332,7 +2282,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); syncButtons(); detectGPU(); initLab();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, verifyConsent, extractVoices, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb, statementText };
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>
