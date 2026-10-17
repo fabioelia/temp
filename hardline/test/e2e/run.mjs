@@ -317,6 +317,68 @@ async function picking(browser, srv) {
   }
 }
 
+/** The TV / cast screen: a spoiler-free spectator that both players can watch. */
+async function cast(browser, srv) {
+  console.log('\n● TV screen (castable spectator)');
+  const a = await newPlayer(browser, srv, 'Trin', { query: LOW });
+  const b = await newPlayer(browser, srv, 'Wren', { query: LOW });
+  const tv = await newPlayer(browser, srv, 'TV', { viewport: { width: 1920, height: 1080 } });
+  try {
+    const code = await createAndJoin(a, b, { hostRole: 'operator' });
+    await tv.page.goto(`${tv.url}cast?code=${code}`);
+    await tv.page.waitForSelector('#sc-lobby:not(.hidden)', { timeout: 15000 });
+    await tv.page.waitForFunction(() => document.querySelectorAll('#tv-slot-0.on, #tv-slot-1.on').length === 2, null, { timeout: 10000 });
+    check('tv: shows the session code and both crew members in the lobby', (await get(tv, () => document.getElementById('big-code').textContent)) === code);
+    await sleep(800);
+    await shot(tv, 'e2e-tv-lobby');
+
+    await a.page.click('#btn-start');
+    await tv.page.waitForSelector('#sc-brief:not(.hidden)', { timeout: 20000 });
+    await sleep(2500);
+    const typed = await get(tv, () => document.getElementById('tv-lines').textContent.length);
+    check('tv: the story beats are typed out on the big screen', typed > 40, `${typed} chars`);
+    await shot(tv, 'e2e-tv-story');
+
+    await enterRoom(a, b);
+    await tv.page.waitForSelector('#sc-play:not(.hidden)', { timeout: 20000 });
+    check('tv: switches to the live room when the countdown starts', true);
+    const t1 = await get(tv, () => document.getElementById('tv-timer').textContent);
+    await sleep(1500);
+    const t2 = await get(tv, () => document.getElementById('tv-timer').textContent);
+    check('tv: the clock counts down', t1 !== t2, `${t1} -> ${t2}`);
+
+    // a real mistake by the Operator shows up on the TV, with no detail about what was entered
+    const { operator } = await byRole(a, b);
+    await sleep(1000);
+    for (const d of ['1', '2', '3']) await clickHot(operator, `key:${d}`);
+    await clickHot(operator, 'key:OK');
+    await tv.page.waitForFunction(() => document.querySelectorAll('#tv-strikes i:not(.none)').length === 1, null, { timeout: 25000 });
+    check('tv: a mistake shows as a strike and a trace spike in the log', /TRACE SPIKE/.test(await get(tv, () => document.getElementById('tv-log').textContent)));
+    await sleep(500);
+    await shot(tv, 'e2e-tv-play');
+
+    // spoiler check: nothing from either player's secret half is anywhere in the TV's page
+    const leak = await tv.page.evaluate(() => {
+      const html = document.documentElement.innerHTML;
+      const bad = [];
+      if (document.querySelector('svg.glyph, canvas#ring ~ svg, .tables, .cells5')) bad.push('glyph/table markup');
+      for (const w of ['sconce', 'cipher table', 'tracer', 'glimpse', 'EXIT']) if (document.getElementById('tv').innerText.toLowerCase().includes(w.toLowerCase())) bad.push(w);
+      return bad;
+    });
+    check('tv: no puzzle information anywhere on the TV page', leak.length === 0, leak.join(', '));
+
+    // a reload (or a flaky TV connection) rejoins the same session
+    await tv.page.reload();
+    await tv.page.waitForSelector('#sc-play:not(.hidden)', { timeout: 20000 });
+    await tv.page.waitForFunction(() => document.querySelectorAll('#tv-strikes i:not(.none)').length === 1, null, { timeout: 10000 });
+    check('tv: reloading the TV tab rejoins and shows the current state', true);
+    check('tv: the players were not disturbed (still in the room)', (await get(a, () => document.getElementById('screen-game').classList.contains('hidden'))) === false);
+  } finally {
+    for (const p of [a, b, tv]) await p.ctx.close();
+    for (const p of [tv]) if (p.errors.length) check('tv: no browser errors', false, p.errors.slice(0, 3).join(' | '));
+  }
+}
+
 // --------------------------------------------------------------------- main
 
 const srv = await startGame({ SOLVE_HOLD_MS: '1400', FAIL_RESET_MS: '3000' });
@@ -324,6 +386,7 @@ const browser = await launch();
 try {
   if (!only || only === 'full') await fullRun(browser, srv);
   if (!only || only === 'picking') await picking(browser, srv);
+  if (!only || only === 'cast') await cast(browser, srv);
   if (!only || only === 'resilience') await resilience(browser, srv);
 } catch (e) {
   check(`scenario crashed: ${e.message.split('\n')[0]}`, false);

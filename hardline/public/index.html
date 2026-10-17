@@ -62,6 +62,11 @@
       <p class="fine" id="lobby-hint">Send your partner the code or the link. Then open your Discord call.</p>
       <p class="fine hidden" id="lan-hint"></p>
 
+      <div class="tv-offer">
+        <button id="btn-tv" class="btn small">SHOW ON TV</button>
+        <p class="fine">Opens a spoiler-free <b>bridge display</b> — the clock, the crew and the story, never anyone's secrets — that you can cast to a TV from Chrome (⋮ → Cast…) so you can both watch.</p>
+      </div>
+
       <div class="slots">
         <div class="slot" id="slot-0"><span class="dot"></span><b>—</b><i>host</i></div>
         <div class="slot" id="slot-1"><span class="dot"></span><b>—</b><i>waiting…</i></div>
@@ -123,7 +128,8 @@
       <div class="hud-timer" id="hud-timer" aria-label="Time remaining">0:00.0</div>
       <div class="hud-right">
         <div class="hud-strikes" id="hud-strikes" title="Mistakes this attempt"></div>
-        <button id="btn-hud-audio" class="icon-btn" title="Audio settings" aria-label="Audio settings">♪</button>
+        <button id="btn-hud-tv" class="icon-btn tvbtn" title="Open the TV screen (spoiler-free, castable)" aria-label="Open the TV screen">TV</button>
+        <button id="btn-hud-audio" class="icon-btn" title="Settings" aria-label="Settings">♪</button>
       </div>
     </div>
     <div id="penalty-pop" class="penalty-pop"></div>

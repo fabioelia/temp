@@ -1,0 +1,119 @@
+/* HARDLINE bridge display — sized to the shorter screen edge so it fits any TV. */
+
+html.tv-root, body.tv { font-size: min(1.12vw, 2vh); }
+body.tv { overflow: hidden; background: #020604; }
+body.tv #rain { position: fixed; inset: 0; width: 100%; height: 100%; opacity: 0.32; z-index: 0; }
+#tv { position: relative; z-index: 1; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 2.2vh 3vw 2.6vh; gap: 1.2vh; }
+
+.tv-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem; }
+.brand { font-size: 1.15rem; letter-spacing: 0.4em; color: var(--green); font-weight: 800; }
+.brand span { color: var(--green-dim); font-weight: 600; }
+.tv-room { font-size: 1.55rem; letter-spacing: 0.3em; color: var(--ink); font-weight: 700; text-align: center; text-shadow: 0 0 20px rgba(45, 255, 122, 0.35); }
+.tv-code { text-align: right; font-size: 1rem; letter-spacing: 0.3em; color: var(--green-dim); }
+.tv-code b { color: var(--green); font-size: 1.6rem; letter-spacing: 0.35em; margin-left: 0.5em; }
+.tv-conn { margin-left: 1.2em; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--amber); }
+
+.scene { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 0; overflow: visible; }
+.scene.hidden { display: none !important; }
+.eyebrow { font-size: 1.05rem; letter-spacing: 0.4em; }
+.lead { font-size: 1.5rem; line-height: 1.55; max-width: 38em; color: var(--ink); }
+.lead.dim { color: rgba(200, 255, 217, 0.6); font-size: 1.25rem; }
+.lead b { color: var(--green); }
+
+/* connect */
+.connect-card { max-width: 46rem; text-align: left; }
+.connect-card h1 { font-size: 6rem; margin: 0.4rem 0 1.2rem; }
+#connect-form { display: flex; gap: 1rem; margin: 1.6rem 0 0.4rem; }
+#connect-form input { width: 14rem; text-transform: uppercase; text-align: center; letter-spacing: 0.5em; font-size: 2.4rem; padding: 0.7rem 0.4rem 0.7rem 0.9rem; background: rgba(0,0,0,.6); border: 1px solid var(--line); color: var(--ink); }
+#connect-form .btn { font-size: 1.3rem; padding: 0 2.4rem; }
+.cast-help { margin: 1.4rem 0 0; padding-left: 1.4rem; font-size: 1.05rem; line-height: 1.8; color: rgba(200, 255, 217, 0.65); }
+.cast-help b { color: var(--green); }
+
+/* lobby */
+.lobby-tv { text-align: center; }
+.big-code { font-size: 12rem; font-weight: 800; letter-spacing: 0.3em; padding-left: 0.3em; color: var(--green); text-shadow: 0 0 50px rgba(45, 255, 122, 0.5); line-height: 1.05; margin: 0.6rem 0 1.4rem; }
+.tv-slots { display: flex; gap: 1.6rem; justify-content: center; margin-bottom: 1.6rem; }
+.tv-slot { display: flex; align-items: center; gap: 1rem; min-width: 22rem; padding: 1.1rem 1.6rem; border: 1px solid var(--line); background: rgba(0, 10, 5, 0.75); font-size: 1.7rem; }
+.tv-slot .dot { width: 0.9rem; height: 0.9rem; border-radius: 50%; background: #333; }
+.tv-slot.on .dot { background: var(--green); box-shadow: 0 0 14px var(--green); }
+.tv-slot.off .dot { background: var(--amber); }
+.tv-slot b { flex: 1; text-align: left; letter-spacing: 0.06em; }
+.tv-slot i { font-style: normal; font-size: 0.95rem; letter-spacing: 0.16em; color: rgba(200, 255, 217, 0.5); text-transform: uppercase; }
+
+/* briefing */
+.brief-tv { width: min(78rem, 100%); }
+.brief-kind { font-size: 1.1rem; letter-spacing: 0.45em; color: var(--green-dim); }
+.brief-title { font-size: 3.2rem; font-weight: 800; letter-spacing: 0.18em; color: var(--green); text-shadow: 0 0 28px rgba(45, 255, 122, 0.45); margin: 0.4rem 0 1.4rem; }
+.tv-lines { font-size: 1.85rem; line-height: 1.6; min-height: 14rem; }
+.tv-lines .bl { margin: 0 0 1.1rem; }
+.tv-lines .bl.sys { font-size: 1.3rem; }
+.crew-strip { display: flex; gap: 2.4rem; margin-top: 1.4rem; font-size: 1.2rem; letter-spacing: 0.1em; color: rgba(200, 255, 217, 0.75); }
+.crew-strip b { color: var(--green); }
+
+/* play */
+.play-grid { width: 100%; height: 100%; display: grid; grid-template-columns: 22rem 1fr 26rem; gap: 2rem; align-items: stretch; }
+.col { display: flex; flex-direction: column; gap: 1.1rem; min-height: 0; }
+.col.center { align-items: center; justify-content: center; }
+.card { padding: 1.1rem 1.3rem 1.3rem; clip-path: none; }
+.card h4 { margin: 0 0 0.8rem; font-size: 0.8rem; letter-spacing: 0.36em; color: var(--green-dim); font-weight: 600; }
+.crew-row { display: grid; grid-template-columns: auto 1fr; column-gap: 0.8rem; align-items: baseline; margin: 0.5rem 0; }
+.crew-row .role { font-size: 0.75rem; letter-spacing: 0.24em; color: var(--green-dim); grid-column: 1 / 3; }
+.crew-row b { font-size: 1.6rem; color: var(--ink); letter-spacing: 0.05em; }
+.crew-row i { font-style: normal; font-size: 0.8rem; letter-spacing: 0.2em; color: var(--green-dim); justify-self: end; }
+.pips { display: flex; gap: 0.5rem; }
+.pips i { flex: 1; height: 0.5rem; background: rgba(45, 255, 122, 0.18); }
+.pips i.done { background: var(--green); box-shadow: 0 0 10px var(--green); }
+.pips i.now { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.strikes { display: flex; gap: 0.7rem; min-height: 2rem; flex-wrap: wrap; }
+.strikes i { width: 1.5rem; height: 1.5rem; background: var(--red); transform: rotate(45deg) scale(0.8); box-shadow: 0 0 12px var(--red); animation: pop 0.35s ease-out; }
+.strikes .none { font-style: normal; color: rgba(200, 255, 217, 0.5); font-size: 1.15rem; letter-spacing: 0.1em; }
+.strike-note { margin: 0.8rem 0 0; font-size: 0.95rem; color: rgba(200, 255, 217, 0.5); }
+
+.ring-wrap { position: relative; height: min(100%, 66vh); aspect-ratio: 1; }
+#ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.tv-timer { font-size: 10.6vh; font-weight: 800; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; color: var(--green); text-shadow: 0 0 40px rgba(45, 255, 122, 0.55); line-height: 1; }
+.tv-timer.mid { color: var(--amber); text-shadow: 0 0 40px rgba(255, 176, 46, 0.6); }
+.tv-timer.low { color: var(--red); text-shadow: 0 0 44px rgba(255, 61, 77, 0.8); animation: lowpulse 0.5s ease-in-out infinite alternate; }
+.tv-timer.paused { opacity: 0.4; animation: none; }
+.tv-trace { margin-top: 1.1vh; font-size: min(1.25rem, 2.4vh); letter-spacing: 0.3em; color: var(--green-dim); }
+.tv-trace b { color: var(--ink); margin-left: 0.4em; }
+
+.log { flex: 1; min-height: 0; overflow: hidden; }
+#tv-log { font-size: 1.05rem; line-height: 1.75; color: rgba(200, 255, 217, 0.72); }
+#tv-log p { margin: 0 0 0.35rem; animation: fadein 0.4s ease-out; }
+#tv-log .bad { color: var(--red); }
+#tv-log .good { color: var(--green); }
+#tv-log .warn { color: var(--amber); }
+@keyframes fadein { from { opacity: 0; transform: translateY(-6px); } }
+
+/* descent */
+.descent { display: flex; align-items: flex-start; justify-content: space-between; gap: 0; padding: 0.6rem 2rem 0; position: relative; }
+.descent::before { content: ""; position: absolute; left: 4rem; right: 4rem; top: 1.45rem; height: 2px; background: rgba(45, 255, 122, 0.22); }
+.node { position: relative; flex: 1; text-align: center; }
+.node .dot { width: 1.7rem; height: 1.7rem; margin: 0 auto; border-radius: 50%; background: #06140c; border: 2px solid rgba(45, 255, 122, 0.4); position: relative; z-index: 1; }
+.node.done .dot { background: var(--green); border-color: var(--green); box-shadow: 0 0 16px var(--green); }
+.node.now .dot { background: var(--amber); border-color: var(--amber); box-shadow: 0 0 18px var(--amber); animation: pulse 1.4s ease-in-out infinite; }
+.node .nm { margin-top: 0.55rem; font-size: 0.85rem; letter-spacing: 0.2em; color: rgba(200, 255, 217, 0.5); }
+.node.done .nm, .node.now .nm { color: var(--ink); }
+.node .tm { font-size: 0.85rem; color: var(--green-dim); min-height: 1.2em; }
+
+/* ending */
+.end-tv { width: min(70rem, 100%); text-align: center; }
+.end-tv h2 { font-size: 6rem; margin: 0.3rem 0 1.2rem; }
+.end-tv .tv-lines { text-align: left; min-height: 8rem; font-size: 1.6rem; }
+.end-tv .end-stats { font-size: 1.3rem; }
+.end-tv .end-stats th { font-size: 0.85rem; }
+.end-tv .end-stats td { padding: 0.5rem 0.4rem; }
+.end-tv .page-note { font-size: 1.9rem; }
+
+.tv-overlay { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; background: rgba(0, 6, 3, 0.72); }
+.tv-overlay.fail { background: radial-gradient(circle at center, rgba(0, 20, 8, 0.5), rgba(0, 0, 0, 0.95)); }
+.tv-overlay .overlay-box { padding: 2.4rem 4rem; max-width: 50rem; }
+.tv-overlay h3 { font-size: 3.6rem; letter-spacing: 0.3em; }
+.tv-overlay p { font-size: 1.5rem; }
+.tv-overlay.solved h3 { color: #fff; text-shadow: 0 0 30px var(--green); }
+
+.tv-controls { position: fixed; right: 1.2rem; bottom: 1rem; z-index: 80; display: flex; gap: 0.6rem; transition: opacity 0.6s; }
+.tv-controls.idle { opacity: 0; pointer-events: none; }
+body.tv.idle-cursor { cursor: none; }

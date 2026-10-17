@@ -331,3 +331,8 @@ select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .title-block { position: relative; isolation: isolate; }
 .title-block::before { content: ""; position: absolute; z-index: -1; inset: -36px -28px -28px -28px; pointer-events: none;
   background: radial-gradient(ellipse at 45% 50%, rgba(0, 4, 2, 0.92) 0%, rgba(0, 4, 2, 0.7) 55%, rgba(0, 4, 2, 0) 82%); }
+
+.tv-offer { display: flex; gap: 14px; align-items: flex-start; margin: 16px 0 6px; }
+.tv-offer .btn { flex: none; margin-top: 8px; }
+.tv-offer .fine { margin: 0; }
+.icon-btn.tvbtn { width: auto; padding: 0 9px; font-size: 11px; letter-spacing: 0.14em; font-weight: 700; }

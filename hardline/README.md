@@ -16,6 +16,23 @@ npm start          # http://localhost:3000
 Open it in two browsers (or send the invite link to a friend), start a Discord call, and jack in.
 Requires Node 18+ and a browser with WebGL 2 (any current Chrome, Edge, Firefox or Safari). Headphones recommended.
 
+### Playing over your local network
+
+The server listens on **all network interfaces** (IPv4 and IPv6; it falls back to IPv4-only where IPv6 isn't available), so anyone on your Wi-Fi/LAN can join by your computer's local IP. On start-up it prints the addresses:
+
+```
+  This computer   http://localhost:3000
+  On your network http://192.168.1.20:3000   <- send this to your partner
+```
+
+If the game is opened via `localhost`, the lobby's **Copy invite link** automatically uses your LAN address instead, so the link works for your friend. If they still can't connect, allow Node through your OS firewall for port 3000. Over plain `http://` on a LAN address, browsers withhold two conveniences — the clipboard (the link is shown in a toast instead) and microphone access (so the optional *duck the score while I'm talking* is unavailable); everything else works. Use HTTPS (e.g. a tunnel or reverse proxy) if you want those too.
+
+### A TV screen you can cast
+
+Both players can watch a **spoiler-free bridge display** on a TV. In the lobby (or the in-game **TV** button) choose **Show on TV**. That opens `/cast?code=ABCD` in a new tab; in Chrome use **⋮ → Cast…** and pick your Chromecast / TV with **Cast tab**, then press **F** for full screen. Or open `http://<your-ip>:3000/cast` on any device with a screen and enter the code.
+
+It shows the shared clock inside an Agent-trace ring, the crew, mistakes, progress through the current room, a ship log, the descent through the five layers with your times, the story interstitials typed out large, and the *waking up* ending. **It never shows either player's secret half**, so it can't break the game when you both look at it: the server only sends spectators a stripped feed (names, clock, strikes, stage counts, story) and a test scans that feed for every puzzle key. *Sound: On* optionally plays the score and cues through the TV speakers. Up to six TV screens can watch one session; they are read-only and don't take a player seat.
+
 ## How a run works
 
 1. **Create a private session.** You get a four-letter code and an invite link (`/?join=ABCD`). Two players max; no public matchmaking.
@@ -38,7 +55,7 @@ Every room is solvable only by talking: the server sends each player *only their
 
 ## Screenshots
 
-Full-quality captures of every room, Operator on the left of each pair and Mentor on the right, are in [`docs/screenshots/`](docs/screenshots/) (regenerate with `npm run shots`).
+Full-quality captures of every room, Operator on the left of each pair and Mentor on the right, are in [`docs/screenshots/`](docs/screenshots/) (regenerate with `npm run shots`), along with `6-tv-bridge.png`, the castable TV screen.
 
 ## Design handoff → implementation
 
@@ -79,7 +96,9 @@ shared/             code used by both server and browser (served at /shared/)
   rng.js            seeded RNG
 public/
   index.html, css/  screens, HUD, the paper manual
+  cast.html         the TV / bridge display (served at /cast)
   js/main.js        app flow, interstitials, HUD, message routing
+  js/cast.js        the TV screen: spectator connection, trace ring, ship log, descent map
   js/net.js         WebSocket client with auto-reconnect + seat resume
   js/audio.js       WebAudio score, SFX, tension, mic ducking
   js/stage.js       renderer, post-processing, camera rig, hotspots, tweens
@@ -98,8 +117,8 @@ For the maze, the server only ever sends the Operator the 3×3 patch around them
 
 ### Protocol (JSON over WebSocket)
 
-Client → server: `create`, `join`, `resume`, `setPref`, `setSwap`, `start`, `ready`, `swap`, `act`, `again`, `leave`, `ping`.
-Server → client: `joined`, `lobby`, `briefing` (role-specific view), `go`, `fx` (result + per-role event + new view), `timer`, `pause`, `resume`, `failed`, `solved`, `ending`, `peer`, `partnerReady`, `error`.
+Client → server: `create`, `join`, `resume`, `spectate` (read-only TV screen), `setPref`, `setSwap`, `start`, `ready`, `swap`, `act`, `again`, `leave`, `ping`.
+Server → client: `joined`, `spectating`, `lobby`, `briefing` (role-specific view; spectators get no view), `go`, `fx` (result + per-role event + new view), `timer`, `pause`, `resume`, `failed`, `solved`, `ending`, `peer`, `partnerReady`, `error`.
 
 The clock is a server value; clients count down locally from each `remainingMs` and are re-synced every 4 s and on every penalty.
 
@@ -114,13 +133,15 @@ npm run shots       # full-quality screenshots of every room into docs/screensho
 
 - **Solver bots** play every room using *only* the two role views — the information two humans would have after talking — across 150 seeds per room. If they can solve it, it's solvable; the info-split test proves neither half is enough alone (blind guessing the cipher door wins <3 % of the time).
 - **Session tests** drive the real WebSocket protocol: full five-room playthrough with role swapping, soft reset with re-rolled puzzle, 15 s penalties, the mentor being unable to act, pause-on-disconnect with a frozen clock, rejoin with state intact, lobby rules.
-- **End-to-end** launches the real server and two Chromium instances (software WebGL), reads each page's actual views, and clicks the actual 3D hotspots through all five rooms — including a deliberate mistake in each — then checks the ending screen. It also checks that a dropped partner pauses the clock (and that it is genuinely frozen) and that rejoining restores the same seat, that timer expiry produces the *resimulating* interstitial, and a pointer-picking regression (a not-yet-active hit box must never swallow a click meant for something behind it — this once made the final step into the phone unclickable). The e2e runs use `?gfx=low` so software WebGL can keep up; screenshots land in `test/e2e/out/`.
+- **Network tests** start the server with its default settings and reach the page and the game protocol through this machine's real LAN address as well as loopback.
+- **TV-feed tests** watch a live two-player session as a spectator and scan everything it receives for every puzzle-secret key (and the actual glyphs, sconce colour and typed code); they also cover mid-room catch-up, read-only enforcement and the cap.
+- **End-to-end** launches the real server and two Chromium instances (software WebGL), reads each page's actual views, and clicks the actual 3D hotspots through all five rooms — including a deliberate mistake in each — then checks the ending screen. It also checks that a dropped partner pauses the clock (and that it is genuinely frozen) and that rejoining restores the same seat, that timer expiry produces the *resimulating* interstitial, and a pointer-picking regression (a not-yet-active hit box must never swallow a click meant for something behind it — this once made the final step into the phone unclickable), and the TV screen at 1080p (lobby, story, live room, reacting to a mistake, reconnecting after a reload, and no puzzle information anywhere on its page). The e2e runs use `?gfx=low` so software WebGL can keep up; screenshots land in `test/e2e/out/`.
 
 ## Configuration
 
 | Env var | Default | Purpose |
 |---|---|---|
-| `PORT` / `HOST` | `3000` / `0.0.0.0` | Where to listen |
+| `PORT` / `HOST` | `3000` / `::` (all interfaces) | Where to listen. Set `HOST=127.0.0.1` to accept this computer only |
 | `TIME_SCALE` | `1` | Multiply every room's clock (`0.1` = ten times shorter; handy for testing failure) |
 | `START_ROOM` | `0` | Development aid: jump straight to room N (0–4) |
 | `SOLVE_HOLD_MS` / `FAIL_RESET_MS` | `3400` / `4200` | How long the *layer cleared* / *resimulating* screens hold |

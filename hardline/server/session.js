@@ -16,6 +16,8 @@ const roomTime = (room) => Math.round(room.timeMs * timeScale());
 const SYNC_EVERY_MS = 4000;
 const RESUME_DELAY_MS = 1500;
 
+// message types that carry nothing role-specific and are safe to mirror to spectators
+const PUBLIC_TYPES = new Set(['timer', 'pause', 'resume', 'failed', 'solved', 'peer']);
 const other = (role) => (role === 'operator' ? 'mentor' : 'operator');
 const cleanName = (n) => String(n ?? '').replace(/[^\p{L}\p{N} _.\-']/gu, '').trim().slice(0, 16) || 'Guest';
 
@@ -24,6 +26,7 @@ export class Session {
     this.code = code;
     this.onEmpty = onEmpty;
     this.players = [];
+    this.spectators = new Set(); // read-only TV screens: { id, ws }
     this.pref = 'random'; // host's choice for the first room
     this.swapEachRoom = true;
     this.phase = 'lobby';
@@ -88,7 +91,7 @@ export class Session {
     clearTimeout(player.dropTimer);
     this.ready.delete(player.id);
     this.touch();
-    this.broadcast({ t: 'peer', id: player.id, connected: true }, player);
+    this.broadcast({ t: 'peer', id: player.id, name: player.name, connected: true }, player);
     this.sendLobby();
     this.sendSnapshot(player);
     if (this.phase === 'playing' && this.paused && this.connectedCount === 2) this.scheduleResume();
@@ -98,7 +101,7 @@ export class Session {
     if (player.ws !== ws) return;
     player.ws = null;
     this.touch();
-    this.broadcast({ t: 'peer', id: player.id, connected: false }, player);
+    this.broadcast({ t: 'peer', id: player.id, name: player.name, connected: false }, player);
     if (this.phase === 'lobby') {
       // nobody has started yet: hold the seat briefly so a page refresh can slip back in
       clearTimeout(player.dropTimer);
@@ -132,6 +135,76 @@ export class Session {
     this.lastActive = Date.now();
   }
 
+  // -------------------------------------------------------------- spectators
+  // A spectator is a read-only TV screen (e.g. a cast browser tab). It gets the shared,
+  // spoiler-free feed only: names, the clock, strikes, stage counts, story beats. It NEVER
+  // receives a puzzle view or a per-role event, so showing it to both players leaks nothing.
+
+  addSpectator(ws) {
+    if (this.spectators.size >= 6) return null;
+    const sp = { id: randomBytes(4).toString('hex'), ws };
+    this.spectators.add(sp);
+    this.touch();
+    return sp;
+  }
+
+  removeSpectator(sp) {
+    this.spectators.delete(sp);
+  }
+
+  spec(msg, only = null) {
+    const data = JSON.stringify(msg);
+    for (const sp of only ? [only] : this.spectators) if (sp.ws && sp.ws.readyState === 1) sp.ws.send(data);
+  }
+
+  publicLobby() {
+    return {
+      t: 'lobby',
+      code: this.code,
+      you: null,
+      phase: this.phase,
+      players: this.players.map((q) => ({ id: q.id, name: q.name, host: q === this.host, connected: !!q.ws })),
+    };
+  }
+
+  publicBriefing(resume = false) {
+    const room = ROOMS[this.roomIndex];
+    return {
+      t: 'briefing',
+      kind: this.kind,
+      resume,
+      roomIndex: this.roomIndex,
+      roomCount: ROOMS.length,
+      room: { ...room, timeMs: roomTime(room) },
+      role: null,
+      names: this.names(),
+      retry: this.retry,
+    };
+  }
+
+  /** Everything a spectator needs to catch up when it connects mid-session. */
+  sendSpecSnapshot(sp) {
+    this.spec(this.publicLobby(), sp);
+    switch (this.phase) {
+      case 'briefing':
+        this.spec(this.publicBriefing(), sp);
+        break;
+      case 'playing':
+        this.spec(this.publicBriefing(true), sp);
+        this.spec({ t: 'go', resume: true, remainingMs: this.remaining(), paused: this.paused, strikes: this.strikes, stage: this.stage }, sp);
+        break;
+      case 'failed':
+        this.spec({ t: 'failed', retry: this.retry + 1 }, sp);
+        break;
+      case 'solved':
+        this.spec({ t: 'solved', roomIndex: this.roomIndex }, sp);
+        break;
+      case 'ending':
+        this.spec(this.endingPayload(), sp);
+        break;
+    }
+  }
+
   // --------------------------------------------------------------- messaging
 
   send(player, msg) {
@@ -140,9 +213,11 @@ export class Session {
 
   broadcast(msg, except) {
     for (const p of this.players) if (p !== except) this.send(p, msg);
+    if (PUBLIC_TYPES.has(msg.t)) this.spec(msg);
   }
 
   sendLobby() {
+    this.spec(this.publicLobby());
     for (const p of this.players) {
       this.send(p, {
         t: 'lobby',
@@ -268,6 +343,7 @@ export class Session {
     this.timer = { remaining: roomTime(room), startedAt: null };
     this.paused = false;
     for (const p of this.players) this.sendBriefing(p);
+    this.spec(this.publicBriefing());
     this.sendLobby();
   }
 
@@ -276,6 +352,7 @@ export class Session {
     for (const p of this.players) p.role = other(p.role);
     this.ready.clear();
     for (const p of this.players) this.sendBriefing(p);
+    this.spec(this.publicBriefing());
   }
 
   onReady(player) {
@@ -292,6 +369,7 @@ export class Session {
     this.attempt = { startedAt: Date.now() };
     this.startTimer();
     for (const p of this.players) this.send(p, { t: 'go', remainingMs: this.remaining(), strikes: 0, stage: 0 });
+    this.spec({ t: 'go', remainingMs: this.remaining(), strikes: 0, stage: 0 });
     this.syncHandle = setInterval(() => {
       if (this.phase === 'playing' && !this.paused) this.broadcast({ t: 'timer', remainingMs: this.remaining() });
     }, SYNC_EVERY_MS);
@@ -365,6 +443,8 @@ export class Session {
       });
     }
 
+    this.spec({ t: 'fx', result: res.result, penaltyMs: res.penaltyMs ?? 0, remainingMs, strikes: this.strikes, stage: this.stage });
+
     if (res.result === 'solved') return this.solved();
     if (remainingMs <= 0) this.expire();
   }
@@ -416,5 +496,6 @@ export class Session {
   ending() {
     this.phase = 'ending';
     for (const p of this.players) this.send(p, this.endingPayload());
+    this.spec(this.endingPayload());
   }
 }

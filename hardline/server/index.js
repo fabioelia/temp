@@ -67,6 +67,7 @@ export function createServer({ port = PORT, host = HOST } = {}) {
         return res.end(JSON.stringify({ port: server.address()?.port, addresses: lanAddresses() }));
       }
       let pathname = decodeURIComponent(url.pathname);
+      if (pathname === '/cast') pathname = '/cast.html'; // the TV screen
       if (pathname.endsWith('/')) pathname += 'index.html';
       const mount = MOUNTS.find(([prefix]) => pathname.startsWith(prefix));
       const file = path.normalize(path.join(mount[1], pathname.slice(mount[0].length)));
@@ -99,6 +100,7 @@ export function createServer({ port = PORT, host = HOST } = {}) {
   wss.on('connection', (ws) => {
     let session = null;
     let player = null;
+    let watching = null; // { session, sp } when this socket is a read-only TV screen
     let budget = 60;
     const refill = setInterval(() => (budget = 60), 1000);
 
@@ -114,7 +116,23 @@ export function createServer({ port = PORT, host = HOST } = {}) {
       }
       if (!msg || typeof msg.t !== 'string') return;
 
+      if (watching) {
+        // spectators are strictly read-only
+        if (msg.t === 'ping') ws.send(JSON.stringify({ t: 'pong' }));
+        return;
+      }
+
       if (!session) {
+        if (msg.t === 'spectate') {
+          const s = sessions.get(String(msg.code ?? '').toUpperCase().trim());
+          if (!s) return fail('no_session', 'No session with that code. Check it and try again.');
+          const sp = s.addSpectator(ws);
+          if (!sp) return fail('too_many', 'That session already has as many TV screens as it can serve.');
+          watching = { session: s, sp };
+          ws.send(JSON.stringify({ t: 'spectating', code: s.code }));
+          s.sendSpecSnapshot(sp);
+          return;
+        }
         if (msg.t === 'create') {
           session = new Session(newCode(), (s) => sessions.delete(s.code));
           sessions.set(session.code, session);
@@ -148,6 +166,7 @@ export function createServer({ port = PORT, host = HOST } = {}) {
 
     ws.on('close', () => {
       clearInterval(refill);
+      if (watching) watching.session.removeSpectator(watching.sp);
       if (session && player) session.disconnect(player, ws);
     });
     ws.on('error', () => {});

@@ -197,7 +197,15 @@ function inviteUrl() {
   return `${base}${location.pathname}?join=${app.lobby?.code ?? ''}`;
 }
 
+// the spoiler-free bridge display, castable to a TV (Chrome: ⋮ → Cast…)
+function castUrl() {
+  const base = isLocalHost() && app.lan ? app.lan.base : location.origin;
+  return `${base}/cast?code=${app.code ?? app.lobby?.code ?? ''}`;
+}
+const openTv = () => window.open(castUrl(), '_blank', 'noopener');
+
 function initLobby() {
+  $('btn-tv').onclick = openTv;
   $('btn-copy').onclick = async () => {
     const url = inviteUrl();
     try {
@@ -657,6 +665,7 @@ function openSettings() {
 
 function initSettings() {
   $('btn-hud-audio').onclick = openSettings;
+  $('btn-hud-tv').onclick = openTv;
   $('btn-settings-close').onclick = () => $('ov-settings').classList.add('hidden');
   $('vol-master').oninput = (e) => audio.set('master', +e.target.value);
   $('vol-music').oninput = (e) => audio.set('music', +e.target.value);
