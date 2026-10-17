@@ -41,7 +41,7 @@ function viewsFor(id, seed) {
   for (let guard = 0; guard < 80; guard++) {
     const a = solvers[id]({ operator: { ...operator, __done: done }, mentor });
     const { __cable, ...clean } = a;
-    const res = p.act(state, clean);
+    const res = p.act(state, clean, rng);
     if (!res || res.result === 'solved') break;
     if (id === 'switchboard' && __cable) done.add(__cable);
     if (res.result === 'stage') {
