@@ -52,3 +52,7 @@ Saturday, but the tracker treated them as binding and would have filled them at 
 * O001 and O002 are now unconfirmed proposals. They will fill on Monday only if Monday's pre-close run still judges them the best use of the money.
 * Tested with a fixed clock: unconfirmed proposal skips, confirm before the cutoff fills, confirm after the cutoff or on a weekend is refused, same-day decide-and-fill works, stops fire
   unconfirmed.
+
+**Note, Day 0 (user shared `claude mcp add robinhood-trading --transport http https://agent.robinhood.com/mcp/trading`).** Not added by me: that command targets a local CLI, this cloud
+session reads connectors from claude.ai, and the registry has no Robinhood entry (it would be a custom connector). Rule added to `RULES.md` and the routine: a brokerage connector,
+if one is ever attached, is read-only quotes only, with no order, transfer or account tools and no reading of real balances or positions.

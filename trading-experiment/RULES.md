@@ -2,6 +2,10 @@
 
 Simulation only. No brokerage account is touched. Nothing here is financial advice.
 
+**Brokerage connectors are read-only here.** If a brokerage or trading connector (for example a Robinhood MCP server) is ever attached to a session, only its read-only
+quote/market-data tools may be called. Never call any tool that places, modifies or cancels an order, moves money, or changes an account, and never read the owner's real
+balances or positions. The paper ledger in `data/` stays the only record of this experiment. Any unattended run that finds such a tool in use must stop and say so.
+
 ## Account and goal
 * Start: **$2,000 cash**, Robinhood-style retail account. No margin, no shorting, no options, no crypto, no OTC.
 * Window: first fills **Mon 2026-10-19** (close) through **Wed 2026-11-18** (close). 23 sessions; no NYSE holiday inside it.

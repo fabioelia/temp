@@ -99,4 +99,4 @@ scheduled tasks and disable them with `update_trigger enabled=false`.
 * Never fabricate a price, headline or date. If data is missing, say so and skip.
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
-* No real brokerage action of any kind. This is a simulation.
+* No real brokerage action of any kind. This is a simulation. If a brokerage connector is attached, use only its read-only quote tools (see `RULES.md`); never any order, transfer or account tool, and never the owner's real balances or positions.
