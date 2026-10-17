@@ -1,0 +1,237 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import WebSocket from 'ws';
+import { createServer } from '../server/index.js';
+import { ROOMS } from '../shared/rooms.js';
+import { solvers, localise, mazeRoute } from './solvers.js';
+
+class Bot {
+  constructor(port, name) {
+    this.name = name;
+    this.port = port;
+    this.log = [];
+    this.waiters = [];
+    this.view = null;
+    this.role = null;
+    this.remainingMs = null;
+  }
+  async connect() {
+    this.ws = new WebSocket(`ws://127.0.0.1:${this.port}/ws`);
+    this.ws.on('message', (raw) => this.onMessage(JSON.parse(raw.toString())));
+    await new Promise((r) => this.ws.once('open', r));
+  }
+  onMessage(m) {
+    this.log.push(m);
+    if (m.t === 'joined') Object.assign(this, { id: m.id, token: m.token, code: m.code });
+    if (m.t === 'briefing') {
+      this.briefing = m;
+      this.view = m.view;
+      this.role = m.role;
+      this.send({ t: 'ready' });
+    }
+    if (m.t === 'fx' && m.view) this.view = m.view;
+    if (m.t === 'fx' && m.event?.pickup) this.pickedUp = true;
+    if (m.t === 'go' || m.t === 'fx' || m.t === 'timer' || m.t === 'resume' || m.t === 'pause') if (m.remainingMs != null) this.remainingMs = m.remainingMs;
+    this.waiters = this.waiters.filter((w) => !(w.pred(m) && (w.resolve(m), true)));
+  }
+  send(m) {
+    this.ws.send(JSON.stringify(m));
+  }
+  next(pred, ms = 5000) {
+    const past = this.log.find((m) => !m.__seen && pred(m));
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(`${this.name}: timeout waiting for message (last: ${JSON.stringify(this.log.at(-1))?.slice(0, 200)})`)), ms);
+      this.waiters.push({ pred, resolve: (m) => (clearTimeout(timer), resolve(m)) });
+    });
+  }
+  close() {
+    this.ws.close();
+  }
+}
+
+async function setup(env = {}) {
+  Object.assign(process.env, { SOLVE_HOLD_MS: '0', FAIL_RESET_MS: '50', TIME_SCALE: '1', ...env });
+  const srv = await createServer({ port: 0, host: '127.0.0.1' });
+  const host = new Bot(srv.port, 'Host');
+  const guest = new Bot(srv.port, 'Guest');
+  await host.connect();
+  await guest.connect();
+  host.send({ t: 'create', name: 'Trin' });
+  const joined = await host.next((m) => m.t === 'joined');
+  guest.send({ t: 'join', code: joined.code, name: 'Wren' });
+  await guest.next((m) => m.t === 'joined');
+  return { srv, host, guest, code: joined.code };
+}
+
+/** Plays the current room to completion; resolves when the room is solved. */
+async function playRoom(host, guest, roomId) {
+  const bots = [host, guest];
+  const op = bots.find((b) => b.role === 'operator');
+  const mentor = bots.find((b) => b.role === 'mentor');
+  await Promise.all(bots.map((b) => b.next((m) => m.t === 'go').catch(() => null)));
+  const solved = op.next((m) => m.t === 'solved', 20000);
+  const stageSolver = solvers[roomId];
+
+  if (roomId === 'maze') {
+    const loc = localise(op.view, mentor.view);
+    assert.equal(loc.candidates.length, 1);
+    let pos = { x: loc.candidates[0].x, y: loc.candidates[0].y };
+    for (const dir of mazeRoute(mentor.view, pos)) {
+      op.send({ t: 'act', action: { type: 'move', dir } });
+      await op.next((m) => m.t === 'fx');
+      const d = { n: [0, -1], e: [1, 0], s: [0, 1], w: [-1, 0] }[dir];
+      pos = { x: pos.x + d[0], y: pos.y + d[1] };
+    }
+    op.send({ t: 'act', action: { type: 'answer' } });
+    return solved;
+  }
+
+  const done = new Set();
+  for (let guard = 0; guard < 40; guard++) {
+    op.view.__done = done;
+    const a = stageSolver({ operator: op.view, mentor: mentor.view });
+    const { __cable, ...clean } = a;
+    const fx = op.next((m) => m.t === 'fx');
+    op.send({ t: 'act', action: clean });
+    const res = await fx;
+    assert.notEqual(res.result, 'wrong', `${roomId}: the bots should never be wrong`);
+    if (roomId === 'switchboard' && __cable) done.add(__cable);
+    if (res.result === 'stage') {
+      done.clear();
+      // let mentor receive its fx too
+      await mentor.next((m) => m.t === 'fx' && m.result === 'stage').catch(() => {});
+      mentor.view = mentor.log.filter((m) => m.t === 'fx' && m.view).at(-1)?.view ?? mentor.view;
+    }
+    if (res.result === 'solved') break;
+  }
+  return solved;
+}
+
+test('full playthrough: lobby -> five rooms -> ending, roles swap between rooms', async (t) => {
+  const { srv, host, guest } = await setup();
+  t.after(() => srv.close());
+
+  host.send({ t: 'setPref', value: 'operator' });
+  host.send({ t: 'start' });
+  const rolesSeen = [];
+  for (let i = 0; i < ROOMS.length; i++) {
+    const [b1, b2] = await Promise.all([host.next((m) => m.t === 'briefing'), guest.next((m) => m.t === 'briefing')]).catch(async () => [null, null]);
+    if (i === 0) assert.equal(host.role, 'operator');
+    rolesSeen.push(host.role);
+    assert.equal(host.briefing.room.id, ROOMS[i].id);
+    assert.equal(host.briefing.kind, i === 0 ? 'intro' : 'transition');
+    assert.notEqual(host.role, guest.role);
+    await playRoom(host, guest, ROOMS[i].id);
+  }
+  const ending = await host.next((m) => m.t === 'ending');
+  assert.equal(ending.rooms.length, ROOMS.length);
+  assert.deepEqual(rolesSeen, ['operator', 'mentor', 'operator', 'mentor', 'operator']);
+  assert.ok(host.pickedUp, 'operator saw the phone pickup event');
+});
+
+test('timer expiry is a soft reset: same room, fresh puzzle, no session end', async (t) => {
+  const { srv, host, guest } = await setup({ TIME_SCALE: '0.0005' }); // ~180ms rooms
+  t.after(() => srv.close());
+  host.send({ t: 'start' });
+  const first = await host.next((m) => m.t === 'briefing');
+  const firstView = JSON.stringify(host.view);
+  await host.next((m) => m.t === 'go');
+  const failed = await host.next((m) => m.t === 'failed');
+  assert.equal(failed.retry, 1);
+  const again = await host.next((m) => m.t === 'briefing');
+  assert.equal(again.kind, 'retry');
+  assert.equal(again.room.id, first.room.id, 'same room after failing');
+  assert.equal(again.retry, 1);
+  assert.notEqual(JSON.stringify(again.view), firstView, 'puzzle is re-rolled');
+  assert.equal(again.role, first.role, 'roles stay put on a retry');
+});
+
+test('wrong answers take 15s off the shared clock and strike both players', async (t) => {
+  const { srv, host, guest } = await setup();
+  t.after(() => srv.close());
+  host.send({ t: 'setPref', value: 'operator' });
+  host.send({ t: 'start' });
+  await host.next((m) => m.t === 'briefing');
+  const go = await host.next((m) => m.t === 'go');
+  const before = go.remainingMs;
+  host.send({ t: 'act', action: { type: 'submit', code: '12345678' } });
+  const fx = await host.next((m) => m.t === 'fx');
+  const gfx = await guest.next((m) => m.t === 'fx').catch(() => guest.log.findLast((m) => m.t === 'fx'));
+  assert.equal(fx.result, 'wrong');
+  assert.equal(fx.penaltyMs, 15000);
+  assert.equal(fx.strikes, 1);
+  assert.ok(before - fx.remainingMs >= 14900 && before - fx.remainingMs <= 15600, `remaining dropped by ${before - fx.remainingMs}`);
+  assert.equal(gfx.strikes, 1);
+  assert.equal(gfx.event, null, 'the mentor is not shown the operator\'s entry');
+});
+
+test('mentor cannot act on the puzzle', async (t) => {
+  const { srv, host, guest } = await setup();
+  t.after(() => srv.close());
+  host.send({ t: 'setPref', value: 'operator' });
+  host.send({ t: 'start' });
+  await guest.next((m) => m.t === 'briefing');
+  await guest.next((m) => m.t === 'go');
+  guest.send({ t: 'act', action: { type: 'submit', code: '1' } });
+  await new Promise((r) => setTimeout(r, 150));
+  assert.equal(host.log.filter((m) => m.t === 'fx').length, 0);
+});
+
+test('disconnect pauses the shared clock; rejoining resumes it with state intact', async (t) => {
+  const { srv, host, guest, code } = await setup();
+  t.after(() => srv.close());
+  host.send({ t: 'setPref', value: 'operator' });
+  host.send({ t: 'start' });
+  await host.next((m) => m.t === 'briefing');
+  await host.next((m) => m.t === 'go');
+  host.send({ t: 'act', action: { type: 'submit', code: '999999' } }); // strike
+  await host.next((m) => m.t === 'fx');
+
+  guest.close();
+  const paused = await host.next((m) => m.t === 'pause');
+  const frozenAt = paused.remainingMs;
+  await new Promise((r) => setTimeout(r, 400));
+
+  const back = new Bot(srv.port, 'GuestAgain');
+  await back.connect();
+  back.send({ t: 'resume', code, token: guest.token });
+  const joined = await back.next((m) => m.t === 'joined');
+  assert.ok(joined.resumed);
+  const resumeMsg = await host.next((m) => m.t === 'resume', 4000);
+  assert.ok(frozenAt - resumeMsg.remainingMs < 50, `clock must not advance while paused (${frozenAt} -> ${resumeMsg.remainingMs})`);
+  const brief = back.log.find((m) => m.t === 'briefing');
+  assert.ok(brief?.resume, 'rejoining player is handed the current room');
+  assert.equal(brief.role, 'mentor');
+  const go = back.log.find((m) => m.t === 'go');
+  assert.equal(go.strikes, 1);
+  assert.ok(go.paused);
+});
+
+test('lobby rules: two players max, bad codes rejected, only host starts', async (t) => {
+  const { srv, host, guest, code } = await setup();
+  t.after(() => srv.close());
+  const third = new Bot(srv.port, 'Third');
+  await third.connect();
+  third.send({ t: 'join', code, name: 'Nope' });
+  assert.equal((await third.next((m) => m.t === 'error')).code, 'session_full');
+  const fourth = new Bot(srv.port, 'Fourth');
+  await fourth.connect();
+  fourth.send({ t: 'join', code: 'ZZZZ', name: 'Nope' });
+  assert.equal((await fourth.next((m) => m.t === 'error')).code, 'no_session');
+  guest.send({ t: 'start' });
+  await new Promise((r) => setTimeout(r, 100));
+  assert.ok(!host.log.some((m) => m.t === 'briefing'), 'guest cannot start the run');
+  host.send({ t: 'start' });
+  await host.next((m) => m.t === 'briefing');
+});
+
+test('both players are always on opposite roles; random pref still splits roles', async (t) => {
+  for (let i = 0; i < 6; i++) {
+    const { srv, host, guest } = await setup();
+    host.send({ t: 'setPref', value: 'random' });
+    host.send({ t: 'start' });
+    await Promise.all([host.next((m) => m.t === 'briefing'), guest.next((m) => m.t === 'briefing')]);
+    assert.deepEqual([host.role, guest.role].sort(), ['mentor', 'operator']);
+    await srv.close();
+  }
+});
