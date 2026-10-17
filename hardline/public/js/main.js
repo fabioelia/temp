@@ -153,6 +153,7 @@ function onLobby(m) {
     hideOverlays();
   }
   $('lobby-code').textContent = m.code;
+  loadLan();
   const me = m.players.find((p) => p.id === m.you);
   const isHost = !!me?.host;
   for (let i = 0; i < 2; i++) {
@@ -171,9 +172,34 @@ function onLobby(m) {
   $('btn-start').textContent = ready ? 'START THE RUN' : 'WAITING FOR PARTNER…';
 }
 
+// If the game was opened via localhost, an invite built from the address bar is useless to a
+// friend. Ask the server for this machine's LAN address and use that instead.
+const isLocalHost = () => ['localhost', '127.0.0.1', '[::1]', '::1'].includes(location.hostname);
+
+async function loadLan() {
+  if (!isLocalHost() || app.lan !== undefined) return;
+  app.lan = null;
+  try {
+    const r = await fetch('/api/lan', { cache: 'no-store' });
+    const j = await r.json();
+    app.lan = j.addresses?.length ? { base: `http://${j.addresses[0]}:${j.port}`, all: j.addresses.map((a) => `http://${a}:${j.port}`) } : null;
+  } catch {
+    app.lan = null;
+  }
+  if (app.lan) {
+    $('lan-hint').textContent = `On the same network? Your partner can open ${app.lan.all.join(' or ')} and enter the code.`;
+    $('lan-hint').classList.remove('hidden');
+  }
+}
+
+function inviteUrl() {
+  const base = isLocalHost() && app.lan ? app.lan.base : location.origin;
+  return `${base}${location.pathname}?join=${app.lobby?.code ?? ''}`;
+}
+
 function initLobby() {
   $('btn-copy').onclick = async () => {
-    const url = `${location.origin}${location.pathname}?join=${app.lobby?.code ?? ''}`;
+    const url = inviteUrl();
     try {
       await navigator.clipboard.writeText(url);
       toast('Invite link copied. Paste it to your partner.');
