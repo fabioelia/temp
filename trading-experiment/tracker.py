@@ -35,7 +35,7 @@ DASH_JSON = DATA / "dashboard.json"
 LEDGER_COLS = ["id", "date", "ticker", "side", "qty", "close_price", "fill_price", "gross", "fees",
                "cash_delta", "tier", "slip_bps", "order_id", "thesis", "price_source"]
 ORDER_COLS = ["id", "created", "ticker", "side", "size_type", "size_value", "tier", "max_price",
-              "min_price", "stop", "target", "priority", "gtd", "status", "filled_date", "reason", "thesis"]
+              "min_price", "stop", "target", "stop_pct", "target_pct", "priority", "gtd", "status", "filled_date", "reason", "thesis"]
 MARK_COLS = ["date", "ticker", "close", "source"]
 EQUITY_COLS = ["date", "cash", "positions_value", "equity", "pnl", "pnl_pct", "fees_cum", "slippage_cum",
                "realized", "unrealized", "trades_today", "bench_close", "bench_value"]
@@ -106,8 +106,10 @@ def calc_fees(side, qty, price):
     notional = qty * price
     f = FEES["commission_per_order"] + FEES["cat_per_share"] * qty
     if side == "sell":
-        f += FEES["sec_per_million_sold"] * notional / 1e6
-        f += min(FEES["finra_taf_per_share_sold"] * qty, FEES["finra_taf_max_per_trade"])
+        if notional > FEES.get("sec_waived_if_sale_usd_le", 0):
+            f += FEES["sec_per_million_sold"] * notional / 1e6
+        if qty > FEES.get("taf_waived_if_shares_le", 0):
+            f += min(FEES["finra_taf_per_share_sold"] * qty, FEES["finra_taf_max_per_trade"])
     if f > 0 and FEES["round_up_to_cent"]:
         f = math.ceil(f * 100 - 1e-9) / 100
     return round(f, 4)
@@ -198,6 +200,8 @@ def cmd_order_add(a):
          "max_price": a.max_price if a.max_price is not None else "",
          "min_price": a.min_price if a.min_price is not None else "",
          "stop": a.stop if a.stop is not None else "", "target": a.target if a.target is not None else "",
+         "stop_pct": a.stop_pct if a.stop_pct is not None else "",
+         "target_pct": a.target_pct if a.target_pct is not None else "",
          "priority": a.priority, "gtd": gtd.isoformat(), "status": "pending", "filled_date": "",
          "reason": "", "thesis": a.thesis}
     orders.append(o)
@@ -212,7 +216,8 @@ def cmd_order_list(a):
         rows = [r for r in rows if r["status"] == a.status]
     for r in rows:
         print(f"{r['id']} {r['status']:9} {r['created']} {r['side']:4} {r['ticker']:6} "
-              f"{r['size_type']}={r['size_value']} tier={r['tier']} stop={r['stop']} target={r['target']} "
+              f"{r['size_type']}={r['size_value']} tier={r['tier']} stop={r['stop'] or r.get('stop_pct', '') + '%'} "
+              f"target={r['target'] or r.get('target_pct', '') + '%'} "
               f"maxpx={r['max_price']} gtd={r['gtd']} {r['reason']}")
 
 
@@ -307,12 +312,16 @@ def process_orders(D, prices, sources):
         n_today += 1
         touched.add(t)
         o["status"], o["filled_date"] = "filled", day
-        if side == "buy" and (o["stop"] or o["target"]):
+        if side == "buy" and (o["stop"] or o["target"] or o.get("stop_pct") or o.get("target_pct")):
             ex = exits.setdefault(t, {})
             if o["stop"]:
                 ex["stop"] = float(o["stop"])
+            elif o.get("stop_pct"):
+                ex["stop"] = round(fp * (1 - float(o["stop_pct"]) / 100), 4)
             if o["target"]:
                 ex["target"] = float(o["target"])
+            elif o.get("target_pct"):
+                ex["target"] = round(fp * (1 + float(o["target_pct"]) / 100), 4)
         msgs.append(f"FILL {row['id']} {side.upper()} {qty:.4f} {t} @ {fp} (close {px}, fees ${fees:.2f}) "
                     f"cash {money(delta)}")
     after = replay()
@@ -515,6 +524,7 @@ def export_rows(b):
                 "after_tax_equity": round(b["est_after_tax_equity"], 2)}]
     orders = [{"id": o["id"], "created": o["created"], "side": o["side"], "ticker": o["ticker"],
                "size": f"{o['size_type']}={o['size_value']}", "stop": fnum(o["stop"]), "target": fnum(o["target"]),
+               "stop_pct": fnum(o.get("stop_pct")), "target_pct": fnum(o.get("target_pct")),
                "max_price": fnum(o["max_price"]), "status": o["status"], "reason": o["reason"], "thesis": o["thesis"]}
               for o in read_csv(ORDERS) if o["status"] == "pending" or o["created"] >= week_ago(b)]
     trades = [{"id": t["id"], "date": t["date"], "side": t["side"], "ticker": t["ticker"], "qty": float(t["qty"]),
@@ -555,8 +565,10 @@ def write_reports(D):
     else:
         L.append("_All cash._")
     L += ["", "## Pending orders (fill at next close)", ""]
-    L += [f"- {o['id']} {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} stop={o['stop']} "
-          f"target={o['target']} :: {o['thesis']}" for o in b["pending_orders"]] or ["_None._"]
+    L += [f"- {o['id']} {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} "
+          f"stop={o['stop'] or (o.get('stop_pct') and o['stop_pct'] + '%') or ''} "
+          f"target={o['target'] or (o.get('target_pct') and o['target_pct'] + '%') or ''} :: {o['thesis']}"
+          for o in b["pending_orders"]] or ["_None._"]
     L += ["", "## Stats", "",
           f"- Fills: {s['total_fills']} | closed round trips: {s['closed_trades']} (W {s['wins']} / L {s['losses']})",
           f"- Win rate: {s['win_rate'] * 100:.0f}%" if s["win_rate"] is not None else "- Win rate: n/a",
@@ -621,6 +633,8 @@ def main():
     oa.add_argument("--min-price", type=float)
     oa.add_argument("--stop", type=float)
     oa.add_argument("--target", type=float)
+    oa.add_argument("--stop-pct", type=float, help="stop as percent below the actual fill price")
+    oa.add_argument("--target-pct", type=float, help="target as percent above the actual fill price")
     oa.add_argument("--priority", type=int, default=5, help="lower fills first (sells always first)")
     oa.add_argument("--created")
     oa.add_argument("--gtd", help="good-till date; default: next trading day only")

@@ -1,0 +1,146 @@
+[
+ {
+  "date": "2026-10-16",
+  "equity": 2000.0,
+  "benchmark": 2000.0,
+  "pace": 2000.0
+ },
+ {
+  "date": "2026-10-19",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2061.19
+ },
+ {
+  "date": "2026-10-20",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2124.25
+ },
+ {
+  "date": "2026-10-21",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2189.25
+ },
+ {
+  "date": "2026-10-22",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2256.23
+ },
+ {
+  "date": "2026-10-23",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2325.26
+ },
+ {
+  "date": "2026-10-26",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2396.4
+ },
+ {
+  "date": "2026-10-27",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2469.72
+ },
+ {
+  "date": "2026-10-28",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2545.28
+ },
+ {
+  "date": "2026-10-29",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2623.16
+ },
+ {
+  "date": "2026-10-30",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2703.41
+ },
+ {
+  "date": "2026-11-02",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2786.13
+ },
+ {
+  "date": "2026-11-03",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2871.37
+ },
+ {
+  "date": "2026-11-04",
+  "equity": null,
+  "benchmark": null,
+  "pace": 2959.22
+ },
+ {
+  "date": "2026-11-05",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3049.76
+ },
+ {
+  "date": "2026-11-06",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3143.07
+ },
+ {
+  "date": "2026-11-09",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3239.23
+ },
+ {
+  "date": "2026-11-10",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3338.34
+ },
+ {
+  "date": "2026-11-11",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3440.48
+ },
+ {
+  "date": "2026-11-12",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3545.74
+ },
+ {
+  "date": "2026-11-13",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3654.22
+ },
+ {
+  "date": "2026-11-16",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3766.03
+ },
+ {
+  "date": "2026-11-17",
+  "equity": null,
+  "benchmark": null,
+  "pace": 3881.25
+ },
+ {
+  "date": "2026-11-18",
+  "equity": null,
+  "benchmark": null,
+  "pace": 4000.0
+ }
+]

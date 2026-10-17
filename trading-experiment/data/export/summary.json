@@ -1,0 +1,25 @@
+[
+ {
+  "asof": "2026-10-16",
+  "equity": 2000.0,
+  "pnl": 0.0,
+  "pnl_pct": 0.0,
+  "goal": 4000.0,
+  "end_date": "2026-11-18",
+  "progress_to_goal": 0.0,
+  "cash": 2000.0,
+  "fees": 0.0,
+  "slippage": 0.0,
+  "realized": 0.0,
+  "benchmark_value": null,
+  "benchmark_pnl_pct": null,
+  "trading_days_left": 23,
+  "required_daily_return": 0.0306,
+  "fills": 0,
+  "closed_trades": 0,
+  "win_rate": null,
+  "payoff": null,
+  "max_drawdown": 0.0,
+  "after_tax_equity": 2000.0
+ }
+]
