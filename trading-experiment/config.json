@@ -1,0 +1,25 @@
+{
+  "starting_cash": 2000.0,
+  "goal_equity": 4000.0,
+  "start_date": "2026-10-19",
+  "end_date": "2026-11-18",
+  "baseline_date": "2026-10-16",
+  "max_trades_per_day": 4,
+  "min_order_usd": 1.0,
+  "benchmark": "SPY",
+  "tax_rate_memo": 0.24,
+  "slippage_bps": {"A": 5, "B": 15, "C": 30, "D": 60},
+  "fees": {
+    "commission_per_order": 0.0,
+    "sec_per_million_sold": 27.80,
+    "finra_taf_per_share_sold": 0.000166,
+    "finra_taf_max_per_trade": 8.30,
+    "cat_per_share": 0.000035,
+    "round_up_to_cent": true
+  },
+  "holidays": [
+    "2026-01-01", "2026-01-19", "2026-02-16", "2026-04-03", "2026-05-25",
+    "2026-06-19", "2026-07-03", "2026-09-07", "2026-11-26", "2026-12-25"
+  ],
+  "early_close": ["2026-11-27", "2026-12-24"]
+}
