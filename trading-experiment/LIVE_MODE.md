@@ -48,10 +48,38 @@ Robinhood has no market-on-close orders, so a real order executes when it is pla
 orders are market orders only. Partial fills, rejected orders and wider live spreads are possible. The paper ledger keeps running as the shadow model; the live ledger records what actually
 happened, and the scoreboard should show both.
 
+## How Robinhood's agent access works (from Robinhood's help center, read 2026-10-17)
+Sources: https://robinhood.com/us/en/support/articles/onboarding-an-external-agent/ , https://robinhood.com/us/en/support/articles/trading-with-your-agent/ ,
+https://robinhood.com/us/en/support/articles/setting-up-an-agent/
+* The agent can **place trades only in a dedicated Agentic / MCP account**, opened during the connect flow (desktop), which needs an open primary individual investing account in good
+  standing. Fund that account with exactly the experiment's money ($2,000); the gate's cap is a second fence.
+* The agent gets **read access to all of the owner's Robinhood accounts** (account numbers, positions, balances, order history). Robinhood does not narrow this. Our rule: read only the
+  MCP account's data and market data; never look at the other accounts.
+* Account type at opening: limited margin (default) or cash. Agentic accounts have **no margin borrowing**; limited margin only lets sale proceeds be reused before settlement, which
+  matches how the tracker models same-day rotation. A cash account also works but may block buying with unsettled proceeds.
+* **Trade approvals** are off by default for MCP accounts (rolling out; may be unavailable). Off means fully automatic, as the owner chose. Some trades may still ask for approval.
+* No tool moves money: there are no deposit, withdrawal or transfer tools. Crypto needs a separate Robinhood Crypto account tied to the MCP account (do not set one up); options need an
+  approved options level (do not apply).
+* Order types: market (share- or dollar-based), limit, stop limit, stop market. **No market-on-close.**
+
+### Tools the routine may use (everything else is off-limits)
+| Purpose | Tools |
+|---|---|
+| Find the MCP account, check buying power | `get_accounts` (to identify the MCP account only), `get_portfolio` (MCP account) |
+| Prices and research | `get_equity_quotes` (real-time, up to 20 symbols; the second live source for `quotes.py`), `get_index_quotes`, `get_equity_historicals`, `get_equity_fundamentals`, `get_equity_news`, `get_earnings_calendar`, `get_earnings_results`, `get_equity_analyst_ratings` |
+| Before an order | `get_equity_tradability` (tradable? fractional?), `review_equity_order` (pre-trade warnings) |
+| Orders (only with an approved `live.py gate` ticket) | `place_equity_order`, `get_equity_orders`, `cancel_equity_order` (own experiment orders only) |
+| Reconciliation | `get_equity_positions` (MCP account) |
+
+**Never call:** any `*option*` tool (`place_option_order`, `exercise_option`, ...), any `*crypto*` tool, `place_advanced_order`, margin-upgrade tools, and no watchlist, alert, scan or Legend writes.
+In the connector's tool permissions, turn off at least: `place_option_order`, `exercise_option`, `cancel_option_exercise`, `place_crypto_order`, `place_advanced_order`.
+
 ## Enabling checklist (all of it must pass before `live.enabled` becomes true)
 1. Connect the connector at https://claude.ai/customize/connectors (custom connector, URL `https://agent.robinhood.com/mcp/trading`), sign in, and set every transfer, ACH, option, crypto and account-setting tool to off in its tool permissions.
-2. Start a fresh session (connectors are read when a session starts). List the connector's tools; write them to `data/live_tools.md`, marked read-only or order-placing.
-3. Read-only test: one quote (SPY) and the experiment's positions. Nothing placed.
+2. Start a fresh session (connectors are read when a session starts). List the connector's tools; write them to `data/live_tools.md`, marked read-only or order-placing, and confirm the
+   forbidden ones above are off. Identify the MCP account with `get_accounts` and record only its id.
+3. Read-only test: `get_equity_quotes` for SPY, XLE, GUSH; `get_equity_tradability` for each proposal ticker (incl. GUSH, a leveraged ETF); `get_portfolio` for the MCP account
+   (expect $2,000 buying power, no positions). Nothing placed.
 4. Make the connector available to the unattended runs (the scheduled tasks were created without connectors, so they are recreated with it attached) and test that a scheduled run sees it.
 5. Only then commit `live.enabled: true`. Watch the first live day closely.
 

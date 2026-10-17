@@ -64,3 +64,7 @@ pass). `live.enabled` stays false until the connector is verified. Connection at
 **Quotes live, Day 0 (environment given full network access).** `quotes.py check`: official closes READY from Yahoo + Cboe (independent; agreed to the cent on SPY 763.25, XLE 68.24,
 GUSH 50.12, NVDA 214.13, SOXL 93.67, SQQQ 38.90 for 10/16). The agents' search-derived references for XLE, NVDA and SOXL were correct; GUSH is now price-verified. Stooq resets
 connections from this IP and is off; Nasdaq times out; CNBC refuses. Live intraday quotes are Yahoo-only for now. Robinhood server now reachable but needs sign-in via the claude.ai connector.
+
+**Robinhood agent access, researched (owner finishing setup on desktop).** Per Robinhood's help center: trades only in a dedicated MCP account (fund it with the $2,000); read access to all
+accounts (we read only the MCP account); no money-movement tools exist; trade approvals off by default (matches "fully automatic"); no market-on-close order type; `get_equity_quotes` is
+real-time and becomes the second live quote source. Tool allow/deny list written into `LIVE_MODE.md`.
