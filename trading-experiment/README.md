@@ -16,6 +16,7 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 * **Append-only ledger.** `data/ledger.csv` is never edited; git history timestamps every decision before its outcome exists.
 * **Every fill carries a written thesis and a price source.** `tracker.py validate` re-checks all rules from the ledger.
 * **A benchmark.** The same $2,000 put into SPY on day one. Beating a risk-free coin flip is not the same as beating the market.
+* **Cross-checked prices.** The tracker pulls official closes itself from at least two independent providers and records them; fills priced any other way are flagged.
 * **Costs are modeled**: regulatory fees, plus slippage by liquidity tier. Slippage is the big one at this scale.
 
 ## Files
@@ -28,6 +29,7 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 | `research/<date>/` | Each agent's memo, one folder per day |
 | `data/` | `ledger.csv`, `orders.csv`, `marks.csv`, `equity.csv`, `exits.json`, `dashboard.json`, `export/` |
 | `tracker.py` | The rules engine and reporter (Python stdlib only) |
+| `quotes.py` | Cross-checked quote layer (Yahoo, Stooq, Finnhub, Alpaca); fails closed. Setup: `QUOTES_SETUP.md` |
 | `DAILY_ROUTINE.md` | The procedure the scheduled run follows |
 
 ## Schedule

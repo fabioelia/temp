@@ -19,20 +19,27 @@ Read `RULES.md`, `playbook.md`, the last entry of `journal.md`, and today's `res
 * After `end_date` in `config.json`: do the **final report** (section 8) and stop the schedule.
 
 ## 1. Closing prices for D (the data step; be strict)
-Build `trading-experiment/data/prices/D.csv` with columns `ticker,close,source` for:
-every held ticker, every ticker with a pending order, `SPY`, and today's shortlist.
+First see which feeds work from this environment today:
+```bash
+python3 trading-experiment/quotes.py check        # READY means two independent providers answered
+```
+**Preferred path (feed READY):** the tracker fetches cross-checked official closes itself. Prices are never typed in.
+```bash
+python3 trading-experiment/tracker.py day --date D --auto-prices --also CANDIDATE1,CANDIDATE2
+```
+It prices every held ticker, every ticker with a pending order, the benchmark, and any `--also` tickers (today's shortlist). A close is accepted only when at least two
+providers agree within 0.3%; otherwise the ticker prints `NO VERIFIED CLOSE`, its order skips, and its mark carries the last verified close with a stale-mark warning.
+Results are saved to `data/prices/D.csv` with the providers and spread for every price.
 
-* Use WebSearch (standard mode). Look for the official close of D, dated D, from AP / Reuters / CNBC /
-  MarketWatch / Nasdaq / Yahoo Finance / Google Finance / Investing.com snippets or exchange recaps.
-* A position larger than 25% of equity needs the close confirmed by TWO independent sources.
-* `source` = short name + date (and URL if available). Never guess or interpolate. If a close cannot be
-  verified, leave that ticker out: its order will skip safely, and the marked value carries yesterday's close
-  (the tracker prints a stale-mark warning; say so in the journal).
-* Intraday/after-hours prices are not closes. Do not use them.
+**Fallback path (feed NOT READY, e.g. the network policy blocks the quote hosts):** build `data/prices/D.csv` (`ticker,close,source`) by hand from WebSearch: the official
+close of D, dated D, from AP / Reuters / CNBC / MarketWatch / Nasdaq / Yahoo / Google Finance snippets; a position larger than 25% of equity needs TWO independent sources;
+never guess or interpolate; leave out anything unverifiable. Then pass `--prices-file` (instead of `--auto-prices`). These fills are flagged `WARN ... fallback source` by
+`validate`, counted separately on the scoreboard, and the journal must say the feed was down and why. Say so to the user in the daily message: the experiment's credibility
+depends on the feed, and `QUOTES_SETUP.md` explains how to restore it.
 
 ## 2. Book the day
 ```bash
-python3 trading-experiment/tracker.py day --date D --prices-file trading-experiment/data/prices/D.csv
+python3 trading-experiment/tracker.py day --date D --auto-prices --also ...   # or --prices-file data/prices/D.csv on the fallback path
 python3 trading-experiment/tracker.py validate
 ```
 This (a) records marks, (b) fills last evening's queued orders at D's close with slippage and fees,

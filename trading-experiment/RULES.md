@@ -62,7 +62,9 @@ convexity*: take the asymmetric shots, but cap the damage.
 ## Integrity rules
 * Every order carries a written thesis; every fill carries a price source. `tracker.py validate` rechecks the ledger.
 * The ledger, marks and journal are append-only. Corrections are dated notes in `journal.md`, never edits to past rows.
-* Prices are official closes from public sources, cited. If a close cannot be verified, the ticker is skipped (its order does not fill) and the mark carries the
-  last verified close with a stale-mark warning.
+* **Quote integrity.** Prices come from `quotes.py`, which accepts a price only when at least two independent providers agree within 0.3% and records which providers and
+  the spread. The tracker fetches them itself (`day --auto-prices`); the AI never types a price in. If the feed is unavailable, the fallback is cited web-search closes
+  (two independent sources for any position over 25% of equity); fills priced that way are flagged on the scoreboard and by `validate`. If a close cannot be verified
+  at all, the ticker is skipped (its order does not fill) and the mark carries the last verified close with a stale-mark warning.
 * Never use information from after an order's fill date when queuing it. Git history timestamps each decision before its outcome.
 * The committee may break a soft guardrail only with a dated journal entry that says which rule and why.

@@ -404,21 +404,44 @@ def check_exits(D, prices):
     return msgs
 
 
+def auto_prices(D, extra):
+    """Official closes from the multi-provider quote layer (quotes.py); unverifiable tickers are left out."""
+    import quotes
+    tickers = set(replay()["pos"]) | {o["ticker"] for o in read_csv(ORDERS) if o["status"] == "pending"}
+    tickers |= {CFG["benchmark"]} | {t.strip().upper() for t in extra.split(",") if t.strip()}
+    prices, sources, msgs = {}, {}, []
+    for sym, r in quotes.closes(D.isoformat(), sorted(tickers)).items():
+        if r["status"] == "ok":
+            prices[sym], sources[sym] = r["price"], r["source"]
+        else:
+            msgs.append(f"NO VERIFIED CLOSE {sym}: {r['status']} {r['errors'] or ''}")
+    if prices:
+        write_csv(DATA / "prices" / f"{D.isoformat()}.csv", ["ticker", "close", "source"],
+                  [{"ticker": t, "close": prices[t], "source": sources[t]} for t in sorted(prices)])
+    return prices, sources, msgs
+
+
 def cmd_day(a):
     D = d(a.date)
     if not is_trading_day(D):
         sys.exit(f"{D} is not a US trading day")
     if D < d(CFG["start_date"]):
         sys.exit(f"experiment starts {CFG['start_date']}")
-    prices, sources = load_prices(a)
+    prices, sources, feed_msgs = {}, {}, []
+    if a.auto_prices:
+        prices, sources, feed_msgs = auto_prices(D, a.also or "")
+    manual, manual_src = load_prices(a)
+    for t, px in manual.items():  # manual/search prices only fill gaps the feed could not verify
+        if t not in prices:
+            prices[t], sources[t] = px, manual_src.get(t, "") or "manual entry"
     if not prices:
-        sys.exit("no prices supplied (use --prices-file or --prices)")
+        sys.exit("no prices: quote feed returned nothing and none were supplied (use --prices-file or --prices)\n" + "\n".join(feed_msgs))
     marks = [r for r in read_csv(MARKS) if not (r["date"] == D.isoformat() and r["ticker"] in prices)]
     for t, px in prices.items():
         marks.append({"date": D.isoformat(), "ticker": t, "close": px, "source": sources.get(t, "")})
     marks.sort(key=lambda r: (r["date"], r["ticker"]))
     write_csv(MARKS, MARK_COLS, marks)
-    msgs = process_orders(D, prices, sources)
+    msgs = feed_msgs + process_orders(D, prices, sources)
     row, stale = snapshot(D)
     msgs += check_exits(D, prices)
     write_reports(D)
@@ -449,7 +472,9 @@ def stats():
             "avg_loss": sum(losses) / len(losses) if losses else None,
             "payoff": (sum(wins) / len(wins)) / abs(sum(losses) / len(losses)) if wins and losses and sum(losses) else None,
             "max_drawdown": mdd, "best_day": max(daily) if daily else None,
-            "worst_day": min(daily) if daily else None, "total_fills": sum(len(v) for v in st["per_day"].values())}
+            "worst_day": min(daily) if daily else None, "total_fills": sum(len(v) for v in st["per_day"].values()),
+            "verified_fills": sum(1 for v in st["per_day"].values() for r in v
+                                  if "official close" in r["price_source"] or " live " in r["price_source"])}
 
 
 def build_dashboard(D):
@@ -517,7 +542,7 @@ def export_rows(b):
                 "benchmark_pnl_pct": round(spy_pnl, 4) if spy_pnl is not None else None,
                 "trading_days_left": b["trading_days_left"],
                 "required_daily_return": round(b["required_daily_return"], 4) if b["required_daily_return"] else None,
-                "fills": s["total_fills"], "closed_trades": s["closed_trades"],
+                "fills": s["total_fills"], "verified_fills": s["verified_fills"], "closed_trades": s["closed_trades"],
                 "win_rate": round(s["win_rate"], 4) if s["win_rate"] is not None else None,
                 "payoff": round(s["payoff"], 2) if s["payoff"] else None,
                 "max_drawdown": round(s["max_drawdown"], 4),
@@ -582,6 +607,8 @@ def write_reports(D):
           for o in b["pending_orders"]] or ["_None._"]
     L += ["", "## Stats", "",
           f"- Fills: {s['total_fills']} | closed round trips: {s['closed_trades']} (W {s['wins']} / L {s['losses']})",
+          f"- Fills priced by the cross-checked quote feed: {s['verified_fills']} of {s['total_fills']}"
+          + ("" if s["verified_fills"] == s["total_fills"] else " (the rest used fallback sources, see price_source)"),
           f"- Win rate: {s['win_rate'] * 100:.0f}%" if s["win_rate"] is not None else "- Win rate: n/a",
           f"- Payoff (avg win / avg loss): {s['payoff']:.2f}" if s["payoff"] else "- Payoff: n/a",
           f"- Max drawdown: {pct(s['max_drawdown'])}"]
@@ -623,6 +650,9 @@ def cmd_validate(a):
         ts = [r["ticker"] for r in rs]
         if len(ts) != len(set(ts)):
             errs.append(f"{day}: ticker traded twice (round trip)")
+    for r in rows:
+        if "official close" not in r["price_source"] and " live " not in r["price_source"]:
+            print(f"WARN {r['id']}: priced from a fallback source, not the cross-checked feed: {r['price_source'][:80]}")
     print("OK: ledger satisfies all rules" if not errs else "\n".join(errs))
     sys.exit(1 if errs else 0)
 
@@ -663,6 +693,8 @@ def main():
     dy.add_argument("--prices-file")
     dy.add_argument("--prices")
     dy.add_argument("--source")
+    dy.add_argument("--auto-prices", action="store_true", help="fetch cross-checked official closes via quotes.py")
+    dy.add_argument("--also", help="extra tickers to price with --auto-prices (comma separated)")
     dy.set_defaults(fn=cmd_day)
     for name, fn in (("status", cmd_report), ("report", cmd_report)):
         s = sub.add_parser(name)
