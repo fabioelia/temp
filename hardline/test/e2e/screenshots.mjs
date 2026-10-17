@@ -1,5 +1,6 @@
 // Captures full-quality screenshots of every room (both roles) into docs/screenshots/.
-//   node test/e2e/screenshots.mjs        (or: npm run shots)
+//   node test/e2e/screenshots.mjs        (or: npm run shots) — all rooms
+//   node test/e2e/screenshots.mjs 4      — just room 5 (0-based index)
 // Uses software WebGL, so it is slow (about a minute per room) but needs no GPU.
 
 import path from 'node:path';
@@ -11,8 +12,10 @@ const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../do
 fs.mkdirSync(OUT, { recursive: true });
 const NAMES = ['1-lobby', '2-corridor', '3-atrium', '4-switchboard', '5-hardline'];
 
+const only = process.argv[2] === undefined ? null : Number(process.argv[2]);
 const browser = await launch();
 for (let room = 0; room < NAMES.length; room++) {
+  if (only !== null && room !== only) continue;
   const srv = await startGame({ START_ROOM: String(room) });
   const a = await newPlayer(browser, srv, 'Trin');
   const b = await newPlayer(browser, srv, 'Wren');
@@ -23,6 +26,9 @@ for (let room = 0; room < NAMES.length; room++) {
     await a.page.screenshot({ path: path.join(OUT, `${NAMES[room]}-operator.jpg`), type: 'jpeg', quality: 82 });
     await b.page.screenshot({ path: path.join(OUT, `${NAMES[room]}-mentor.jpg`), type: 'jpeg', quality: 82 });
     console.log('captured', NAMES[room], [...a.errors, ...b.errors].length ? `(errors: ${[...a.errors, ...b.errors].join(' | ')})` : '');
+  } catch (e) {
+    console.log('FAILED', NAMES[room], e.message.split('\n')[0], '| page errors:', [...a.errors, ...b.errors].join(' | ') || 'none');
+    console.log('   brief-wait:', await a.page.evaluate(() => document.getElementById('brief-wait')?.textContent).catch(() => '?'), '| boot:', await a.page.evaluate(() => document.getElementById('boot-text')?.textContent + ' ' + document.getElementById('boot-pct')?.textContent).catch(() => '?'));
   } finally {
     await a.ctx.close();
     await b.ctx.close();
