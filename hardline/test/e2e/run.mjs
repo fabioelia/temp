@@ -6,7 +6,9 @@
 //   node test/e2e/run.mjs resilience # only the reconnect + timeout scenarios
 
 import { launch, startGame, startStatic, newPlayer, createAndJoin, startRun, enterRoom, shot, sleep, clickHot, byRole, LOW } from './lib.mjs';
-import { solvers, localise, mazeRoute, bulletCells } from '../solvers.js';
+import { solvers, localise, mazeRoute, bulletCells, echoPresses, vaultCandidates, gridLevers, triangulateCell, logicSwitches, mosaicGrid } from '../solvers.js';
+import { PYLONS } from '../../engine/puzzles/echo.js';
+import { evaluate } from '../../engine/puzzles/logic.js';
 
 const only = process.argv[2];
 const results = [];
@@ -169,6 +171,147 @@ const rooms = {
   },
 };
 
+
+// ---------------------------------------------------------- Deep Loop rooms
+// Same rule as above: the oracle only sees what the two role views show, and every move is made
+// through the real 3D hotspots.
+
+Object.assign(rooms, {
+  async echo(op, me) {
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      let presses = echoPresses({ operator: ov, mentor: mv, strikes: await strikes(op) });
+      if (stage === 1) {
+        const bad = PYLONS.find((c) => c !== presses[0]);
+        const fx = await act(op, me, () => clickHot(op, `pylon:${bad}`));
+        check('echo: a wrong pylon is a strike on both screens, and the sequence replays', fx.result === 'wrong' && (await strikes(me)) === 1);
+        await waitIdle(op);
+        presses = echoPresses({ operator: ov, mentor: mv, strikes: await strikes(op) });
+      }
+      let fx;
+      for (let i = 0; i < presses.length; i++) {
+        fx = await act(op, me, () => clickHot(op, `pylon:${presses[i]}`));
+        if (i < presses.length - 1) await sleep(250);
+      }
+      check(`echo: sequence ${stage + 1}/3 cleared`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+      if (stage === 0) await shot(op, 'e2e-echo-cleared');
+    }
+  },
+
+  async vault(op, me) {
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      const history = [];
+      let fx;
+      for (let tries = 0; tries < 4; tries++) {
+        const cands = vaultCandidates({ operator: ov, mentor: mv, history });
+        const code = cands[0];
+        const cur = await get(op, () => window.__hl.app.room.dials);
+        for (let i = 0; i < code.length; i++) {
+          const steps = (ov.glyphs.indexOf(code[i]) - cur[i] + ov.glyphs.length) % ov.glyphs.length;
+          for (let s = 0; s < steps; s++) await clickHot(op, `dial:${i}:up`);
+        }
+        fx = await act(op, me, () => clickHot(op, 'lever'));
+        if (fx.result !== 'wrong') break;
+        history.push({ code, bulls: fx.event.bulls });
+        if (!history.checked) {
+          history.checked = true;
+          check('vault: a wrong try costs a strike on both screens and reports how many dials were right', (await strikes(me)) >= 1 && Number.isInteger(fx.event.bulls));
+          await shot(op, 'e2e-vault-feedback');
+        }
+        await waitIdle(op);
+      }
+      check(`vault: door ${stage + 1}/3 opens (${history.length} wrong ${history.length === 1 ? 'try' : 'tries'} first)`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+    }
+  },
+
+  async grid(op, me) {
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      const levers = gridLevers({ operator: ov, mentor: mv });
+      if (stage === 0) {
+        const fx = await act(op, me, () => clickHot(op, 'engage')); // pulling nothing leaves the grid overloaded
+        check('grid: engaging without the right levers is a strike', fx.result === 'wrong' && (await strikes(op)) === 1);
+        await waitIdle(op);
+      }
+      for (const i of levers) await clickHot(op, `lever:${i}`);
+      const fx = await act(op, me, () => clickHot(op, 'engage'));
+      check(`grid: ${stage + 1}/3 — pulling ${levers.length} lever${levers.length === 1 ? '' : 's'} makes every node safe`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+    }
+  },
+
+  async triangulate(op, me) {
+    const pick = async (x, y) => {
+      await clickHot(op, `col:${x}`);
+      await clickHot(op, `row:${y + 1}`);
+    };
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      const { best } = triangulateCell({ operator: ov, mentor: mv });
+      if (stage === 0) await shot(op, 'e2e-triangulate-readings');
+      if (stage === 1) {
+        await pick((best.x + 3) % 10, best.y);
+        const fx = await act(op, me, () => clickHot(op, 'enter'));
+        check('signal room: a wrong square is a strike', fx.result === 'wrong');
+        await waitIdle(op);
+      }
+      await pick(best.x, best.y);
+      const fx = await act(op, me, () => clickHot(op, 'enter'));
+      check(`signal room: fix ${stage + 1}/3 — the square the readings agree on is right`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+    }
+  },
+
+  async logic(op, me) {
+    const setSwitches = async (want) => {
+      const cur = await get(op, () => window.__hl.app.room.switches);
+      for (let i = 0; i < want.length; i++) if (!!want[i] !== !!cur[i]) await clickHot(op, `switch:${i}`);
+    };
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      const sw = logicSwitches({ operator: ov, mentor: mv });
+      if (stage === 1) {
+        // an assignment that leaves the lamp dark
+        const typeOf = Object.fromEntries(mv.table.map((t) => [t.glyph, t.type]));
+        const circuit = { gates: ov.gates, output: ov.output };
+        let dark = null;
+        for (let m = 0; m < 1 << ov.switches && !dark; m++) {
+          const a = Array.from({ length: ov.switches }, (_, i) => !!(m & (1 << i)));
+          if (!evaluate(circuit, a, (g) => typeOf[g.glyph])) dark = a;
+        }
+        await setSwitches(dark);
+        const fx = await act(op, me, () => clickHot(op, 'engage'));
+        check('logic wall: a failing switch setting is a strike', fx.result === 'wrong');
+        await waitIdle(op);
+      }
+      await setSwitches(sw);
+      const fx = await act(op, me, () => clickHot(op, 'engage'));
+      check(`logic wall: circuit ${stage + 1}/3 lights the lamp`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+    }
+  },
+
+  async mosaic(op, me) {
+    for (let stage = 0; stage < 3; stage++) {
+      await waitIdle(op);
+      const [ov, mv] = [await appView(op), await appView(me)];
+      const grid = mosaicGrid({ operator: ov, mentor: mv });
+      if (stage === 0) {
+        const fx = await act(op, me, () => clickHot(op, 'seal')); // a blank wall is not the picture
+        check('mosaic: sealing the wrong picture is a strike', fx.result === 'wrong');
+        await waitIdle(op);
+      }
+      for (let r = 0; r < grid.length; r++) for (let c = 0; c < grid.length; c++) if (grid[r][c]) await clickHot(op, `tile:${r},${c}`);
+      if (stage === 0) await shot(op, 'e2e-mosaic-filled');
+      const fx = await act(op, me, () => clickHot(op, 'seal'));
+      check(`mosaic: picture ${stage + 1}/3 (${grid.length}×${grid.length}) is accepted`, fx.result === (stage === 2 ? 'solved' : 'stage'), fx.result);
+    }
+  },
+});
+
 // ---------------------------------------------------------------- scenarios
 
 async function fullRun(browser, srv) {
@@ -209,6 +352,52 @@ async function fullRun(browser, srv) {
   } finally {
     for (const p of [a, b]) if (p.errors.length) check(`no browser errors (${p.name})`, false, p.errors.slice(0, 3).join(' | '));
     for (const p of [a, b]) if (!p.errors.length) check(`no browser errors (${p.name})`, true);
+    await a.ctx.close();
+    await b.ctx.close();
+  }
+}
+
+/** The Deep Loop chapter: six harder rooms, chosen in the lobby. */
+async function deepLoop(browser, srv) {
+  console.log('\n● Deep Loop chapter (six rooms, chosen from the lobby)');
+  const a = await newPlayer(browser, srv, 'Trin', { query: LOW });
+  const b = await newPlayer(browser, srv, 'Wren', { query: LOW });
+  try {
+    await createAndJoin(a, b, { hostRole: 'operator' });
+    await a.page.click('#seg-chapter button[data-v="deep"]');
+    await sleep(400);
+    check('lobby: the Deep Loop chapter is selectable', (await get(a, () => document.querySelector('#seg-chapter button.on')?.dataset.v)) === 'deep');
+    const guestSees = await get(b, () => document.querySelector('#seg-chapter button.on')?.dataset.v);
+    check('lobby: the partner sees the chosen chapter', guestSees === 'deep', guestSees);
+    await shot(a, 'e2e-lobby-deep');
+    await a.page.click('#btn-start');
+    const order = ['echo', 'vault', 'grid', 'triangulate', 'logic', 'mosaic'];
+    for (let r = 0; r < order.length; r++) {
+      if (r === 0) await Promise.all([a, b].map((p) => waitScreen(p, 'screen-brief')));
+      await enterRoom(a, b);
+      const { operator, mentor } = await byRole(a, b);
+      const id = await get(operator, () => window.__hl.app.briefing.room.id);
+      check(`deep room ${r + 1}: it is ${order[r]}`, id === order[r], id);
+      await sleep(1500);
+      await shot(operator, `e2e-deep${r + 1}-${order[r]}-operator`);
+      await shot(mentor, `e2e-deep${r + 1}-${order[r]}-mentor`);
+      await rooms[order[r]](operator, mentor);
+      if (r < order.length - 1) await Promise.all([a, b].map((p) => waitScreen(p, 'screen-brief', 40000)));
+    }
+    await Promise.all([a, b].map((p) => waitScreen(p, 'screen-end', 40000)));
+    await a.page.waitForSelector('#end-stats:not(.hidden)', { timeout: 60000 });
+    await sleep(400);
+    await shot(a, 'e2e-ending-deep');
+    const rowsN = await get(a, () => document.querySelectorAll('#end-stats tbody tr').length);
+    check('ending: stats table lists six layers plus a total', rowsN === 7, `${rowsN} rows`);
+  } catch (e) {
+    for (const p of [a, b]) {
+      await shot(p, `e2e-deep-fail-${p.name}`).catch(() => {});
+      console.log('    state', p.name, await get(p, () => ({ screen: window.__hl.app.screen, brief: window.__hl.app.briefing?.room?.id, kind: window.__hl.app.briefing?.kind, strikes: window.__hl.app.strikes })).catch(() => '?'));
+    }
+    throw e;
+  } finally {
+    for (const p of [a, b]) check(`no browser errors (${p.name})`, p.errors.length === 0, p.errors.slice(0, 3).join(' | '));
     await a.ctx.close();
     await b.ctx.close();
   }
@@ -442,6 +631,7 @@ const browser = await launch();
 try {
   if (only === 'static') await staticHosting(browser);
   if (!only || only === 'full') await fullRun(browser, srv);
+  if (!only || only === 'deep') await deepLoop(browser, srv);
   if (!only || only === 'picking') await picking(browser, srv);
   if (!only || only === 'cast') await cast(browser, srv);
   if (!only || only === 'resilience') await resilience(browser, srv);

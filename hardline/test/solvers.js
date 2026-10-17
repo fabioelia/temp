@@ -201,3 +201,50 @@ export function mosaicGrid({ operator, mentor }) {
   if (!g) throw new Error('mosaic: not line-solvable');
   return g;
 }
+
+/**
+ * The actions two players would send next in a Deep Loop room, using only their own views.
+ * `strikes` is how many mistakes the room has seen (Echo's rules shift with it); `history` is the
+ * feedback from failed Vault tries, [{ code, bulls }].
+ */
+export function deepActions(id, { operator, mentor }, { strikes = 0, history = [] } = {}) {
+  switch (id) {
+    case 'echo':
+      return echoPresses({ operator, mentor, strikes }).map((pylon) => ({ type: 'press', pylon }));
+    case 'vault':
+      return [{ type: 'open', code: vaultCandidates({ operator, mentor, history })[0] }];
+    case 'grid':
+      return [{ type: 'engage', levers: gridLevers({ operator, mentor }) }];
+    case 'triangulate': {
+      const { best } = triangulateCell({ operator, mentor });
+      return [{ type: 'locate', col: best.x, row: best.y }];
+    }
+    case 'logic':
+      return [{ type: 'engage', switches: logicSwitches({ operator, mentor }) }];
+    case 'mosaic':
+      return [{ type: 'seal', grid: mosaicGrid({ operator, mentor }) }];
+    default:
+      throw new Error(`no stage solver for ${id}`);
+  }
+}
+
+/**
+ * Solve one whole stage of a Deep Loop room against the puzzle module. Returns the engine's reply
+ * to the final (stage-clearing) action. Used by the seed stress test to walk every stage.
+ */
+export function solveDeepStage(id, puzzle, state, rng, views, strikes = 0) {
+  const history = [];
+  for (let tries = 0; tries < 6; tries++) {
+    let res = null;
+    let last = null;
+    for (const action of deepActions(id, views, { strikes, history })) {
+      last = action;
+      res = puzzle.act(state, action, rng, { strikes });
+    }
+    if (res.result !== 'wrong') return res;
+    history.push({ code: last.code, bulls: res.events.operator.bulls });
+  }
+  throw new Error(`${id}: not solved within six tries`);
+}
+
+export const DEEP_IDS = ['echo', 'vault', 'grid', 'triangulate', 'logic', 'mosaic'];

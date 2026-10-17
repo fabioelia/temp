@@ -4,7 +4,7 @@ import WebSocket from 'ws';
 import { createServer } from '../server/index.js';
 import { runFor } from '../shared/rooms.js';
 const ROOMS = runFor('classic');
-import { solvers, localise, mazeRoute } from './solvers.js';
+import { solvers, localise, mazeRoute, deepActions, DEEP_IDS } from './solvers.js';
 
 class Bot {
   constructor(port, name) {
@@ -69,7 +69,8 @@ async function playRoom(host, guest, roomId) {
   const bots = [host, guest];
   const op = bots.find((b) => b.role === 'operator');
   const mentor = bots.find((b) => b.role === 'mentor');
-  await Promise.all(bots.map((b) => b.next((m) => m.t === 'go').catch(() => null)));
+  const from = Math.min(...bots.map((b) => b.log.findLastIndex((m) => m.t === 'briefing')));
+  await Promise.all(bots.map((b) => until(b, (m) => m.t === 'go', from)));
   const solved = op.next((m) => m.t === 'solved', 20000);
   const stageSolver = solvers[roomId];
 
@@ -116,7 +117,7 @@ test('full playthrough: lobby -> five rooms -> ending, roles swap between rooms'
   host.send({ t: 'start' });
   const rolesSeen = [];
   for (let i = 0; i < ROOMS.length; i++) {
-    const [b1, b2] = await Promise.all([host.next((m) => m.t === 'briefing'), guest.next((m) => m.t === 'briefing')]).catch(async () => [null, null]);
+    await Promise.all([host, guest].map((b) => until(b, (m) => m.t === 'briefing' && m.roomIndex === i, 0, 20000)));
     if (i === 0) assert.equal(host.role, 'operator');
     rolesSeen.push(host.role);
     assert.equal(host.briefing.room.id, ROOMS[i].id);
@@ -236,3 +237,85 @@ test('both players are always on opposite roles; random pref still splits roles'
     await srv.close();
   }
 });
+
+
+// ---------------------------------------------------------------- Deep Loop + Gauntlet runs
+
+const until = async (bot, pred, from = 0, ms = 15000) => {
+  const t0 = Date.now();
+  for (;;) {
+    const hit = bot.log.slice(from).find(pred);
+    if (hit) return hit;
+    if (Date.now() - t0 > ms) throw new Error(`${bot.name}: timed out (last: ${JSON.stringify(bot.log.at(-1))?.slice(0, 160)})`);
+    await new Promise((r) => setTimeout(r, 5));
+  }
+};
+
+/** Plays one Deep Loop room over the wire, with only what each role is shown. */
+async function playDeepRoom(host, guest, roomId) {
+  const bots = [host, guest];
+  const op = bots.find((b) => b.role === 'operator');
+  const mentor = bots.find((b) => b.role === 'mentor');
+  const from = Math.min(...bots.map((b) => b.log.findLastIndex((m) => m.t === 'briefing')));
+  await Promise.all(bots.map((b) => until(b, (m) => m.t === 'go', from)));
+  let strikes = 0;
+  const history = [];
+  let wrongs = 0;
+  for (let guard = 0; guard < 40; guard++) {
+    const actions = deepActions(roomId, { operator: op.view, mentor: mentor.view }, { strikes, history });
+    let res = null;
+    for (const action of actions) {
+      const mark = op.log.length;
+      op.send({ t: 'act', action });
+      res = await until(op, (m) => m.t === 'fx', mark);
+      if (res.result === 'wrong') {
+        wrongs++;
+        strikes = res.strikes;
+        if (roomId === 'vault') history.push({ code: action.code, bulls: res.event.bulls });
+        break;
+      }
+    }
+    if (res.result === 'wrong') {
+      assert.equal(roomId, 'vault', `${roomId}: the bots should never be wrong (only the Vault is a guess-and-feedback room)`);
+      assert.ok(wrongs <= 3, 'vault: clues + feedback finish it within three wrong tries');
+      continue;
+    }
+    if (res.result === 'solved') {
+      await until(mentor, (m) => m.t === 'solved', from);
+      return;
+    }
+    assert.equal(res.result, 'stage');
+    // wait until the Mentor has been handed the new stage too
+    const stage = res.stage;
+    await until(mentor, (m) => m.t === 'fx' && m.result === 'stage' && m.stage === stage, from);
+    await new Promise((r) => setTimeout(r, 20));
+    wrongs = 0;
+    history.length = 0;
+  }
+  assert.fail(`${roomId}: not solved`);
+}
+
+for (const chapter of ['deep', 'gauntlet']) {
+  test(`${chapter} playthrough over the wire: every room solvable from the two role views, roles swap each room`, async (t) => {
+    const { srv, host, guest } = await setup();
+    t.after(() => srv.close());
+    const run = runFor(chapter);
+    host.send({ t: 'setChapter', value: chapter });
+    host.send({ t: 'setPref', value: 'operator' });
+    host.send({ t: 'start' });
+    const roles = [];
+    for (let i = 0; i < run.length; i++) {
+      await Promise.all([host, guest].map((b) => until(b, (m) => m.t === 'briefing' && m.roomIndex === i, 0, 20000)));
+      assert.equal(host.briefing.room.id, run[i].id);
+      assert.equal(host.briefing.chapter, chapter);
+      assert.notEqual(host.role, guest.role);
+      roles.push(host.role);
+      if (DEEP_IDS.includes(run[i].id)) await playDeepRoom(host, guest, run[i].id);
+      else await playRoom(host, guest, run[i].id);
+    }
+    const ending = await until(host, (m) => m.t === 'ending', 0, 20000);
+    assert.equal(ending.rooms.length, run.length);
+    assert.equal(ending.chapter, chapter);
+    assert.deepEqual(roles, run.map((_, i) => (i % 2 === 0 ? 'operator' : 'mentor')));
+  });
+}

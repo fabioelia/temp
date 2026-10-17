@@ -1,6 +1,6 @@
 // Captures full-quality screenshots of every room (both roles) into docs/screenshots/.
 //   node test/e2e/screenshots.mjs        (or: npm run shots) — all rooms
-//   node test/e2e/screenshots.mjs 4      — just room 5 (0-based index)
+//   node test/e2e/screenshots.mjs 4      — just room 5 (0-based index; 0-4 classic, 5-10 Deep Loop)
 // Uses software WebGL, so it is slow (about a minute per room) but needs no GPU.
 
 import path from 'node:path';
@@ -10,13 +10,26 @@ import { launch, startGame, newPlayer, createAndJoin, startRun, sleep } from './
 
 const OUT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../docs/screenshots');
 fs.mkdirSync(OUT, { recursive: true });
-const NAMES = ['1-lobby', '2-corridor', '3-atrium', '4-switchboard', '5-hardline'];
+const ROOMS = [
+  ['1-lobby', 'cipher'],
+  ['2-corridor', 'doors'],
+  ['3-atrium', 'bullets'],
+  ['4-switchboard', 'switchboard'],
+  ['5-hardline', 'maze'],
+  ['6-echo', 'echo'],
+  ['7-vault', 'vault'],
+  ['8-substation', 'grid'],
+  ['9-signal-room', 'triangulate'],
+  ['10-logic-wall', 'logic'],
+  ['11-mosaic', 'mosaic'],
+];
+const NAMES = ROOMS.map((r) => r[0]);
 
 const only = process.argv[2] === undefined ? null : Number(process.argv[2]);
 const browser = await launch();
 for (let room = 0; room < NAMES.length; room++) {
   if (only !== null && room !== only) continue;
-  const srv = await startGame({ START_ROOM: String(room) });
+  const srv = await startGame({ START_ROOM: ROOMS[room][1] });
   const a = await newPlayer(browser, srv, 'Trin');
   const b = await newPlayer(browser, srv, 'Wren');
   try {

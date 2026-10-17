@@ -8,10 +8,10 @@
 import { launch, startGame, newPlayer, createAndJoin, startRun, sleep, LOW } from './lib.mjs';
 import { PUZZLES } from '../../engine/puzzles/index.js';
 import { makeRng } from '../../shared/rng.js';
-import { solvers, localise, mazeRoute } from '../solvers.js';
+import { solvers, localise, mazeRoute, solveDeepStage, DEEP_IDS } from '../solvers.js';
 
 const SEEDS = Number(process.argv[2]) || 6;
-const ROOM_IDS = (process.env.ROOMS || 'cipher,doors,bullets,switchboard,maze').split(',');
+const ROOM_IDS = (process.env.ROOMS || 'cipher,doors,bullets,switchboard,maze,echo,vault,grid,triangulate,logic,mosaic').split(',');
 
 /** Every {operator, mentor} view pair a player could be shown for this seed. */
 function viewsFor(id, seed) {
@@ -37,6 +37,16 @@ function viewsFor(id, seed) {
 
   let operator = views.operator;
   let mentor = views.mentor;
+  if (DEEP_IDS.includes(id)) {
+    for (let guard = 0; guard < 6; guard++) {
+      const res = solveDeepStage(id, p, state, rng, { operator, mentor });
+      if (res.result !== 'stage') break;
+      operator = res.views.operator;
+      mentor = res.views.mentor;
+      out.push({ label: `${id}#${seed} stage ${out.length}`, operator, mentor });
+    }
+    return out;
+  }
   const done = new Set();
   for (let guard = 0; guard < 80; guard++) {
     const a = solvers[id]({ operator: { ...operator, __done: done }, mentor });
@@ -75,7 +85,7 @@ try {
           try {
             app.room?.dispose?.();
             app.stage.resetScene();
-            const mod = await import(`/js/operator/${id}.js`);
+            const mod = await import(`./js/operator/${id}.js`);
             const room = await mod.create({ stage: app.stage, view, send() {}, audio, names: { operator: 'a', mentor: 'b' }, room: {} });
             app.room = room;
             await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -94,10 +104,10 @@ try {
               window.__hl.app.shell.dispose();
               window.__hl.app.shell = null;
             }
-            const { createMentorShell } = await import('/js/mentor/shell.js');
+            const { createMentorShell } = await import('./js/mentor/shell.js');
             const root = document.getElementById('mentor-root');
             const shell = createMentorShell(root, { audio: window.__hl.audio });
-            const mod = await import(`/js/mentor/${id}.js`);
+            const mod = await import(`./js/mentor/${id}.js`);
             const room = mod.create({ shell, view, audio: window.__hl.audio });
             room.onFx?.({ view, event: null, result: 'stage' });
             shell.dispose();

@@ -262,6 +262,7 @@ export async function create({ stage, view, send, audio }) {
       buildPips();
       stage.pulseGlitch(0.6, 350);
       locked = false;
+      autoPending = true; // the next sequence is about to play: not idle, and presses would be ignored
       await stage.wait(600);
       play();
     }

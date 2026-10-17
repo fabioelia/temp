@@ -116,7 +116,7 @@ export async function enterRoom(...players) {
       await p.page.click('#btn-ready');
     })
   );
-  await Promise.all(players.map((p) => p.page.waitForSelector('#screen-game:not(.hidden)', { timeout: 15000 })));
+  await Promise.all(players.map((p) => p.page.waitForSelector('#screen-game:not(.hidden)', { timeout: 45000 })));
 }
 
 export async function shot(p, name) {

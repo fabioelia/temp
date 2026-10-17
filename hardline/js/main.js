@@ -574,7 +574,7 @@ function onGo(m) {
 
 function onFx(m) {
   app.fxCount = (app.fxCount ?? 0) + 1;
-  app.fxLog.push({ result: m.result, strikes: m.strikes, stage: m.stage });
+  app.fxLog.push({ result: m.result, strikes: m.strikes, stage: m.stage, event: m.event ?? null });
   if (app.fxLog.length > 80) app.fxLog.shift();
   if (m.view) app.view = m.view;
   setTimer(m.remainingMs, true);
