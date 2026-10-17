@@ -16,6 +16,7 @@
   "trading_days_left": 23,
   "required_daily_return": 0.0306,
   "fills": 0,
+  "verified_fills": 0,
   "closed_trades": 0,
   "win_rate": null,
   "payoff": null,

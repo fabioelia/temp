@@ -20,6 +20,7 @@ _All cash._
 ## Stats
 
 - Fills: 0 | closed round trips: 0 (W 0 / L 0)
+- Fills priced by the cross-checked quote feed: 0 of 0
 - Win rate: n/a
 - Payoff: n/a
 - Max drawdown: +0.00%

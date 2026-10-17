@@ -13,7 +13,8 @@ of the type's own files.** Each day only the five data files change.
 | `orders` | `trading-experiment/data/export/orders.json` |
 | `trades` | `trading-experiment/data/export/trades.json` |
 
-`tracker.py day ...` and `tracker.py report` rewrite those files. Then:
+`tracker.py day ...` and `tracker.py report` rewrite those files. The post-close run refreshes all five. The **pre-close run only needs to refresh `orders`** (and only when it
+confirmed, cancelled or added something), so viewers can see which proposals were confirmed for the close. Run `tracker.py report` first, then:
 
 1. **Upload all five** in one message, as five parallel `Artifact` calls, each with `url` = the dashboard URL above, `asset: true`, and `file_path` = the absolute path
    of one export file. Each result gives a new `/_blob/<id>`; keep the url exactly as returned.

@@ -42,3 +42,13 @@ $0.000195/share (max $9.79, waived on 50 shares or less). At this size they are 
 waivers, idempotent reruns); the real ledger is empty. Dashboard artifact created and loaded with the baseline (all cash, two queued orders); it had not been opened yet, so
 its rendering is unverified. Schedules created: weekday close 17:13 ET, Sunday review 18:22 ET. The Day-0 risk red-team was the risk memo's own sizing template, applied to the
 two orders above; the daily routine adds a separate red-team pass.
+
+**Amendment, Day 0 (user challenge: "why lock in buys early; shouldn't each run re-evaluate whether it is still the best bet?").** Correct. O001 (XLE) and O002 (GUSH) were written on
+Saturday, but the tracker treated them as binding and would have filled them at Monday's close with no further look, three days of news later. Fixed the same day:
+* Every queued order is now a *proposal*. It fills only if re-confirmed on the fill day before the 15:50 ET closing-order cutoff (`tracker.py order confirm`, or a fresh
+  `order add --confirm`); otherwise it is skipped with that reason. Automatic stop exits are the one exception (a run may still cancel one, with a written reason).
+* New scheduled run at 14:43 ET each trading day (Run A) whose only job is to re-judge every position and proposal with the freshest information and confirm, cancel or add.
+  The 17:13 ET run (Run B) books the day and writes the next day's *proposals*; the Sunday run (Run C) writes Monday's.
+* O001 and O002 are now unconfirmed proposals. They will fill on Monday only if Monday's pre-close run still judges them the best use of the money.
+* Tested with a fixed clock: unconfirmed proposal skips, confirm before the cutoff fills, confirm after the cutoff or on a weekend is refused, same-day decide-and-fill works, stops fire
+  unconfirmed.

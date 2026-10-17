@@ -16,9 +16,11 @@ import argparse
 import csv
 import json
 import math
+import os
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -35,11 +37,13 @@ DASH_JSON = DATA / "dashboard.json"
 LEDGER_COLS = ["id", "date", "ticker", "side", "qty", "close_price", "fill_price", "gross", "fees",
                "cash_delta", "tier", "slip_bps", "order_id", "thesis", "price_source"]
 ORDER_COLS = ["id", "created", "ticker", "side", "size_type", "size_value", "tier", "max_price",
-              "min_price", "stop", "target", "stop_pct", "target_pct", "priority", "gtd", "status", "filled_date", "reason", "thesis"]
+              "min_price", "stop", "target", "stop_pct", "target_pct", "priority", "gtd", "status", "filled_date", "reason", "thesis", "auto", "confirmed_on", "confirmed_at"]
 MARK_COLS = ["date", "ticker", "close", "source"]
 EQUITY_COLS = ["date", "cash", "positions_value", "equity", "pnl", "pnl_pct", "fees_cum", "slippage_cum",
                "realized", "unrealized", "trades_today", "bench_close", "bench_value"]
 
+ET = ZoneInfo("America/New_York")
+CUTOFF = time(15, 50)  # NYSE market-on-close order cutoff; confirmations after this cannot fill today
 HOLIDAYS = {date.fromisoformat(x) for x in CFG["holidays"]}
 FEES = CFG["fees"]
 
@@ -123,6 +127,29 @@ def pct(x):
     return f"{x * 100:+.2f}%"
 
 
+def now_et():
+    """Current New York time. TRACKER_NOW (ISO, ET) exists only so tests can fix the clock."""
+    v = os.environ.get("TRACKER_NOW")
+    return datetime.fromisoformat(v).replace(tzinfo=ET) if v else datetime.now(ET)
+
+
+def confirmed_for(o, day):
+    """An order may fill on `day` only if it was confirmed that day before the cutoff (or is an automatic stop exit)."""
+    if o.get("auto") == "1":
+        return o["created"] < day
+    if o.get("confirmed_on") != day or not o.get("confirmed_at"):
+        return False
+    return datetime.fromisoformat(o["confirmed_at"]).time() <= CUTOFF
+
+
+def order_state(o):
+    if o.get("auto") == "1":
+        return "Automatic stop exit"
+    if o.get("confirmed_on"):
+        return f"Confirmed {o['confirmed_on']} {o['confirmed_at'][11:16]} ET"
+    return "Proposal, not yet confirmed"
+
+
 # ---------------------------------------------------------------- state
 def replay(upto=None):
     cash = CFG["starting_cash"]
@@ -181,7 +208,7 @@ def next_id(prefix, rows):
 
 def cmd_order_add(a):
     orders = read_csv(ORDERS)
-    created = d(a.created) if a.created else date.today()
+    created = d(a.created) if a.created else now_et().date()
     if a.tier not in CFG["slippage_bps"]:
         sys.exit(f"tier must be one of {list(CFG['slippage_bps'])}")
     sizes = [("usd", a.usd), ("qty", a.qty), ("pct", a.pct)]
@@ -194,7 +221,10 @@ def cmd_order_add(a):
         sys.exit("buys are sized with --usd or --qty")
     if not a.thesis:
         sys.exit("--thesis is required (every order needs a written reason)")
-    gtd = d(a.gtd) if a.gtd else next_trading_day(created)
+    now = now_et()
+    if a.confirm:
+        check_confirmable(now)
+    gtd = d(a.gtd) if a.gtd else (now.date() if a.confirm else next_trading_day(created))
     o = {"id": next_id("O", orders), "created": created.isoformat(), "ticker": a.ticker.upper(),
          "side": a.side, "size_type": chosen[0][0], "size_value": chosen[0][1], "tier": a.tier,
          "max_price": a.max_price if a.max_price is not None else "",
@@ -203,11 +233,40 @@ def cmd_order_add(a):
          "stop_pct": a.stop_pct if a.stop_pct is not None else "",
          "target_pct": a.target_pct if a.target_pct is not None else "",
          "priority": a.priority, "gtd": gtd.isoformat(), "status": "pending", "filled_date": "",
-         "reason": "", "thesis": a.thesis}
+         "reason": "", "thesis": a.thesis, "auto": "", "confirmed_on": "", "confirmed_at": ""}
+    if a.confirm:
+        o["confirmed_on"], o["confirmed_at"] = now.date().isoformat(), now.isoformat(timespec="minutes")
     orders.append(o)
     write_csv(ORDERS, ORDER_COLS, orders)
-    print(f"queued {o['id']}: {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} "
-          f"(fills at close of {next_trading_day(created)} .. {gtd})")
+    if a.confirm:
+        print(f"queued and CONFIRMED {o['id']}: {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} "
+              f"(fills at today's close, {gtd})")
+    else:
+        print(f"PROPOSED {o['id']}: {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} (not binding). It fills only if "
+              f"re-confirmed (`order confirm {o['id']}`) before {CUTOFF:%H:%M} ET on a fill day between {next_trading_day(created)} and {gtd}")
+
+
+def check_confirmable(now):
+    if not is_trading_day(now.date()):
+        sys.exit(f"{now.date()} is not a trading day; nothing can be confirmed for a close")
+    if now.time() > CUTOFF:
+        sys.exit(f"it is {now:%H:%M} ET, after the {CUTOFF:%H:%M} ET cutoff: this order cannot fill at today's close. "
+                 f"Leave it as a proposal for the next session")
+
+
+def cmd_order_confirm(a):
+    now = now_et()
+    check_confirmable(now)
+    rows = read_csv(ORDERS)
+    targets = [r for r in rows if r["status"] == "pending" and not r.get("auto")
+               and (a.all or r["id"] in a.ids) and r["created"] <= now.date().isoformat() <= r["gtd"]]
+    missing = set(a.ids) - {r["id"] for r in targets}
+    if missing and not a.all:
+        sys.exit(f"cannot confirm {sorted(missing)}: not pending, not valid today ({now.date()}), or automatic")
+    for r in targets:
+        r["confirmed_on"], r["confirmed_at"] = now.date().isoformat(), now.isoformat(timespec="minutes")
+        print(f"confirmed {r['id']} {r['side']} {r['ticker']} for today's close ({now:%H:%M} ET)")
+    write_csv(ORDERS, ORDER_COLS, rows)
 
 
 def cmd_order_list(a):
@@ -216,9 +275,9 @@ def cmd_order_list(a):
         rows = [r for r in rows if r["status"] == a.status]
     for r in rows:
         print(f"{r['id']} {r['status']:9} {r['created']} {r['side']:4} {r['ticker']:6} "
-              f"{r['size_type']}={r['size_value']} tier={r['tier']} stop={r['stop'] or r.get('stop_pct', '') + '%'} "
-              f"target={r['target'] or r.get('target_pct', '') + '%'} "
-              f"maxpx={r['max_price']} gtd={r['gtd']} {r['reason']}")
+              f"{r['size_type']}={r['size_value']} tier={r['tier']} stop={r['stop'] or (r.get('stop_pct') and r['stop_pct'] + '%') or '-'} "
+              f"target={r['target'] or (r.get('target_pct') and r['target_pct'] + '%') or '-'} "
+              f"maxpx={r['max_price']} gtd={r['gtd']} [{order_state(r)}] {r['reason']}")
 
 
 def cmd_order_cancel(a):
@@ -242,14 +301,19 @@ def process_orders(D, prices, sources):
     for o in orders:
         if o["status"] == "pending" and o["gtd"] < day:
             o["status"], o["reason"] = "expired", f"not filled by {o['gtd']}"
-    elig = [o for o in orders if o["status"] == "pending" and o["created"] < day <= o["gtd"]]
-    elig.sort(key=lambda o: (o["side"] != "sell", int(o["priority"]), o["id"]))
     todays = [r for r in ledger if r["date"] == day]
     n_today, touched = len(todays), {r["ticker"] for r in todays}
 
     def skip(o, why):
         o["status"], o["reason"] = "skipped", why
         msgs.append(f"SKIP {o['id']} {o['side']} {o['ticker']}: {why}")
+
+    due = [o for o in orders if o["status"] == "pending" and o["created"] <= day <= o["gtd"]]
+    for o in due:
+        if not confirmed_for(o, day) and o["gtd"] <= day:
+            skip(o, f"not re-confirmed before the {CUTOFF:%H:%M} ET cutoff on the fill day")
+    elig = [o for o in due if o["status"] == "pending" and confirmed_for(o, day)]
+    elig.sort(key=lambda o: (o["side"] != "sell", int(o["priority"]), o["id"]))
 
     for o in elig:
         t, side = o["ticker"], o["side"]
@@ -395,7 +459,8 @@ def check_exits(D, prices):
             o = {"id": next_id("O", orders), "created": day, "ticker": t, "side": "sell", "size_type": "all",
                  "size_value": 1, "tier": "A", "max_price": "", "min_price": "", "stop": "", "target": "",
                  "priority": 0, "gtd": next_trading_day(D).isoformat(), "status": "pending", "filled_date": "",
-                 "reason": "", "thesis": f"AUTO-STOP: close {px} <= stop {ex['stop']}"}
+                 "reason": "", "thesis": f"AUTO-STOP: close {px} <= stop {ex['stop']}", "auto": "1",
+                 "confirmed_on": "", "confirmed_at": ""}
             orders.append(o)
             msgs.append(f"STOP HIT {t}: close {px} <= {ex['stop']} -> queued {o['id']} sell-all for next close")
         elif ex.get("target") and px >= ex["target"]:
@@ -550,7 +615,8 @@ def export_rows(b):
     orders = [{"id": o["id"], "created": o["created"], "side": o["side"], "ticker": o["ticker"],
                "size": size_label(o), "stop": level_label(o["stop"], o.get("stop_pct"), "-"),
                "target": level_label(o["target"], o.get("target_pct"), "+"),
-               "max_price": fnum(o["max_price"]), "status": o["status"], "reason": o["reason"], "thesis": o["thesis"]}
+               "max_price": fnum(o["max_price"]), "status": o["status"], "state": order_state(o),
+               "reason": o["reason"], "thesis": o["thesis"]}
               for o in read_csv(ORDERS) if o["status"] == "pending" or o["created"] >= week_ago(b)]
     trades = [{"id": t["id"], "date": t["date"], "side": t["side"], "ticker": t["ticker"], "qty": float(t["qty"]),
                "fill_price": float(t["fill_price"]), "gross": float(t["gross"]), "fees": float(t["fees"]),
@@ -680,7 +746,13 @@ def main():
     oa.add_argument("--created")
     oa.add_argument("--gtd", help="good-till date; default: next trading day only")
     oa.add_argument("--thesis")
+    oa.add_argument("--confirm", action="store_true",
+                    help="decide now and fill at TODAY's close (only before 15:50 ET on a trading day)")
     oa.set_defaults(fn=cmd_order_add)
+    ocf = o.add_parser("confirm", help="re-confirm proposals for today's close (before 15:50 ET)")
+    ocf.add_argument("ids", nargs="*")
+    ocf.add_argument("--all", action="store_true")
+    ocf.set_defaults(fn=cmd_order_confirm)
     ol = o.add_parser("list")
     ol.add_argument("--status")
     ol.set_defaults(fn=cmd_order_list)

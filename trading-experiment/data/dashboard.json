@@ -80,7 +80,8 @@
     "max_drawdown": 0.0,
     "best_day": null,
     "worst_day": null,
-    "total_fills": 0
+    "total_fills": 0,
+    "verified_fills": 0
   },
   "est_after_tax_equity": 2000.0
 }

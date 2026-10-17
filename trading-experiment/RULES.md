@@ -14,12 +14,16 @@ Simulation only. No brokerage account is touched. Nothing here is financial advi
 US-listed stocks and ETFs (including leveraged and inverse ETFs), fractional shares allowed. Minimum order $1. A name needs a verifiable official close each
 day or it cannot be traded.
 
-## Execution protocol (no look-ahead)
-1. Orders are **queued after a session closes** (`tracker.py order add`), with a written thesis.
-2. They **fill at the next session's official close** (market-on-close style) plus slippage, in this order: sells first, then by priority.
-3. A buy may carry `--max-price` (skipped if the close is above it, so a gap cannot make the committee chase). A stop or target is judged on **closing
-   prices only**; a stop breach on the close of day D auto-queues a sell-all that fills at the close of D+1 (gap risk is part of the game).
-4. A queued order is a day order: it is valid for the next session only unless `--gtd` extends it.
+## Execution protocol (no look-ahead, nothing locked in)
+1. Orders queued by the evening and Sunday runs are **proposals**. They are not binding and fill nothing by themselves (`tracker.py order add ...`, each with a written thesis).
+2. A pre-close run on the fill day re-evaluates every position and every proposal with the newest information, then **confirms** (`order confirm`), cancels, or adds a new order
+   with `order add --confirm`. The tracker only accepts a confirmation on a trading day **before 15:50 ET** (the NYSE closing-order cutoff). An order that is not confirmed that
+   day does not fill (it is skipped with that reason).
+3. Confirmed orders **fill at that day's official close** (market-on-close style) plus slippage, sells first, then by priority. The decision therefore uses information up to
+   about 15:00-15:50 ET, never the close itself.
+4. A buy may carry `--max-price` (skipped if the close is above it, so a gap cannot make the committee chase). A stop or target is judged on **closing prices only**; a stop
+   breach on the close of day D auto-queues a sell-all that fills at the close of D+1 without needing confirmation. A run may cancel it, but only with a written reason.
+5. A proposal is valid for the next session only unless `--gtd` extends it.
 
 ## Trade limits (enforced in code)
 * **Max 4 fills per day** (each buy or sell fill counts as one). Unfilled/skipped orders do not count.

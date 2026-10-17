@@ -12,7 +12,7 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 4. writes down its reasoning, commits everything to git, and refreshes the dashboard.
 
 ## Why you can trust the scoreboard
-* **No look-ahead.** Orders are queued after a session closes and fill at the *next* session's close, plus slippage and fees.
+* **No look-ahead, nothing locked in.** Orders are only proposals. A pre-close run re-judges each one on the day it would fill and confirms it (before 15:50 ET) or drops it; confirmed orders fill at that day's close, plus slippage and fees.
 * **Append-only ledger.** `data/ledger.csv` is never edited; git history timestamps every decision before its outcome exists.
 * **Every fill carries a written thesis and a price source.** `tracker.py validate` re-checks all rules from the ledger.
 * **A benchmark.** The same $2,000 put into SPY on day one. Beating a risk-free coin flip is not the same as beating the market.
@@ -33,8 +33,9 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 | `DAILY_ROUTINE.md` | The procedure the scheduled run follows |
 
 ## Schedule
-Two durable scheduled tasks wake the portfolio manager (times are New York time, so the Nov 1 clock change is handled):
-* **Weekdays 5:13 PM ET**: close the books, fire the research agents, queue the next orders, journal, refresh the dashboard, commit and push.
+Three durable scheduled tasks wake the portfolio manager (times are New York time, so the Nov 1 clock change is handled):
+* **Weekdays 2:43 PM ET (pre-close decision)**: re-evaluate every position and every proposal with fresh information; confirm, cancel or add orders for today's close.
+* **Weekdays 5:13 PM ET (post-close)**: book the day, fire the research agents, write the next session's *proposals*, journal, refresh the dashboard, commit and push.
 * **Sundays 6:22 PM ET**: weekly review with all six personas, post-mortem, playbook revision, re-plan Monday.
 After 2026-11-18 the first run writes `FINAL_REPORT.md` and disables both tasks. The live dashboard is described in `DASHBOARD.md`.
 
