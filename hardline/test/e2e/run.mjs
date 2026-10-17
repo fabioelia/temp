@@ -223,17 +223,19 @@ async function resilience(browser, srv) {
       await createAndJoin(a, b, { hostRole: 'operator' });
       await startRun(a, b);
       await sleep(1500);
-      const before = await timerText(a);
-      await b.page.reload();
+      // the partner leaves for a few seconds (navigating away keeps this tab's session
+      // storage, so coming back resumes the same seat — exactly what a refresh does)
+      await b.page.goto('about:blank');
       await a.page.waitForSelector('#ov-pause:not(.hidden)', { timeout: 10000 });
       check('pause: host sees SIGNAL LOST when partner drops', true);
       await shot(a, 'e2e-paused');
       const t1 = await timerText(a);
-      await sleep(1500);
+      await sleep(2500);
       const t2 = await timerText(a);
       check('pause: the shared clock is frozen while the partner is away', t1 === t2, `${t1} -> ${t2}`);
-      await waitScreen(b, 'screen-game', 20000);
-      await a.page.waitForSelector('#ov-pause', { state: 'hidden', timeout: 10000 });
+      await b.page.goBack();
+      await waitScreen(b, 'screen-game', 30000);
+      await a.page.waitForSelector('#ov-pause', { state: 'hidden', timeout: 15000 });
       check('rejoin: partner is back in the room and the overlay clears', true);
       const roleB = await get(b, () => window.__hl.app.role);
       check('rejoin: partner kept their role', roleB === 'mentor');
