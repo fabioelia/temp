@@ -9,7 +9,8 @@
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "test": "node --test test/*.test.js",
-    "e2e": "node test/e2e/run.mjs"
+    "e2e": "node test/e2e/run.mjs",
+    "shots": "node test/e2e/screenshots.mjs"
   },
   "engines": { "node": ">=18" },
   "dependencies": {

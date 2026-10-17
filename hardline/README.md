@@ -36,6 +36,10 @@ Requires Node 18+ and a browser with WebGL 2 (any current Chrome, Edge, Firefox 
 
 Every room is solvable only by talking: the server sends each player *only their half* (see [Information split](#information-split)).
 
+## Screenshots
+
+Full-quality captures of every room, Operator on the left of each pair and Mentor on the right, are in [`docs/screenshots/`](docs/screenshots/) (regenerate with `npm run shots`).
+
 ## Design handoff → implementation
 
 | Handoff decision | What shipped |
@@ -104,12 +108,13 @@ The clock is a server value; clients count down locally from each `remainingMs` 
 ```
 npm test            # puzzle + session/protocol tests (fast, no browser)
 npm run e2e         # two real Chromium sessions play the whole game through the UI
-node test/e2e/run.mjs resilience   # disconnect/refresh/timeout scenarios only
+node test/e2e/run.mjs resilience   # disconnect/rejoin/timeout scenarios only
+npm run shots       # full-quality screenshots of every room into docs/screenshots/
 ```
 
 - **Solver bots** play every room using *only* the two role views — the information two humans would have after talking — across 150 seeds per room. If they can solve it, it's solvable; the info-split test proves neither half is enough alone (blind guessing the cipher door wins <3 % of the time).
 - **Session tests** drive the real WebSocket protocol: full five-room playthrough with role swapping, soft reset with re-rolled puzzle, 15 s penalties, the mentor being unable to act, pause-on-disconnect with a frozen clock, rejoin with state intact, lobby rules.
-- **End-to-end** launches the real server and two Chromium instances (software WebGL), reads each page's actual views, and clicks the actual 3D hotspots through all five rooms — including a deliberate mistake in each — then checks the ending screen. It also checks that refreshing a tab pauses and then rejoins, and that timer expiry produces the *resimulating* interstitial. Screenshots are written to `test/e2e/out/`.
+- **End-to-end** launches the real server and two Chromium instances (software WebGL), reads each page's actual views, and clicks the actual 3D hotspots through all five rooms — including a deliberate mistake in each — then checks the ending screen. It also checks that a dropped partner pauses the clock (and that it is genuinely frozen) and that rejoining restores the same seat, that timer expiry produces the *resimulating* interstitial, and a pointer-picking regression (a not-yet-active hit box must never swallow a click meant for something behind it — this once made the final step into the phone unclickable). The e2e runs use `?gfx=low` so software WebGL can keep up; screenshots land in `test/e2e/out/`.
 
 ## Configuration
 
@@ -126,7 +131,7 @@ To play across the internet, run it anywhere that can serve HTTPS with WebSocket
 
 ## Visual fidelity — an honest note
 
-The handoff targets *hyper-realistic full 3D*. This build ships with no downloaded art assets: every texture, material and model is procedural, so it is high-fidelity-stylised rather than photoreal. What gets it most of the way is the lighting model (physically based materials, shadowed spot lights, wet-floor reflections, light shafts, fog, bloom) and heavy post-processing. If you want to push toward photorealism, the seams are clean: drop glTF models/PBR texture sets into `textures.js` / each room's builder, and bake or add an HDRI for `scene.environment` in `stage.js`. The renderer drops pixel ratio and then disables reflections automatically if it can't hold ~25 fps.
+The handoff targets *hyper-realistic full 3D*. This build ships with no downloaded art assets: every texture, material and model is procedural, so it is high-fidelity-stylised rather than photoreal. What gets it most of the way is the lighting model (physically based materials, shadowed spot lights, wet-floor reflections, light shafts, fog, bloom) and heavy post-processing. If you want to push toward photorealism, the seams are clean: drop glTF models/PBR texture sets into `textures.js` / each room's builder, and bake or add an HDRI for `scene.environment` in `stage.js`. **Graphics: Auto / High / Low** (Settings, the ♪ button) — *Auto* drops resolution and then disables reflections if it can't hold ~25 fps; *Low* starts without reflections or MSAA (best for integrated GPUs). Changes apply from the next room.
 
 ## Known limitations
 
