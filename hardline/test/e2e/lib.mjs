@@ -2,8 +2,11 @@
 import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
 import { createServer } from '../../server/index.js';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import express from 'express';
+import { ExpressPeerServer } from 'peer';
 
 export const OUT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'out');
 fs.mkdirSync(OUT, { recursive: true });
@@ -19,11 +22,59 @@ export async function startGame(env = {}) {
   return createServer({ port: 0, host: '127.0.0.1' });
 }
 
+const PROJECT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const STATIC_MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.txt': 'text/plain' };
+
+/**
+ * The game exactly as GitHub Pages would serve it: plain files under a sub-path
+ * (/games/hardline/), nothing dynamic — plus a local PeerJS broker standing in for the public one,
+ * so two browsers can find each other without the internet. There is no game server at all.
+ */
+export async function startStatic({ env = {} } = {}) {
+  const allowed = (rel) => ['index.html', 'cast.html'].includes(rel) || (/^(css|js|shared|engine|vendor)\//.test(rel) && !rel.includes('..'));
+  const server = http.createServer((req, res) => {
+    const pathname = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    const prefix = '/games/hardline/';
+    let rel = pathname.startsWith(prefix) ? pathname.slice(prefix.length) : null;
+    if (rel !== null && (rel === '' || rel.endsWith('/'))) rel += 'index.html';
+    const file = rel !== null && allowed(rel) ? path.join(PROJECT, rel) : null;
+    if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
+      res.writeHead(404, { 'content-type': 'text/html' });
+      return res.end('<h1>404</h1>');
+    }
+    res.writeHead(200, { 'content-type': STATIC_MIME[path.extname(file)] ?? 'application/octet-stream' });
+    fs.createReadStream(file).pipe(res);
+  });
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+
+  const app = express();
+  const broker = app.listen(0, '127.0.0.1');
+  await new Promise((r) => broker.once('listening', r));
+  app.use('/', ExpressPeerServer(broker, { path: '/' }));
+  const peerOpts = { host: '127.0.0.1', port: broker.address().port, path: '/', secure: false, config: { iceServers: [] } };
+
+  const port = server.address().port;
+  return {
+    isStatic: true,
+    port,
+    base: `http://127.0.0.1:${port}/games/hardline/`,
+    peerOpts,
+    env: { SOLVE_HOLD_MS: '700', FAIL_RESET_MS: '2500', ...env },
+    close: () => new Promise((r) => server.close(() => broker.close(() => r()))),
+  };
+}
+
 export const LOW = 'gfx=low&scale=0.6&maxdt=4';
 
 export async function newPlayer(browser, srv, name, { viewport = { width: 1280, height: 720 }, seen = true, query = '' } = {}) {
   const ctx = await browser.newContext({ viewport, deviceScaleFactor: 1 });
-  if (seen) await ctx.addInitScript(() => localStorage.setItem('hardline.seen.v1', '1'));
+  if (seen) await ctx.addInitScript(() => { try { localStorage.setItem('hardline.seen.v1', '1'); } catch {} });
+  if (srv.isStatic) {
+    await ctx.addInitScript(({ peerOpts, env }) => {
+      window.PEERJS_OPTS = peerOpts;
+      window.HARDLINE_ENV = env;
+    }, { peerOpts: srv.peerOpts, env: srv.env });
+  }
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
@@ -32,7 +83,7 @@ export async function newPlayer(browser, srv, name, { viewport = { width: 1280, 
     else if (m.type() === 'warning' && /three|webgl/i.test(m.text())) errors.push(`warn: ${m.text().slice(0, 200)}`);
   });
   page.on('requestfailed', (r) => errors.push(`requestfailed: ${r.url()}`));
-  return { name, ctx, page, errors, query, url: `http://127.0.0.1:${srv.port}/` };
+  return { name, ctx, page, errors, query, url: srv.base ?? `http://127.0.0.1:${srv.port}/` };
 }
 
 export async function createAndJoin(host, guest, { hostRole = 'operator' } = {}) {

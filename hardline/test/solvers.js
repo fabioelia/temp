@@ -3,7 +3,7 @@
 // solve every seed, the rooms are solvable; if they needed anything else, the
 // information split would be broken.
 
-import { VECTORS } from '../server/puzzles/bullets.js';
+import { VECTORS } from '../engine/puzzles/bullets.js';
 
 const vec = Object.fromEntries(VECTORS.map((v) => [v.id, v]));
 
@@ -109,10 +109,10 @@ export function mazeRoute(mentor, from) {
 
 // ============================================================================ Deep Loop rooms
 
-import { holds } from '../server/puzzles/vault.js';
-import { evaluate } from '../server/puzzles/logic.js';
-import { lineSolve } from '../server/puzzles/mosaic.js';
-import { compassBearing, fromReading } from '../server/puzzles/triangulate.js';
+import { holds } from '../engine/puzzles/vault.js';
+import { evaluate } from '../engine/puzzles/logic.js';
+import { lineSolve } from '../engine/puzzles/mosaic.js';
+import { compassBearing, fromReading } from '../engine/puzzles/triangulate.js';
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 

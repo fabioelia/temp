@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PUZZLES } from '../server/puzzles/index.js';
+import { PUZZLES } from '../engine/puzzles/index.js';
 import { makeRng } from '../shared/rng.js';
 import { ROOM_DEFS, PENALTY_MS } from '../shared/rooms.js';
 import { solvers, localise, mazeRoute } from './solvers.js';

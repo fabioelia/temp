@@ -1,0 +1,1 @@
+PeerJS 1.5.4 (MIT) — https://peerjs.com — vendored unmodified (minus the sourcemap comment).

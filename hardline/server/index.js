@@ -6,8 +6,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
-import { Session } from './session.js';
-import { CODE_ALPHABET } from '../shared/rooms.js';
+import { createHub } from '../engine/hub.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = Number(process.env.PORT) || 3000;
@@ -24,11 +23,10 @@ export function lanAddresses() {
   return out;
 }
 
-const MOUNTS = [
-  ['/vendor/three/', path.join(ROOT, 'node_modules/three/')],
-  ['/shared/', path.join(ROOT, 'shared/')],
-  ['/', path.join(ROOT, 'public/')],
-];
+// The project root doubles as the static site (it is also what gets published to GitHub Pages),
+// so only the browser-facing parts of it are served: never server/, test/, docs/ or node_modules/.
+const PUBLIC_DIRS = ['css', 'js', 'shared', 'engine', 'vendor'];
+const PUBLIC_FILES = new Set(['index.html', 'cast.html', 'favicon.ico']);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -43,16 +41,8 @@ const MIME = {
 };
 
 export function createServer({ port = PORT, host = HOST } = {}) {
-  const sessions = new Map();
-
-  function newCode() {
-    for (let i = 0; i < 50; i++) {
-      let code = '';
-      for (let j = 0; j < 4; j++) code += CODE_ALPHABET[Math.floor(Math.random() * CODE_ALPHABET.length)];
-      if (!sessions.has(code)) return code;
-    }
-    throw new Error('no free session codes');
-  }
+  const hub = createHub();
+  const sessions = hub.sessions;
 
   const server = http.createServer(async (req, res) => {
     try {
@@ -69,9 +59,14 @@ export function createServer({ port = PORT, host = HOST } = {}) {
       let pathname = decodeURIComponent(url.pathname);
       if (pathname === '/cast') pathname = '/cast.html'; // the TV screen
       if (pathname.endsWith('/')) pathname += 'index.html';
-      const mount = MOUNTS.find(([prefix]) => pathname.startsWith(prefix));
-      const file = path.normalize(path.join(mount[1], pathname.slice(mount[0].length)));
-      if (!file.startsWith(mount[1])) {
+      const rel = pathname.replace(/^\/+/, '');
+      const top = rel.split('/')[0];
+      if (!(PUBLIC_DIRS.includes(top) && rel.includes('/')) && !PUBLIC_FILES.has(rel)) {
+        res.writeHead(404, { 'content-type': 'text/plain' });
+        return res.end('not found');
+      }
+      const file = path.normalize(path.join(ROOT, rel));
+      if (!file.startsWith(ROOT + path.sep)) {
         res.writeHead(403);
         return res.end('forbidden');
       }
@@ -80,10 +75,13 @@ export function createServer({ port = PORT, host = HOST } = {}) {
         res.writeHead(404, { 'content-type': 'text/plain' });
         return res.end('not found');
       }
-      const body = await readFile(file);
+      let body = await readFile(file);
+      // a Node server behind the page means plain WebSockets; on a static host this marker stays
+      // an inert comment and the page falls back to peer-to-peer (see js/transport.js)
+      if (file.endsWith('.html')) body = Buffer.from(body.toString('utf8').replace('<!--hardline:server-->', '<meta name="hardline-transport" content="ws">'));
       res.writeHead(200, {
         'content-type': MIME[path.extname(file)] ?? 'application/octet-stream',
-        'cache-control': file.includes('node_modules') ? 'public, max-age=86400' : 'no-cache',
+        'cache-control': rel.startsWith('vendor/') ? 'public, max-age=86400' : 'no-cache',
         'x-content-type-options': 'nosniff',
       });
       res.end(body);
@@ -97,91 +95,10 @@ export function createServer({ port = PORT, host = HOST } = {}) {
   // ws re-emits the HTTP server's errors (e.g. a failed IPv6 bind); listen() below handles them
   wss.on('error', () => {});
 
-  wss.on('connection', (ws) => {
-    let session = null;
-    let player = null;
-    let watching = null; // { session, sp } when this socket is a read-only TV screen
-    let budget = 60;
-    const refill = setInterval(() => (budget = 60), 1000);
-
-    const fail = (code, message) => ws.send(JSON.stringify({ t: 'error', code, message }));
-
-    ws.on('message', (raw) => {
-      if (--budget < 0) return;
-      let msg;
-      try {
-        msg = JSON.parse(raw.toString());
-      } catch {
-        return;
-      }
-      if (!msg || typeof msg.t !== 'string') return;
-
-      if (watching) {
-        // spectators are strictly read-only
-        if (msg.t === 'ping') ws.send(JSON.stringify({ t: 'pong' }));
-        return;
-      }
-
-      if (!session) {
-        if (msg.t === 'spectate') {
-          const s = sessions.get(String(msg.code ?? '').toUpperCase().trim());
-          if (!s) return fail('no_session', 'No session with that code. Check it and try again.');
-          const sp = s.addSpectator(ws);
-          if (!sp) return fail('too_many', 'That session already has as many TV screens as it can serve.');
-          watching = { session: s, sp };
-          ws.send(JSON.stringify({ t: 'spectating', code: s.code }));
-          s.sendSpecSnapshot(sp);
-          return;
-        }
-        if (msg.t === 'create') {
-          session = new Session(newCode(), (s) => sessions.delete(s.code));
-          sessions.set(session.code, session);
-          player = session.addPlayer(ws, msg.name);
-          ws.send(JSON.stringify({ t: 'joined', code: session.code, token: player.token, id: player.id }));
-          session.sendLobby();
-        } else if (msg.t === 'join') {
-          const s = sessions.get(String(msg.code ?? '').toUpperCase().trim());
-          if (!s) return fail('no_session', 'No session with that code. Check it and try again.');
-          const p = s.addPlayer(ws, msg.name);
-          if (!p) return fail('session_full', s.phase === 'lobby' ? 'That session already has two players.' : 'That run is already underway.');
-          session = s;
-          player = p;
-          ws.send(JSON.stringify({ t: 'joined', code: s.code, token: p.token, id: p.id }));
-          s.sendLobby();
-        } else if (msg.t === 'resume') {
-          const s = sessions.get(String(msg.code ?? '').toUpperCase().trim());
-          const p = s?.players.find((q) => q.token === msg.token);
-          if (!s || !p) return fail('no_session', 'That session has ended.');
-          session = s;
-          player = p;
-          ws.send(JSON.stringify({ t: 'joined', code: s.code, token: p.token, id: p.id, resumed: true }));
-          s.reconnect(p, ws);
-        } else if (msg.t === 'ping') {
-          ws.send(JSON.stringify({ t: 'pong' }));
-        }
-        return;
-      }
-      session.handle(player, msg);
-    });
-
-    ws.on('close', () => {
-      clearInterval(refill);
-      if (watching) watching.session.removeSpectator(watching.sp);
-      if (session && player) session.disconnect(player, ws);
-    });
-    ws.on('error', () => {});
-  });
+  wss.on('connection', (ws) => hub.attach(ws));
 
   // sweep abandoned sessions
-  const sweep = setInterval(() => {
-    const now = Date.now();
-    for (const s of sessions.values()) {
-      if (!s.connectedCount && now - s.lastActive > 15 * 60 * 1000) {
-        s.resetRun();
-        sessions.delete(s.code);
-      }
-    }
-  }, 60 * 1000);
+  const sweep = setInterval(() => hub.sweep(), 60 * 1000);
   sweep.unref();
 
   const listen = (h) =>
@@ -212,7 +129,7 @@ export function createServer({ port = PORT, host = HOST } = {}) {
       close: () =>
         new Promise((r) => {
           clearInterval(sweep);
-          for (const s of sessions.values()) s.resetRun();
+          hub.closeAll();
           for (const c of wss.clients) c.terminate();
           wss.close(() => server.close(() => r()));
         }),

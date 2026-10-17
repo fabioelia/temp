@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PUZZLES } from '../server/puzzles/index.js';
+import { PUZZLES } from '../engine/puzzles/index.js';
 import { makeRng } from '../shared/rng.js';
 import { PENALTY_MS, ROOM_DEFS } from '../shared/rooms.js';
 import { echoPresses, vaultCandidates, gridLevers, triangulateCell, logicSwitches, mosaicGrid } from './solvers.js';
-import { expectedPress, PYLONS } from '../server/puzzles/echo.js';
-import { evaluate } from '../server/puzzles/logic.js';
+import { expectedPress, PYLONS } from '../engine/puzzles/echo.js';
+import { evaluate } from '../engine/puzzles/logic.js';
 
 // The Deep Loop rooms. As with the classic rooms: oracle solvers that use ONLY the two role views
 // must be able to solve every seed, and neither view may carry the other's half.

@@ -6,7 +6,7 @@
 //   node test/e2e/rooms-stress.mjs [seedsPerRoom=6]
 
 import { launch, startGame, newPlayer, createAndJoin, startRun, sleep, LOW } from './lib.mjs';
-import { PUZZLES } from '../../server/puzzles/index.js';
+import { PUZZLES } from '../../engine/puzzles/index.js';
 import { makeRng } from '../../shared/rng.js';
 import { solvers, localise, mazeRoute } from '../solvers.js';
 

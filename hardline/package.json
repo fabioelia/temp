@@ -13,9 +13,13 @@
     "shots": "node test/e2e/screenshots.mjs",
     "stress": "node test/e2e/rooms-stress.mjs"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "three": "^0.180.0",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "peer": "^1.0.2"
   }
 }

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#020604">
+<title>HARDLINE — Bridge display</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23020604'/%3E%3Cpath d='M16 5v22M7 16h18' stroke='%232dff7a' stroke-width='3'/%3E%3C/svg%3E">
+<!--hardline:server-->
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/cast.css">
+</head>
+<body class="tv">
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="crt" aria-hidden="true"></div>
+
+<main id="tv">
+  <header class="tv-top">
+    <div class="brand">HALCYON<span> // BRIDGE</span></div>
+    <div class="tv-room" id="tv-room"></div>
+    <div class="tv-code">SESSION <b id="tv-code">----</b><span id="tv-conn" class="tv-conn"></span></div>
+  </header>
+
+  <!-- enter a code -->
+  <section id="sc-connect" class="scene">
+    <div class="connect-card">
+      <p class="eyebrow">BRIDGE DISPLAY // FOR THE BIG SCREEN</p>
+      <h1 class="glitch" data-text="HARDLINE">HARDLINE</h1>
+      <p class="lead">A spoiler-free second screen for the couch. It shows the shared clock, the Agent trace, the crew and the story — and <b>never</b> either player's secret half.</p>
+      <form id="connect-form">
+        <input id="in-code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="CODE" aria-label="Session code" autofocus>
+        <button class="btn primary" type="submit">WATCH</button>
+      </form>
+      <p class="error" id="connect-error" role="alert"></p>
+      <ol class="cast-help">
+        <li>In Chrome, open this page (you're on it).</li>
+        <li>Menu <b>⋮ → Save and share → Cast…</b> and pick your Chromecast / TV, with source <b>Cast tab</b>.</li>
+        <li>Enter the four-letter code from the lobby. Press <b>F</b> for full screen.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- waiting for the crew -->
+  <section id="sc-lobby" class="scene hidden">
+    <div class="lobby-tv">
+      <p class="eyebrow">THE HALCYON IS WAITING FOR ITS CREW</p>
+      <div class="big-code" id="big-code">----</div>
+      <div class="tv-slots">
+        <div class="tv-slot" id="tv-slot-0"><span class="dot"></span><b>—</b><i>host</i></div>
+        <div class="tv-slot" id="tv-slot-1"><span class="dot"></span><b>—</b><i>waiting…</i></div>
+      </div>
+      <p class="lead dim" id="tv-join-hint"></p>
+    </div>
+  </section>
+
+  <!-- story beats between rooms -->
+  <section id="sc-brief" class="scene hidden">
+    <div class="brief-tv">
+      <div class="brief-kind" id="tv-kind">JACKING IN</div>
+      <div class="brief-title" id="tv-title"></div>
+      <div id="tv-lines" class="tv-lines" aria-live="polite"></div>
+      <div class="crew-strip" id="tv-crew-brief"></div>
+    </div>
+  </section>
+
+  <!-- the live room -->
+  <section id="sc-play" class="scene hidden">
+    <div class="play-grid">
+      <aside class="col left">
+        <div class="panel card">
+          <h4>CREW</h4>
+          <div class="crew-row"><span class="role">OPERATOR</span><b id="crew-op">—</b><i>JACKED IN</i></div>
+          <div class="crew-row"><span class="role">MENTOR</span><b id="crew-mentor">—</b><i>ABOARD</i></div>
+        </div>
+        <div class="panel card">
+          <h4 id="stage-label">PROGRESS</h4>
+          <div class="pips" id="tv-pips"></div>
+        </div>
+        <div class="panel card">
+          <h4>MISTAKES</h4>
+          <div class="strikes" id="tv-strikes"></div>
+          <p class="strike-note" id="strike-note">Each one costs 15 seconds.</p>
+        </div>
+      </aside>
+
+      <div class="col center">
+        <div class="ring-wrap">
+          <canvas id="ring" aria-hidden="true"></canvas>
+          <div class="ring-text">
+            <div class="tv-timer" id="tv-timer">0:00.0</div>
+            <div class="tv-trace">AGENT TRACE <b id="tv-trace">0%</b></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="col right">
+        <div class="panel card log">
+          <h4>SHIP LOG</h4>
+          <div id="tv-log"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- waking up -->
+  <section id="sc-end" class="scene hidden">
+    <div class="end-tv">
+      <p class="eyebrow" id="tv-end-eyebrow">HARDLINE CONNECTED</p>
+      <h2 class="glitch" data-text="WAKING UP">WAKING UP</h2>
+      <div id="tv-end-lines" class="tv-lines"></div>
+      <div id="tv-end-stats" class="end-stats hidden"></div>
+    </div>
+  </section>
+
+  <!-- the way down -->
+  <footer class="descent" id="descent" aria-label="Descent through the five security layers"></footer>
+
+  <div id="tv-overlay" class="tv-overlay hidden"><div class="overlay-box"><h3 id="tv-ov-title"></h3><p id="tv-ov-text"></p></div></div>
+
+  <div class="tv-controls" id="tv-controls">
+    <button class="btn small ghost" id="btn-sound">SOUND: OFF</button>
+    <button class="btn small ghost" id="btn-full">FULL SCREEN (F)</button>
+  </div>
+</main>
+
+<script type="module" src="js/cast.js"></script>
+</body>
+</html>

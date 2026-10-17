@@ -5,7 +5,7 @@
 //   node test/e2e/run.mjs            # everything
 //   node test/e2e/run.mjs resilience # only the reconnect + timeout scenarios
 
-import { launch, startGame, newPlayer, createAndJoin, startRun, enterRoom, shot, sleep, clickHot, byRole, LOW } from './lib.mjs';
+import { launch, startGame, startStatic, newPlayer, createAndJoin, startRun, enterRoom, shot, sleep, clickHot, byRole, LOW } from './lib.mjs';
 import { solvers, localise, mazeRoute, bulletCells } from '../solvers.js';
 
 const only = process.argv[2];
@@ -325,7 +325,7 @@ async function cast(browser, srv) {
   const tv = await newPlayer(browser, srv, 'TV', { viewport: { width: 1920, height: 1080 } });
   try {
     const code = await createAndJoin(a, b, { hostRole: 'operator' });
-    await tv.page.goto(`${tv.url}cast?code=${code}`);
+    await tv.page.goto(`${tv.url}cast.html?code=${code}`);
     await tv.page.waitForSelector('#sc-lobby:not(.hidden)', { timeout: 15000 });
     await tv.page.waitForFunction(() => document.querySelectorAll('#tv-slot-0.on, #tv-slot-1.on').length === 2, null, { timeout: 10000 });
     check('tv: shows the session code and both crew members in the lobby', (await get(tv, () => document.getElementById('big-code').textContent)) === code);
@@ -379,15 +379,73 @@ async function cast(browser, srv) {
   }
 }
 
+
+/**
+ * The game as published on GitHub Pages: plain static files under a sub-path, no game server. The
+ * host's own tab runs the engine and the partner (and a TV screen) connect to it over WebRTC.
+ */
+async function staticHosting(browser) {
+  console.log('\n● Static hosting (no server): the host\'s tab runs the game, partner + TV connect over WebRTC');
+  const stat = await startStatic();
+  const a = await newPlayer(browser, stat, 'Trin', { query: LOW });
+  const b = await newPlayer(browser, stat, 'Wren', { query: LOW });
+  const tv = await newPlayer(browser, stat, 'TV', { viewport: { width: 1920, height: 1080 } });
+  try {
+    const health = await a.ctx.request.get(`${stat.base}healthz`);
+    check('static: there is no server behind the site (no /healthz)', health.status() === 404);
+    const code = await createAndJoin(a, b, { hostRole: 'operator' });
+    const mode = await get(a, () => import(new URL('js/transport.js', location.href).href).then((m) => m.transportMode()));
+    check('static: the page picked the peer-to-peer transport on its own', mode === 'p2p', mode);
+    check('static: partner joined by code and both are seated', (await get(a, () => document.querySelectorAll('#screen-lobby .slot.on').length)) === 2);
+    const invite = await get(a, () => window.__hl.app.lobby && document.querySelector('#btn-copy') && location.href);
+    check('static: the invite link stays under the sub-path', typeof invite === 'string' && invite.includes('/games/hardline/'));
+
+    await tv.page.goto(`${tv.url}cast.html?code=${code}`);
+    await tv.page.waitForSelector('#sc-lobby:not(.hidden)', { timeout: 20000 });
+    await tv.page.waitForFunction(() => document.querySelectorAll('#tv-slot-0.on, #tv-slot-1.on').length === 2, null, { timeout: 10000 });
+    check('static: the TV screen joins the host tab and shows the crew', (await get(tv, () => document.getElementById('big-code').textContent)) === code);
+
+    await a.page.click('#btn-start');
+    await enterRoom(a, b);
+    const { operator, mentor } = await byRole(a, b);
+    await sleep(1200);
+
+    // the partner drops, the host's tab pauses the shared clock, and they slip back into the same seat
+    await b.page.goto('about:blank');
+    await a.page.waitForSelector('#ov-pause:not(.hidden)', { timeout: 30000 });
+    check('static: the host pauses the clock when the partner\'s connection drops', true);
+    await b.page.goBack();
+    await waitScreen(b, 'screen-game', 40000);
+    await a.page.waitForSelector('#ov-pause', { state: 'hidden', timeout: 30000 });
+    check('static: the partner resumes the same seat over a fresh WebRTC connection', (await get(b, () => window.__hl.app.role)) === (mentor === b ? 'mentor' : 'operator'));
+    await sleep(800);
+
+    await rooms.cipher(operator, mentor);
+    await tv.page.waitForFunction(() => document.querySelectorAll('#tv-strikes i:not(.none)').length >= 0, null, { timeout: 5000 });
+    await shot(tv, 'e2e-static-tv');
+
+    // the host closing their tab ends the session for everyone else
+    await a.page.close();
+    await b.page.waitForSelector('#screen-landing:not(.hidden)', { timeout: 90000 });
+    check('static: when the host leaves, the partner is returned to the landing page', true);
+  } finally {
+    for (const p of [a, b, tv]) if (p.errors.length) check(`static: no browser errors (${p.name})`, false, p.errors.slice(0, 3).join(' | '));
+    for (const p of [a, b, tv]) await p.ctx.close();
+    await stat.close();
+  }
+}
+
 // --------------------------------------------------------------------- main
 
 const srv = await startGame({ SOLVE_HOLD_MS: '1400', FAIL_RESET_MS: '3000' });
 const browser = await launch();
 try {
+  if (only === 'static') await staticHosting(browser);
   if (!only || only === 'full') await fullRun(browser, srv);
   if (!only || only === 'picking') await picking(browser, srv);
   if (!only || only === 'cast') await cast(browser, srv);
   if (!only || only === 'resilience') await resilience(browser, srv);
+  if (!only) await staticHosting(browser);
 } catch (e) {
   check(`scenario crashed: ${e.message.split('\n')[0]}`, false);
   console.error(e);
