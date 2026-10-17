@@ -24,6 +24,9 @@ export async function create({ stage, view, send, audio }) {
   const M = materials();
   const root = new THREE.Group();
   scene.add(root);
+  // test/debug handles to the hotspots. Declared first: applyPatch() runs during the first
+  // paint and registers the phone here when it is already in the starting 3x3 patch.
+  const hot = {};
   scene.background = new THREE.Color(0x000201);
   scene.fog = new THREE.FogExp2(0x000402, 0.05);
   scene.environmentIntensity = 0.03;
@@ -300,7 +303,6 @@ export async function create({ stage, view, send, audio }) {
   place(view.pos);
   audio.freeze();
 
-  const hot = {};
   for (const d of ['n', 'e', 's', 'w']) hot[`move:${d}`] = arrows[d].hit;
   if (exitBooth) hot.phone = exitBooth.hit;
 

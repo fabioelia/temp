@@ -10,7 +10,8 @@
     "dev": "node --watch server/index.js",
     "test": "node --test test/*.test.js",
     "e2e": "node test/e2e/run.mjs",
-    "shots": "node test/e2e/screenshots.mjs"
+    "shots": "node test/e2e/screenshots.mjs",
+    "stress": "node test/e2e/rooms-stress.mjs"
   },
   "engines": { "node": ">=18" },
   "dependencies": {
