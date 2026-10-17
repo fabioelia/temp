@@ -7,7 +7,8 @@ module itself (`tracker.py day --auto-prices`), so prices are never typed in by 
 
 Providers (all optional; the ones that answer are cross-checked):
   yahoo    keyless  live + daily closes   query1/query2.finance.yahoo.com
-  stooq    keyless  daily closes          stooq.com
+  cboe     keyless  daily closes          cdn.cboe.com (15-minute delayed quotes, so closes only)
+  stooq    keyless  daily closes          stooq.com (off by default: resets connections from cloud IPs)
   finnhub  key      live                  finnhub.io           env FINNHUB_API_KEY
   alpaca   key      live + daily closes   data.alpaca.markets  env ALPACA_KEY_ID, ALPACA_SECRET_KEY
 
@@ -91,7 +92,7 @@ def positive(x):
 
 
 def mk(symbol, provider, price, ts, kind, bid=None, ask=None, delayed=False):
-    return {"symbol": symbol, "provider": provider, "price": price, "ts": ts, "kind": kind,
+    return {"symbol": symbol, "provider": provider, "price": round(price, 4), "ts": ts, "kind": kind,
             "bid": bid, "ask": ask, "delayed": delayed}
 
 
@@ -158,6 +159,19 @@ def parse_alpaca_bars(data, sym, day):
     raise ProviderError("nodata", f"alpaca bars: no close for {day}")
 
 
+def parse_cboe_daily(data, sym, day):
+    """Cboe delayed quote: `close` is the official close of the session in `last_trade_time` (ET)."""
+    try:
+        q = data["data"]
+        close, ltt = positive(q["close"]), q["last_trade_time"]
+    except (KeyError, TypeError) as e:
+        raise ProviderError("parse", f"cboe: {e}") from e
+    if close is None or not ltt or ltt[:10] != day:
+        raise ProviderError("nodata", f"cboe: last session {str(ltt)[:10]}, not {day}")
+    return mk(sym, "cboe", close, datetime.fromisoformat(ltt).replace(tzinfo=ET), "close",
+              bid=positive(q.get("bid")), ask=positive(q.get("ask")), delayed=True)
+
+
 # ---------------------------------------------------------------- providers (network)
 def yahoo_live(sym):
     err = None
@@ -188,6 +202,11 @@ def stooq_daily(sym, day):
     if status != 200:
         raise ProviderError(fail_kind(status, body), f"HTTP {status}: {body[:120]}")
     return parse_stooq_daily(body, sym, day)
+
+
+def cboe_daily(sym, day):
+    url = f"{base('cboe', 'https://cdn.cboe.com')}/api/global/delayed_quotes/quotes/{urllib.parse.quote(sym)}.json"
+    return parse_cboe_daily(get_json(url), sym, day)
 
 
 def finnhub_live(sym):
@@ -221,7 +240,7 @@ def alpaca_daily(sym, day):
 
 
 LIVE = {"yahoo": yahoo_live, "finnhub": finnhub_live, "alpaca": alpaca_live}
-DAILY = {"yahoo": yahoo_daily, "stooq": stooq_daily, "alpaca": alpaca_daily}
+DAILY = {"yahoo": yahoo_daily, "cboe": cboe_daily, "alpaca": alpaca_daily}  # stooq_daily available but off
 
 
 # ---------------------------------------------------------------- consensus

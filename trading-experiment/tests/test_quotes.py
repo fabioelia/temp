@@ -56,6 +56,12 @@ class Parsers(unittest.TestCase):
         bars = {"bars": {"XLE": [{"t": "2026-10-19T04:00:00Z", "c": 68.55}]}}
         self.assertEqual(quotes.parse_alpaca_bars(bars, "XLE", DAY)["price"], 68.55)
 
+    def test_cboe_daily_uses_the_session_of_the_last_trade(self):
+        data = {"data": {"close": 68.24, "last_trade_time": "2026-10-19T15:59:59", "bid": 68.2, "ask": 68.25}}
+        self.assertEqual(quotes.parse_cboe_daily(data, "XLE", DAY)["price"], 68.24)
+        with self.assertRaises(quotes.ProviderError):
+            quotes.parse_cboe_daily(data, "XLE", "2026-10-20")
+
     def test_failure_classification(self):
         self.assertEqual(quotes.fail_kind(0, "URLError: Tunnel connection failed: 403 Forbidden"), "blocked")
         self.assertEqual(quotes.fail_kind(0, "URLError: [Errno -2] Name or service not known"), "dns")
@@ -108,9 +114,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(yahoo_daily_json(712.34))
         if "/v8/finance/chart/" in p:
             return self.reply(yahoo_live_json(68.50, Handler.live_ts))
-        if p.startswith("/q/d/l/"):
-            close = "799.00" if Handler.bad_stooq else "712.30"
-            return self.reply(f"Date,Open,High,Low,Close,Volume\n{DAY},1,2,3,{close},9\n")
+        if p.startswith("/api/global/delayed_quotes/quotes/"):
+            close = 799.00 if Handler.bad_stooq else 712.30
+            return self.reply({"data": {"close": close, "last_trade_time": f"{DAY}T16:00:00"}})
         if p.startswith("/api/v1/quote"):
             if "token=testkey" not in p:
                 return self.reply({"error": "bad key"}, 401)
@@ -124,8 +130,8 @@ class EndToEnd(unittest.TestCase):
         cls.srv = HTTPServer(("127.0.0.1", 0), Handler)
         threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
         port = cls.srv.server_address[1]
-        cls.saved = {k: os.environ.get(k) for k in ("QUOTES_BASE_YAHOO", "QUOTES_BASE_STOOQ", "QUOTES_BASE_FINNHUB", "FINNHUB_API_KEY")}
-        os.environ.update({"QUOTES_BASE_YAHOO": f"http://127.0.0.1:{port}", "QUOTES_BASE_STOOQ": f"http://127.0.0.1:{port}",
+        cls.saved = {k: os.environ.get(k) for k in ("QUOTES_BASE_YAHOO", "QUOTES_BASE_CBOE", "QUOTES_BASE_FINNHUB", "FINNHUB_API_KEY")}
+        os.environ.update({"QUOTES_BASE_YAHOO": f"http://127.0.0.1:{port}", "QUOTES_BASE_CBOE": f"http://127.0.0.1:{port}",
                            "QUOTES_BASE_FINNHUB": f"http://127.0.0.1:{port}/api/v1", "FINNHUB_API_KEY": "testkey"})
         for k in ("http_proxy", "HTTP_PROXY", "all_proxy", "ALL_PROXY"):
             os.environ.pop(k, None)
@@ -142,7 +148,7 @@ class EndToEnd(unittest.TestCase):
         r = quotes.closes(DAY, ["SPY"])["SPY"]
         self.assertEqual(r["status"], "ok")
         self.assertAlmostEqual(r["price"], 712.32, places=2)
-        self.assertIn("yahoo+stooq", r["source"])
+        self.assertIn("yahoo+cboe", r["source"])
 
     def test_closes_fail_closed_when_sources_disagree(self):
         Handler.bad_stooq = True

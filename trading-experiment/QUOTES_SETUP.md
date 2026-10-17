@@ -1,13 +1,13 @@
 # Getting real quotes into the experiment
 
-**Status (2026-10-17):** the sandbox's egress proxy blocks every quote host (HTTP 403 on the tunnel), so the experiment can only use cited web-search closes. Verified with
-`python3 trading-experiment/quotes.py check`:
-
+**Status (2026-10-17, after the environment was given full network access):**
 ```
-yahoo    live / close   BLOCKED (403)        stooq    close   BLOCKED (403)
-finnhub.io, data.alpaca.markets, api.polygon.io, api.twelvedata.com   all unreachable (curl: connection refused by the proxy)
+official closes: READY  (yahoo + cboe, two independent sources; agreed to the cent on SPY, XLE, GUSH, NVDA, SOXL, SQQQ for 10/16)
+live quotes:     yahoo only (single source). cboe is 15-minute delayed, so it is used for closes only.
+stooq:           connection reset / TLS timeout from this cloud IP (off by default)
+nasdaq api:      read timeout;   cnbc quote api: 403
 ```
-This is a network-policy setting that only the environment's owner can change. Nothing in the code or the session can, or should, route around it.
+A second independent *live* source needs either a free Finnhub key (`FINNHUB_API_KEY`) or the broker connector.
 
 ## The fix: allow the hosts (one time, about two minutes)
 Environment menu in the session's title bar, then **Edit**, then **Network access**. Docs: https://code.claude.com/docs/en/cloud-environments#network-access

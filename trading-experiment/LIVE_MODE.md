@@ -59,3 +59,5 @@ happened, and the scoreboard should show both.
 * 2026-10-17: `claude mcp add robinhood-trading --transport http https://agent.robinhood.com/mcp/trading` run in the cloud container. Registered, but `claude mcp list` reports
   `Failed to connect: ERR_PROXY_TUNNEL: Proxy refused to open a tunnel: 403 Forbidden`, because the environment's network policy does not allow `agent.robinhood.com`, and the server's sign-in
   could not be completed from a container anyway. The route that avoids both is the claude.ai custom connector in step 1.
+* 2026-10-17, after full network access: `claude mcp list` reports `Needs authentication` (the host is reachable now). `claude mcp login --no-browser` would need the owner to paste the
+  OAuth redirect URL (which carries an authorization code) back into this session; that is not done here. Use the claude.ai custom connector (step 1), which signs in in the owner's own browser.

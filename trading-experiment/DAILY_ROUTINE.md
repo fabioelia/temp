@@ -34,8 +34,9 @@ Goal: decide, with the freshest information available, what fills at today's clo
 happens: nothing new fills.
 
 1. **Refresh the picture (fast).**
-   * Feed READY: `python3 trading-experiment/quotes.py get TICKER ...` for every held ticker, every pending proposal, and the benchmark; compare live prices with each proposal's
-     `--max-price`, each position's stop and target.
+   * Live prices: `python3 trading-experiment/quotes.py get TICKER ... --allow-single` for every held ticker, every pending proposal, and the benchmark (Yahoo, single source until
+     a second live source exists: Finnhub key or the broker connector). Compare them with each proposal's `--max-price`, each position's stop and target. They are decision inputs
+     only, never an execution price.
    * Feed not READY: WebSearch for the last hours' news on the same tickers and the swing factors (oil/Hormuz headlines, rates, AI-credit stress, index direction today). Treat any
      intraday price from search as unverified color, never as an execution price.
 2. **Re-evaluate each position.** Hold, trim or exit? Check the stop, the target, the regime switches and time stops in `playbook.md`, and the guardrails in `RULES.md`

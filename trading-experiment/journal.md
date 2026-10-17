@@ -60,3 +60,7 @@ if one is ever attached, is read-only quotes only, with no order, transfer or ac
 **Live mode authorized (owner, 2026-10-17):** "I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again. In parallel start the connection to Robinhood, it's not clear it will even work."
 Built `live.py` (kill switch, $2,000 real-capital cap, 30% single-order and 15% leveraged caps, 4 fills a day, one ticket per order, a $500 loss limit that sells to cash and then halts; 32 tests
 pass). `live.enabled` stays false until the connector is verified. Connection attempt: `claude mcp add` ran, and the proxy refuses `agent.robinhood.com` (403). See `LIVE_MODE.md`.
+
+**Quotes live, Day 0 (environment given full network access).** `quotes.py check`: official closes READY from Yahoo + Cboe (independent; agreed to the cent on SPY 763.25, XLE 68.24,
+GUSH 50.12, NVDA 214.13, SOXL 93.67, SQQQ 38.90 for 10/16). The agents' search-derived references for XLE, NVDA and SOXL were correct; GUSH is now price-verified. Stooq resets
+connections from this IP and is off; Nasdaq times out; CNBC refuses. Live intraday quotes are Yahoo-only for now. Robinhood server now reachable but needs sign-in via the claude.ai connector.
