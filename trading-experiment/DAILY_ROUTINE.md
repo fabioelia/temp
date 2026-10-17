@@ -20,7 +20,9 @@ TZ=America/New_York date              # today's ET date and time; D = today's ET
 python3 trading-experiment/tracker.py status
 python3 trading-experiment/tracker.py order list --status pending
 python3 trading-experiment/quotes.py check        # READY means two independent providers answered
+python3 trading-experiment/live.py status          # live mode, kill switch, loss-limit state, open tickets
 ```
+If `KILL_SWITCH` exists, make no real orders at all and say so. If `live.py status` shows open tickets, reconcile them with the broker before anything else.
 Read `RULES.md`, `playbook.md`, the last entries of `journal.md`. Weekend or NYSE holiday: Runs A and B do nothing (say so in one line). After `end_date` in `config.json`: write the
 **final report** (last section) and disable the schedule.
 
@@ -47,9 +49,12 @@ happens: nothing new fills.
    python3 trading-experiment/tracker.py order add ... --confirm           # new idea, decided now, fills at today's close
    ```
    Anything left unconfirmed does not fill. At most 4 fills in total; doing nothing is a valid outcome. Prefer smaller steps and staging when the information is mixed.
-5. **Red-team when it matters.** If today's confirmed buys total 20% or more of equity, or include a leveraged ETF, spawn one fresh `risk` agent with the order list, the portfolio
+5. **Real orders (only if `live.enabled` is true in `config.json`; follow `LIVE_MODE.md` exactly).** After the confirmations, run `live.py check --marks ...` with broker prices, then pass each
+   confirmed order through `live.py gate`. Place only what a gate ticket approves, then `placed` / `record` / `fail`. If the loss limit has tripped, flatten and halt as `check` instructs. Never
+   place an order the gate refused, and never work around a refusal.
+6. **Red-team when it matters.** If today's confirmed buys total 20% or more of equity, or include a leveraged ETF, spawn one fresh `risk` agent with the order list, the portfolio
    and the guardrails (reply in at most 100 words: approve / modify / reject per order) and heed it before confirming.
-6. **Journal and push.** Append a short "Pre-close" entry to `journal.md`: what changed since last evening, each order confirmed/cancelled/added and the one-line reason, the
+7. **Journal and push.** Append a short "Pre-close" entry to `journal.md`: what changed since last evening, each order confirmed/cancelled/added and the one-line reason, the
    state of the feed. Commit and push.
 
 ## Run B: post-close (weekdays ~17:13 ET)
@@ -68,6 +73,7 @@ happens: nothing new fills.
    Nasdaq / Yahoo / Google Finance snippets, two independent sources for any position over 25% of equity, never guessed or interpolated, unverifiable tickers left out. Pass
    `--prices-file` instead of `--auto-prices`. These fills are flagged by `validate` and counted separately; say in the journal and the user message that the feed was down
    (`QUOTES_SETUP.md` explains the fix).
+1b. **Live reconciliation (live mode only).** Compare broker positions with `data/live_ledger.csv`, run `live.py check --marks ...`, and report real P/L next to the paper P/L.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
    market recap, the next five trading days' calendar, and the persona). Each writes `research/D/<name>.md` (max about 350 words, sources cited, never invent prices) and replies in at
    most 100 words with ranked ideas (ticker, reference close + source, entry, closing-basis stop, target, confidence 1-10, liquidity tier):
@@ -99,4 +105,4 @@ scheduled tasks and disable them with `update_trigger enabled=false`.
 * Never fabricate a price, headline or date. If data is missing, say so and skip.
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
-* No real brokerage action of any kind. This is a simulation. If a brokerage connector is attached, use only its read-only quote tools (see `RULES.md`); never any order, transfer or account tool, and never the owner's real balances or positions.
+* Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $500-loss limits of `LIVE_MODE.md`. Never transfers, account changes, options, crypto, margin or shorting. Never remove `KILL_SWITCH`.

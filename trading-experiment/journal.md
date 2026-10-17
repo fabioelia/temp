@@ -56,3 +56,7 @@ Saturday, but the tracker treated them as binding and would have filled them at 
 **Note, Day 0 (user shared `claude mcp add robinhood-trading --transport http https://agent.robinhood.com/mcp/trading`).** Not added by me: that command targets a local CLI, this cloud
 session reads connectors from claude.ai, and the registry has no Robinhood entry (it would be a custom connector). Rule added to `RULES.md` and the routine: a brokerage connector,
 if one is ever attached, is read-only quotes only, with no order, transfer or account tools and no reading of real balances or positions.
+
+**Live mode authorized (owner, 2026-10-17):** "I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again. In parallel start the connection to Robinhood, it's not clear it will even work."
+Built `live.py` (kill switch, $2,000 real-capital cap, 30% single-order and 15% leveraged caps, 4 fills a day, one ticket per order, a $500 loss limit that sells to cash and then halts; 32 tests
+pass). `live.enabled` stays false until the connector is verified. Connection attempt: `claude mcp add` ran, and the proxy refuses `agent.robinhood.com` (403). See `LIVE_MODE.md`.

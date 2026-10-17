@@ -2,9 +2,10 @@
 
 Simulation only. No brokerage account is touched. Nothing here is financial advice.
 
-**Brokerage connectors are read-only here.** If a brokerage or trading connector (for example a Robinhood MCP server) is ever attached to a session, only its read-only
-quote/market-data tools may be called. Never call any tool that places, modifies or cancels an order, moves money, or changes an account, and never read the owner's real
-balances or positions. The paper ledger in `data/` stays the only record of this experiment. Any unattended run that finds such a tool in use must stop and say so.
+**Paper by default; real money only through live mode.** The scoreboard in `data/` is a simulation. The owner has separately authorized real orders for up to $2,000 with a $500 loss limit,
+in live mode only (`LIVE_MODE.md`): disabled until the broker connector is verified, then every real order must pass `live.py gate` (confirmed by the pre-close run, capped, ticketed, never duplicated).
+Outside the gate, a brokerage connector may be used only for read-only quotes and the experiment's own positions. Never deposits, withdrawals, transfers or account changes; never options,
+crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` file stops everything until the owner removes it; the agent must never remove it.
 
 ## Account and goal
 * Start: **$2,000 cash**, Robinhood-style retail account. No margin, no shorting, no options, no crypto, no OTC.

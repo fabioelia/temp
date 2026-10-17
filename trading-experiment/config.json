@@ -25,6 +25,17 @@
     "round_up_to_cent": true,
     "source": "Risk memo 2026-10-17: Robinhood fee page, SEC fee advisory 2026-2 (eff. 2026-04-04), FINRA TAF 2026; search-extract level, re-verify if materially wrong"
   },
+  "live": {
+    "enabled": false,
+    "capital_cap_usd": 2000.0,
+    "loss_limit_usd": 500.0,
+    "max_single_order_pct": 0.30,
+    "max_leveraged_each_pct": 0.15,
+    "leveraged_etfs": ["GUSH", "ERX", "SOXL", "TQQQ", "SQQQ", "SOXS", "SPXL", "SPXS", "UPRO", "SPXU", "TECL", "TECS", "LABU", "LABD", "NUGT", "DUST", "FNGU", "FNGD", "UVXY", "UVIX", "SVIX", "BOIL", "KOLD", "YINN", "YANG", "TNA", "TZA", "QLD", "SSO", "SDS", "QID", "NVDL", "TSLL", "CONL", "MSTU"],
+    "last_order_cutoff_et": "15:50",
+    "flatten_cutoff_et": "15:58",
+    "authorization": "2026-10-17, owner: 'I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again.' Earlier the owner chose 'Real trades, fully automatic' after being told the committee odds (about 1-5% to double, 2-14% chance of losing half on aggressive routes). enabled stays false until the broker connector is connected and verified in a fresh session."
+  },
   "holidays": [
     "2026-01-01",
     "2026-01-19",
