@@ -14,7 +14,7 @@ One of you is **jacked in** and can see the room but can't read it. The other is
 
 Open the page, type a callsign, **Create a private session**, and send your partner the four-letter code or the invite link. That's the whole setup.
 
-There is no game server. **The player who creates the session *is* the server**: their browser tab runs the game engine (`engine/`) and your partner (and any TV screen) connects straight to it over a WebRTC data channel, introduced by [PeerJS](https://peerjs.com)'s free public broker — the same approach as the arcade's Pixel Pitch. So:
+There is no game server. **The player who creates the session *is* the server**: their browser tab runs the game engine (`engine/`) and your partner (and any TV screen) connects straight to it over a WebRTC data channel, introduced by [PeerJS](https://peerjs.com)'s free public broker — the same approach as Pixel Pitch on this site. So:
 
 - **The host's tab must stay open** until the run is over. If the host closes it, the session ends for everyone (the others are returned to the start page).
 - If the *partner's* connection drops the shared clock pauses; refreshing puts them back in the same seat and the clock resumes.

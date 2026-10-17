@@ -425,7 +425,7 @@ h3 small { font-weight: 400; letter-spacing: 0.04em; text-transform: none; opaci
 .tips { margin: 6px 0 12px 20px; padding: 0; line-height: 1.5; }
 .tips li { margin-bottom: 6px; }
 
-/* link back to the arcade's game picker (shown only when the game is served as a static sub-page) */
+/* link back to the games menu (shown only when the game is served as a static sub-page) */
 .arcade-link { position: fixed; top: 14px; left: 16px; z-index: 5; font-size: 11px; letter-spacing: 0.2em; color: var(--dim, #4fbf7f); text-decoration: none; padding: 6px 10px; border: 1px solid rgba(79, 191, 127, 0.35); }
 .arcade-link:hover { color: #9dffbf; border-color: #2dff7a; }
 .arcade-link.hidden { display: none; }
