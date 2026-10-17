@@ -271,12 +271,57 @@ async function resilience(browser, srv) {
   }
 }
 
+/**
+ * Regression: a disabled hotspot must never swallow a click meant for something behind
+ * it. The phone booth's tall hit box sits between the camera and the "south" arrow when
+ * you approach the phone from the north, which used to make the final step unclickable.
+ */
+async function picking(browser, srv) {
+  console.log('\n● Disabled hotspots are transparent to the pointer (phone approached from the north)');
+  process.env.START_ROOM = '4';
+  const a = await newPlayer(browser, srv, 'Trin', { query: LOW });
+  const b = await newPlayer(browser, srv, 'Wren', { query: LOW });
+  try {
+    await createAndJoin(a, b, { hostRole: 'operator' });
+    await startRun(a, b);
+    await sleep(1500);
+    const res = await a.page.evaluate(() => {
+      const st = window.__hl.app.stage, r = window.__hl.app.room;
+      st.rig.par = { x: 0, y: 0, look: 0 };
+      const arrow = r.hot['move:s'];
+      const arrowHs = arrow.userData.hotspot;
+      arrowHs.opts.enabled = true;
+      const avatar = arrow.parent.parent;
+      const Mesh = st.pickMeshes[0].constructor, Box = arrow.geometry.constructor, Mat = arrow.material.constructor;
+      const booth = new Mesh(new Box(1.1, 2.4, 1.1), new Mat({ visible: false }));
+      booth.position.set(avatar.position.x, 1.2, avatar.position.z + 2.4 - 0.55 - 0.4);
+      st.scene.add(booth);
+      booth.updateMatrixWorld(true);
+      booth.userData.hotspot = { opts: { enabled: false }, meshes: [booth], target: booth };
+      st.pickMeshes.push(booth);
+      arrow.updateMatrixWorld(true);
+      const p = st.screenPos(arrow), rect = st.renderer.domElement.getBoundingClientRect();
+      st.pointer.set(((p.x - rect.left) / rect.width) * 2 - 1, -(((p.y - rect.top) / rect.height) * 2 - 1));
+      st.raycaster.setFromCamera(st.pointer, st.camera);
+      const hits = st.raycaster.intersectObjects(st.pickMeshes, false);
+      return { boothInTheWay: hits[0]?.object === booth, picksArrow: st._pick() === arrowHs };
+    });
+    check('picking: the disabled booth hit box really is in the ray\'s path', res.boothInTheWay);
+    check('picking: the arrow behind it is still clickable', res.picksArrow);
+  } finally {
+    delete process.env.START_ROOM;
+    await a.ctx.close();
+    await b.ctx.close();
+  }
+}
+
 // --------------------------------------------------------------------- main
 
 const srv = await startGame({ SOLVE_HOLD_MS: '1400', FAIL_RESET_MS: '3000' });
 const browser = await launch();
 try {
   if (!only || only === 'full') await fullRun(browser, srv);
+  if (!only || only === 'picking') await picking(browser, srv);
   if (!only || only === 'resilience') await resilience(browser, srv);
 } catch (e) {
   check(`scenario crashed: ${e.message.split('\n')[0]}`, false);

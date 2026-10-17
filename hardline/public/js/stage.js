@@ -307,10 +307,11 @@ export class Stage {
     if (!this.pickMeshes.length) return null;
     this.raycaster.setFromCamera(this.pointer, this.camera);
     const hits = this.raycaster.intersectObjects(this.pickMeshes, false);
+    // disabled hotspots are transparent to the pointer: a tall, not-yet-active hit box
+    // (e.g. the phone booth) must never swallow a click meant for something behind it
     for (const h of hits) {
       const hs = h.object.userData.hotspot;
       if (hs && hs.opts.enabled !== false) return hs;
-      if (hs) return null; // a disabled hotspot blocks what is behind it
     }
     return null;
   }
