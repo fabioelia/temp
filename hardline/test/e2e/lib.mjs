@@ -30,14 +30,13 @@ const STATIC_MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascri
  * (/games/hardline/), nothing dynamic — plus a local PeerJS broker standing in for the public one,
  * so two browsers can find each other without the internet. There is no game server at all.
  */
-export async function startStatic({ env = {} } = {}) {
+export async function startStatic({ env = {}, root = process.env.HARDLINE_STATIC_ROOT || PROJECT, prefix = process.env.HARDLINE_STATIC_ROOT ? '/hardline/' : '/games/hardline/' } = {}) {
   const allowed = (rel) => ['index.html', 'cast.html'].includes(rel) || (/^(css|js|shared|engine|vendor)\//.test(rel) && !rel.includes('..'));
   const server = http.createServer((req, res) => {
     const pathname = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    const prefix = '/games/hardline/';
     let rel = pathname.startsWith(prefix) ? pathname.slice(prefix.length) : null;
     if (rel !== null && (rel === '' || rel.endsWith('/'))) rel += 'index.html';
-    const file = rel !== null && allowed(rel) ? path.join(PROJECT, rel) : null;
+    const file = rel !== null && allowed(rel) ? path.join(root, rel) : null;
     if (!file || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
       res.writeHead(404, { 'content-type': 'text/html' });
       return res.end('<h1>404</h1>');
@@ -57,7 +56,7 @@ export async function startStatic({ env = {} } = {}) {
   return {
     isStatic: true,
     port,
-    base: `http://127.0.0.1:${port}/games/hardline/`,
+    base: `http://127.0.0.1:${port}${prefix}`,
     peerOpts,
     env: { SOLVE_HOLD_MS: '700', FAIL_RESET_MS: '2500', ...env },
     close: () => new Promise((r) => server.close(() => broker.close(() => r()))),

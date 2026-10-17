@@ -587,7 +587,7 @@ async function staticHosting(browser) {
     check('static: the page picked the peer-to-peer transport on its own', mode === 'p2p', mode);
     check('static: partner joined by code and both are seated', (await get(a, () => document.querySelectorAll('#screen-lobby .slot.on').length)) === 2);
     const invite = await get(a, () => window.__hl.app.lobby && document.querySelector('#btn-copy') && location.href);
-    check('static: the invite link stays under the sub-path', typeof invite === 'string' && invite.includes('/games/hardline/'));
+    check('static: the invite link stays under the sub-path', typeof invite === 'string' && invite.includes(new URL(stat.base).pathname));
 
     await tv.page.goto(`${tv.url}cast.html?code=${code}`);
     await tv.page.waitForSelector('#sc-lobby:not(.hidden)', { timeout: 20000 });

@@ -801,6 +801,7 @@ net.onStatus = (s) => {
 function boot() {
   bgRain = new Rain($('bg-rain'), { size: 18, speed: 0.9, density: 0.8 });
   initLanding();
+  transportMode().then((mode) => mode === 'p2p' && $('arcade-link').classList.remove('hidden'));
   initLobby();
   initBriefing();
   initEnding();
