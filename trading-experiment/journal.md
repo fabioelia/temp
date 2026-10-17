@@ -37,3 +37,8 @@ or amend O001/O002 using weekend news (Hormuz headlines are the swing factor).
 
 **Fee numbers adopted** (from the risk memo's search extracts): $0 commission, SEC fee $20.60 per $1M sold (since 4/4/2026, waived on sales of $500 or less), FINRA TAF
 $0.000195/share (max $9.79, waived on 50 shares or less). At this size they are cents; slippage by tier is the cost that matters.
+
+**Setup notes (Day 0).** `tracker.py` self-tested on synthetic prices in a scratch copy only (cap of 4 fills, same-day round-trip block, no shorting, stop auto-queue, fees and
+waivers, idempotent reruns); the real ledger is empty. Dashboard artifact created and loaded with the baseline (all cash, two queued orders); it had not been opened yet, so
+its rendering is unverified. Schedules created: weekday close 17:13 ET, Sunday review 18:22 ET. The Day-0 risk red-team was the risk memo's own sizing template, applied to the
+two orders above; the daily routine adds a separate red-team pass.

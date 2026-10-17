@@ -523,8 +523,8 @@ def export_rows(b):
                 "max_drawdown": round(s["max_drawdown"], 4),
                 "after_tax_equity": round(b["est_after_tax_equity"], 2)}]
     orders = [{"id": o["id"], "created": o["created"], "side": o["side"], "ticker": o["ticker"],
-               "size": f"{o['size_type']}={o['size_value']}", "stop": fnum(o["stop"]), "target": fnum(o["target"]),
-               "stop_pct": fnum(o.get("stop_pct")), "target_pct": fnum(o.get("target_pct")),
+               "size": size_label(o), "stop": level_label(o["stop"], o.get("stop_pct"), "-"),
+               "target": level_label(o["target"], o.get("target_pct"), "+"),
                "max_price": fnum(o["max_price"]), "status": o["status"], "reason": o["reason"], "thesis": o["thesis"]}
               for o in read_csv(ORDERS) if o["status"] == "pending" or o["created"] >= week_ago(b)]
     trades = [{"id": t["id"], "date": t["date"], "side": t["side"], "ticker": t["ticker"], "qty": float(t["qty"]),
@@ -534,6 +534,17 @@ def export_rows(b):
     files = {"summary": summary, "equity": curve, "positions": b["positions"] or [], "orders": orders, "trades": trades}
     for name, rows in files.items():
         (out / f"{name}.json").write_text(json.dumps(rows, indent=1, default=str) + "\n")
+
+
+def size_label(o):
+    v = float(o["size_value"])
+    return {"usd": f"${v:,.0f}", "qty": f"{v:g} sh", "pct": f"{v:g}% of position"}.get(o["size_type"], "entire position")
+
+
+def level_label(price, pct_of_fill, sign):
+    if price not in ("", None):
+        return f"{float(price):,.2f}"
+    return f"{sign}{float(pct_of_fill):g}% of fill" if pct_of_fill not in ("", None) else ""
 
 
 def week_ago(b, days=7):

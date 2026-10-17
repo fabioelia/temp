@@ -30,6 +30,12 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 | `tracker.py` | The rules engine and reporter (Python stdlib only) |
 | `DAILY_ROUTINE.md` | The procedure the scheduled run follows |
 
+## Schedule
+Two durable scheduled tasks wake the portfolio manager (times are New York time, so the Nov 1 clock change is handled):
+* **Weekdays 5:13 PM ET**: close the books, fire the research agents, queue the next orders, journal, refresh the dashboard, commit and push.
+* **Sundays 6:22 PM ET**: weekly review with all six personas, post-mortem, playbook revision, re-plan Monday.
+After 2026-11-18 the first run writes `FINAL_REPORT.md` and disables both tasks. The live dashboard is described in `DASHBOARD.md`.
+
 ## Honest expectations
 Doubling in a month needs about **+3% per day, compounded, every day**. Strategies with a real chance of getting there also have a real
 chance of losing half the account, and one month is far too small a sample to prove or disprove anything about AI skill. The scoreboard
