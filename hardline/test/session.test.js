@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import WebSocket from 'ws';
 import { createServer } from '../server/index.js';
-import { ROOMS } from '../shared/rooms.js';
+import { runFor } from '../shared/rooms.js';
+const ROOMS = runFor('classic');
 import { solvers, localise, mazeRoute } from './solvers.js';
 
 class Bot {

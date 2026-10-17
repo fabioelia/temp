@@ -8,7 +8,7 @@
 // opt-in, the microphone is analysed locally (never recorded or sent) so the score
 // ducks while *you* are talking.
 
-const ROOM_ROOTS = [73.42, 82.41, 65.41, 87.31, 61.74]; // D2 E2 C2 F2 B1
+const ROOM_ROOTS = [73.42, 82.41, 65.41, 87.31, 61.74, 77.78, 69.3, 92.5, 55.0, 98.0, 58.27]; // one per room: D2 E2 C2 F2 B1 D#2 C#2 F#2 A1 G2 A#1
 const STORE_KEY = 'hardline.audio.v1';
 
 export class AudioEngine {
@@ -369,6 +369,43 @@ export class AudioEngine {
     if (!this._ok()) return;
     this._tone({ type: 'sine', f0: 300, f1: 90, dur: 0.2, gain: 0.2 });
     this._noise({ dur: 0.08, gain: 0.1, type: 'lowpass', f0: 1400 });
+  }
+
+  // ----------------------------------------------------- deep-loop room cues
+
+  /** A pure tone at a given pitch: the Echo Chamber gives each pylon its own note. */
+  note(freq, dur = 0.45, gain = 0.2) {
+    if (!this._ok()) return;
+    this._tone({ type: 'triangle', f0: freq, dur, gain, verb: 0.55, attack: 0.01 });
+    this._tone({ type: 'sine', f0: freq * 2, dur: dur * 0.8, gain: gain * 0.25, verb: 0.7 });
+  }
+
+  /** A heavy mechanical lever or switch. */
+  lever() {
+    if (!this._ok()) return;
+    this._tone({ type: 'square', f0: 140, f1: 70, dur: 0.09, gain: 0.12, filter: { type: 'lowpass', f: 700 } });
+    this._tone({ type: 'sine', f0: 80, f1: 45, dur: 0.18, gain: 0.3 });
+    this._noise({ dur: 0.06, gain: 0.12, type: 'bandpass', f0: 1500, q: 1.5 });
+  }
+
+  /** A small detent as a dial or tile clicks over. */
+  tick() {
+    if (!this._ok()) return;
+    this._tone({ type: 'square', f0: 1800, dur: 0.012, gain: 0.05, filter: { type: 'highpass', f: 900 } });
+    this._tone({ type: 'sine', f0: 240, f1: 160, dur: 0.05, gain: 0.1 });
+  }
+
+  /** Power surging up as a circuit is engaged. */
+  engage() {
+    if (!this._ok()) return;
+    this._tone({ type: 'sawtooth', f0: 60, f1: 340, dur: 0.7, gain: 0.12, attack: 0.1, filter: { type: 'lowpass', f: 1200 }, verb: 0.3 });
+    this._noise({ dur: 0.6, gain: 0.08, type: 'bandpass', f0: 400, f1: 3000, q: 0.8, attack: 0.2 });
+  }
+
+  /** A short confirming blip for a single tile or switch. */
+  blip(up = true) {
+    if (!this._ok()) return;
+    this._tone({ type: 'sine', f0: up ? 660 : 440, f1: up ? 880 : 330, dur: 0.07, gain: 0.1 });
   }
 
   // ------------------------------------------------------------ score + tension

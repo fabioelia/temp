@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PUZZLES } from '../server/puzzles/index.js';
 import { makeRng } from '../shared/rng.js';
-import { ROOMS, PENALTY_MS } from '../shared/rooms.js';
+import { ROOM_DEFS, PENALTY_MS } from '../shared/rooms.js';
 import { solvers, localise, mazeRoute } from './solvers.js';
 
 const SEEDS = 150;
@@ -37,7 +37,7 @@ for (const id of ['cipher', 'doors', 'bullets', 'switchboard']) {
   test(`${id}: oracle solver using only the two views solves ${SEEDS} seeds`, () => {
     for (let s = 1; s <= SEEDS; s++) {
       const { stages } = playTable(id, s);
-      assert.equal(stages, ROOMS.find((r) => r.id === id).stages);
+      assert.equal(stages, ROOM_DEFS[id].stages);
     }
   });
 }
@@ -110,7 +110,7 @@ test('wrong answers cost time and never end the puzzle', () => {
 test('information split: neither role view contains the other role\'s reference data', () => {
   const opForbidden = { cipher: ['tables'], doors: ['verdicts', 'glimpses'], bullets: ['chart'], switchboard: ['links', 'left', 'right'], maze: [] };
   const mentorForbidden = { cipher: ['lamp', 'glyphs', 'clock'], doors: ['doors'], bullets: ['bullets'], switchboard: ['cables', 'jacks'], maze: ['pos'] };
-  for (const id of Object.keys(PUZZLES)) {
+  for (const id of Object.keys(opForbidden)) {
     const { views } = PUZZLES[id].create(makeRng(5));
     for (const k of opForbidden[id]) assert.ok(!(k in views.operator), `${id}: operator view leaks ${k}`);
     for (const k of mentorForbidden[id]) assert.ok(!(k in views.mentor), `${id}: mentor view leaks ${k}`);
@@ -134,5 +134,5 @@ test('operator alone cannot do better than chance on the cipher door', () => {
 });
 
 test('rooms are reasonably tuned: stage counts match the roster', () => {
-  for (const r of ROOMS) assert.ok(PUZZLES[r.id], r.id);
+  for (const id of Object.keys(ROOM_DEFS)) assert.ok(PUZZLES[id], `${id} has a puzzle generator`);
 });

@@ -336,3 +336,40 @@ select:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .tv-offer .btn { flex: none; margin-top: 8px; }
 .tv-offer .fine { margin: 0; }
 .icon-btn.tvbtn { width: auto; padding: 0 9px; font-size: 11px; letter-spacing: 0.14em; font-weight: 700; }
+
+/* mentor notes + chart alignment */
+.notes { width: 100%; min-height: 46vh; resize: vertical; background: rgba(255, 255, 255, 0.28); border: 2px solid var(--paper-ink); color: var(--paper-ink); font-family: var(--hand); font-size: 20px; line-height: 1.5; padding: 12px 14px; outline: none; }
+.chart td svg { vertical-align: middle; margin-right: 4px; }
+.chart td { vertical-align: middle; }
+
+/* ---------------------------------------------------------------- deep loop manuals */
+.gtable { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.gtable th { font-size: 11px; letter-spacing: 0.18em; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--paper-ink); }
+.gtable th.cur { background: rgba(143, 29, 29, 0.14); }
+.gtable td { padding: 9px 10px; border-bottom: 1px dashed rgba(37, 29, 14, 0.45); font-size: 15px; }
+.gtable td.cur { background: rgba(143, 29, 29, 0.12); font-weight: 800; }
+.glyphrow { display: flex; gap: 14px; margin: 12px 0; flex-wrap: wrap; }
+.glyphrow .cellg { padding: 10px 14px; }
+.cells6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.cellg.letter b { font-size: 26px; }
+.clues { list-style: none; margin: 14px 0; padding: 0; }
+.clue { display: flex; gap: 12px; align-items: baseline; padding: 10px 12px; margin-bottom: 6px; border: 1px solid rgba(37, 29, 14, 0.5); background: rgba(255, 255, 255, 0.2); cursor: pointer; font-size: 15.5px; line-height: 1.45; }
+.clue .n { font-weight: 800; min-width: 1.4em; }
+.clue.done { opacity: 0.45; text-decoration: line-through; }
+.nodes { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0 14px; }
+.nchip { appearance: none; background: none; border: 0; padding: 0; cursor: pointer; }
+.ring { display: inline-flex; align-items: center; justify-content: center; border: 3px solid var(--paper-ink); border-radius: 50%; padding: 6px; background: rgba(255, 255, 255, 0.25); }
+.ring.sm { padding: 3px; border-width: 2px; }
+.nchip .ring svg, .lbox svg, .ring svg { color: var(--paper-ink); }
+.nchip.rep .ring { background: rgba(224, 160, 32, 0.4); }
+.nchip.lit .ring { border-color: #c0261c; box-shadow: 0 0 0 3px rgba(192, 38, 28, 0.35); }
+.lrows { display: grid; gap: 7px; }
+.lrow { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 12px; padding: 7px 10px; border: 1px solid rgba(37, 29, 14, 0.5); background: rgba(255, 255, 255, 0.2); cursor: pointer; }
+.lrow.on { background: rgba(20, 104, 58, 0.22); border-color: #14683a; border-width: 2px; }
+.lbox { display: inline-flex; border: 3px solid var(--paper-ink); padding: 4px; background: rgba(255, 255, 255, 0.25); }
+.lrow .arrow { font-size: 12px; letter-spacing: 0.12em; opacity: 0.7; }
+.lrow .flips { display: flex; gap: 6px; flex-wrap: wrap; }
+.lrow .pull { font-weight: 800; letter-spacing: 0.14em; color: #14683a; }
+.verdict { margin: 14px 0 6px; padding: 10px 14px; border: 2px dashed var(--paper-ink); font-weight: 700; }
+.verdict.ok { border-style: solid; border-color: #14683a; background: rgba(20, 104, 58, 0.18); color: #0d4a28; }
+h3 small { font-weight: 400; letter-spacing: 0.04em; text-transform: none; opacity: 0.7; }

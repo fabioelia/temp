@@ -117,3 +117,8 @@ body.tv #rain { position: fixed; inset: 0; width: 100%; height: 100%; opacity: 0
 .tv-controls { position: fixed; right: 1.2rem; bottom: 1rem; z-index: 80; display: flex; gap: 0.6rem; transition: opacity 0.6s; }
 .tv-controls.idle { opacity: 0; pointer-events: none; }
 body.tv.idle-cursor { cursor: none; }
+
+.descent.many .node .nm { font-size: 0.62rem; letter-spacing: 0.08em; }
+.descent.many .node .dot { width: 1.3rem; height: 1.3rem; }
+.descent.many::before { top: 1.25rem; }
+.descent.many { padding: 0.6rem 0.6rem 0; }

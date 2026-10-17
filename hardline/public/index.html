@@ -79,10 +79,17 @@
           <button data-v="random" class="on">RANDOM</button>
           <button data-v="mentor">I'M THE MENTOR</button>
         </div>
+        <p class="label">WHICH RUN?</p>
+        <div class="seg" id="seg-chapter" role="group" aria-label="Which run to play">
+          <button data-v="classic" class="on">CLASSIC</button>
+          <button data-v="deep">DEEP LOOP</button>
+          <button data-v="gauntlet">GAUNTLET</button>
+        </div>
+        <p class="fine" id="chapter-blurb"></p>
         <label class="check"><input type="checkbox" id="chk-swap" checked> <span>Swap roles after every room</span></label>
         <button id="btn-start" class="btn primary wide" disabled>WAITING FOR PARTNER…</button>
       </div>
-      <p id="guest-wait" class="fine hidden">The host will start the run when you're both ready.</p>
+      <p id="guest-wait" class="fine hidden"><span id="chapter-guest"></span><br>The host will start the run when you're both ready.</p>
 
       <div class="lobby-foot">
         <button id="btn-lobby-audio" class="btn small ghost">AUDIO</button>

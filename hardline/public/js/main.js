@@ -4,7 +4,7 @@
 import { Net } from './net.js';
 import { audio } from './audio.js';
 import { Rain } from './rain.js';
-import { ROOMS, ROLE_LABEL } from '/shared/rooms.js';
+import { ROLE_LABEL, CHAPTERS } from '/shared/rooms.js';
 import * as story from '/shared/story.js';
 import { createMentorShell } from './mentor/shell.js';
 
@@ -166,6 +166,10 @@ function onLobby(m) {
   $('host-controls').classList.toggle('hidden', !isHost);
   $('guest-wait').classList.toggle('hidden', isHost);
   for (const b of $('seg-pref').children) b.classList.toggle('on', b.dataset.v === m.pref);
+  for (const b of $('seg-chapter').children) b.classList.toggle('on', b.dataset.v === m.chapter);
+  const ch = CHAPTERS[m.chapter] ?? CHAPTERS.classic;
+  $('chapter-blurb').textContent = `${ch.blurb} (${ch.rooms.length} rooms)`;
+  $('chapter-guest').textContent = `Run: ${ch.name} — ${ch.blurb} (${ch.rooms.length} rooms)`;
   $('chk-swap').checked = m.swap;
   const ready = m.players.length === 2 && m.players.every((p) => p.connected);
   $('btn-start').disabled = !ready;
@@ -216,6 +220,7 @@ function initLobby() {
     }
   };
   for (const b of $('seg-pref').children) b.onclick = () => net.send({ t: 'setPref', value: b.dataset.v });
+  for (const b of $('seg-chapter').children) b.onclick = () => net.send({ t: 'setChapter', value: b.dataset.v });
   $('chk-swap').onchange = (e) => net.send({ t: 'setSwap', value: e.target.checked });
   $('btn-start').onclick = () => {
     audio.unlock();
@@ -234,9 +239,10 @@ function leaveSession() {
 // --------------------------------------------------------------- interstitial
 
 function beatsFor(b) {
-  if (b.kind === 'intro') return [...story.introBeats(b.names), ...story.ROOM_BEATS[0]];
+  const room = story.ROOM_BEATS[b.room.id] ?? [];
+  if (b.kind === 'intro') return [...story.introBeats(b.names, b.chapter), ...room];
   if (b.kind === 'retry') return story.RETRY_BEATS[(b.retry - 1) % story.RETRY_BEATS.length];
-  return story.ROOM_BEATS[b.roomIndex] ?? [];
+  return room;
 }
 
 async function typeLine(p, text, token) {
@@ -532,7 +538,7 @@ function onGo(m) {
   renderStagePips();
   renderStrikes();
   audio.unlock();
-  audio.startScore(app.briefing?.roomIndex ?? 0);
+  audio.startScore(app.briefing?.room?.audioRoot ?? 0);
   if (m.paused) showPause('Reconnected. Waiting for the line to settle…');
   app.room?.onGo?.(m);
   app.stage?.resize();
@@ -597,7 +603,7 @@ function onSolved(m) {
   audio.stopScore();
   audio.solved();
   app.room?.onSolved?.();
-  $('solved-text').textContent = `${ROOMS[m.roomIndex].title} — the way is open.`;
+  $('solved-text').textContent = `${app.briefing?.room?.title ?? 'This layer'} — the way is open.`;
   setTimeout(() => $('ov-solved').classList.remove('hidden'), 900);
 }
 
@@ -617,7 +623,7 @@ async function onEnding(m) {
   $('end-stats').classList.add('hidden');
   $('end-actions').classList.add('hidden');
   app.skip = false;
-  for (const beat of story.outroBeats(m.names)) {
+  for (const beat of story.outroBeats(m.names, m.chapter)) {
     if (token !== app.briefToken) return;
     const p = document.createElement('p');
     p.className = `bl ${beat.who.toLowerCase()}`;

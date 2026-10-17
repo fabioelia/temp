@@ -106,3 +106,98 @@ export function mazeRoute(mentor, from) {
   }
   return dirs;
 }
+
+// ============================================================================ Deep Loop rooms
+
+import { holds } from '../server/puzzles/vault.js';
+import { evaluate } from '../server/puzzles/logic.js';
+import { lineSolve } from '../server/puzzles/mosaic.js';
+import { compassBearing, fromReading } from '../server/puzzles/triangulate.js';
+
+const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+/** ECHO: the presses for the current sequence, given how many mistakes have been made so far. */
+export function echoPresses({ operator, mentor, strikes = 0 }) {
+  const level = Math.min(2, strikes);
+  return operator.flashes.map((f) => {
+    let p = mentor.table.find((r) => r.color === f.color).press[level];
+    if (mentor.inverting.includes(f.glyph)) p = mentor.swap[p];
+    return p;
+  });
+}
+
+/** VAULT: every code (as glyphs) consistent with the clues and with what failed tries revealed. */
+export function vaultCandidates({ operator, mentor, history = [] }) {
+  const letters = LETTERS.slice(0, mentor.legend.length);
+  const out = [];
+  const rec = (acc, rest) => {
+    if (acc.length === mentor.dials) return out.push(acc);
+    rest.forEach((x, i) => rec([...acc, x], [...rest.slice(0, i), ...rest.slice(i + 1)]));
+  };
+  rec([], letters);
+  const glyphOf = Object.fromEntries(mentor.legend.map((l) => [l.letter, l.glyph]));
+  return out
+    .filter((code) => mentor.clues.every((c) => holds(c, code)))
+    .filter((code) => history.every((h) => code.filter((l, i) => glyphOf[l] === h.code[i]).length === h.bulls))
+    .map((code) => code.map((l) => glyphOf[l]));
+}
+
+/** GRID: the operator-row lever indices to pull so that every node ends up safe. */
+export function gridLevers({ operator, mentor }) {
+  const n = mentor.levers.length;
+  const litNodes = new Set(operator.nodes.filter((nd) => nd.lit).map((nd) => nd.glyph));
+  for (let mask = 0; mask < 1 << n; mask++) {
+    const lit = new Set(litNodes);
+    mentor.levers.forEach((lv, i) => {
+      if (mask & (1 << i)) for (const g of lv.flips) lit.has(g) ? lit.delete(g) : lit.add(g);
+    });
+    if (!lit.size) {
+      const glyphs = mentor.levers.filter((_, i) => mask & (1 << i)).map((lv) => lv.glyph);
+      return operator.levers.map((lv, i) => (glyphs.includes(lv.glyph) ? i : -1)).filter((i) => i >= 0);
+    }
+  }
+  throw new Error('grid: no solution found');
+}
+
+/** TRIANGULATE: the map square that best explains the readings that are not flickering. */
+export function triangulateCell({ operator, mentor }) {
+  const pos = Object.fromEntries(mentor.beacons.map((b) => [b.glyph, b]));
+  const real = operator.readings.filter((r) => !r.flicker);
+  const scores = [];
+  for (let y = 0; y < mentor.size; y++) {
+    for (let x = 0; x < mentor.size; x++) {
+      let err = 0;
+      for (const r of real) {
+        const b = pos[r.glyph];
+        if (b.x === x && b.y === y) {
+          err += 90;
+          continue;
+        }
+        const want = compassBearing(b, { x, y });
+        const got = fromReading(r.bearing, r.mode);
+        err += Math.abs(((want - got + 540) % 360) - 180);
+      }
+      scores.push({ x, y, err });
+    }
+  }
+  scores.sort((a, b) => a.err - b.err);
+  return { best: scores[0], second: scores[1] };
+}
+
+/** LOGIC: a switch assignment that lights the lamp. */
+export function logicSwitches({ operator, mentor }) {
+  const typeOf = Object.fromEntries(mentor.table.map((t) => [t.glyph, t.type]));
+  const circuit = { gates: operator.gates, output: operator.output };
+  for (let m = 0; m < 1 << operator.switches; m++) {
+    const sw = Array.from({ length: operator.switches }, (_, i) => !!(m & (1 << i)));
+    if (evaluate(circuit, sw, (g) => typeOf[g.glyph])) return sw;
+  }
+  throw new Error('logic: no satisfying assignment');
+}
+
+/** MOSAIC: the grid, from the Operator's row clues and the Mentor's column clues together. */
+export function mosaicGrid({ operator, mentor }) {
+  const g = lineSolve(operator.rows, mentor.cols);
+  if (!g) throw new Error('mosaic: not line-solvable');
+  return g;
+}

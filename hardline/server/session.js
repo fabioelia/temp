@@ -5,7 +5,7 @@
 
 import { randomBytes } from 'node:crypto';
 import { PUZZLES } from './puzzles/index.js';
-import { ROOMS, FAIL_RESET_MS } from '../shared/rooms.js';
+import { runFor, CHAPTERS, DEFAULT_CHAPTER, ROOM_DEFS, FAIL_RESET_MS } from '../shared/rooms.js';
 import { makeRng, randomSeed } from '../shared/rng.js';
 
 // Tunable at call time so tests (and impatient developers) can shorten the clocks.
@@ -27,6 +27,8 @@ export class Session {
     this.onEmpty = onEmpty;
     this.players = [];
     this.spectators = new Set(); // read-only TV screens: { id, ws }
+    this.chapter = DEFAULT_CHAPTER; // which run the host picked (classic / deep / gauntlet)
+    this.run = runFor(this.chapter);
     this.pref = 'random'; // host's choice for the first room
     this.swapEachRoom = true;
     this.phase = 'lobby';
@@ -163,18 +165,25 @@ export class Session {
       code: this.code,
       you: null,
       phase: this.phase,
+      chapter: this.chapter,
       players: this.players.map((q) => ({ id: q.id, name: q.name, host: q === this.host, connected: !!q.ws })),
     };
   }
 
+  runSummary() {
+    return this.run.map((r) => ({ id: r.id, title: r.title, sub: r.sub, stages: r.stages }));
+  }
+
   publicBriefing(resume = false) {
-    const room = ROOMS[this.roomIndex];
+    const room = this.run[this.roomIndex];
     return {
       t: 'briefing',
       kind: this.kind,
       resume,
+      chapter: this.chapter,
+      run: this.runSummary(),
       roomIndex: this.roomIndex,
-      roomCount: ROOMS.length,
+      roomCount: this.run.length,
       room: { ...room, timeMs: roomTime(room) },
       role: null,
       names: this.names(),
@@ -226,6 +235,7 @@ export class Session {
         phase: this.phase,
         pref: this.pref,
         swap: this.swapEachRoom,
+        chapter: this.chapter,
         players: this.players.map((q) => ({ id: q.id, name: q.name, host: q === this.host, connected: !!q.ws })),
       });
     }
@@ -239,13 +249,15 @@ export class Session {
   }
 
   sendBriefing(player, { resume = false } = {}) {
-    const room = ROOMS[this.roomIndex];
+    const room = this.run[this.roomIndex];
     this.send(player, {
       t: 'briefing',
       kind: this.kind,
       resume,
+      chapter: this.chapter,
+      run: this.runSummary(),
       roomIndex: this.roomIndex,
-      roomCount: ROOMS.length,
+      roomCount: this.run.length,
       room: { ...room, timeMs: roomTime(room) },
       role: player.role,
       names: this.names(),
@@ -286,6 +298,13 @@ export class Session {
         if (player !== this.host || this.phase !== 'lobby') return;
         if (['operator', 'mentor', 'random'].includes(msg.value)) this.pref = msg.value;
         return this.sendLobby();
+      case 'setChapter':
+        if (player !== this.host || this.phase !== 'lobby') return;
+        if (msg.value in CHAPTERS) {
+          this.chapter = msg.value;
+          this.run = runFor(this.chapter);
+        }
+        return this.sendLobby();
       case 'setSwap':
         if (player !== this.host || this.phase !== 'lobby') return;
         this.swapEachRoom = !!msg.value;
@@ -320,8 +339,19 @@ export class Session {
     if (hostRole === 'random') hostRole = Math.random() < 0.5 ? 'operator' : 'mentor';
     a.role = hostRole;
     b.role = other(hostRole);
-    // START_ROOM is a development aid: jump straight to a given room
-    this.roomIndex = Math.min(ROOMS.length - 1, Math.max(0, Number(process.env.START_ROOM) || 0));
+    this.run = runFor(this.chapter);
+    // START_ROOM is a development aid: jump straight to a room, by position in the run or by id
+    // (an id from outside the chosen chapter switches to the full gauntlet so it can be found)
+    const start = process.env.START_ROOM;
+    if (start && start in ROOM_DEFS) {
+      if (!this.run.some((r) => r.id === start)) {
+        this.chapter = 'gauntlet';
+        this.run = runFor('gauntlet');
+      }
+      this.roomIndex = this.run.findIndex((r) => r.id === start);
+    } else {
+      this.roomIndex = Math.min(this.run.length - 1, Math.max(0, Number(start) || 0));
+    }
     this.kind = 'intro';
     this.beginBriefing();
   }
@@ -332,7 +362,7 @@ export class Session {
     clearTimeout(this.phaseHandle);
     this.phase = 'briefing';
     this.ready.clear();
-    const room = ROOMS[this.roomIndex];
+    const room = this.run[this.roomIndex];
     const def = PUZZLES[room.id];
     const rng = makeRng(randomSeed());
     const { state, views } = def.create(rng);
@@ -416,7 +446,7 @@ export class Session {
 
   onAct(player, action) {
     if (this.phase !== 'playing' || this.paused || player.role !== 'operator') return;
-    const res = this.puzzle.def.act(this.puzzle.state, action, this.puzzle.rng);
+    const res = this.puzzle.def.act(this.puzzle.state, action, this.puzzle.rng, { strikes: this.strikes });
     if (!res) return;
 
     if (res.penaltyMs) {
@@ -465,7 +495,7 @@ export class Session {
   }
 
   solved() {
-    const room = ROOMS[this.roomIndex];
+    const room = this.run[this.roomIndex];
     this.stopTimer();
     const timeMs = roomTime(room) - this.timer.remaining;
     this.roomStats.push({
@@ -480,7 +510,7 @@ export class Session {
     this.phase = 'solved';
     this.broadcast({ t: 'solved', roomIndex: this.roomIndex });
     this.phaseHandle = setTimeout(() => {
-      if (this.roomIndex + 1 >= ROOMS.length) return this.ending();
+      if (this.roomIndex + 1 >= this.run.length) return this.ending();
       this.roomIndex += 1;
       this.retry = 0;
       this.kind = 'transition';
@@ -490,7 +520,7 @@ export class Session {
   }
 
   endingPayload() {
-    return { t: 'ending', names: this.names(), rooms: this.roomStats, totalMs: this.roomStats.reduce((a, r) => a + r.timeMs, 0) };
+    return { t: 'ending', chapter: this.chapter, names: this.names(), rooms: this.roomStats, totalMs: this.roomStats.reduce((a, r) => a + r.timeMs, 0) };
   }
 
   ending() {

@@ -34,6 +34,14 @@ export function createMentorShell(root, { audio }) {
   let active = null;
   let lastBars = -1;
 
+  // a scratch pad that lives for the whole room: the deeper rooms need somewhere to jot things down
+  const notesEl = document.createElement('div');
+  notesEl.innerHTML = `
+    <div class="folio"><span>RED PILL PROTOCOL</span><span>margin</span></div>
+    <h2>Notes</h2>
+    <p>Your own scribbles. Nobody else sees this page.</p>
+    <textarea class="notes" spellcheck="false" placeholder="Write down what the Operator tells you — clues, numbers, sequences…"></textarea>`;
+
   function renderTabs() {
     tabsEl.innerHTML = '';
     for (const p of pages) {
@@ -73,7 +81,7 @@ export function createMentorShell(root, { audio }) {
 
     /** pages: [{ id, title, el }]. Keeps the open tab if its id still exists. */
     setPages(next) {
-      pages = next;
+      pages = [...next, { id: 'notes', title: 'NOTES', el: notesEl }];
       select(pages.some((p) => p.id === active) ? active : pages[0]?.id);
     },
 

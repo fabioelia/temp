@@ -6,7 +6,7 @@
 
 import { Rain } from './rain.js';
 import { audio } from './audio.js';
-import { ROOMS } from '/shared/rooms.js';
+import { runFor } from '/shared/rooms.js';
 import * as story from '/shared/story.js';
 
 const $ = (id) => document.getElementById(id);
@@ -20,7 +20,9 @@ const S = {
   players: [],
   names: { operator: 'Operator', mentor: 'Mentor' },
   roomIndex: 0,
-  room: ROOMS[0],
+  chapter: 'classic',
+  run: runFor('classic'),
+  room: runFor('classic')[0],
   kind: 'intro',
   stage: 0,
   stageCount: 1,
@@ -134,7 +136,9 @@ function renderStrikes() {
 
 function renderDescent() {
   const el = $('descent');
-  el.innerHTML = ROOMS.map((r, i) => {
+  const many = S.run.length > 6;
+  el.classList.toggle('many', many);
+  el.innerHTML = S.run.map((r, i) => {
     const done = S.scene === 'end' || i < S.currentRoomIdx || S.cleared[i] != null;
     const now = !done && i === S.currentRoomIdx;
     const cls = done ? 'done' : now ? 'now' : '';
@@ -164,9 +168,10 @@ async function typeInto(container, beats, token) {
 }
 
 function beatsFor(m) {
-  if (m.kind === 'intro') return [...story.introBeats(m.names), ...story.ROOM_BEATS[0]];
+  const room = story.ROOM_BEATS[m.room.id] ?? [];
+  if (m.kind === 'intro') return [...story.introBeats(m.names, m.chapter), ...room];
   if (m.kind === 'retry') return story.RETRY_BEATS[(m.retry - 1) % story.RETRY_BEATS.length];
-  return story.ROOM_BEATS[m.roomIndex] ?? [];
+  return room;
 }
 
 // ---------------------------------------------------------------- messages
@@ -176,6 +181,8 @@ function onBriefing(m) {
   const token = ++S.token;
   S.names = m.names;
   S.roomIndex = m.roomIndex;
+  S.chapter = m.chapter ?? 'classic';
+  if (m.run) S.run = m.run;
   S.currentRoomIdx = m.roomIndex;
   S.room = m.room;
   S.kind = m.kind;
@@ -220,7 +227,7 @@ function onGo(m) {
   renderDescent();
   log(`Countdown running — ${S.room.title}`, 'good');
   if (m.paused) showOverlay('', 'SIGNAL LOST', 'Waiting for the line to settle…');
-  if (S.sound) audio.startScore(S.roomIndex);
+  if (S.sound) audio.startScore(S.room.audioRoot ?? 0);
 }
 
 function onFx(m) {
@@ -250,10 +257,10 @@ function onSolved(m) {
   const used = S.timer.total - S.timer.remaining;
   S.cleared[m.roomIndex] = used;
   renderDescent();
-  log(`${ROOMS[m.roomIndex].title} cleared in ${fmtShort(used)}`, 'good');
+  log(`${S.run[m.roomIndex].title} cleared in ${fmtShort(used)}`, 'good');
   audio.stopScore();
   if (S.sound) audio.solved();
-  showOverlay('solved', 'LAYER CLEARED', `${ROOMS[m.roomIndex].title} — the way is open.`);
+  showOverlay('solved', 'LAYER CLEARED', `${S.run[m.roomIndex].title} — the way is open.`);
 }
 
 function onFailed() {
@@ -270,14 +277,14 @@ async function onEnding(m) {
   hideOverlay();
   audio.stopScore();
   S.names = m.names;
-  S.currentRoomIdx = ROOMS.length;
+  S.currentRoomIdx = S.run.length;
   m.rooms.forEach((r, i) => (S.cleared[i] = r.timeMs));
   setScene('end');
   $('tv-room').textContent = 'HARDLINE CONNECTED';
   renderDescent();
   const lines = $('tv-end-lines');
   $('tv-end-stats').classList.add('hidden');
-  await typeInto(lines, story.outroBeats(m.names), token);
+  await typeInto(lines, story.outroBeats(m.names, m.chapter), token);
   if (token !== S.token) return;
   const note = document.createElement('div');
   note.className = 'page-note';
@@ -552,7 +559,7 @@ function initControls() {
     if (S.sound) {
       audio.unlock();
       audio.ready();
-      if (S.playing) audio.startScore(S.roomIndex);
+      if (S.playing) audio.startScore(S.room.audioRoot ?? 0);
     } else audio.stopScore();
   };
   const toggleFull = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.());
