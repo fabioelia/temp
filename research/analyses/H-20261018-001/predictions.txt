@@ -1,0 +1,36 @@
+H-20261018-001 -- predictions registered BEFORE running (2026-10-18)
+
+Statement: COPD risk from HHIP-expression-lowering alleles at 4q31 acts partly
+through ongoing adult mesenchymal Hedgehog activity, so SMO inhibition should
+help HHIP risk-allele carriers.
+
+PREDICTION IF TRUE:
+ (a) HHIP has strong direct genetic evidence for COPD in Open Targets (genetic
+     association datatype dominant, score high, top-ranked COPD target);
+ (b) SMO/GLI1/PTCH1 also carry at least some independent human genetic signal
+     for COPD or lung function (association score > ~0.1 with a genetic
+     component), i.e. the pathway, not just the one gene;
+ (c) SMO, GLI1, PTCH1 are robustly expressed in adult GTEx lung (TPM well
+     above noise) and ideally have lung eQTLs -> a druggable adult target;
+ (d) HHIP GWAS associations include progression / FEV1-decline / emphysema
+     phenotypes, not only cross-sectional baseline lung function;
+ (e) SMO is high-tractability with approved small molecules (repurposable).
+
+PREDICTION IF FALSE:
+ (a) HHIP genetic evidence is real but SMO/GLI1/PTCH1 have no COPD genetic
+     evidence -> the "pathway" claim rests on inference, not genetics;
+ (b) Hh effectors poorly expressed in adult lung;
+ (c) all HHIP GWAS hits are cross-sectional baseline FEV1/FEV1-FVC/COPD
+     case-control, with no longitudinal decline signal -> the developmental
+     (lung-growth) explanation is not separable from the ongoing-adult-
+     signalling explanation using public summary data, so the decisive test
+     is NOT runnable -> hypothesis unfalsifiable from this layer;
+ (d) no SMO inhibitor trial in COPD/emphysema; SMO inhibitors approved only
+     for basal cell carcinoma / AML, with known tolerability burden.
+
+DIRECTIONALITY NOTE (kill criterion): HHIP risk alleles LOWER HHIP expression.
+HHIP is an inhibitor of HH ligands -> less HHIP = MORE Hh signalling. An SMO
+inhibitor would therefore be mechanistically coherent ONLY if excess adult Hh
+activity is pathogenic. If published lung biology instead shows HH signalling
+is required for adult alveolar maintenance (i.e. Hh loss causes emphysema),
+SMO inhibition would be predicted to HARM, not help -> falsifies.
