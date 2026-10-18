@@ -158,6 +158,14 @@ COPD: 82 loci (Sakornsakolpat Nat Genet 2019); multi-ancestry lung function
 Grade the **pair** and the **sub-claim** separately. Many good hypotheses
 are an N1 pair with an N4 sub-claim.
 
+**Hard rule, learned the hard way (see §10):** a `TITLE_ABS:`-only count
+systematically overstates novelty. In the HHIP worked example it returned 1
+hit where full text returned 10. **N4 may never be claimed without the
+full-text, mechanism-class and review tiers all returning zero**, and
+without reading the top hits of each. A reviewer who re-runs your search
+with a wider scope and finds prior art has refuted the hypothesis, not just
+annotated it.
+
 ## 7. Scoring rubric (1-5, anchored)
 
 | Axis | 1 | 3 | 5 | Weight |
@@ -220,19 +228,57 @@ HHIP antagonises Hedgehog; Hhip+/- mice get age-related emphysema (Lao PNAS
 incl. a 2022 review (PMID 36191777) and a 2026 mouse vismodegib study (PMID
 41637659). Pair = **N1** — the obvious ABC link was already made.
 
-**Pivot to unmade sub-claims:** HHIP genotype × treatment response (0 hits);
-SMO-inhibitor-treated basal cell carcinoma patients' lung outcomes (0 hits);
-Hh-pathway drug-target MR for COPD (0 hits). Refined H*: *adult (not only
-developmental) mesenchymal Hh activity mediates HHIP risk, so SMO
-inhibition should help most in risk-allele carriers.* Sub-claim **N4**.
+**Pivot attempt:** refined H*: *adult (not only developmental) mesenchymal Hh
+activity mediates HHIP risk, so SMO inhibition should help most in
+risk-allele carriers.* Graded **N4** on title/abstract-only counts.
 
-**Cheap tests:** coloc of HHIP lung eQTL with FEV1/FVC; instrument against
-baseline lung function vs **FEV1 decline / emphysema progression** (purely
-developmental signal falsifies — the kill criterion); PheWAS (HHIP is a
-height locus → developmental pleiotropy flag); scDRS on HLCA; BCC-cohort
-target-trial emulation; precision-cut lung slices by genotype.
+**Then the critic ran it (2026-10-18) and returned MAJOR.** This is the
+instructive part — read it before trusting any dossier:
 
-**Expected red-team:** Hh maintains adult lung quiescence and repair (Peng
-Nature 2015) so inhibition may impair regeneration; SMO-inhibitor muscle
-spasm and weight loss harmful in COPD cachexia; risk may be fixed in
-development.
+- **Novelty was overstated.** `TITLE_ABS:` gave 1 hit; the same query over
+  full text gave **10**, and a 2022 review (PMID 36191777) already proposes
+  Hh inhibition for genetically susceptible COPD. True grade **N3, not N4.**
+- **Two of three mechanism links only partially supported.** Lao PNAS 2016
+  (PMID 27444019) attributes Hhip+/- emphysema to oxidative stress and
+  rescues it with N-acetylcysteine, with no Hh/GLI readout and no
+  SMO-dependence; Wang JCI 2018 (PMID 29999500) is forced *ectopic*
+  Hh gain-of-function, not HHIP loss. Each was cited for a mechanism its
+  paper never tested.
+- **Wrong cell context in humans.** Adult human HHIP is epithelial;
+  fibroblast dominance is mouse-specific, and the causal 4q31 enhancer acts
+  SMAD3-dependently and **Hedgehog-independently** (PMID 38417378,
+  EBioMedicine 2024).
+- **Direction of effect contradicted.** Human tissue shows Hh signalling
+  deficient or down in COPD epithelium (PMID 31877414, 30833624, 39844999),
+  and GLI1 nuclear translocation is *required* for AT2 proliferation
+  (PMID 42399584) — so SMO inhibition predicts **harm**, not protection.
+- **The "ongoing, not developmental" premise has no supporting experiment.**
+  No adult inducible Hhip deletion exists; the best model (PMID 40333979,
+  Sci Adv 2025) places the effect in alveologenesis and its therapeutic was
+  **neonatal** HHIP-Fc. HHIP is overwhelmingly a *height* locus (p ≤ 1e-300)
+  — developmental pleiotropy.
+- **The nominated cheap test was not runnable.** GTEx v8 has no significant
+  HHIP lung cis-eQTL; the real coloc is with a lung *splicing* QTL and is
+  already published (PMID 40798880).
+- **Target substitution.** Genetic support is for HHIP; **SMO has zero
+  genetic evidence for COPD** (Open Targets 0.083, literature only).
+- **Safety gate 2.** FAERS for vismodegib/sonidegib is dominated by muscle
+  spasms, raised CPK, dysgeusia and weight loss — the worst possible profile
+  in sarcopenic, cachectic, elderly patients.
+- **Kill criterion confounded with power.** FEV1-decline and
+  emphysema-progression GWAS are small, so a null would be uninformative.
+  Fix: pre-specify a detectable effect size and add a positive-control locus
+  (e.g. FAM13A) to show the design can detect progression at all.
+
+**Lessons to carry into every run:**
+1. **Never grade N4 from `TITLE_ABS:` alone.** Run the full-text tier, the
+   mechanism-class tier and the review literature before claiming zero.
+2. **Check what each cited paper actually measured**, not what it is
+   commonly cited for.
+3. **Mouse cell-type localisation does not transfer to humans** — verify in
+   adult human tissue (HLCA, LTRC).
+4. **Run the direction-of-effect check on the drug target itself**, not on
+   the upstream GWAS gene. Genetic support for a pathway member is not
+   genetic support for the node your drug hits.
+5. **Confirm the nominated cheap test is actually executable** (the
+   instrument exists, in the right tissue) before promising it.
