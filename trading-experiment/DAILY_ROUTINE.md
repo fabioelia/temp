@@ -49,6 +49,8 @@ python3 trading-experiment/quotes.py check        # READY means two independent 
 python3 trading-experiment/live.py status          # live mode, kill switch, loss-limit state, open tickets
 ```
 If `KILL_SWITCH` exists, make no real orders at all and say so. If `live.py status` shows open tickets, reconcile them with the broker before anything else.
+Live mode is ENABLED: confirm the Robinhood tools are loaded (ToolSearch "Robinhood get_option_quotes"). If they are missing, make no live orders this run, keep the paper
+ledger going, and tell the owner in the run's message. Use only the agent account (nickname MCP, ending 5318) and only the tools listed in `data/live_tools.md`.
 Read `RULES.md`, `playbook.md`, the last entries of `journal.md`. Weekend or NYSE holiday: Runs A and B do nothing (say so in one line). After `end_date` in `config.json`: write the
 **final report** (last section) and disable the schedule.
 

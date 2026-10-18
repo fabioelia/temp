@@ -190,6 +190,14 @@ class LiveOptions(unittest.TestCase):
         t = json.loads(out)
         self.assertEqual((t["contracts"], t["order_type"], t["premium_usd"]), (1, "limit", 255.0))  # $500 budget
 
+    def test_option_limit_must_be_on_tick_and_ref_id_is_stable(self):
+        rc, out = self.gate("--order", "O001", "--limit", "3.12")
+        self.assertEqual((rc, "tick" in out), (2, True))
+        rc, out = self.gate("--order", "O001", "--limit", "2.55")
+        self.assertEqual(rc, 0, out)
+        import uuid
+        self.assertEqual(json.loads(out)["ref_id"], str(uuid.uuid5(uuid.NAMESPACE_URL, "https://github.com/fabioelia/temp/trading-experiment/K001")))
+
     def test_stock_buy_refused_in_options_strategy(self):
         rc, out = self.gate("--order", "O002")
         self.assertEqual((rc, "switched off" in out), (2, True))

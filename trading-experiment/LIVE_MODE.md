@@ -1,6 +1,7 @@
 # Live mode: real money, fully automatic, hard limits
 
-**Status: DISABLED** (`live.enabled` is false in `config.json`). It is switched on only after the broker connector is connected and verified in a fresh session (checklist below).
+**Status: ENABLED 2026-10-18** after the checklist passed (results in `data/live_tools.md`). Agent account: "MCP", ending 5318 (options Level 2, approvals off, $2,000).
+Every run first confirms the Robinhood tools are loaded; if they are missing, it makes no live orders and tells the owner.
 
 ## Authorization (the owner's own words, 2026-10-17)
 * Chose "Real trades, fully automatic" after being told the committee's odds: about 1-5% to double, a 2-14% chance of losing half on aggressive routes.
@@ -44,6 +45,16 @@ python3 trading-experiment/live.py record --ticket K001 --qty <filled shares> --
 #   anything unclear or failed:  live.py fail --ticket K001 --reason "..."   (never re-place without checking the broker's order history first)
 ```
 Run B (post-close) reconciles: broker positions against `data/live_ledger.csv`, runs `live.py check`, and reports real P/L next to the paper P/L.
+
+## Placing a real option order, step by step
+1. `get_accounts` → use the single agent-tradable account (nickname MCP, ending 5318). Never the main account.
+2. `get_option_instruments` (chain_symbol, expiration, strike, type) → the contract's `id`; `get_option_quotes` → live bid/ask, mark, `high_fill_rate_buy_price`.
+3. Choose the limit: for a buy, the high-fill-rate buy price rounded **down** to the tick ($0.05 at/above $3.00, $0.01 below), never above the ask or the order's `--max-price`.
+4. `live.py gate --order Oxxx --limit <price> --marks ...` → APPROVED ticket with `contracts`, `limit_price`, `ref_id`, or REFUSED (stop).
+5. `review_option_order` (single leg, `side` buy, `position_effect` open, `quantity` = contracts, `type` limit, `price` = limit). If it returns order_checks alerts, stop and journal them.
+6. `place_option_order` with the same legs/quantity/price and `ref_id` from the ticket → `live.py placed --ticket K... --broker-order-id <id>`.
+7. `get_option_orders` until filled or the day's cutoff → `live.py record --ticket ... --qty <filled> --avg-price <avg>`; unfilled at 15:50 ET → `cancel_option_order`, `live.py fail`.
+Selling to close is the same with `side` sell, `position_effect` close, limit at the bid side (high_fill_rate_sell_price rounded up to the tick).
 
 ## Real execution is not the paper model
 Robinhood has no market-on-close orders, so a real order executes when it is placed (around 15:00-15:50 ET), not at the 16:00 close that the paper ledger assumes. Fractional and dollar-sized

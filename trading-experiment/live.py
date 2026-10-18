@@ -29,6 +29,7 @@ import argparse
 import json
 import math
 import sys
+import uuid
 from datetime import time
 
 import tracker as T
@@ -107,6 +108,11 @@ def trip_if_breached(st, day, extra=None):
     return stopped(), eq, loss
 
 
+def ref_id(ticket):
+    """Deterministic broker idempotency key per ticket: a retried placement re-sends the same ref_id."""
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"https://github.com/fabioelia/temp/trading-experiment/{ticket}"))
+
+
 def tickets():
     return T.read_csv(TICKETS)
 
@@ -174,6 +180,9 @@ def cmd_gate(a):
             refuse("an option order needs --limit (per-share premium from the broker's live quote)")
         if (T.occ_expiry(tk) - now.date()).days < strat.get("min_days_to_expiry", 3):
             refuse(f"{tk} expires {T.occ_expiry(tk)}: too close")
+        tick = 0.05 if a.limit >= 3 else 0.01  # Robinhood option ticks: $0.05 at/above $3.00, $0.01 below
+        if abs(round(a.limit / tick) * tick - a.limit) > 1e-9:
+            refuse(f"limit {a.limit} is not on the ${tick:.2f} tick; round it (down for a buy) first")
         if o["max_price"] and a.limit > float(o["max_price"]):
             refuse(f"limit {a.limit} above the order's max_price {o['max_price']}")
         cash_live = cap + st["realized"] - st["deployed"]
@@ -186,8 +195,8 @@ def cmd_gate(a):
         usd = round(qty * a.limit * 100, 2)
         tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
                           "side": side, "usd": f"{usd:.2f}", "qty": str(qty), "status": "approved", "reason": ""})
-        print(json.dumps({"verdict": "APPROVED", "ticket": tid, "order": o["id"], "ticker": tk, "side": "buy_to_open",
-                          "contracts": qty, "order_type": "limit", "limit_price": a.limit, "premium_usd": usd,
+        print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
+                          "side": "buy_to_open", "contracts": qty, "order_type": "limit", "limit_price": a.limit, "premium_usd": usd,
                           "budget_left_after": round(avail - usd - qty * fee, 2), "stopped": halted}, indent=1))
         return
     if side == "buy":
@@ -226,7 +235,7 @@ def cmd_gate(a):
     tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
                       "side": side, "usd": f"{usd:.2f}" if usd else "", "qty": f"{qty:.6f}" if qty else "",
                       "status": "approved", "reason": ""})
-    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "order": o["id"], "ticker": tk,
+    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
                       "side": "sell_to_close" if opt else side, "order_type": "limit" if (opt and a.limit) else "market",
                       "limit_price": a.limit if opt else None, "notional_usd": usd,
                       ("contracts" if opt else "shares"): qty, "sell_all": bool(side == "sell" and (halted or o["size_type"] == "all")),

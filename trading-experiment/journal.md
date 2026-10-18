@@ -81,3 +81,9 @@ buys/sells with 10b5-1 flags, full-text search). SEC refuses anonymous automated
 Added a 09:13 ET pre-open news run (no agents, proposals only, never confirms). Agent briefs now require the toolkit; the catalyst agent must check filings and insider activity.
 
 **SEC access verified (2026-10-18).** Contact email set outside the repo (container home file; the environment variable `SEC_CONTACT_EMAIL` is the durable home for it). Live test: NVDA filings, Form 4 insider sales (director sales of ~$298M on 9/18, a 10b5-1 plan sale by the general counsel), EDGAR full-text search for "CoreWeave" 8-Ks. Fixed a parser bug that read Form 4 prices as $0 when footnotes sit beside the value.
+
+**Robinhood connected and live mode enabled (2026-10-18).** The claude.ai Robinhood connector is connected; the stale container-local registration was removed. Checklist (read-only, nothing
+placed): one agent-tradable account (MCP, ending 5318, options Level 2, limited margin), $2,000 cash and buying power (deposit settling), trade approvals off, no positions; Robinhood's
+real-time stock and option quotes match Yahoo/Cboe exactly, so options now have two price sources. Gate gained option tick-size checks and a deterministic ref_id per ticket (47 tests).
+`live.enabled` set true. Still visible and never to be called: exercise_option, crypto and advanced-order tools (owner asked to switch them off). The first possible real order is
+Monday's 14:43 ET run, only if it confirms a proposal and the gate approves it.
