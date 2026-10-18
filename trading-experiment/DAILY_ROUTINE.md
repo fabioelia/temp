@@ -69,7 +69,9 @@ happens: nothing new fills.
      `quotes.py chain <UNDERLYING> --expiry ... --type C|P --near <price>` to re-check the strike choice. Reject anything that fails the liquidity filter in `playbook.md`.
    * Feed not READY: WebSearch for the last hours' news on the same tickers and the swing factors (oil/Hormuz headlines, rates, AI-credit stress, index direction today). Treat any
      intraday price from search as unverified color, never as an execution price.
-2. **Re-evaluate each position.** Hold, trim or exit? Check the stop, the target, the regime switches and time stops in `playbook.md`, and the guardrails in `RULES.md`
+2. **Re-evaluate each position.** For options, check every held contract against its stop and target with LIVE quotes now (Robinhood `get_option_quotes`, else
+   `quotes.py option`). If the stop is breached, sell to close TODAY with a confirmed order; do not wait for the end-of-day stop, which fills a session later (the 2026-10-18
+   dry run showed a -50% stop realizing -58% that way). Hold, trim or exit? Check the stop, the target, the regime switches and time stops in `playbook.md`, and the guardrails in `RULES.md`
    (theme caps, staging caps, the 10/28 and 11/3 event caps, circuit breakers). A stop exit that auto-queued yesterday may be cancelled only with a written reason.
 3. **Re-evaluate each proposal as if it were new.** Ask: *given what I know right now, is this still the best use of this money, at this size?* Compare it with the alternatives on the
    shortlist. Did the thesis change (news, oil, rates, a failed level, a flipped regime switch)? Is the price still inside its limit? Would adding it breach a cap?
@@ -142,6 +144,7 @@ scheduled tasks (all of them: pre-open, pre-close, post-close, Sunday) and disab
 
 ## Guardrails for the runner
 * Never fabricate a price, headline or date. If data is missing, say so and skip.
+* If the permission layer, the broker, or a tool refuses an action, do not retry it another way: record the ticket as failed (`live.py fail`), journal it, and tell the owner.
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
 * Options: buy-to-open and sell-to-close only. Never sell to open, never multi-leg, never exercise, never hold into expiry.

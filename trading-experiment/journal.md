@@ -87,3 +87,11 @@ placed): one agent-tradable account (MCP, ending 5318, options Level 2, limited 
 real-time stock and option quotes match Yahoo/Cboe exactly, so options now have two price sources. Gate gained option tick-size checks and a deterministic ref_id per ticket (47 tests).
 `live.enabled` set true. Still visible and never to be called: exercise_option, crypto and advanced-order tools (owner asked to switch them off). The first possible real order is
 Monday's 14:43 ET run, only if it confirms a proposal and the gate approves it.
+
+**Dry run, 2026-10-18 (owner asked; scratch copy, simulated Sun 18:30 to Wed 17:13 ET; real ledger untouched).** Proposals for NVDA 11/20 225C ($6.25 ask) and 240C ($2.36 ask), $250 each,
+confirmed Monday 14:50 with live Cboe quotes. Gate: 225C REFUSED (one contract costs $625, above the $500 budget); 240C APPROVED for 1 contract at a $2.35 limit with a stable ref_id;
+a second gate call REFUSED as a duplicate. Robinhood `review_option_order` on that exact ticket (simulation only, nothing placed): no alerts, no in-app approval required, fees $0.04
+per contract (config updated from $0.05). Paper booking: filled at the stamped ask 2.36, marked at Cboe mid; a simulated slump to 1.10 tripped the -50% stop on Tuesday's close and the
+automatic exit filled Wednesday at 0.98, realizing -58%. Fix: the pre-close run now checks option stops on live quotes and exits the same day. Also learned: a $250 shot only buys
+contracts priced at $2.50 or less (for NVDA that means strikes about 12% out of the money, delta ~0.19), which shapes every proposal. Robinhood's guide asks for explicit
+confirmation per order when approvals are off; the owner's standing authorization is treated as that confirmation (LIVE_MODE.md), or the owner can turn approvals on.

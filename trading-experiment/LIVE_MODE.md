@@ -46,6 +46,12 @@ python3 trading-experiment/live.py record --ticket K001 --qty <filled shares> --
 ```
 Run B (post-close) reconciles: broker positions against `data/live_ledger.csv`, runs `live.py check`, and reports real P/L next to the paper P/L.
 
+## Confirmation policy
+Robinhood's tool guidance says that when in-app trade approvals are off, the agent should get explicit confirmation before each order. The owner has given standing, written
+authorization for fully automatic trading within these limits (see Authorization above: "Real trades, fully automatic", "$2,000 ... if we lose $500 we pull the plug"), so the
+unattended runs treat that authorization plus an approved `live.py gate` ticket as the confirmation. If the owner turns trade approvals ON in the Robinhood app, every order goes to
+the app for one-tap approval instead, and the runs simply place it for approval (`customer_approval_required` true) and report that it awaits the owner.
+
 ## Placing a real option order, step by step
 1. `get_accounts` → use the single agent-tradable account (nickname MCP, ending 5318). Never the main account.
 2. `get_option_instruments` (chain_symbol, expiration, strike, type) → the contract's `id`; `get_option_quotes` → live bid/ask, mark, `high_fill_rate_buy_price`.
