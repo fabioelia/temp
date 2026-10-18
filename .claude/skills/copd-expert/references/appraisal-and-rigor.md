@@ -168,6 +168,26 @@ interpretation.
 12. Presenting MR or UK Biobank results as causal without pleiotropy and
     selection diagnostics.
 13. False balance or false certainty on contested results.
+14. **Contradicting without seeking the other side's evidence.** Asserting
+    someone is wrong, having searched only for your own support. Always ask
+    what source they used, retrieve it, and read what it actually tested
+    before ruling. A real example from this skill's own history: a confident
+    "CSF3R is not a classical-monocyte marker" was built on one HPA field
+    and collapsed when the user produced three independent studies showing
+    CSF3R higher in classical monocytes at mRNA and protein level.
+15. **Reading a database field without its semantics.** HPA's
+    `RNA blood cell specific nTPM` lists only cells above its enrichment
+    cutoff, so a missing cell type means "not enriched", never "not
+    expressed". The same trap exists for GTEx (`data:[]` = no *significant*
+    eQTL), Open Targets (datatype scores are not effect sizes), and FAERS
+    (report counts are not incidence). Check what the resource is actually
+    measuring before drawing a conclusion from an absence.
+16. **Confusing marker specificity with signal attribution.** "Does gene X
+    distinguish cell A from cell B in this panel" and "whose mRNA is gene X
+    in this bulk tissue" are different questions with different answers, and
+    a paper answering one is silent on the other. Name which you are asking,
+    and check which cells the reference panel actually contained — markers
+    derived against a PBMC atlas cannot speak to granulocytes.
 
 ## F. Five-minute paper read
 
