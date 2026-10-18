@@ -185,10 +185,13 @@ def cmd_gate(a):
             refuse(f"limit {a.limit} is not on the ${tick:.2f} tick; round it (down for a buy) first")
         if o["max_price"] and a.limit > float(o["max_price"]):
             refuse(f"limit {a.limit} above the order's max_price {o['max_price']}")
-        cash_live = cap + st["realized"] - st["deployed"]
-        avail = cash_live - (cap - LIVE.get("loss_limit_usd", 500))
-        want = float(o["size_value"]) * a.limit * 100 if o["size_type"] == "qty" else float(o["size_value"])
         fee = strat.get("option_fee_per_contract", 0.05)
+        cash_live = cap + st["realized"] - st["deployed"]
+        # premium of buy tickets approved or placed but not yet recorded is already spoken for
+        reserved = sum(float(t["usd"] or 0) + fee * float(t["qty"] or 0) for t in tickets()
+                       if t["status"] in ("approved", "placed") and t["side"] == "buy")
+        avail = cash_live - (cap - LIVE.get("loss_limit_usd", 500)) - reserved
+        want = float(o["size_value"]) * a.limit * 100 if o["size_type"] == "qty" else float(o["size_value"])
         single = LIVE.get("max_single_order_pct", 0.30) * cap
         # size like the paper tracker: premium within the ask, the floor and the single-order cap; fees only have to fit above the floor
         qty = int(min(want, avail, single) // (a.limit * 100))

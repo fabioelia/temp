@@ -235,6 +235,13 @@ class LiveOptions(unittest.TestCase):
         t = json.loads(out)
         self.assertEqual((t["contracts"], t["premium_usd"]), (2, 510.0))
 
+    def test_unrecorded_tickets_count_against_the_floor(self):
+        self.write_order(f"O003,{MON},XLE261120C00070000,buy,usd,500,O,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,2.4,2.5,,cboe")
+        rc, out = self.gate("--order", "O001", "--limit", "2.55")   # $500 budget: 1 contract ($255), ticket not yet recorded
+        self.assertEqual(rc, 0, out)
+        rc, out = self.gate("--order", "O003", "--limit", "2.50")   # $244.96 left, not $500
+        self.assertEqual((rc, "buys no contract" in out), (2, True))
+
     def test_stock_buy_refused_in_options_strategy(self):
         rc, out = self.gate("--order", "O002")
         self.assertEqual((rc, "switched off" in out), (2, True))

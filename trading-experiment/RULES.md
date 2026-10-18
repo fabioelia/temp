@@ -59,6 +59,11 @@ Fee numbers come from search extracts of the Robinhood fee page and SEC/FINRA no
 ## Risk guardrails (CIO policy for this experiment)
 The committee's own Monte Carlo says 2x is a 0-5% event and that the aggressive routes carry a 2-14% chance of losing half. The policy is therefore *bounded
 convexity*: take the asymmetric shots, but cap the damage.
+* **Under the options strategy (owner's choice 2026-10-17; clarified 2026-10-18):** the loss budget and its $1,000 floor are the risk cap. An option's worst case is its premium,
+  which is already inside the budget, so the stock-era limits below on risk per position, the regime gate, staging, event exposure, the -15%/-25% drawdown breakers and the
+  ratchet do not apply to option premium (profits raise the budget, as the strategy section says). Still in force: at most 4 positions, a single order at most 30% of $2,000
+  ($600, coded in the gate), 4 fills a day, no new buys the session after a -6% equity day, never average down, and the playbook's pacing (one new shot a day). The $1,000
+  loss limit replaces the -25% breaker: hitting it sells everything to cash and halts until the owner and Claude talk.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
 * **Concentration:** max 4 positions, no single name above 30% of equity at entry. **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
 * **Risk per position to its closing stop:** <= 2% of equity core, <= 3% satellite (assume the realised loss is 1.5x planned, 2x for 3x ETFs).
