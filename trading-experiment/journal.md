@@ -121,3 +121,46 @@ regime gate's VIX >= 20 line, so the gate reads borderline, not risk-off. Flagge
   expiry rule forces the 10/30 contract); no index puts (VIX 20, SKEW 169).
 Agreement: a SPY ~785 call is the relief shot, but only on a trigger, not on Monday. Disagreement: semis-ai would carry NVDA premium into its print; options-vol's models give that
 EV ~0.9 and warn about IV crush. The options-vol first draft put both event trades on 2-day expiries the gate refuses; caught and re-struck before any proposal was queued.
+
+## 2026-10-18 (Sun) Run C: weekly review and plan for the week of 10/19
+**Recap.** No session today. Fri 10/16: SPY 763.25, VIX 19.99 (high 22.31), 10y 5.10%. Weekend: Iran says tankers hit mines in Hormuz, yet at 18:13 ET Sunday ES +0.2%,
+NQ +0.4%, RTY +0.5%, WTI 98.29 (-0.7%), Brent 108.81 (-1.0%). Equity $2,000 paper and real (all cash); SPY comparison starts with the first fill.
+
+**Post-mortem (setup week; nothing traded).** No fills, fees or slippage yet; Run A has not re-checked a proposal yet. Every error so far was caught before it cost money:
+NVDA earnings date (11/18 -> 11/17, semis-ai); VIX level (21-22 -> 19.99, flows); options-vol's first draft on 2-day expiries the gate refuses; two specialists read the
+pre-update $500 config; four docs still said "never options"; stock-era caps in RULES.md that make any $500 option shot illegal (clarified today); and two gate bugs found by the
+risk red-team and the dry run (below). Agents that earned their keep this week: risk (found real code bugs), semis-ai and flows (data corrections), historian (a base rate the
+chair reproduced exactly), catalyst (dates verified, AMD 11/3, FOMC presser timing). Least useful: the contrarian's n=6 small-cap statistic (grade C).
+
+**Code fixes (tests 47 -> 52).** The live gate divided the budget by premium + fee, so `--qty N` bought N-1 contracts and `--usd 500` at a $5.00 limit bought none (paper bought
+one); it also never applied the $600 single-order cap to options, and sized a second buy against the full budget while the first ticket was approved but unrecorded. All three
+fixed; each new test fails on the old code. Dry run of Monday's path on a scratch copy: O003 confirm stamps Cboe 4.35/4.40, gate APPROVES 1 contract at 4.40 ($440, $559.96 left),
+a repeat call is refused as a duplicate.
+
+**Committee (memos in research/2026-10-18/).**
+- macro: Monday WAIT; S&P to 11/18 new high 40% / chop 43% / -8% 17%; mine reports recycled IRGC claims; FOMC hold ~82%. TLT 11/20 82C on 10y <= 5.05% (conf 5): the only idea
+  that also pays if AI credit cracks.
+- momentum: WAIT; Nasdaq in correction, 6-8 distribution days, earliest follow-through day Thu 10/22. QQQ 11/20 760C only on an FTD (conf 5); COP 11/20 150C on volume (conf 4).
+  Do not buy NVDA by the calendar; only after an FTD and a reclaim of 223.08.
+- catalyst: WAIT; dates verified (AMD 11/3 added); no 8-Ks in 14 days and no insider buying at MSFT/META/NVDA/AVGO. Shot on 10/28: MSFT 11/20 580C (conf 5), decided after the presser.
+- contrarian: BUY one IWM 11/20 275C Monday (Fear & Greed ~18; 6 of 6 cases since 2021 up a month later; conf 4). Not queued: same factor as P1, lower EV, n=6.
+- historian: BUY one SPY 11/20 785C Monday if SPY 752-772 and VIX 17-24 (conf 5); the reclaim trigger is the wrong trigger (after it SPY reached 785 only 37-39%).
+- options-vol: WAIT on its own models; ranks MSFT 10/28 (EV 1.32x) > SPY calls (0.92-0.94) > NVDA 230C (0.91) > USO put, IWM (0.79). NVDA's IV ramp is not a tailwind.
+- risk: P1 APPROVE modified (the index's 60% is not the call's: it doubles ~35%, a flat SPY decays to the stop by ~10/30; sell the single contract whole at 2x; no other buy before
+  10/28 while it is open). P2 MODIFY (ceiling 0.90, only if SPY >= 752, out by 11/12). MSFT APPROVE modified (--usd 365, keep >= $361, ticket by 15:45). Month: worst ~$1,230,
+  median $1,630-2,050, 90th percentile $3,150-3,700, $4,000 at 4-7%.
+
+**Decision: shot 1 can go Monday, on conditions.** The chair sides with the historian and the risk-modified version over the four WAITs: the setup's base rate is the best
+evidence we have, the SPY call wing is the cheapest vol on the surface, and waiting for a reclaim historically buys worse. Proposals (non-binding; Monday 14:43 decides on live quotes):
+- O003 BUY 1 SPY261120C00785000, ceiling $5.00, only if SPY 752-772, VIX 17-24, VIX9D <= VIX3M, Brent < 112, spread <= 5%. Sell whole at 2x; -50% stop; out if no record by 11/4.
+- O004 (only if O003 is not confirmed) BUY 7 TLT261120C00082000, ceiling $0.90, only if 10y <= 5.05%, Brent < 110, SPY >= 752.
+
+**Week plan.** Mon: O003 or O004 or nothing. Tue 10/20 NFLX and Wed 10/21 META/TSLA: no event trades (rich vol; META fails after the 3-day rule). Thu-Fri: if no shot is open,
+the FTD ideas (QQQ/NVDA) or the flush trigger for SPY. Wed 10/28: shot 2 = MSFT 11/20 call ~9-10% OTM, ceiling $3.60, decided after the 14:30 presser (next Sunday's review sets a
+15:25 ET run for that day). Third shot after the 11/3 close with whatever is left (~$470 if both fail).
+
+**Rule changes today.** RULES.md: buying calls/puts allowed consistently (four stale "never options" lines); the stock-era caps do not apply to option premium (the $1,000 floor is
+the cap; $600 single order, 4 positions, 4 fills, -6% day cool-off and the $1,000 loss limit stay). Playbook v2.1: event-vol rule, FOMC-day timing, one shot a day with a reserve for
+MSFT, 3-day expiry note, verified base rate, universe (TLT/IWM/COP in, XLE out).
+
+**Lesson.** A red team that reads the actual code path is worth more than another opinion on direction: dry-run the gate at the planned size before every decision day.
