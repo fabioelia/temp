@@ -120,4 +120,4 @@ regime gate's VIX >= 20 line, so the gate reads borderline, not risk-off. Flagge
   1.23x premium, 0.89x if MSFT only moves the implied 5.8%); SPY261113C00785000 after an S&P close above its prior 10-day high (conf 3); META dropped (no edge once the 3-day
   expiry rule forces the 10/30 contract); no index puts (VIX 20, SKEW 169).
 Agreement: a SPY ~785 call is the relief shot, but only on a trigger, not on Monday. Disagreement: semis-ai would carry NVDA premium into its print; options-vol's models give that
-EV ~0.9 and warn about IV crush. My first draft re-struck two event trades onto 2-day expiries the gate refuses; caught before any proposal was queued.
+EV ~0.9 and warn about IV crush. The options-vol first draft put both event trades on 2-day expiries the gate refuses; caught and re-struck before any proposal was queued.
