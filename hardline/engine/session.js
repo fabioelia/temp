@@ -1,4 +1,4 @@
-// One private two-player session: lobby -> (briefing -> playing -> solved|failed)* -> ending.
+// One private session — two players, or one playing solo: lobby -> (briefing -> playing -> solved|failed)* -> ending.
 //
 // The session is authoritative. It generates every puzzle, holds the answer, and
 // sends each player only their own role's view of it. It has no Node-only dependencies: it runs
@@ -35,6 +35,7 @@ export class Session {
     this.run = runFor(this.chapter);
     this.pref = 'random'; // host's choice for the first room
     this.swapEachRoom = true;
+    this.solo = false; // one player holds both roles (set by the host in the lobby)
     this.phase = 'lobby';
     this.createdAt = Date.now();
     this.lastActive = Date.now();
@@ -72,14 +73,20 @@ export class Session {
     return this.players.filter((p) => p.ws).length;
   }
 
+  /** Seats that must be connected for the clock to run: two players, or one when playing solo. */
+  get seats() {
+    return this.solo ? 1 : 2;
+  }
+
   names() {
+    if (this.solo) return { operator: this.players[0]?.name ?? 'Operator', mentor: 'the Protocol', solo: true };
     const op = this.players.find((p) => p.role === 'operator');
     const me = this.players.find((p) => p.role === 'mentor');
     return { operator: op?.name ?? 'Operator', mentor: me?.name ?? 'Mentor' };
   }
 
   addPlayer(ws, name) {
-    if (this.players.length >= 2) return null;
+    if (this.players.length >= this.seats) return null;
     if (this.phase !== 'lobby') return null;
     const player = { id: randomHex(4), token: randomHex(12), name: cleanName(name), ws, role: null };
     this.players.push(player);
@@ -100,7 +107,7 @@ export class Session {
     this.broadcast({ t: 'peer', id: player.id, name: player.name, connected: true }, player);
     this.sendLobby();
     this.sendSnapshot(player);
-    if (this.phase === 'playing' && this.paused && this.connectedCount === 2) this.scheduleResume();
+    if (this.phase === 'playing' && this.paused && this.connectedCount >= this.seats) this.scheduleResume();
   }
 
   disconnect(player, ws) {
@@ -120,7 +127,7 @@ export class Session {
       this.sendLobby();
       return;
     }
-    if (this.phase === 'playing') this.pause('Signal lost — your partner dropped off the line.');
+    if (this.phase === 'playing') this.pause(this.solo ? 'Signal lost — reconnecting you to the line.' : 'Signal lost — your partner dropped off the line.');
     if (!this.connectedCount) this.touch();
   }
 
@@ -170,6 +177,7 @@ export class Session {
       you: null,
       phase: this.phase,
       chapter: this.chapter,
+      solo: this.solo,
       players: this.players.map((q) => ({ id: q.id, name: q.name, host: q === this.host, connected: !!q.ws })),
     };
   }
@@ -191,6 +199,7 @@ export class Session {
       room: { ...room, timeMs: roomTime(room) },
       role: null,
       names: this.names(),
+      solo: this.solo,
       retry: this.retry,
     };
   }
@@ -240,6 +249,7 @@ export class Session {
         pref: this.pref,
         swap: this.swapEachRoom,
         chapter: this.chapter,
+        solo: this.solo,
         players: this.players.map((q) => ({ id: q.id, name: q.name, host: q === this.host, connected: !!q.ws })),
       });
     }
@@ -266,6 +276,8 @@ export class Session {
       role: player.role,
       names: this.names(),
       view: this.viewFor(player, { withResync: resume }),
+      // a lone player holds the Mentor's manual as well
+      ...(this.solo ? { solo: true, mentorView: this.viewFor({ role: 'mentor' }, { withResync: resume }) } : {}),
       retry: this.retry,
     });
   }
@@ -309,13 +321,18 @@ export class Session {
           this.run = runFor(this.chapter);
         }
         return this.sendLobby();
+      case 'setSolo':
+        // only while the host is alone: a session with a partner in it can't turn solo
+        if (player !== this.host || this.phase !== 'lobby' || this.players.length !== 1) return;
+        this.solo = !!msg.value;
+        return this.sendLobby();
       case 'setSwap':
         if (player !== this.host || this.phase !== 'lobby') return;
         this.swapEachRoom = !!msg.value;
         return this.sendLobby();
       case 'start':
         if (player !== this.host || this.phase !== 'lobby') return;
-        if (this.players.length < 2 || this.connectedCount < 2) return this.send(player, { t: 'error', code: 'need_partner', message: 'Waiting for your partner to join.' });
+        if (this.players.length < this.seats || this.connectedCount < this.seats) return this.send(player, { t: 'error', code: 'need_partner', message: 'Waiting for your partner to join.' });
         return this.startRun();
       case 'ready':
         return this.onReady(player);
@@ -339,10 +356,14 @@ export class Session {
   startRun() {
     this.resetRun();
     const [a, b] = this.players;
-    let hostRole = this.pref;
-    if (hostRole === 'random') hostRole = Math.random() < 0.5 ? 'operator' : 'mentor';
-    a.role = hostRole;
-    b.role = other(hostRole);
+    if (this.solo) {
+      a.role = 'operator'; // the one player acts in the room; the manual comes along as mentorView
+    } else {
+      let hostRole = this.pref;
+      if (hostRole === 'random') hostRole = Math.random() < 0.5 ? 'operator' : 'mentor';
+      a.role = hostRole;
+      b.role = other(hostRole);
+    }
     this.run = runFor(this.chapter);
     // START_ROOM is a development aid: jump straight to a room, by position in the run or by id
     // (an id from outside the chosen chapter switches to the full gauntlet so it can be found)
@@ -382,7 +403,7 @@ export class Session {
   }
 
   swapRoles() {
-    if (this.phase !== 'briefing') return;
+    if (this.phase !== 'briefing' || this.solo) return;
     for (const p of this.players) p.role = other(p.role);
     this.ready.clear();
     for (const p of this.players) this.sendBriefing(p);
@@ -393,7 +414,7 @@ export class Session {
     if (this.phase !== 'briefing') return;
     this.ready.add(player.id);
     this.broadcast({ t: 'partnerReady', id: player.id });
-    if (this.players.length === 2 && this.ready.size === 2 && this.connectedCount === 2) this.go();
+    if (this.players.length === this.seats && this.ready.size === this.seats && this.connectedCount === this.seats) this.go();
   }
 
   // --------------------------------------------------------------- playing
@@ -441,7 +462,7 @@ export class Session {
   scheduleResume() {
     clearTimeout(this.resumeHandle);
     this.resumeHandle = setTimeout(() => {
-      if (this.phase !== 'playing' || !this.paused || this.connectedCount < 2) return;
+      if (this.phase !== 'playing' || !this.paused || this.connectedCount < this.seats) return;
       this.paused = false;
       this.startTimer();
       this.broadcast({ t: 'resume', remainingMs: this.remaining() });
@@ -474,6 +495,7 @@ export class Session {
         stage: this.stage,
         event: res.events?.[p.role] ?? null,
         view: res.views?.[p.role] ?? null,
+        ...(this.solo ? { mentor: { event: res.events?.mentor ?? null, view: res.views?.mentor ?? null } } : {}),
       });
     }
 
@@ -518,13 +540,13 @@ export class Session {
       this.roomIndex += 1;
       this.retry = 0;
       this.kind = 'transition';
-      if (this.swapEachRoom) for (const p of this.players) p.role = other(p.role);
+      if (this.swapEachRoom && !this.solo) for (const p of this.players) p.role = other(p.role);
       this.beginBriefing();
     }, solveHoldMs());
   }
 
   endingPayload() {
-    return { t: 'ending', chapter: this.chapter, names: this.names(), rooms: this.roomStats, totalMs: this.roomStats.reduce((a, r) => a + r.timeMs, 0) };
+    return { t: 'ending', chapter: this.chapter, solo: this.solo, names: this.names(), rooms: this.roomStats, totalMs: this.roomStats.reduce((a, r) => a + r.timeMs, 0) };
   }
 
   ending() {

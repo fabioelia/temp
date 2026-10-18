@@ -45,6 +45,9 @@ const app = {
   room: null,
   stage: null, // Stage (Operator 3D) — kept alive for the whole session
   shell: null, // mentor shell
+  mentorRoom: null, // solo: the Mentor's manual page module, alongside the Operator's room
+  mentorView: null,
+  solo: false,
   timer: { remaining: 0, total: 1, running: false, at: 0 },
   strikes: 0,
   stageIdx: 0,
@@ -112,13 +115,15 @@ async function connectThen(msg) {
   store.set('hardline.name', name);
   audio.unlock();
   const busy = (on) => {
-    for (const id of ['btn-create', 'btn-join']) $(id).disabled = on;
+    for (const id of ['btn-create', 'btn-join', 'btn-solo']) $(id).disabled = on;
   };
   try {
     busy(true);
+    // a solo run on a static host lives entirely in this tab: no broker, no code worth sharing, no TV link
+    app.offlineSolo = !!msg.solo && (await transportMode()) === 'p2p';
     if (net.status !== 'open') {
-      if ((await transportMode()) === 'p2p') landingError(msg.t === 'create' ? 'Opening a line…' : 'Looking for that session…');
-      await net.open(msg.t === 'create' ? { host: true } : { code: msg.code });
+      if ((await transportMode()) === 'p2p' && !msg.solo) landingError(msg.t === 'create' ? 'Opening a line…' : 'Looking for that session…');
+      await net.open(msg.t === 'create' ? { host: true, solo: !!msg.solo } : { code: msg.code });
       landingError('');
     }
     net.send({ ...msg, name });
@@ -140,6 +145,7 @@ function initLanding() {
     $('in-name').focus();
   }
   $('btn-create').onclick = () => connectThen({ t: 'create' });
+  $('btn-solo').onclick = () => connectThen({ t: 'create', solo: true });
   $('btn-join').onclick = () => {
     const code = $('in-code').value.trim().toUpperCase();
     if (code.length !== 4) return landingError('Session codes are four letters.');
@@ -167,28 +173,41 @@ function onLobby(m) {
   loadLan();
   const me = m.players.find((p) => p.id === m.you);
   const isHost = !!me?.host;
+  const offline = !!m.solo && !!app.offlineSolo;
+  $('lobby-eyebrow').textContent = m.solo ? 'SOLO RUN' : 'PRIVATE SESSION';
+  $('lobby-code').parentElement.classList.toggle('hidden', !!m.solo);
+  $('tv-offer').classList.toggle('hidden', offline);
+  $('solo-note').classList.toggle('hidden', !m.solo);
+  $('lobby-hint').classList.toggle('hidden', !!m.solo);
+  // a lone host can switch between solo and inviting someone (a session that is solo from the start
+  // on a static host has no peer connection, so it can't open up to a partner)
+  $('btn-solo-on').classList.toggle('hidden', !isHost || m.solo || m.players.length !== 1);
+  $('btn-solo-off').classList.toggle('hidden', !isHost || !m.solo || offline);
   transportMode().then((mode) => {
-    if (mode !== 'p2p') return;
-    $('lobby-hint').textContent = isHost
-      ? 'Send your partner the code or the link, then open your Discord call. This tab is hosting the session — keep it open until the run is over.'
-      : 'Connected straight to your partner\'s browser. Open your Discord call.';
+    if (!m.solo && mode === 'p2p') {
+      $('lobby-hint').textContent = isHost
+        ? 'Send your partner the code or the link, then open your Discord call. This tab is hosting the session — keep it open until the run is over.'
+        : 'Connected straight to your partner\'s browser. Open your Discord call.';
+    }
   });
   for (let i = 0; i < 2; i++) {
     const p = m.players[i];
     const slot = $(`slot-${i}`);
     slot.className = 'slot' + (p ? (p.connected ? ' on' : ' off') : '');
     slot.querySelector('b').textContent = p ? p.name + (p.id === m.you ? ' (you)' : '') : '—';
-    slot.querySelector('i').textContent = p ? (p.host ? 'host' : 'guest') + (p.connected ? '' : ' · reconnecting') : 'waiting…';
+    slot.querySelector('i').textContent = p ? (p.host ? (m.solo ? 'operator + protocol' : 'host') : 'guest') + (p.connected ? '' : ' · reconnecting') : 'waiting…';
   }
+  $('slot-1').classList.toggle('hidden', !!m.solo);
   $('host-controls').classList.toggle('hidden', !isHost);
   $('guest-wait').classList.toggle('hidden', isHost);
+  for (const el of [$('pref-label'), $('seg-pref'), $('swap-row')]) el.classList.toggle('hidden', !!m.solo);
   for (const b of $('seg-pref').children) b.classList.toggle('on', b.dataset.v === m.pref);
   for (const b of $('seg-chapter').children) b.classList.toggle('on', b.dataset.v === m.chapter);
   const ch = CHAPTERS[m.chapter] ?? CHAPTERS.classic;
   $('chapter-blurb').textContent = `${ch.blurb} (${ch.rooms.length} rooms)`;
   $('chapter-guest').textContent = `Run: ${ch.name} — ${ch.blurb} (${ch.rooms.length} rooms)`;
   $('chk-swap').checked = m.swap;
-  const ready = m.players.length === 2 && m.players.every((p) => p.connected);
+  const ready = m.solo ? m.players.length === 1 && m.players[0].connected : m.players.length === 2 && m.players.every((p) => p.connected);
   $('btn-start').disabled = !ready;
   $('btn-start').textContent = ready ? 'START THE RUN' : 'WAITING FOR PARTNER…';
 }
@@ -250,6 +269,8 @@ function initLobby() {
   for (const b of $('seg-pref').children) b.onclick = () => net.send({ t: 'setPref', value: b.dataset.v });
   for (const b of $('seg-chapter').children) b.onclick = () => net.send({ t: 'setChapter', value: b.dataset.v });
   $('chk-swap').onchange = (e) => net.send({ t: 'setSwap', value: e.target.checked });
+  $('btn-solo-on').onclick = () => net.send({ t: 'setSolo', value: true });
+  $('btn-solo-off').onclick = () => net.send({ t: 'setSolo', value: false });
   $('btn-start').onclick = () => {
     audio.unlock();
     net.send({ t: 'start' });
@@ -267,9 +288,9 @@ function leaveSession() {
 // --------------------------------------------------------------- interstitial
 
 function beatsFor(b) {
-  const room = story.ROOM_BEATS[b.room.id] ?? [];
+  const room = story.roomBeats(b.room.id, b.names?.solo);
   if (b.kind === 'intro') return [...story.introBeats(b.names, b.chapter), ...room];
-  if (b.kind === 'retry') return story.RETRY_BEATS[(b.retry - 1) % story.RETRY_BEATS.length];
+  if (b.kind === 'retry') return story.retryBeats(b.retry, b.names?.solo);
   return room;
 }
 
@@ -314,6 +335,13 @@ async function playBeats(b, token) {
 }
 
 function showRoleCard(b) {
+  if (b.solo) {
+    const card = $('brief-role');
+    card.classList.remove('hidden');
+    card.innerHTML = `<div><span class="rn">YOU GO IN ALONE</span><span class="rw">inside the construct, with the Protocol on your wrist</span></div>
+      <p>Look at the room, then press <b>M</b> (or <b>PROTOCOL</b> in the corner) to open the manual. The clock keeps running while you read. Your notes page is in there too.</p>`;
+    return;
+  }
   const r = ROLE_LABEL[b.role];
   const partner = b.role === 'operator' ? b.names.mentor : b.names.operator;
   const swapped = app.prevRole && app.prevRole !== b.role && b.kind === 'transition';
@@ -348,7 +376,7 @@ function sendReady() {
   const btn = $('btn-ready');
   btn.classList.remove('pulse');
   btn.disabled = true;
-  btn.textContent = 'WAITING FOR PARTNER…';
+  btn.textContent = app.solo ? 'LINKING…' : 'WAITING FOR PARTNER…';
 }
 
 function initBriefing() {
@@ -367,11 +395,19 @@ async function teardownRoom() {
     console.error(e);
   }
   app.room = null;
+  try {
+    app.mentorRoom?.dispose?.();
+  } catch (e) {
+    console.error(e);
+  }
+  app.mentorRoom = null;
   app.shell?.dispose();
   app.shell = null;
   app.playing = false;
   $('op-root').classList.add('hidden');
   $('mentor-root').classList.add('hidden');
+  $('mentor-root').classList.remove('solo');
+  $('btn-hud-manual').classList.add('hidden');
   app.stage?.setActive(false);
 }
 
@@ -414,6 +450,7 @@ async function buildRoom(b, token) {
     app.stage.renderer.compile(app.stage.scene, app.stage.camera);
     await sleep(40);
     app.stage.resize();
+    if (b.solo) await buildSoloManual(b, id, token);
   } else {
     const mod = await import(`./mentor/${id}.js`);
     if (token !== app.briefToken) return;
@@ -424,6 +461,47 @@ async function buildRoom(b, token) {
     app.room = await mod.create(ctx);
   }
   setBoot(100, 'CONSTRUCT READY');
+}
+
+/** Solo: the Mentor's manual for this room, kept as a pull-up overlay on top of the Operator's room. */
+async function buildSoloManual(b, id, token) {
+  const mod = await import(`./mentor/${id}.js`);
+  if (token !== app.briefToken) return;
+  const root = $('mentor-root');
+  root.classList.add('solo');
+  app.shell = createMentorShell(root, { audio, solo: true });
+  app.mentorRoom = await mod.create({ shell: app.shell, view: b.mentorView, audio, names: b.names, room: b.room });
+  app.mentorView = b.mentorView;
+  root.classList.add('hidden'); // closed until the player opens it
+  $('btn-hud-manual').classList.remove('hidden');
+}
+
+function setManual(open) {
+  if (!app.solo || !app.mentorRoom) return;
+  $('mentor-root').classList.toggle('hidden', !open);
+  $('btn-hud-manual').classList.toggle('on', open);
+  if (open) audio.pageFlip?.();
+}
+const manualOpen = () => !$('mentor-root').classList.contains('hidden');
+
+function initSolo() {
+  $('btn-hud-manual').onclick = () => setManual(!manualOpen());
+  const typing = (el) => !!el?.matches?.('input, textarea, select, [contenteditable]');
+  window.addEventListener('keydown', (e) => {
+    if (!app.solo || !app.mentorRoom || e.ctrlKey || e.metaKey || e.altKey || e.repeat || typing(e.target)) return;
+    if (e.key === 'm' || e.key === 'M') {
+      e.preventDefault();
+      setManual(!manualOpen());
+    }
+  });
+  // keys typed into the manual (notes, row clues) must never reach the Operator room's own handlers
+  $('mentor-root').addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || ((e.key === 'm' || e.key === 'M') && !typing(e.target) && !e.ctrlKey && !e.metaKey && !e.altKey)) {
+      e.preventDefault();
+      setManual(false);
+    }
+    e.stopPropagation();
+  });
 }
 
 // ----------------------------------------------------------------- briefing
@@ -440,6 +518,8 @@ async function onBriefing(b) {
   app.view = b.view;
   app.prevRole = app.role;
   app.role = b.role;
+  app.solo = !!b.solo;
+  app.mentorView = b.mentorView ?? null;
   app.names = b.names;
   app.stageIdx = 0;
   app.stageCount = b.room.stages;
@@ -454,11 +534,12 @@ async function onBriefing(b) {
   $('btn-ready').classList.remove('pulse');
   $('brief-role').classList.add('hidden');
   $('brief-wait').textContent = '';
-  $('btn-swap').classList.toggle('hidden', b.resume);
+  $('btn-swap').classList.toggle('hidden', b.resume || !!b.solo);
   const canSkip = b.kind === 'retry' || app.seenStory;
   $('btn-skip').classList.toggle('hidden', !canSkip);
   setBoot(0, 'BUILDING CONSTRUCT');
   setHud(b);
+  $('btn-hud-tv').classList.toggle('hidden', !!b.solo && !!app.offlineSolo);
 
   if (b.resume) {
     // rejoining mid-room: no interstitial, straight back to the puzzle
@@ -492,7 +573,7 @@ async function onBriefing(b) {
 
 function setHud(b) {
   const r = ROLE_LABEL[b.role];
-  $('hud-role').textContent = `${r.name} · ${r.where}`;
+  $('hud-role').textContent = b.solo ? 'SOLO · INSIDE THE CONSTRUCT' : `${r.name} · ${r.where}`;
   $('hud-room').textContent = `${b.room.sub} · ${b.room.title}`;
   renderStagePips();
   renderStrikes();
@@ -569,6 +650,7 @@ function onGo(m) {
   audio.startScore(app.briefing?.room?.audioRoot ?? 0);
   if (m.paused) showPause('Reconnected. Waiting for the line to settle…');
   app.room?.onGo?.(m);
+  app.mentorRoom?.onGo?.(m);
   app.stage?.resize();
 }
 
@@ -602,6 +684,15 @@ function onFx(m) {
   } catch (e) {
     console.error(e);
   }
+  if (app.solo && app.mentorRoom) {
+    // the manual gets the Mentor's half of the reply: its own event and (on a new stage) its own page
+    if (m.mentor?.view) app.mentorView = m.mentor.view;
+    try {
+      app.mentorRoom.onFx?.({ ...m, event: m.mentor?.event ?? null, view: m.mentor?.view ?? null });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 }
 
 function showPause(text) {
@@ -610,6 +701,7 @@ function showPause(text) {
 }
 
 function hideOverlays() {
+  clearTimeout(app.overlayTimer); // a delayed "layer cleared" / "resimulating" card must not appear over the next screen
   for (const id of ['ov-pause', 'ov-fail', 'ov-solved']) $(id).classList.add('hidden');
 }
 
@@ -622,7 +714,7 @@ function onFailed() {
   app.stage?.setGlitch(0.6);
   app.stage?.tween(1500, (k) => app.stage.setDrain(k));
   app.room?.onFailed?.();
-  setTimeout(() => $('ov-fail').classList.remove('hidden'), 600);
+  app.overlayTimer = setTimeout(() => $('ov-fail').classList.remove('hidden'), 600);
 }
 
 function onSolved(m) {
@@ -632,7 +724,7 @@ function onSolved(m) {
   audio.solved();
   app.room?.onSolved?.();
   $('solved-text').textContent = `${app.briefing?.room?.title ?? 'This layer'} — the way is open.`;
-  setTimeout(() => $('ov-solved').classList.remove('hidden'), 900);
+  app.overlayTimer = setTimeout(() => $('ov-solved').classList.remove('hidden'), 900);
 }
 
 // ------------------------------------------------------------------- ending
@@ -804,6 +896,7 @@ function boot() {
   transportMode().then((mode) => mode === 'p2p' && $('arcade-link').classList.remove('hidden'));
   initLobby();
   initBriefing();
+  initSolo();
   initEnding();
   initSettings();
   show('landing');

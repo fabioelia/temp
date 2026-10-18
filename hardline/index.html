@@ -26,7 +26,7 @@
     <a id="arcade-link" class="arcade-link hidden" href="../">&larr; GAMES</a>
     <div class="landing-grid">
       <header class="title-block">
-        <p class="eyebrow">A TWO-PLAYER ESCAPE &nbsp;//&nbsp; VOICE REQUIRED</p>
+        <p class="eyebrow">A CO-OP ESCAPE FOR TWO (OR ONE) &nbsp;//&nbsp; VOICE RECOMMENDED</p>
         <h1 class="glitch" data-text="HARDLINE">HARDLINE</h1>
         <p class="tagline">One of you can see the construct.<br>The other can read it.<br><em>Neither is enough.</em></p>
         <ul class="how">
@@ -42,6 +42,8 @@
           <input id="in-name" maxlength="16" autocomplete="nickname" spellcheck="false" placeholder="e.g. Switch">
         </label>
         <button id="btn-create" class="btn primary wide">CREATE A PRIVATE SESSION</button>
+        <button id="btn-solo" class="btn wide">PLAY SOLO</button>
+        <p class="fine solo-note">Solo: you play both halves — the room <i>and</i> the Protocol manual.</p>
         <div class="or"><span>or join your partner</span></div>
         <div class="join-row">
           <input id="in-code" maxlength="4" autocomplete="off" spellcheck="false" placeholder="CODE" aria-label="Session code">
@@ -56,7 +58,7 @@
   <!-- ============================================================== LOBBY -->
   <section id="screen-lobby" class="screen hidden">
     <div class="panel lobby">
-      <p class="eyebrow">PRIVATE SESSION</p>
+      <p class="eyebrow" id="lobby-eyebrow">PRIVATE SESSION</p>
       <div class="code-row">
         <div class="code" id="lobby-code" aria-label="Session code">----</div>
         <button id="btn-copy" class="btn small">COPY INVITE LINK</button>
@@ -64,7 +66,8 @@
       <p class="fine" id="lobby-hint">Send your partner the code or the link. Then open your Discord call.</p>
       <p class="fine hidden" id="lan-hint"></p>
 
-      <div class="tv-offer">
+      <p class="fine hidden" id="solo-note">You're playing <b>solo</b>. You'll go into the construct and carry the Protocol with you: press <kbd>M</kbd> (or the PROTOCOL button) to open the manual, <kbd>M</kbd> or <kbd>Esc</kbd> to close it. The clock keeps running while you read.</p>
+      <div class="tv-offer" id="tv-offer">
         <button id="btn-tv" class="btn small">SHOW ON TV</button>
         <p class="fine">Opens a spoiler-free <b>bridge display</b> — the clock, the crew and the story, never anyone's secrets — that you can cast to a TV from Chrome (⋮ → Cast…) so you can both watch.</p>
       </div>
@@ -73,9 +76,10 @@
         <div class="slot" id="slot-0"><span class="dot"></span><b>—</b><i>host</i></div>
         <div class="slot" id="slot-1"><span class="dot"></span><b>—</b><i>waiting…</i></div>
       </div>
+      <p class="fine" id="solo-switch"><button id="btn-solo-on" class="btn small ghost">PLAY SOLO INSTEAD</button><button id="btn-solo-off" class="btn small ghost hidden">INVITE A PARTNER INSTEAD</button></p>
 
       <div id="host-controls">
-        <p class="label">FIRST ROOM — WHO GOES IN?</p>
+        <p class="label" id="pref-label">FIRST ROOM — WHO GOES IN?</p>
         <div class="seg" id="seg-pref" role="group" aria-label="Role for the host">
           <button data-v="operator">I'M THE OPERATOR</button>
           <button data-v="random" class="on">RANDOM</button>
@@ -88,7 +92,7 @@
           <button data-v="gauntlet">GAUNTLET</button>
         </div>
         <p class="fine" id="chapter-blurb"></p>
-        <label class="check"><input type="checkbox" id="chk-swap" checked> <span>Swap roles after every room</span></label>
+        <label class="check" id="swap-row"><input type="checkbox" id="chk-swap" checked> <span>Swap roles after every room</span></label>
         <button id="btn-start" class="btn primary wide" disabled>WAITING FOR PARTNER…</button>
       </div>
       <p id="guest-wait" class="fine hidden"><span id="chapter-guest"></span><br>The host will start the run when you're both ready.</p>
@@ -137,6 +141,7 @@
       <div class="hud-timer" id="hud-timer" aria-label="Time remaining">0:00.0</div>
       <div class="hud-right">
         <div class="hud-strikes" id="hud-strikes" title="Mistakes this attempt"></div>
+        <button id="btn-hud-manual" class="icon-btn manualbtn hidden" title="Open the Protocol manual (M)" aria-label="Open the Protocol manual">PROTOCOL</button>
         <button id="btn-hud-tv" class="icon-btn tvbtn" title="Open the TV screen (spoiler-free, castable)" aria-label="Open the TV screen">TV</button>
         <button id="btn-hud-audio" class="icon-btn" title="Settings" aria-label="Settings">♪</button>
       </div>

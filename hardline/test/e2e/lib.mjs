@@ -109,7 +109,7 @@ export async function startRun(host, guest) {
 export async function enterRoom(...players) {
   await Promise.all(
     players.map(async (p) => {
-      await p.page.waitForSelector('#screen-brief:not(.hidden)', { timeout: 15000 });
+      await p.page.waitForSelector('#screen-brief:not(.hidden)', { timeout: 45000 }); // generous: software WebGL shares the CPU with the other pages
       await p.page.waitForSelector('#btn-skip:not(.hidden)', { timeout: 15000 }).then(() => p.page.click('#btn-skip')).catch(() => {});
       await p.page.waitForSelector('#btn-ready:not(.hidden)', { timeout: 60000 });
       await p.page.click('#btn-ready');

@@ -1,6 +1,6 @@
 # HARDLINE
 
-A two-player, voice-first co-op escape game set inside a simulated construct. Runs in the browser — **as plain static files, no server needed** — so it can live on GitHub Pages.
+A two-player, voice-first co-op escape game set inside a simulated construct — or play it **solo**. Runs in the browser — **as plain static files, no server needed** — so it can live on GitHub Pages.
 
 One of you is **jacked in** and can see the room but can't read it. The other is **aboard the Halcyon** holding a salvaged protocol manual that can read the room but can't see it. Describe, cross-reference, beat the clock, wake up.
 
@@ -9,6 +9,12 @@ One of you is **jacked in** and can see the room but can't read it. The other is
 - There is **no in-game chat**. Voice is external (Discord). The game is built to make you talk.
 
 ## Play it
+
+### Solo
+
+No partner? Hit **Play solo** on the start page. You go into the construct **and** carry the Protocol with you: the Mentor's manual is a pull-up overlay on top of the 3D room — press **M** (or the **PROTOCOL** button in the corner) to open it, **M** or **Esc** to close it. The clock keeps running while you read, the manual's own *Notes* page is there for scribbling, and keys typed into the manual never reach the room. Same rooms, same runs, same 15-second mistakes; the puzzles are no longer about *describing* things to someone, they are about looking at the room, reading the page and putting the two together.
+
+On a static host a solo run needs **no network at all** — no matchmaking broker, no partner: the game engine just runs in your tab. (A normal session's host can also switch to solo from the lobby while they're alone.) A solo session has no code, no invite and no TV link.
 
 ### On a static host (GitHub Pages and friends)
 
@@ -81,7 +87,7 @@ It shows the shared clock inside an Agent-trace ring, the crew, mistakes, progre
 | 10 | **The Logic Wall** — switches → gates → a lamp | Switch numbers, gate chips with a letter, a glyph and what feeds them. Wires don't light up | Which glyph is AND / OR / XOR / NAND / NOR / XNOR — **re-rolled every attempt** | Evaluate a circuit you can only see half of; work backwards from the lamp |
 | 11 | **The Mosaic** — a nonogram split between you | A wall of tiles and the **row** clues | The **column** clues and a scratch grid | Neither half is solvable alone; every picture is solvable by line logic (no guessing) |
 
-Every room is solvable only by talking: the engine sends each player *only their half* (see [Information split](#information-split)).
+Every room is solvable only by talking: the engine sends each player *only their half* (see [Information split](#information-split)). Clocks run from 5½ to 12 minutes a room; the Vault has the longest clock (12 min) because reading a glyph ring out, working the clues and trying codes takes first-time pairs about four minutes a door.
 
 ## Screenshots
 
@@ -153,8 +159,10 @@ On a static host the engine lives in the *host's* browser, so a determined host 
 
 ### Protocol (JSON messages)
 
-Client → engine: `create`, `join`, `resume`, `spectate` (read-only TV screen), `setPref`, `setChapter`, `setSwap`, `start`, `ready`, `swap`, `act`, `again`, `leave`, `ping`.
+Client → engine: `create` (`solo: true` for a one-seat session), `join`, `resume`, `spectate` (read-only TV screen), `setPref`, `setChapter`, `setSwap`, `setSolo`, `start`, `ready`, `swap`, `act`, `again`, `leave`, `ping`.
 Engine → client: `joined`, `spectating`, `lobby`, `briefing` (role-specific view; spectators get no view), `go`, `fx` (result + per-role event + new view), `timer`, `pause`, `resume`, `failed`, `solved`, `ending`, `peer`, `partnerReady`, `error`.
+
+In a solo session the player's `briefing` also carries `mentorView` (the manual's half) and each `fx` carries a `mentor: { event, view }` — fields that never appear in a two-player session (a test asserts that).
 
 The clock is an engine value; clients count down locally from each `remainingMs` and are re-synced every 4 s and on every penalty.
 
@@ -165,13 +173,14 @@ npm test                            # puzzle + session/protocol tests (fast, no 
 npm run e2e                         # real Chromium sessions play the game through the UI
 node test/e2e/run.mjs deep          # just the Deep Loop, all six rooms
 node test/e2e/run.mjs static        # just the static-hosting scenario
+node test/e2e/run.mjs solo          # a solo run on a static host: manual overlay, keys isolation, two rooms
 node test/e2e/run.mjs resilience    # disconnect/rejoin/timeout scenarios only
 npm run stress                      # build every room from many generated puzzles
 npm run shots                       # full-quality screenshots into docs/screenshots/
 ```
 
 - **Solver bots** play every room using *only* the two role views — the information two humans would have after talking — across 120–150 seeds per room. If they can solve it, it's solvable; the info-split tests prove neither half is enough alone (the Vault's clues leave several codes and the dials alone leave hundreds; Echo's rules genuinely change after a mistake; the Mosaic's rows and columns *together* determine the picture by line logic; and so on).
-- **Session tests** drive the real protocol over WebSockets: full playthroughs of the classic run, the **Deep Loop** and the **Gauntlet** (every room solved from the two role views, roles swapping each room), soft reset with a re-rolled puzzle, 15 s penalties, the mentor being unable to act, pause-on-disconnect with a frozen clock, rejoin with state intact, lobby rules.
+- **Session tests** drive the real protocol over WebSockets: full playthroughs of the classic run, the **Deep Loop** and the **Gauntlet** (every room solved from the two role views, roles swapping each room), **solo** runs of both chapters (one player, both halves, no role swap; no second seat; pause and resume on reconnect; no solo fields ever leak into a two-player session), soft reset with a re-rolled puzzle, 15 s penalties, the mentor being unable to act, pause-on-disconnect with a frozen clock, rejoin with state intact, lobby rules.
 - **Network tests** start the server with its default settings and reach the page and the protocol through this machine's real LAN address as well as loopback.
 - **TV-feed tests** watch a live session as a spectator and scan everything it receives for every puzzle-secret key; they also cover mid-room catch-up, read-only enforcement and the cap.
 - **End-to-end** launches two Chromium instances (software WebGL), reads each page's actual views, and clicks the actual 3D hotspots through every room — including a deliberate mistake in each — then checks the ending screen. It covers the classic run, the whole **Deep Loop**, pause/rejoin, timer expiry, a pointer-picking regression, and the TV screen. The **static-hosting scenario** serves the folder with a plain file server under `/games/hardline/` (no `/healthz`, nothing dynamic, like GitHub Pages) plus a local PeerJS broker, and checks that the page chooses WebRTC on its own, a partner and a TV join by code, a dropped partner pauses the clock and resumes the same seat, and the host leaving returns everyone to the start page.
@@ -202,6 +211,7 @@ The handoff targets *hyper-realistic full 3D*. This build ships with no download
 - **Never tested on a real GPU or by ear.** Everything above was built and tested in a sandbox with software WebGL and no sound card: frame rates on real hardware, the actual loudness balance of the synthesised score, and how the mix sounds in headphones have not been verified by a person.
 - **The peer-to-peer path was tested against a local broker, not the public one.** The WebRTC code is exercised end to end (two browsers and a TV screen, pause/rejoin, host leaving) with a local PeerJS server standing in for PeerJS's public one; I could not reach the public broker from the sandbox. It is the same broker and the same approach Pixel Pitch already relies on.
 - **A host's tab is the server.** Static hosting means the host must keep their tab open, and a host who reloads ends the session. Strict networks may need the TURN option above.
+- **Solo is easier to *read* than to *talk*.** A lone player sees both halves, so the communication puzzle is gone; what remains is the look-then-read-then-act loop under the same clock. Rooms whose manual is built around a partner's position (the maze) are still solvable but read a little oddly — the manual says "the Operator" and that is you (each page carries a reminder).
 - **Colour-dependent puzzles.** The Atrium's bullets now differ by shape as well as colour, but cables, sconces, glimpses, Echo's pylons and the Substation's lamps still lean on colour. Players with colour-vision deficiency may struggle; a patterned mode would be the next accessibility step.
 - **No partner-voice detection.** Ducking only hears *your* mic (see Audio).
 - **Sessions are in memory.** Restarting the Node server (or closing the host's tab) ends them.

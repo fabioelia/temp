@@ -306,3 +306,7 @@ test('every defined room has a generator, and stage counts match the roster', ()
     assert.ok(def.stages >= 1 && def.timeMs >= 300000, `${id} has sensible timing`);
   }
 });
+
+test('the Vault gets enough clock for three doors of talking (at least four minutes a door)', () => {
+  assert.ok(ROOM_DEFS.vault.timeMs / ROOM_DEFS.vault.stages >= 240000, `vault clock is ${ROOM_DEFS.vault.timeMs / 60000} min for ${ROOM_DEFS.vault.stages} doors`);
+});

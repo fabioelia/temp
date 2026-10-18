@@ -18,7 +18,8 @@ function check(name, ok, extra = '') {
 }
 
 const get = (p, fn, arg) => p.page.evaluate(fn, arg);
-const appView = (p) => get(p, () => JSON.parse(JSON.stringify(window.__hl.app.view)));
+// `p.mentorView` marks the "Mentor" stand-in for a solo player (their manual half lives on the same page)
+const appView = (p) => get(p, (m) => JSON.parse(JSON.stringify(m ? window.__hl.app.mentorView : window.__hl.app.view)), !!p.mentorView);
 const fxCount = (p) => get(p, () => window.__hl.app.fxCount ?? 0);
 const strikes = (p) => get(p, () => window.__hl.app.strikes);
 const stageIdx = (p) => get(p, () => window.__hl.app.stageIdx);
@@ -357,6 +358,79 @@ async function fullRun(browser, srv) {
   }
 }
 
+
+/** A normal lobby can flip to solo while the host is alone, and back again to invite someone. */
+async function soloToggle(browser, srv) {
+  console.log('\n● Lobby: switch between solo and inviting a partner');
+  const a = await newPlayer(browser, srv, 'Trin', { query: LOW });
+  try {
+    await a.page.goto(`${a.url}?${LOW}`);
+    await a.page.fill('#in-name', 'Trin');
+    await a.page.click('#btn-create');
+    await a.page.waitForSelector('#screen-lobby:not(.hidden)', { timeout: 15000 });
+    const state = () => get(a, () => ({ eyebrow: document.getElementById('lobby-eyebrow').textContent, codeHidden: document.querySelector('.code-row').classList.contains('hidden'), on: !document.getElementById('btn-solo-on').classList.contains('hidden'), off: !document.getElementById('btn-solo-off').classList.contains('hidden'), tv: !document.getElementById('tv-offer').classList.contains('hidden'), startDisabled: document.getElementById('btn-start').disabled }));
+    let st = await state();
+    check('toggle: a lone host sees PLAY SOLO INSTEAD and cannot start without a partner', st.on && !st.off && st.startDisabled && st.eyebrow === 'PRIVATE SESSION');
+    await a.page.click('#btn-solo-on');
+    await a.page.waitForFunction(() => document.getElementById('lobby-eyebrow').textContent === 'SOLO RUN');
+    st = await state();
+    check('toggle: solo hides the invite, keeps the TV link, and START is enabled', st.codeHidden && st.tv && st.off && !st.on && !st.startDisabled);
+    await a.page.click('#btn-solo-off');
+    await a.page.waitForFunction(() => document.getElementById('lobby-eyebrow').textContent === 'PRIVATE SESSION');
+    st = await state();
+    check('toggle: back to inviting a partner', !st.codeHidden && st.on && !st.off && st.startDisabled);
+  } finally {
+    check('toggle: no browser errors', a.errors.length === 0, a.errors.slice(0, 3).join(' | '));
+    await a.ctx.close();
+  }
+}
+
+/** Solo: one player, both halves, on a static host with no partner and no matchmaking broker at all. */
+async function solo(browser) {
+  console.log('\n● Solo run (static host, fully offline: no partner, no broker)');
+  const stat = await startStatic();
+  const a = await newPlayer(browser, stat, 'Trin', { query: LOW });
+  try {
+    await a.page.goto(`${a.url}?${LOW}`);
+    await a.page.fill('#in-name', 'Trin');
+    await a.page.click('#btn-solo');
+    await a.page.waitForSelector('#screen-lobby:not(.hidden)', { timeout: 15000 });
+    check('solo: the lobby is a solo run with no invite code and no second seat', await get(a, () => document.getElementById('lobby-eyebrow').textContent === 'SOLO RUN' && document.querySelector('.code-row').classList.contains('hidden') && document.getElementById('slot-1').classList.contains('hidden')));
+    check('solo: START is available straight away', await get(a, () => !document.getElementById('btn-start').disabled));
+    await shot(a, 'e2e-solo-lobby');
+    await a.page.click('#btn-start');
+    await enterRoom(a);
+    const me = { ...a, mentorView: true };
+    check('solo: the PROTOCOL button is on the HUD and the manual starts closed', await get(a, () => !document.getElementById('btn-hud-manual').classList.contains('hidden') && document.getElementById('mentor-root').classList.contains('hidden')));
+    await sleep(1200);
+    await shot(a, 'e2e-solo-room');
+
+    // M opens the manual (the Mentor's pages, built from the Mentor's half of the briefing); Esc closes it
+    await a.page.keyboard.press('m');
+    await a.page.waitForSelector('#mentor-root:not(.hidden) .manual', { timeout: 5000 });
+    check('solo: M opens the Protocol manual on top of the room', await get(a, () => document.querySelectorAll('#mentor-root .manual-tabs button').length >= 2));
+    await shot(a, 'e2e-solo-manual');
+    // typing digits into the notes must not leak into the room's keypad
+    await a.page.click('#mentor-root .manual-tabs button:last-child');
+    await a.page.click('#mentor-root textarea.notes');
+    await a.page.keyboard.type('4821');
+    check('solo: keys typed into the notes never reach the room (keypad untouched)', (await get(a, () => window.__hl.app.room.entered)) === '' && (await get(a, () => document.querySelector('#mentor-root textarea.notes').value)) === '4821');
+    await a.page.keyboard.press('Escape');
+    check('solo: Esc closes the manual again', await get(a, () => document.getElementById('mentor-root').classList.contains('hidden')));
+
+    // play two whole rooms alone, reading the manual for the Mentor's half
+    await rooms.cipher(a, me);
+    await waitScreen(a, 'screen-brief', 40000);
+    await enterRoom(a);
+    check('solo: no role swap between rooms — still inside the construct with the manual', (await get(a, () => window.__hl.app.role)) === 'operator' && (await get(a, () => !document.getElementById('btn-hud-manual').classList.contains('hidden'))));
+    await rooms.doors(a, me);
+  } finally {
+    check('solo: no browser errors', a.errors.length === 0, a.errors.slice(0, 3).join(' | '));
+    await a.ctx.close();
+    await stat.close();
+  }
+}
+
 /** The Deep Loop chapter: six harder rooms, chosen in the lobby. */
 async function deepLoop(browser, srv) {
   console.log('\n● Deep Loop chapter (six rooms, chosen from the lobby)');
@@ -630,12 +704,15 @@ const srv = await startGame({ SOLVE_HOLD_MS: '1400', FAIL_RESET_MS: '3000' });
 const browser = await launch();
 try {
   if (only === 'static') await staticHosting(browser);
+  if (only === 'solo') await solo(browser);
   if (!only || only === 'full') await fullRun(browser, srv);
+  if (!only || only === 'solo') await soloToggle(browser, srv);
   if (!only || only === 'deep') await deepLoop(browser, srv);
   if (!only || only === 'picking') await picking(browser, srv);
   if (!only || only === 'cast') await cast(browser, srv);
   if (!only || only === 'resilience') await resilience(browser, srv);
   if (!only) await staticHosting(browser);
+  if (!only) await solo(browser);
 } catch (e) {
   check(`scenario crashed: ${e.message.split('\n')[0]}`, false);
   console.error(e);

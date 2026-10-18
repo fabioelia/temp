@@ -201,6 +201,7 @@ class LoopServer extends HubSocket {
 // -------------------------------------------------------------- the host
 
 let hosting = null; // one hub per tab: { hub, peer, code }
+let soloHub = null; // a solo run needs no broker, no network and no peer: just a hub in this tab
 
 function randomCode() {
   let code = '';
@@ -219,6 +220,13 @@ function registerPeer(code) {
       reject(err);
     });
   });
+}
+
+async function startSoloHub() {
+  return (soloHub ??= (async () => {
+    const { createHub } = await import('../engine/hub.js');
+    return { hub: createHub({ fixedCode: randomCode(), localOnlyCreate: true }), peer: null };
+  })());
 }
 
 function startHosting() {
@@ -259,10 +267,10 @@ function startHosting() {
 }
 
 class HostSocket extends PipeSocket {
-  constructor() {
+  constructor({ solo = false } = {}) {
     super();
     this.server = null;
-    startHosting().then(
+    (solo ? startSoloHub() : startHosting()).then(
       ({ hub }) => {
         this.server = new LoopServer(this);
         hub.attach(this.server, { local: true });
@@ -389,12 +397,13 @@ class GuestSocket extends PipeSocket {
  * A WebSocket-like socket to a session.
  * @param {'ws'|'p2p'} mode
  * @param {{ host?: boolean, code?: string, resume?: boolean }} intent
- *        host: create a session here · code: join/watch one · resume: we were here a moment ago
+ *        host: create a session here (solo: nobody else will join, so no network is needed) ·
+ *        code: join/watch one · resume: we were here a moment ago
  */
-export function openSocket(mode, { host = false, code = '', resume = false } = {}) {
+export function openSocket(mode, { host = false, code = '', resume = false, solo = false } = {}) {
   if (mode === 'ws') {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     return new WebSocket(`${proto}://${location.host}/ws`);
   }
-  return host ? new HostSocket() : new GuestSocket(code, { resume });
+  return host ? new HostSocket({ solo }) : new GuestSocket(code, { resume });
 }

@@ -27,10 +27,12 @@ class Bot {
     if (m.t === 'briefing') {
       this.briefing = m;
       this.view = m.view;
+      this.mentorView = m.mentorView; // solo only
       this.role = m.role;
       this.send({ t: 'ready' });
     }
     if (m.t === 'fx' && m.view) this.view = m.view;
+    if (m.t === 'fx' && m.mentor?.view) this.mentorView = m.mentor.view;
     if (m.t === 'fx' && m.event?.pickup) this.pickedUp = true;
     if (m.t === 'go' || m.t === 'fx' || m.t === 'timer' || m.t === 'resume' || m.t === 'pause') if (m.remainingMs != null) this.remainingMs = m.remainingMs;
     this.waiters = this.waiters.filter((w) => !(w.pred(m) && (w.resolve(m), true)));
@@ -319,3 +321,158 @@ for (const chapter of ['deep', 'gauntlet']) {
     assert.deepEqual(roles, run.map((_, i) => (i % 2 === 0 ? 'operator' : 'mentor')));
   });
 }
+
+
+// ------------------------------------------------------------------------------ solo
+
+async function setupSolo(env = {}) {
+  Object.assign(process.env, { SOLVE_HOLD_MS: '0', FAIL_RESET_MS: '50', TIME_SCALE: '1', ...env });
+  const srv = await createServer({ port: 0, host: '127.0.0.1' });
+  const me = new Bot(srv.port, 'Solo');
+  await me.connect();
+  me.send({ t: 'create', name: 'Trin', solo: true });
+  const joined = await me.next((m) => m.t === 'joined');
+  return { srv, me, code: joined.code };
+}
+
+/** One player, both views: plays a whole room with the same solvers the pairs use. */
+async function playSoloRoom(bot, roomId) {
+  const from = bot.log.findLastIndex((m) => m.t === 'briefing');
+  await until(bot, (m) => m.t === 'go', from);
+  const act = async (action) => {
+    const mark = bot.log.length;
+    bot.send({ t: 'act', action });
+    return until(bot, (m) => m.t === 'fx', mark);
+  };
+  if (roomId === 'maze') {
+    const loc = localise(bot.view, bot.mentorView);
+    assert.equal(loc.candidates.length, 1);
+    let pos = { x: loc.candidates[0].x, y: loc.candidates[0].y };
+    for (const dir of mazeRoute(bot.mentorView, pos)) {
+      await act({ type: 'move', dir });
+      const d = { n: [0, -1], e: [1, 0], s: [0, 1], w: [-1, 0] }[dir];
+      pos = { x: pos.x + d[0], y: pos.y + d[1] };
+    }
+    const res = await act({ type: 'answer' });
+    assert.equal(res.result, 'solved');
+    return;
+  }
+  const done = new Set();
+  let strikes = 0;
+  const history = [];
+  for (let guard = 0; guard < 60; guard++) {
+    let actions;
+    if (DEEP_IDS.includes(roomId)) actions = deepActions(roomId, { operator: bot.view, mentor: bot.mentorView }, { strikes, history });
+    else {
+      bot.view.__done = done;
+      const { __cable, ...clean } = solvers[roomId]({ operator: bot.view, mentor: bot.mentorView });
+      actions = [clean];
+      if (roomId === 'switchboard' && __cable) done.add(__cable);
+    }
+    let res = null;
+    for (const action of actions) {
+      res = await act(action);
+      if (res.result === 'wrong') {
+        assert.equal(roomId, 'vault', `${roomId}: the solo bot should never be wrong`);
+        strikes = res.strikes;
+        history.push({ code: action.code, bulls: res.event.bulls });
+        break;
+      }
+    }
+    if (res.result === 'wrong') continue;
+    if (res.result === 'solved') return;
+    if (res.result === 'stage') {
+      done.clear();
+      history.length = 0;
+      await new Promise((r) => setTimeout(r, 20));
+    }
+  }
+  assert.fail(`${roomId}: not solved`);
+}
+
+for (const chapter of ['classic', 'deep']) {
+  test(`solo ${chapter} run: one player, both halves, no partner and no role swap`, async (t) => {
+    const { srv, me } = await setupSolo();
+    t.after(() => srv.close());
+    const run = runFor(chapter);
+    me.send({ t: 'setChapter', value: chapter });
+    me.send({ t: 'start' });
+    for (let i = 0; i < run.length; i++) {
+      await until(me, (m) => m.t === 'briefing' && m.roomIndex === i, 0, 20000);
+      const b = me.briefing;
+      assert.equal(b.solo, true);
+      assert.equal(b.role, 'operator', 'the lone player always acts in the room');
+      assert.ok(b.mentorView && b.view, 'both halves arrive together');
+      assert.equal(b.names.solo, true);
+      assert.equal(b.room.id, run[i].id);
+      await playSoloRoom(me, run[i].id);
+    }
+    const ending = await until(me, (m) => m.t === 'ending', 0, 20000);
+    assert.equal(ending.solo, true);
+    assert.equal(ending.rooms.length, run.length);
+  });
+}
+
+test('solo: only the host can go solo, a partnered session cannot, and no second seat opens', async (t) => {
+  const { srv, host, guest, code } = await setup();
+  t.after(() => srv.close());
+  host.send({ t: 'setSolo', value: true }); // two players already seated: ignored
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal(host.log.filter((m) => m.t === 'lobby').at(-1).solo, false);
+
+  const solo = await setupSolo();
+  t.after(() => solo.srv.close());
+  const intruder = new Bot(solo.srv.port, 'Intruder');
+  await intruder.connect();
+  intruder.send({ t: 'join', code: solo.code, name: 'Wren' });
+  const err = await intruder.next((m) => m.t === 'error');
+  assert.equal(err.code, 'session_full');
+  assert.match(err.message, /solo/i);
+
+  // a lobby that was created normally can switch to solo while the host is alone
+  const lone = new Bot(srv.port, 'Lone');
+  await lone.connect();
+  lone.send({ t: 'create', name: 'Neo' });
+  await lone.next((m) => m.t === 'joined');
+  lone.send({ t: 'setSolo', value: true });
+  const lobby = await lone.next((m) => m.t === 'lobby' && m.solo === true);
+  assert.equal(lobby.players.length, 1);
+  lone.send({ t: 'start' });
+  const b = await lone.next((m) => m.t === 'briefing');
+  assert.equal(b.solo, true);
+});
+
+test('two-player sessions never carry the Mentor half to the Operator (no solo leak)', async (t) => {
+  const { srv, host, guest } = await setup();
+  t.after(() => srv.close());
+  host.send({ t: 'setPref', value: 'operator' });
+  host.send({ t: 'start' });
+  await until(host, (m) => m.t === 'briefing');
+  await until(guest, (m) => m.t === 'briefing');
+  await until(host, (m) => m.t === 'go');
+  host.send({ t: 'act', action: { type: 'submit', code: '999999' } });
+  await until(host, (m) => m.t === 'fx');
+  for (const b of [host, guest]) {
+    for (const m of b.log) {
+      assert.equal('mentorView' in m, false, `${b.name} ${m.t}: mentorView must not appear in a two-player session`);
+      if (m.t === 'fx') assert.equal('mentor' in m, false, 'fx must not carry a mentor half');
+    }
+  }
+});
+
+test('solo: a dropped connection pauses the clock and the same seat resumes it', async (t) => {
+  const { srv, me, code } = await setupSolo();
+  t.after(() => srv.close());
+  me.send({ t: 'start' });
+  await until(me, (m) => m.t === 'go');
+  me.close();
+  await new Promise((r) => setTimeout(r, 200));
+  const back = new Bot(srv.port, 'Again');
+  await back.connect();
+  back.send({ t: 'resume', code, token: me.token });
+  await back.next((m) => m.t === 'joined');
+  const snap = await until(back, (m) => m.t === 'briefing' && m.resume === true);
+  assert.ok(snap.mentorView, 'the manual comes back with the seat');
+  const resumed = await until(back, (m) => m.t === 'resume', 0, 8000);
+  assert.ok(resumed.remainingMs > 0);
+});

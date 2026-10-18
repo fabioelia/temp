@@ -88,13 +88,15 @@ function renderCode() {
 
 function renderLobby(m) {
   S.players = m.players;
+  S.solo = !!m.solo;
   for (let i = 0; i < 2; i++) {
     const p = m.players[i];
     const el = $(`tv-slot-${i}`);
     el.className = 'tv-slot' + (p ? (p.connected ? ' on' : ' off') : '');
     el.querySelector('b').textContent = p ? p.name : '—';
-    el.querySelector('i').textContent = p ? (p.host ? 'host' : 'guest') + (p.connected ? '' : ' · reconnecting') : 'waiting…';
+    el.querySelector('i').textContent = p ? (p.host ? (m.solo ? 'solo run' : 'host') : 'guest') + (p.connected ? '' : ' · reconnecting') : 'waiting…';
   }
+  $('tv-slot-1').classList.toggle('hidden', S.solo);
 }
 
 function joinHint() {
@@ -117,7 +119,9 @@ async function loadLan() {
 function renderCrew() {
   $('crew-op').textContent = S.names.operator;
   $('crew-mentor').textContent = S.names.mentor;
-  $('tv-crew-brief').innerHTML = `<span>OPERATOR <b>${esc(S.names.operator)}</b> — jacked in</span><span>MENTOR <b>${esc(S.names.mentor)}</b> — aboard the Halcyon</span>`;
+  $('tv-crew-brief').innerHTML = S.names.solo
+    ? `<span>SOLO <b>${esc(S.names.operator)}</b> — inside the construct, the Protocol on their wrist</span>`
+    : `<span>OPERATOR <b>${esc(S.names.operator)}</b> — jacked in</span><span>MENTOR <b>${esc(S.names.mentor)}</b> — aboard the Halcyon</span>`;
 }
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -172,9 +176,9 @@ async function typeInto(container, beats, token) {
 }
 
 function beatsFor(m) {
-  const room = story.ROOM_BEATS[m.room.id] ?? [];
+  const room = story.roomBeats(m.room.id, m.names?.solo);
   if (m.kind === 'intro') return [...story.introBeats(m.names, m.chapter), ...room];
-  if (m.kind === 'retry') return story.RETRY_BEATS[(m.retry - 1) % story.RETRY_BEATS.length];
+  if (m.kind === 'retry') return story.retryBeats(m.retry, m.names?.solo);
   return room;
 }
 

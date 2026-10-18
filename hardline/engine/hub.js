@@ -73,13 +73,14 @@ export function createHub({ fixedCode = null, localOnlyCreate = false } = {}) {
           session = new Session(newCode(), (s) => sessions.delete(s.code));
           sessions.set(session.code, session);
           player = session.addPlayer(ws, msg.name);
+          session.solo = !!msg.solo; // "PLAY SOLO": a one-seat session
           reply({ t: 'joined', code: session.code, token: player.token, id: player.id });
           session.sendLobby();
         } else if (msg.t === 'join') {
           const s = find(msg.code);
           if (!s) return fail('no_session', 'No session with that code. Check it and try again.');
           const p = s.addPlayer(ws, msg.name);
-          if (!p) return fail('session_full', s.phase === 'lobby' ? 'That session already has two players.' : 'That run is already underway.');
+          if (!p) return fail('session_full', s.solo ? 'That is a solo session — it has no seat for a second player.' : s.phase === 'lobby' ? 'That session already has two players.' : 'That run is already underway.');
           session = s;
           player = p;
           reply({ t: 'joined', code: s.code, token: p.token, id: p.id });

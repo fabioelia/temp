@@ -17,7 +17,11 @@ export const ROOM_DEFS = {
   maze: { id: 'maze', title: 'THE HARDLINE', stages: 1, timeMs: 480000, audioRoot: 4 },
   // ---- Deep Loop: harder, more layered puzzles beneath the hardline
   echo: { id: 'echo', title: 'THE ECHO CHAMBER', stages: 3, timeMs: 420000, audioRoot: 5 },
-  vault: { id: 'vault', title: 'THE VAULT', stages: 3, timeMs: 420000, audioRoot: 6 },
+  // The Vault is the slowest kind of puzzle to *talk* through: for each of three doors the glyph ring has
+  // to be read out and matched to the legend, the clues worked into a short list of codes, and then one
+  // to three tries made (each one dial-turning and a lever). First-time pairs need ~4 minutes a door, so
+  // it gets 12 minutes — 7 was only enough for players who already knew the room.
+  vault: { id: 'vault', title: 'THE VAULT', stages: 3, timeMs: 720000, audioRoot: 6 },
   grid: { id: 'grid', title: 'THE SUBSTATION', stages: 3, timeMs: 450000, audioRoot: 7 },
   triangulate: { id: 'triangulate', title: 'THE SIGNAL ROOM', stages: 3, timeMs: 480000, audioRoot: 8 },
   logic: { id: 'logic', title: 'THE LOGIC WALL', stages: 3, timeMs: 480000, audioRoot: 9 },

@@ -4,7 +4,7 @@
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-export function createMentorShell(root, { audio }) {
+export function createMentorShell(root, { audio, solo = false }) {
   root.innerHTML = `
     <div class="manual">
       <div class="manual-tabs" role="tablist" aria-label="Protocol pages"></div>
@@ -42,6 +42,14 @@ export function createMentorShell(root, { audio }) {
     <p>Your own scribbles. Nobody else sees this page.</p>
     <textarea class="notes" spellcheck="false" placeholder="Write down what the Operator tells you — clues, numbers, sequences…"></textarea>`;
 
+  // a lone player is the Operator *and* the reader: say so at the top of every page
+  const soloBanner = () => {
+    const el = document.createElement('p');
+    el.className = 'solo-banner';
+    el.innerHTML = '<b>SOLO RUN</b> — wherever these pages say <i>"the Operator"</i>, that is you. Look at the room, read here, then act. <kbd>M</kbd> closes the manual.';
+    return el;
+  };
+
   function renderTabs() {
     tabsEl.innerHTML = '';
     for (const p of pages) {
@@ -59,7 +67,7 @@ export function createMentorShell(root, { audio }) {
     if (!page) return;
     if (sound && page.id !== active) audio.pageFlip();
     active = page.id;
-    paper.replaceChildren(page.el);
+    paper.replaceChildren(...(solo ? [soloBanner(), page.el] : [page.el]));
     paper.scrollTop = 0;
     renderTabs();
   }

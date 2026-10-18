@@ -10,15 +10,22 @@
 export const SHIP_NAME = 'HALCYON';
 export const AUTHOR = 'Ada Kerr';
 
-export function introBeats({ operator, mentor }, chapter = 'classic') {
-  if (chapter === 'deep') return deepIntroBeats({ operator, mentor });
+export function introBeats({ operator, mentor, solo = false }, chapter = 'classic') {
+  if (chapter === 'deep') return deepIntroBeats({ operator, mentor, solo });
   return [
     { who: 'SYS', text: `HALCYON // UPLINK ESTABLISHED` },
     { who: 'SYS', text: `JACK-IN SEQUENCE INITIATED. DO NOT DISCONNECT.` },
     { who: 'SHIP', text: `Halcyon to the construct. The signal is thin, so I'll keep this short.` },
     { who: 'SHIP', text: `Somewhere below the lobby there's a hardline: a phone that rings in the real world. Reach it and you wake up. Miss it and the system folds you back into the loop.` },
-    { who: 'SHIP', text: `${operator} goes in. ${mentor} stays aboard with the Protocol — every page we salvaged from the crew that tried before us. The Protocol can read the construct. It can't see it.` },
-    { who: 'SHIP', text: `So talk. Describe what's in front of you. Don't assume.` },
+    ...(solo
+      ? [
+          { who: 'SHIP', text: `${operator}, you're going in alone. The Protocol goes with you — every page we salvaged from the crew that tried before us, loaded onto your wrist display. The Protocol can read the construct. It can't see it. You can. You'll need both.` },
+          { who: 'SHIP', text: `So look, then read. Open the Protocol whenever you need it — the clock doesn't stop. Don't assume.` },
+        ]
+      : [
+          { who: 'SHIP', text: `${operator} goes in. ${mentor} stays aboard with the Protocol — every page we salvaged from the crew that tried before us. The Protocol can read the construct. It can't see it.` },
+          { who: 'SHIP', text: `So talk. Describe what's in front of you. Don't assume.` },
+        ]),
   ];
 }
 
@@ -82,13 +89,15 @@ export const ROOM_BEATS = {
   ],
 };
 
-function deepIntroBeats({ operator, mentor }) {
+function deepIntroBeats({ operator, mentor, solo = false }) {
   return [
     { who: 'SYS', text: `HALCYON // SECOND UPLINK ESTABLISHED` },
     { who: 'SYS', text: `JACK-IN SEQUENCE INITIATED. DEPTH: BEYOND THE HARDLINE.` },
     { who: 'SHIP', text: `Halcyon here. I need you both to listen. When the phone connected, our instruments should have shown you outside. They don't. The signal went down a layer, not up.` },
     { who: 'SHIP', text: `A construct inside a construct. Ada's Protocol has an appendix we'd never dared open — six more doors, each harder than the last. Her note on the cover says: "If the phone rings twice, don't wake up. Go deeper."` },
-    { who: 'SHIP', text: `${operator} goes in. ${mentor} reads. The rules are stranger down here, and a lot more of them. So talk — and write things down.` },
+    solo
+      ? { who: 'SHIP', text: `${operator} goes in, with the Protocol on your wrist. The rules are stranger down here, and a lot more of them. So read carefully — and write things down. The Protocol has a notes page for exactly that.` }
+      : { who: 'SHIP', text: `${operator} goes in. ${mentor} reads. The rules are stranger down here, and a lot more of them. So talk — and write things down.` },
   ];
 }
 
@@ -107,27 +116,55 @@ export const RETRY_BEATS = [
   ],
 ];
 
-export function outroBeats({ operator, mentor }, chapter = 'classic') {
+export function outroBeats({ operator, mentor, solo = false }, chapter = 'classic') {
+  const welcome = solo ? `Welcome back, ${operator}.` : `Welcome back, ${operator}. Welcome back, ${mentor}.`;
   if (chapter === 'classic') {
     return [
       { who: 'SYS', text: `HARDLINE CONNECTED` },
       { who: 'NOTE', text: `The phone stops ringing. The line opens. The green drains out of the world like water from a basin.` },
       { who: 'SYS', text: `WAKING UP...` },
-      { who: 'SHIP', text: `Halcyon here. Signal's clean. Welcome back, ${operator}. Welcome back, ${mentor}.` },
+      { who: 'SHIP', text: `Halcyon here. Signal's clean. ${welcome}` },
       { who: 'PROTO', text: `p.59 — (blank) — "Add your page." There is a second, thinner volume clipped behind it: "APPENDIX — DEEP LOOP."` },
     ];
   }
   return [
     { who: 'SYS', text: `LAYER CLEARED // SOURCE REACHED` },
-    { who: 'NOTE', text: `The last tile locks. The picture resolves into a door. You walk through it together, one of you in the construct, one of you aboard the ship, both of you listening.` },
+    {
+      who: 'NOTE',
+      text: solo
+        ? `The last tile locks. The picture resolves into a door. You walk through it alone, the Protocol warm against your wrist, listening for anyone else on the line.`
+        : `The last tile locks. The picture resolves into a door. You walk through it together, one of you in the construct, one of you aboard the ship, both of you listening.`,
+    },
     { who: 'SYS', text: `WAKING UP...` },
-    { who: 'SHIP', text: `Halcyon. Signal's clean. ...I think. Welcome back, ${operator}. Welcome back, ${mentor}. Don't pick up the phone this time.` },
+    { who: 'SHIP', text: `Halcyon. Signal's clean. ...I think. ${welcome} Don't pick up the phone this time.` },
     { who: 'PROTO', text: `Appendix, last page — "If you can read this, you were never alone in here. Add your page." — A.K.` },
   ];
 }
 
-export function epilogueNote({ operator, mentor }) {
+export function epilogueNote({ operator, mentor, solo = false }) {
+  if (solo) return `"Look. Read. Don't assume. Trust both." — ${operator}`;
   return `"Describe. Don't assume. Trust who's on the line." — ${operator} & ${mentor}`;
+}
+
+/** The beats for a room, adjusted for a lone player where the text assumes two. */
+export function roomBeats(id, solo = false) {
+  const beats = ROOM_BEATS[id] ?? [];
+  if (!solo) return beats;
+  return beats.map((b) => ({ ...b, text: SOLO_SWAPS.reduce((t, [from, to]) => (t === from ? to : t), b.text) }));
+}
+
+const SOLO_SWAPS = [
+  [
+    `This is the last piece. A picture the construct broke into tiles, and neither of you holds all of the clues. Read yours aloud. Build it together.`,
+    `This is the last piece. A picture the construct broke into tiles, and the clues are split: the rows are on the wall, the columns are in the Protocol. Neither half is enough. Put them together.`,
+  ],
+];
+
+/** The "resimulating" beats; the second one is reworded for a lone player. */
+export function retryBeats(retry, solo = false) {
+  const set = RETRY_BEATS[(retry - 1 + RETRY_BEATS.length) % RETRY_BEATS.length];
+  if (!solo) return set;
+  return set.map((b) => (b.text.includes('talk it through') ? { ...b, text: `That one slipped. It happens. Breathe, then go through it again, slowly.` } : b));
 }
 
 export const WAIT_LINES = [
