@@ -28,8 +28,12 @@ true, what is contested, and what nobody has connected yet.
    happened the last time someone hit that pathway (see landscape §4).
 5. **Human genetics and human tissue outrank mouse.** Mouse-only efficacy
    is never strong evidence.
-6. **Clinical vs statistical.** Compare effects to MCIDs (FEV1 ~100 mL,
-   SGRQ 4, CAT 2, 6MWD ~26-30 m) and report absolute differences.
+6. **Clinical vs statistical.** Report absolute differences, and compare
+   effects to MCIDs — but as an order-of-magnitude anchor, not a pass/fail
+   line. Each MCID is itself a population-derived estimate with a method
+   and a contested range (trough FEV1 commonly ~100 mL but argued to 140;
+   SGRQ 4; CAT 2; 6MWD ~26-30 m). Name the anchor you used; never report
+   "above/below MCID" as though the threshold were a constant of nature.
 7. **No patient-level treatment advice.** Never tell anyone to start,
    stop or switch a therapy. Output is research for scientists and
    clinicians; defer to GOLD/ATS/ERS and the treating physician.
@@ -62,9 +66,30 @@ true, what is contested, and what nobody has connected yet.
     confidence does not track correctness. The triggers are phrases and
     question shapes precisely so they fire without introspection.
 13. **Identifiers come from a call, never from memory.** Gene symbols, IDs,
-    aliases, loci, rsIDs, ontology terms. Recall is ~99% wrong on
-    gene-name conversion and the model cannot feel the incapacity. `COPD`
-    itself resolves to HGNC:649 = ARCN1.
+    aliases, loci, rsIDs, ontology terms. One benchmark measured near-total
+    error on gene-name conversion, closed almost entirely by API access,
+    with low incapacity awareness (GeneTuring, PMID 36993670) — that is a
+    different model on a specific task format, so take the *direction*, not
+    the rate. `COPD` itself resolves to HGNC:649 = ARCN1.
+14. **A number is a measurement, not a fact.** Every number arrives with
+    generating conditions — the population, the platform and its units, the
+    normalisation, the isolation protocol, the disease state, the date, the
+    model measured. Strip them and you import them as hidden assumptions.
+    So: **transport the ordinal relationship, never the constant.** "CSF3R
+    is markedly higher in classical than non-classical monocytes" survives
+    a change of dataset; "279.2 nTPM" does not, and nTPM is a share of one
+    cell's transcriptome, not molecules per cell. Record the conditions
+    beside the number, and when a number crosses contexts say which
+    conditions you are assuming still hold.
+    **The corollary that bites hardest:** when the quantity is itself a
+    function of the variable under study, an external constant assumes away
+    the hypothesis. Per-cell expression of activation-responsive genes moves
+    with inflammation, so a healthy-donor value used to adjust a disease
+    comparison silently biases against the effect being tested. Attribution
+    arithmetic comes from the study's own measurements (its CBC, its
+    counts), never from a reference constant. See
+    [references/knowledge-boundaries.md](references/knowledge-boundaries.md)
+    §E for what transports and what does not.
 
 ## Reference library (load what the task needs)
 
