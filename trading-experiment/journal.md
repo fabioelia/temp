@@ -106,3 +106,6 @@ per-order confirmation; Robinhood trade approvals stay off.
 
 **Correction (2026-10-18):** NVDA reports Tue 11/17 after the close, company-verified (Robinhood `get_earnings_results`), not 11/18 as assumed. Flagged by the semis-ai specialist.
 NVDA run-up positions must be sold by the 11/17 close unless holding through the print is a deliberate, journaled choice.
+
+**Correction (2026-10-18):** VIX closed 19.99 on Fri 10/16 (intraday high 22.31; Yahoo daily bars), not "~21-22" as written in the 10/17 macro notes. It closed just under the
+regime gate's VIX >= 20 line, so the gate reads borderline, not risk-off. Flagged by the flows specialist.
