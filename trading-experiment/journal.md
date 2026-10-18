@@ -103,3 +103,6 @@ specialists running now were told mid-research. Tests pin the old $500 limit so 
 
 **Confirmation policy confirmed (owner, 2026-10-18):** "yes thats right for my confirmation. I dont want to tap for this." Standing authorization plus an approved gate ticket is the
 per-order confirmation; Robinhood trade approvals stay off.
+
+**Correction (2026-10-18):** NVDA reports Tue 11/17 after the close, company-verified (Robinhood `get_earnings_results`), not 11/18 as assumed. Flagged by the semis-ai specialist.
+NVDA run-up positions must be sold by the 11/17 close unless holding through the print is a deliberate, journaled choice.

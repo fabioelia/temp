@@ -31,8 +31,8 @@ Version 2, 2026-10-17 (budget raised to $1,000 on 2026-10-18). The owner chose o
 * **Week of 10/19:** META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test. Trade the reaction (decide 10/22) rather than holding through.
 * **10/28:** MSFT and GOOGL after the close, FOMC decision at 2pm. **10/29:** AMZN, INTC. **10/30:** XOM/CVX (unverified). **11/1:** OPEC+. **11/2:** AAPL. **11/3:** midterms.
   **11/6:** jobs. **~11/10:** CPI.
-* **11/9-11/18: the NVDA run-up.** NVDA reports after the close on 11/18 (expected); the experiment ends at the 11/18 close, so a run-up position carries no earnings-gap risk to the
-  scored value, but it must still be sold by 11/18 (and before expiry).
+* **11/9-11/17: the NVDA run-up.** NVDA reports **after the close on Tue 11/17** (company-verified per Robinhood `get_earnings_results`, checked 2026-10-18; it was wrongly assumed to be
+  11/18). A run-up position must be **sold by the 11/17 close**; holding it overnight is a one-day bet on the print scored at the 11/18 close, and needs an explicit journal reason.
 
 ## Read of the tape (2026-10-17)
 * Late-cycle correction driven by liquidity and credit, not earnings. Stagflation flavour: Fed hiked 9/16 to 3.75-4.00%, CPI 3.7%, payrolls +29k, 10y ~5.1%,
@@ -63,5 +63,6 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 ## Changelog
 * 2026-10-17: v1 written (stocks/ETFs, energy core).
 * 2026-10-18: research toolkit (headlines, full text, Fed/EIA RSS, SEC filings and insider trades) and a 09:13 ET pre-open news run added at the owner's request.
+* 2026-10-18: NVDA earnings date corrected to 11/17 after the close (semis-ai specialist, confirmed via Robinhood).
 * 2026-10-18: loss budget raised to $1,000 by the owner (floor $1,000; shots ~$500; goal needs ~3x).
 * 2026-10-17: v2. Owner chose options with the $500 loss budget; stock buys off; $1,500 cash floor enforced in code; XLE/GUSH proposals cancelled.
