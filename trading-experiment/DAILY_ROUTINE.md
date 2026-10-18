@@ -112,8 +112,9 @@ happens: nothing new fills.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
    market recap, the next five trading days' calendar, and the persona). Each writes `research/D/<name>.md` (max about 350 words, sources cited, never invent prices) and replies in at
    most 100 words with ranked ideas (ticker, reference close + source, entry, closing-basis stop, target, confidence 1-10, liquidity tier):
-   `macro` (Druckenmiller/Soros school), `momentum` (Livermore, Darvas, O'Neil, Minervini), `catalyst` (event/earnings specialist). Add `contrarian` and `historian` when a regime change
-   makes them useful. Then `risk` red-teams the draft proposals (approve / modify / reject, at most 120 words).
+   `macro` (Druckenmiller/Soros school), `momentum` (Livermore, Darvas, O'Neil, Minervini), `catalyst` (event/earnings specialist), `options-vol` (picks the contract: strike, expiry,
+   IV versus the expected move, theta per week, payoff odds; uses `quotes.py chain`). Add `contrarian` and `historian` when a regime change makes them useful, and the sector
+   specialists from 2026-10-18 (`semis-ai`, `energy`, `flows`) when their theme is in play. Then `risk` red-teams the draft proposals (approve / modify / reject, at most 120 words).
    Every brief tells the agent about the research toolkit above. The `catalyst` agent must check `research.py sec filings` and `sec insiders` for each underlying it proposes and
    say what the latest 8-K and insider activity imply; the `macro` agent reads at least one primary source in full (Fed statement or minutes, EIA weekly, Treasury) when it matters.
 3. **Propose, do not commit.** Weigh the opinions against `playbook.md`, the goal pace and the guardrails, then queue tomorrow's ideas as proposals:
