@@ -1,6 +1,6 @@
 [
  {
-  "asof": "2026-10-16",
+  "asof": "2026-10-19",
   "equity": 2000.0,
   "pnl": 0.0,
   "pnl_pct": 0.0,
@@ -13,8 +13,8 @@
   "realized": 0.0,
   "benchmark_value": null,
   "benchmark_pnl_pct": null,
-  "trading_days_left": 23,
-  "required_daily_return": 0.0306,
+  "trading_days_left": 22,
+  "required_daily_return": 0.032,
   "fills": 0,
   "verified_fills": 0,
   "closed_trades": 0,

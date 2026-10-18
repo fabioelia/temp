@@ -1,5 +1,5 @@
 {
-  "asof": "2026-10-16",
+  "asof": "2026-10-19",
   "start_cash": 2000.0,
   "goal": 4000.0,
   "end_date": "2026-11-18",
@@ -11,8 +11,8 @@
   "slippage": 0.0,
   "realized": 0.0,
   "progress_to_goal": 0.0,
-  "trading_days_left": 23,
-  "required_daily_return": 0.03059554475200943,
+  "trading_days_left": 22,
+  "required_daily_return": 0.03200827973420961,
   "bench_value": null,
   "benchmark": "SPY",
   "series": [

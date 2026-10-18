@@ -149,4 +149,4 @@ scheduled tasks (all of them: pre-open, pre-close, post-close, Sunday) and disab
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
 * Options: buy-to-open and sell-to-close only. Never sell to open, never multi-leg, never exercise, never hold into expiry.
-* Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $1,000-loss limits of `LIVE_MODE.md`. Never transfers, account changes, options, crypto, margin or shorting. Never remove `KILL_SWITCH`.
+* Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $1,000-loss limits of `LIVE_MODE.md`. Never transfers, account changes, selling options to open, multi-leg options, exercise, crypto, margin or shorting. Never remove `KILL_SWITCH`.

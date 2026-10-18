@@ -24,7 +24,7 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 "Pull the plug" is implemented as: sell all positions to cash, then halt. If you would rather it halt without selling, say so.
 
 ## Always forbidden
-Deposits, withdrawals, transfers, ACH, wires; changing any account setting; options, crypto, margin, short selling; any order the gate did not approve; touching holdings that are not part of
+Deposits, withdrawals, transfers, ACH, wires; changing any account setting; selling options to open, multi-leg options, exercising options (buying calls/puts through the gate is allowed, owner's choice 2026-10-17); crypto, margin, short selling; any order the gate did not approve; touching holdings that are not part of
 the experiment; reading anything of the account beyond what the routine needs (prices, the experiment's positions and orders, buying power). If a tool looks like it does one of these, do not call it.
 
 ## Stop it yourself, any time
