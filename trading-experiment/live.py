@@ -189,7 +189,11 @@ def cmd_gate(a):
         avail = cash_live - (cap - LIVE.get("loss_limit_usd", 500))
         want = float(o["size_value"]) * a.limit * 100 if o["size_type"] == "qty" else float(o["size_value"])
         fee = strat.get("option_fee_per_contract", 0.05)
-        qty = int(min(want, avail) // (a.limit * 100 + fee))
+        single = LIVE.get("max_single_order_pct", 0.30) * cap
+        # size like the paper tracker: premium within the ask, the floor and the single-order cap; fees only have to fit above the floor
+        qty = int(min(want, avail, single) // (a.limit * 100))
+        while qty > 0 and qty * (a.limit * 100 + fee) > avail + 1e-9:
+            qty -= 1
         if qty < 1:
             refuse(f"loss budget left (${max(avail, 0):,.2f} above the floor) buys no contract at {a.limit}")
         usd = round(qty * a.limit * 100, 2)

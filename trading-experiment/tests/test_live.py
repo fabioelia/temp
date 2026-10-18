@@ -200,6 +200,41 @@ class LiveOptions(unittest.TestCase):
         import uuid
         self.assertEqual(json.loads(out)["ref_id"], str(uuid.uuid5(uuid.NAMESPACE_URL, "https://github.com/fabioelia/temp/trading-experiment/K001")))
 
+    def write_order(self, row):
+        p = Path(self.dir, "data", "orders.csv")
+        p.write_text(p.read_text() + row + "\n")
+
+    def test_qty_sized_option_buys_the_contracts_asked_for(self):
+        self.write_order(f"O003,{MON},XLE261120C00070000,buy,qty,1,O,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,1.9,2.0,,cboe")
+        rc, out = self.gate("--order", "O003", "--limit", "2.00")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(json.loads(out)["contracts"], 1)
+
+    def set_loss_limit(self, usd):
+        p = Path(self.dir, "config.json")
+        c = json.loads(p.read_text())
+        c["live"]["loss_limit_usd"] = usd
+        p.write_text(json.dumps(c))
+
+    def test_usd_sized_premium_equal_to_the_ask_buys_one_contract(self):
+        self.set_loss_limit(1000.0)
+        self.write_order(f"O003,{MON},XLE261120C00070000,buy,usd,500,O,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,4.9,5.0,,cboe")
+        rc, out = self.gate("--order", "O003", "--limit", "5.00")   # the fee is paid from the budget, not from the $500 asked for
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(json.loads(out)["contracts"], 1)
+
+    def test_fees_must_fit_above_the_floor(self):
+        self.write_order(f"O003,{MON},XLE261120C00070000,buy,usd,500,O,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,4.9,5.0,,cboe")
+        rc, out = self.gate("--order", "O003", "--limit", "5.00")   # $500 budget: $500 premium + $0.04 fee does not fit
+        self.assertEqual((rc, "buys no contract" in out), (2, True))
+
+    def test_single_order_cap_applies_to_options(self):
+        self.set_loss_limit(1000.0)
+        rc, out = self.gate("--order", "O001", "--limit", "2.55")   # wants $2,000; floor allows $1,000; cap is 30% of $2,000
+        self.assertEqual(rc, 0, out)
+        t = json.loads(out)
+        self.assertEqual((t["contracts"], t["premium_usd"]), (2, 510.0))
+
     def test_stock_buy_refused_in_options_strategy(self):
         rc, out = self.gate("--order", "O002")
         self.assertEqual((rc, "switched off" in out), (2, True))
