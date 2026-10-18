@@ -59,6 +59,10 @@ class Options(unittest.TestCase):
         self.dir = tempfile.mkdtemp()
         for f in ("tracker.py", "quotes.py", "config.json"):
             shutil.copy(SRC / f, self.dir)
+        cfg = Path(self.dir, "config.json")  # pin the fee so the arithmetic below does not move with config updates
+        c = json.loads(cfg.read_text())
+        c["strategy"]["option_fee_per_contract"] = 0.05
+        cfg.write_text(json.dumps(c))
         port = self.srv.server_address[1]
         self.env = dict(os.environ, QUOTES_BASE_CBOE=f"http://127.0.0.1:{port}", QUOTES_BASE_YAHOO=f"http://127.0.0.1:{port}",
                         NO_PROXY="127.0.0.1")
