@@ -1,0 +1,8 @@
+# Machine-local Claude Code settings (may contain permissive permission modes)
+.claude/settings.local.json
+
+# Local agent memory
+.claude/agent-memory-local/
+
+# Scratch data pulled by research runs (large, re-fetchable)
+research/analyses/**/raw/

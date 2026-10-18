@@ -1,0 +1,33 @@
+
+### HHIP: total_in_catalog=314 fetched=100 distinct_traits=30
+ top traits: [('body height', 29), ('BMI-adjusted hip circumference', 11), ('body weight', 7), ('BMI-adjusted waist circumference', 6), ('brain attribute', 5), ('vital capacity', 4), ('lean body mass', 4), ('abnormality of the skeletal system', 3)]
+ lung/respiratory associations fetched: 6
+   vital capacity | 2e-47 | - | - | rs1492820 | ? | GCST90270083 | 36641522 
+   peak expiratory flow | 5e-40 | 0.0384 unit increase | - | rs2353940 | T | GCST007430 | 30804560 
+   vital capacity | 1e-22 | - | - | rs75686861 | ? | GCST007081 | 30595370 
+   FEV/FVC ratio | 5e-19 | 0.0246 unit increase | - | rs2353940 | T | GCST007431 | 30804560 
+   vital capacity | 6e-19 | 8.89 z score increase | - | rs11727676 | T | GCST90244093 | 36914875 
+ decline/progression-type lung traits: 0
+
+### SMO: total_in_catalog=7 fetched=7 distinct_traits=8
+ top traits: [('osteoarthritis, hip', 2), ('osteoarthritis', 1), ('total hip arthroplasty', 1), ('systemic lupus erythematosus', 1), ('refractive error', 1), ('body height', 1), ('gut microbiome measurement', 1), ('allergen exposure measurement', 1)]
+ lung/respiratory associations fetched: 0
+ decline/progression-type lung traits: 0
+
+### GLI1: total_in_catalog=11 fetched=11 distinct_traits=10
+ top traits: [('high density lipoprotein cholesterol measurement', 3), ('inhibin beta C chain measurement', 1), ('hematological measurement', 1), ('apolipoprotein a 1 measurement', 1), ('triglyceride measurement', 1), ('aspartate aminotransferase measurement', 1), ('urate measurement', 1), ('insomnia', 1)]
+ lung/respiratory associations fetched: 0
+ decline/progression-type lung traits: 0
+
+### PTCH1: total_in_catalog=497 fetched=100 distinct_traits=21
+ top traits: [('body height', 54), ('brain attribute', 5), ('FEV/FVC ratio', 5), ('vital capacity', 4), ('heel bone mineral density', 4), ('BMI-adjusted waist circumference', 4), ('body shape measurement', 3), ('health trait', 3)]
+ lung/respiratory associations fetched: 9
+   vital capacity | 1e-48 | - | - | rs113154802 | ? | GCST90705071 | 41565855 
+   FEV/FVC ratio | 3.0000000000000003e-46 | - | - | rs60150206 | ? | GCST90705072 | 41565855 
+   FEV/FVC ratio | 9e-46 | - | - | rs145965565 | ? | GCST007080 | 30595370 
+   vital capacity | 2e-42 | - | - | rs16909898 | ? | GCST90270083 | 36641522 
+   FEV/FVC ratio | 2e-41 | 13.491 z score increase | - | rs28427480 | A | GCST90244094 | 36914875 
+   FEV/FVC ratio | 7e-38 | 0.04350239 unit increase | - | rs60417486 | A | GCST90468165 | 39789286 
+   FEV/FVC ratio | 4.9999999999999994e-36 | 0.0523 unit decrease | - | rs28446321 | A | GCST007431 | 30804560 
+   vital capacity | 3e-27 | 0.0446 unit increase | - | rs28446321 | A | GCST007429 | 30804560 
+ decline/progression-type lung traits: 0
