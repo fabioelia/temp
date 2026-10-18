@@ -95,3 +95,11 @@ per contract (config updated from $0.05). Paper booking: filled at the stamped a
 automatic exit filled Wednesday at 0.98, realizing -58%. Fix: the pre-close run now checks option stops on live quotes and exits the same day. Also learned: a $250 shot only buys
 contracts priced at $2.50 or less (for NVDA that means strikes about 12% out of the money, delta ~0.19), which shapes every proposal. Robinhood's guide asks for explicit
 confirmation per order when approvals are off; the owner's standing authorization is treated as that confirmation (LIVE_MODE.md), or the owner can turn approvals on.
+
+**Budget raised (owner, 2026-10-18): "Update the 500 budget to 1k instead."** Loss limit and option budget are now $1,000 in paper and live mode; the cash floor drops to $1,000.
+Hitting -$1,000 sells to cash and halts until the owner and Claude talk. Arithmetic: the goal now needs the budget to roughly triple (was 5x); fair-game ceiling about 1 in 3; my
+estimate for the options approach 8-20%, most likely outcome still losing the budget. Shots become ~$500 (contracts up to $5.00) or $1,000 all-in (up to $10.00). The four
+specialists running now were told mid-research. Tests pin the old $500 limit so they keep checking fixed arithmetic.
+
+**Confirmation policy confirmed (owner, 2026-10-18):** "yes thats right for my confirmation. I dont want to tap for this." Standing authorization plus an approved gate ticket is the
+per-order confirmation; Robinhood trade approvals stay off.

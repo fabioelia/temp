@@ -21,6 +21,7 @@ class Live(unittest.TestCase):
         p = Path(self.dir, "config.json")  # these tests exercise the stock path of the gate
         c = json.loads(p.read_text())
         c["strategy"]["allow_stock_buys"] = True
+        c["live"]["loss_limit_usd"] = 500.0  # tests below assume the original $500 limit
         p.write_text(json.dumps(c))
 
     def tearDown(self):
@@ -166,6 +167,7 @@ class LiveOptions(unittest.TestCase):
         p = Path(self.dir, "config.json")
         c = json.loads(p.read_text())
         c["live"]["enabled"] = True
+        c["live"]["loss_limit_usd"] = 500.0
         p.write_text(json.dumps(c))
         # orders are confirmed with stored quotes directly, so no network is needed
         Path(self.dir, "data").mkdir()

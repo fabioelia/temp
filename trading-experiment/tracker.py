@@ -125,7 +125,7 @@ def occ_expiry(t):
 
 
 def cash_floor():
-    """Cash that option premium may never touch: starting cash minus the loss limit ($2,000 - $500)."""
+    """Cash that option premium may never touch: starting cash minus the loss limit ($2,000 - $1,000)."""
     return CFG["starting_cash"] - STRAT.get("loss_limit_usd", CFG["starting_cash"])
 
 

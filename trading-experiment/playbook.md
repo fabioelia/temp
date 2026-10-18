@@ -1,13 +1,15 @@
 # Playbook (living document; revised as the experiment teaches it something)
 
-Version 2, 2026-10-17. The owner chose "Options with the $500 budget" to go after the $4,000 target. Version 1 (stocks and ETFs, bounded convexity) is in git history.
+Version 2, 2026-10-17 (budget raised to $1,000 on 2026-10-18). The owner chose options with the loss budget to go after the $4,000 target. Version 1 (stocks and ETFs, bounded convexity) is in git history.
 
 ## Stance: bold play with a capped budget
-* **The arithmetic.** $4,000 needs +$2,000 from a $500 risk budget, about a 5x on premium. With the $500 loss limit, no strategy can do better than roughly a 1-in-5 chance even in a
-  fair game; with option costs, a disciplined version is perhaps 5-15% (judgment, not a backtest). The most likely outcome is losing the $500 and stopping.
-* **The structure (enforced in code).** Premium is paid only from cash above the $1,500 floor. Every open option can go to zero and the account still ends at $1,500 or better.
-* **Few, deliberate shots.** Plan for two or three bets over the month, not twenty trades. Shot 1 is about half the budget (~$250) on the best dated catalyst in the next one to
-  two weeks. If it wins, the budget grows and the next shot is sized from the new budget (roll the winnings). If it loses, shot 2 is the remaining ~$250. Doing nothing while
+* **The arithmetic.** $4,000 needs +$2,000 from a $1,000 risk budget, about a 3x on premium. With a $1,000 loss limit, no strategy can do better than roughly a 1-in-3 chance
+  even in a fair game; with option costs, a disciplined version is perhaps 8-20% (judgment, not a backtest). The most likely outcome is losing the $1,000 and stopping.
+* **The structure (enforced in code).** Premium is paid only from cash above the $1,000 floor. Every open option can go to zero and the account still ends at $1,000 or better.
+* **Contract arithmetic.** One contract costs premium x 100. Shot 1 of about $500 buys contracts priced up to $5.00; an all-in $1,000 shot up to $10.00. Below those prices the
+  choice is between fewer at-the-money contracts and more far out-of-the-money ones; prefer delta 0.30-0.45 when the budget allows.
+* **Few, deliberate shots.** Plan for two or three bets over the month, not twenty trades. Shot 1 is about half the budget (~$500) on the best dated catalyst in the next one to
+  two weeks. If it wins, the budget grows and the next shot is sized from the new budget (roll the winnings). If it loses, shot 2 is the remaining ~$500. Doing nothing while
   waiting for a good setup is fine; the budget is the scarce resource, not time.
 
 ## What to buy
@@ -61,4 +63,5 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 ## Changelog
 * 2026-10-17: v1 written (stocks/ETFs, energy core).
 * 2026-10-18: research toolkit (headlines, full text, Fed/EIA RSS, SEC filings and insider trades) and a 09:13 ET pre-open news run added at the owner's request.
+* 2026-10-18: loss budget raised to $1,000 by the owner (floor $1,000; shots ~$500; goal needs ~3x).
 * 2026-10-17: v2. Owner chose options with the $500 loss budget; stock buys off; $1,500 cash floor enforced in code; XLE/GUSH proposals cancelled.

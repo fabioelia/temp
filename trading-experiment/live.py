@@ -10,7 +10,7 @@ Everything the gate checks is enforced here, in code, from files in the repo:
   * only orders the tracker has CONFIRMED today (pre-close decision flow), before the last-order cutoff
   * real capital cap                    -> never more than live.capital_cap_usd deployed, whatever the account holds
   * max single order, leveraged-ETF cap, 4 fills a day, no same-day round trips, no shorting
-  * LOSS LIMIT: when the experiment is down live.loss_limit_usd (default $500) it STOPS: buys are refused, everything
+  * LOSS LIMIT: when the experiment is down live.loss_limit_usd ($1,000 since 2026-10-18) it STOPS: buys are refused, everything
     is sold to cash, then KILL_SWITCH is created. Only the owner re-arms it, after talking.
   * one ticket per order id, so a crashed or repeated run cannot place the same order twice
   * OPTIONS (strategy.allow_options): buy calls/puts only, whole contracts, limit orders; premium may only use cash above

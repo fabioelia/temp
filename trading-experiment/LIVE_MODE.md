@@ -6,14 +6,15 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 ## Authorization (the owner's own words, 2026-10-17)
 * Chose "Real trades, fully automatic" after being told the committee's odds: about 1-5% to double, a 2-14% chance of losing half on aggressive routes.
 * "I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again."
+* 2026-10-18: "Update the 500 budget to 1k instead." The loss limit and the option budget are now **$1,000**.
 
 ## The limits (enforced in code by `live.py`, not just by intention)
 | Limit | Value |
 |---|---|
 | Real capital at work | **$2,000 at most**, whatever the account holds |
-| Loss limit | **Down $500** (experiment equity at or below $1,500): no new buys, everything sold to cash, then `KILL_SWITCH` is created and all orders stop **until the owner and Claude talk** |
+| Loss limit | **Down $1,000** (experiment equity at or below $1,000): no new buys, everything sold to cash, then `KILL_SWITCH` is created and all orders stop **until the owner and Claude talk** |
 | Largest single order | 30% of the cap ($600) |
-| Options (current strategy) | buy-to-open / sell-to-close only, whole contracts, **limit orders at the broker's live quote**; premium only from cash above the **$1,500 floor**, so the $500 limit holds even if every option expires worthless |
+| Options (current strategy) | buy-to-open / sell-to-close only, whole contracts, **limit orders at the broker's live quote**; premium only from cash above the **$1,000 floor**, so the $1,000 limit holds even if every option expires worthless |
 | Stock / ETF buys | switched off by the options strategy (were: 30% per order, leveraged ETFs 15%) |
 | Leveraged / inverse ETF | 15% of the cap ($300) per name |
 | Fills per day | 4, no same-day round trips, no shorting |
@@ -35,7 +36,7 @@ Only the owner removes `KILL_SWITCH`, and the agent must never do it.
 ## How a run uses it (Run A, pre-close)
 ```bash
 python3 trading-experiment/live.py status                       # open tickets? kill switch? stopped?
-python3 trading-experiment/live.py check --marks XLE=68.1,...  # prices from the connector; trips the $500 limit
+python3 trading-experiment/live.py check --marks XLE=68.1,...  # prices from the connector; trips the $1,000 limit
 # for each order the tracker CONFIRMED today:
 python3 trading-experiment/live.py gate --order O003 --marks ...   # APPROVED ticket (with the size it allows) or REFUSED
 #   APPROVED -> place exactly that with the connector (market order; buy by dollar amount, sell by shares)
@@ -48,8 +49,9 @@ Run B (post-close) reconciles: broker positions against `data/live_ledger.csv`, 
 
 ## Confirmation policy
 Robinhood's tool guidance says that when in-app trade approvals are off, the agent should get explicit confirmation before each order. The owner has given standing, written
-authorization for fully automatic trading within these limits (see Authorization above: "Real trades, fully automatic", "$2,000 ... if we lose $500 we pull the plug"), so the
-unattended runs treat that authorization plus an approved `live.py gate` ticket as the confirmation. If the owner turns trade approvals ON in the Robinhood app, every order goes to
+authorization for fully automatic trading within these limits (see Authorization above: "Real trades, fully automatic", "$2,000 ... if we lose $500 we pull the plug", raised to $1,000 on 2026-10-18), so the
+unattended runs treat that authorization plus an approved `live.py gate` ticket as the confirmation. **Owner confirmed this explicitly on 2026-10-18: "yes thats right for my
+confirmation. I dont want to tap for this."** Trade approvals stay off. If the owner turns trade approvals ON in the Robinhood app, every order goes to
 the app for one-tap approval instead, and the runs simply place it for approval (`customer_approval_required` true) and report that it awaits the owner.
 
 ## Placing a real option order, step by step

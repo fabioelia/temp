@@ -29,7 +29,7 @@
   "live": {
     "enabled": true,
     "capital_cap_usd": 2000.0,
-    "loss_limit_usd": 500.0,
+    "loss_limit_usd": 1000.0,
     "max_single_order_pct": 0.3,
     "max_leveraged_each_pct": 0.15,
     "leveraged_etfs": [
@@ -71,7 +71,7 @@
     ],
     "last_order_cutoff_et": "15:50",
     "flatten_cutoff_et": "15:58",
-    "authorization": "2026-10-17, owner: 'I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again.' Earlier the owner chose 'Real trades, fully automatic' after being told the committee odds (about 1-5% to double, 2-14% chance of losing half on aggressive routes). enabled stays false until the broker connector is connected and verified in a fresh session.",
+    "authorization": "2026-10-17, owner: 'I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again.' Earlier the owner chose 'Real trades, fully automatic' after being told the committee odds (about 1-5% to double, 2-14% chance of losing half on aggressive routes). enabled stays false until the broker connector is connected and verified in a fresh session. 2026-10-18, owner: 'Update the 500 budget to 1k instead' -> loss limit and option budget $1,000 (floor $1,000); hitting it sells to cash and halts until the owner and Claude talk.",
     "agent_account_last4": "5318",
     "enabled_note": "2026-10-18: enabled after the LIVE_MODE.md checklist passed (see data/live_tools.md). Every run must confirm the Robinhood tools are present before any live step."
   },
@@ -95,11 +95,11 @@
     "name": "options with the loss budget",
     "allow_stock_buys": false,
     "allow_options": true,
-    "loss_limit_usd": 500.0,
+    "loss_limit_usd": 1000.0,
     "min_days_to_expiry": 3,
     "option_fee_per_contract": 0.04,
     "option_auto_sell_haircut": 0.1,
-    "note": "2026-10-17 owner chose 'Options with the $500 budget': buy calls/puts only, total premium may only use cash above starting_cash - loss_limit ($1,500 floor), so every open option can expire worthless and the loss still stops at $500. Stock buys off; options closed at least a session before expiry.",
+    "note": "2026-10-17 owner chose options with the loss budget; 2026-10-18 owner: 'Update the 500 budget to 1k instead'. Buy calls/puts only; premium may only use cash above starting_cash - loss_limit ($1,000 floor), so every open option can expire worthless and the loss still stops at $1,000. Stock buys off; options closed at least a session before expiry.",
     "option_fee_source": "Robinhood review_option_order 2026-10-18: OCC $0.02 + ORF $0.02 per contract, no contract fee (Gold)"
   },
   "research": {

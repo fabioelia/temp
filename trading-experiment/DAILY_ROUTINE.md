@@ -123,7 +123,7 @@ happens: nothing new fills.
    These are non-binding. Tomorrow's Run A will re-judge them with fresh information. Use `--max-price` so a gap cannot make us chase. Every order needs a written thesis.
    Options strategy (current): propose contracts by OCC symbol, sized in premium dollars, with the -50% premium stop, e.g.
    `tracker.py order add --ticker NVDA261120C00225000 --side buy --usd 250 --tier O --stop-pct 50 --max-price 6.60 --thesis "..."`.
-   Premium can only come from cash above the $1,500 floor (the code refuses more). Plan shots per `playbook.md`.
+   Premium can only come from cash above the $1,000 floor (the code refuses more). Plan shots per `playbook.md`.
 4. **Journal and playbook.** Append to `journal.md`: date, two-line market recap, equity versus SPY, which orders filled and why they had been confirmed, agent opinions in one line each,
    the proposals queued, one lesson. If a lesson changes how we trade, edit `playbook.md` and log it in the changelog.
 5. **Publish.** `python3 trading-experiment/tracker.py report`, refresh the dashboard per `DASHBOARD.md`, then commit and push:
@@ -148,4 +148,4 @@ scheduled tasks (all of them: pre-open, pre-close, post-close, Sunday) and disab
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
 * Options: buy-to-open and sell-to-close only. Never sell to open, never multi-leg, never exercise, never hold into expiry.
-* Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $500-loss limits of `LIVE_MODE.md`. Never transfers, account changes, options, crypto, margin or shorting. Never remove `KILL_SWITCH`.
+* Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $1,000-loss limits of `LIVE_MODE.md`. Never transfers, account changes, options, crypto, margin or shorting. Never remove `KILL_SWITCH`.

@@ -2,7 +2,7 @@
 
 Simulation only. No brokerage account is touched. Nothing here is financial advice.
 
-**Paper by default; real money only through live mode.** The scoreboard in `data/` is a simulation. The owner has separately authorized real orders for up to $2,000 with a $500 loss limit,
+**Paper by default; real money only through live mode.** The scoreboard in `data/` is a simulation. The owner has separately authorized real orders for up to $2,000 with a $1,000 loss limit (raised from $500 on 2026-10-18),
 in live mode only (`LIVE_MODE.md`): disabled until the broker connector is verified, then every real order must pass `live.py gate` (confirmed by the pre-close run, capped, ticketed, never duplicated).
 Outside the gate, a brokerage connector may be used only for read-only quotes and the experiment's own positions. Never deposits, withdrawals, transfers or account changes; never options,
 crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` file stops everything until the owner removes it; the agent must never remove it.
@@ -15,12 +15,12 @@ crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` fi
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
 
-## Strategy and universe (changed 2026-10-17 by the owner: "Options with the $500 budget")
+## Strategy and universe (owner, 2026-10-17: "Options with the $500 budget"; 2026-10-18: "Update the 500 budget to 1k instead")
 * **Options only, buying only.** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
-* **The loss budget is the only money at risk.** Premium may only be paid from cash above a **$1,500 floor** (starting $2,000 minus the $500 loss limit). Every open option can
-  expire worthless and the account still ends at or above $1,500. Profits raise the budget (they lift cash above the floor), so winners can be rolled into the next bet.
-* The other $1,500 stays in cash. Doubling needs the budget to grow about 5x; the most likely outcome is that the $500 is lost and the experiment stops.
+* **The loss budget is the only money at risk.** Premium may only be paid from cash above a **$1,000 floor** (starting $2,000 minus the $1,000 loss limit). Every open option can
+  expire worthless and the account still ends at or above $1,000. Profits raise the budget (they lift cash above the floor), so winners can be rolled into the next bet.
+* The other $1,000 stays in cash. Doubling needs the budget to roughly triple; the most likely outcome is that the $1,000 is lost and the experiment stops.
 * Whole contracts only (1 contract = 100 shares). A ticker needs a quote at decision time; options fill at the bid/ask stamped when the order is confirmed (Cboe delayed chain in paper,
   the broker's live quote with a limit order in live mode). Option marks are single-source (Cboe), flagged as such.
 
