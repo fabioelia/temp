@@ -109,3 +109,15 @@ NVDA run-up positions must be sold by the 11/17 close unless holding through the
 
 **Correction (2026-10-18):** VIX closed 19.99 on Fri 10/16 (intraday high 22.31; Yahoo daily bars), not "~21-22" as written in the 10/17 macro notes. It closed just under the
 regime gate's VIX >= 20 line, so the gate reads borderline, not risk-off. Flagged by the flows specialist.
+
+**Four specialists, 2026-10-18 (owner asked for expert subagents; memos in `research/2026-10-18/`).** All four say WAIT on Mon 10/19: no fill. Candidates for the Sunday review to weigh
+(budget $1,000 above the floor, shots ~$500, so only one or two of these can run):
+- semis-ai: NVDA261120C00230000 (ask 4.60) from 10/22, sold by the 11/17 close before earnings; AVGO 11/20 370C conf 5; NVDA 11/20 195P hedge conf 3.
+- energy: XLE options unusable (spreads 11-150%); USO261120P00145000 pre-close 11/2 conf 4; USO calls only on escalation; do not stack with QQQ/SMH calls.
+- flows: dealers short gamma below SPX ~7,717-7,812, CTA trigger 7,704; buy SPY261120C00785000 (conf 5) on a flush (SPY <=748, VIX >=24, then VIX -10% off its peak) or a
+  reclaim (SPY >=773, VIX <=18), fallback 11/4; IWM 11/20 280C after FOMC conf 4.
+- options-vol: buy event vol only at 14:43 on the print day, where implied move / history <= 0.9; MSFT261120C00580000 bought 10/28 after FOMC, sold 10/29 (conf 4, model EV
+  1.23x premium, 0.89x if MSFT only moves the implied 5.8%); SPY261113C00785000 after an S&P close above its prior 10-day high (conf 3); META dropped (no edge once the 3-day
+  expiry rule forces the 10/30 contract); no index puts (VIX 20, SKEW 169).
+Agreement: a SPY ~785 call is the relief shot, but only on a trigger, not on Monday. Disagreement: semis-ai would carry NVDA premium into its print; options-vol's models give that
+EV ~0.9 and warn about IV crush. My first draft re-struck two event trades onto 2-day expiries the gate refuses; caught before any proposal was queued.
