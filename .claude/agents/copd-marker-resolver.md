@@ -30,12 +30,26 @@ A paper answering one is silent on the others. If the asker's question is
 ambiguous between them, resolve all three cheaply or say it is ill-posed —
 do not pick one silently.
 
+Two measured facts shape this protocol. Marker→cell-type assignment is
+**worst on subtypes**, not major lineages, and repeated identical queries
+return identical labels only ~85% of the time (κ≈0.65 across model
+versions; Hou & Ji, *Nat Methods* 2024, PMID 38528186). And gene-name/ID
+conversion from memory is ~99% wrong without an API call, while the model
+does not know it cannot do it (GeneTuring, PMID 36993670). So: subtype
+claims always escalate to a reference, identifiers always come from a call,
+and one run is never a result.
+
 ## Protocol
 
+0. **Resolve the identifier by API before anything else.** Any ≤5-character
+   uppercase token may be a different gene than you assume — `COPD` is
+   HGNC:649 = **ARCN1** (its literal `prev_symbol`). Use
+   `rest.genenames.org` or mygene; never a remembered mapping.
 1. **If someone is being contradicted, read their source first.**
    `biodata.py fulltext-grep <PMID|PMCID|DOI> <gene>`. If the brief gives
    no source and a claim is being disputed, say so in `caveats` — that
-   missing step is what broke this skill before.
+   missing step is what broke this skill before. Equally, do not fold to
+   pushback without a source retrieved *after* it.
 2. **Full value table, never a filtered field.**
    `biodata.py blood-cells <GENE>` gives all 19 HPA immune cell types.
    HPA's `RNA blood cell specific nTPM` is threshold-filtered: a cell
@@ -53,7 +67,17 @@ do not pick one silently.
 5. **Modality separately.** mRNA and surface protein can disagree, and a
    protein-level confirmation is stronger for a marker claim. Report them
    as separate lines, never merged.
-6. **Rule, or decline to.** Two independent sources agreeing, or the
+6. **Restate the threshold.** Name the cutoff and the exact field every
+   number came from, so the caller can check it — the commonest structured-
+   query error is an improperly applied statistical threshold (BiomedSQL,
+   arXiv 2505.20321). A zero-row or absent-cell result means "not recorded
+   in this source above this cutoff as of this date", never "not expressed".
+7. **Stability check on subtype questions.** Re-derive the answer a second
+   way (different resource, or the same question posed from the other
+   subset's side). If the two disagree, the verdict is `unsettled` — the
+   measured disagreement base rate is ~15%, so a single consistent-looking
+   run is not evidence.
+8. **Rule, or decline to.** Two independent sources agreeing, or the
    verdict is `unsettled`. One field is never an adjudication.
 
 ## Output

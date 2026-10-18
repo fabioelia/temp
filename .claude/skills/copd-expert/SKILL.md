@@ -47,8 +47,24 @@ true, what is contested, and what nobody has connected yet.
 11. **One source never settles a contested question.** A single database
     field or single paper is a data point, not an adjudication. And know
     what the field *means*: "absent from this list" usually means "below
-    this resource's threshold", not "does not exist". Check the schema
-    before you build a verdict on it.
+    this resource's threshold", not "does not exist". Restate the threshold
+    and the field you used so a reader can check it. A zero-row result says
+    "not recorded in this source as of this date", never "no effect".
+12. **Know where you are thin, and go get it.**
+    [references/knowledge-boundaries.md](references/knowledge-boundaries.md)
+    lists this skill's measured blind spots with the phrase that should
+    trigger each one, the resource that settles it, the one command to run,
+    and which subagent to delegate to. Consult it **before** answering a
+    question that matches a trigger, not after being contradicted. Its §A
+    assertion gate is the checklist any contested, numeric, negative or
+    position-reversing claim must pass. Do not rely on feeling uncertain to
+    notice: hedging language is mimicked, not computed, and self-reported
+    confidence does not track correctness. The triggers are phrases and
+    question shapes precisely so they fire without introspection.
+13. **Identifiers come from a call, never from memory.** Gene symbols, IDs,
+    aliases, loci, rsIDs, ontology terms. Recall is ~99% wrong on
+    gene-name conversion and the model cannot feel the incapacity. `COPD`
+    itself resolves to HGNC:649 = ARCN1.
 
 ## Reference library (load what the task needs)
 
@@ -58,20 +74,52 @@ true, what is contested, and what nobody has connected yet.
 | [references/appraisal-and-rigor.md](references/appraisal-and-rigor.md) | Appraising a paper/trial/cohort/MR/omics result; scoring evidence; the 5-minute read; anti-patterns |
 | [references/discovery-methods.md](references/discovery-methods.md) | Generating or vetting hypotheses: Swanson ABC, KG link prediction, genetic triangulation, novelty grades N0-N4, scoring rubric, red-team, anti-convergence |
 | [references/data-sources.md](references/data-sources.md) | Querying public data: tested endpoints, auth, rate limits, copy-paste queries |
+| [references/knowledge-boundaries.md](references/knowledge-boundaries.md) | **Any contested, numeric, negative or cell-attribution claim**, or a question matching one of its triggers: the assertion gate, the thin-area trigger table, cheapest decisive query and delegation target per gap |
+| [references/evals/](references/evals/) | Regression cases, including the CSF3R failure this skill was rebuilt around. Read before changing the rules above |
 
 Helper: `python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py --help` wraps the
 tested public APIs (Europe PMC counts, PubMed, ClinicalTrials.gov, Open
-Targets, GWAS Catalog, and more). Prefer it over hand-written curl.
+Targets, GWAS Catalog, and more). Prefer it over hand-written curl. Two
+commands exist specifically to close the failures above:
+`blood-cells <GENE>` (every immune cell type's nTPM, not the
+threshold-filtered field) and `fulltext-grep <id> <term>` (what the source
+someone cited actually says).
+
+## Gap-filling subagents
+
+When a question matches a trigger in `knowledge-boundaries.md` §B,
+delegate rather than guess, and rather than fill your own context with
+searching. Each returns JSON only, under a hard word cap.
+
+| Subagent | Use for | Cap |
+|---|---|---|
+| `copd-marker-resolver` | Gene-to-cell-type attribution; marker claims, especially at subtype level | 250 w |
+| `copd-verifier` | Citations, effect sizes, CIs, n, retraction status, staleness of a specific claim | 300 w |
+| `copd-methods-check` | How a named method behaves; specifying coloc/MR/LDSC/fine-mapping correctly | 300 w |
+| `copd-scout` | What has changed since the landscape snapshot | 1200 w |
+| `copd-researcher` | A deep sub-question or an adjacent-field lane | 1500 w |
+| `copd-critic` | Red-teaming a hypothesis dossier | 900 w |
+| `copd-data-miner` | Running a concrete public-data analysis | 900 w |
+
+Several triggers at once → launch them in one message, in parallel, and
+compose only the returned schemas.
 
 ## How to answer a COPD research question
 
 1. Classify: frontier fact? appraisal? mechanism? target/drug idea? data
    question?
-2. Load the matching reference(s). For anything dated, run a quick live
-   check (Europe PMC / PubMed sorted by date; ClinicalTrials.gov).
-3. Answer with: the bottom line + certainty label → key evidence with IDs
+2. **Check the triggers.** Scan `knowledge-boundaries.md` §B against what
+   was actually asked. A match means retrieve or delegate *before*
+   answering — this step exists because the skill's worst failure was an
+   answer given confidently at exactly this point.
+3. Load the matching reference(s). For anything dated, run a quick live
+   check (Europe PMC / PubMed sorted by date; ClinicalTrials.gov) and state
+   the retrieved record's own date.
+4. Answer with: the bottom line + certainty label → key evidence with IDs
    → what is contested and why → the single analysis or experiment that
    would most change the picture.
+5. Before sending a contested, numeric, negative or position-reversing
+   claim, run the §A assertion gate.
 
 ## How to appraise a study
 

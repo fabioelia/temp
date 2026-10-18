@@ -1,59 +1,75 @@
 # Knowledge boundaries: where this skill is thin, and what to do about it
 
-A lookup table, not an essay. Consult §A before any contested claim leaves
-your mouth; scan §B when a question matches a trigger; read the one row in
-§C you need. §D lists the gaps that retrieval cannot close.
+A lookup table, not an essay. Run §A before any contested claim leaves your
+mouth; scan §B when a question matches a trigger; read the one row of §C
+you need. §D is the gaps retrieval cannot close. §E is how to maintain it.
 
-**Why the triggers are structural, not felt.** Do not wait to feel
-uncertain. Calibration studies find LLMs show minimal confidence difference
-between their right and wrong answers (Omar et al., *medRxiv*
-2025;e66917 — JMIR Med Inform; a 9-model/13-dataset biomedical calibration
-study reports even the best models ~30% off target, biorxiv
-10.1101/2025.02.11.637373 [secondary, abstract only]). Self-assessment is
-therefore not an instrument. Every trigger below is a property of the
-*question or the sentence you are about to write* — a negation, a number, a
-cell-type attribution, a date word — detectable without introspection.
+**Triggers here are structural, never felt.** Do not wait to feel
+uncertain. Hedging language is mimicked from pretraining, not computed:
+high-certainty expressions ("it is well established") correlate with a ~7%
+*decrease* in accuracy, and accuracy varies >80% across certainty markers
+(Zhou, Jurafsky & Hashimoto, EMNLP 2023, 2023.emnlp-main.335). Asking
+yourself how confident you are underperforms a cheap recalibration
+baseline (arXiv 2409.03225). So every trigger below is a property of the
+*question, the field, or the sentence you are about to write* — a negation,
+a number, a threshold, a bare gene token, a date word.
+
+The one self-check with good evidence is **semantic entropy**: answer the
+question 3-5 times, cluster the answers by *meaning*, and if the clusters
+disagree, stop and retrieve (Farquhar et al., *Nature* 2024;630:625-630).
+Use that; do not use your own confidence report.
 
 ---
 
 ## A. Assertion gate
 
-Apply to any claim that **contradicts someone**, **carries a number**, or
-**asserts a negative** ("X is not a marker", "no trial has", "there is no
-evidence"). All four must be true before it leaves your mouth. Otherwise
-downgrade to a question or label `[unverified]`.
+Applies to any claim that **contradicts someone**, **carries a number**,
+**asserts a negative** ("X is not a marker", "no trial has"), or **reverses
+a position you already took**. Each gate has a measured warrant. A claim
+failing any gate becomes a question or carries `[unverified]`.
 
-| # | Gate | Fails when |
+| # | Gate | Warrant |
 |---|---|---|
-| A1 | **Their source is in hand.** You asked what source they used, retrieved it, and read the passage that bears on the claim (`biodata.py fulltext-grep <id> <term>`). | You searched for *your* support instead of reading *theirs*. |
-| A2 | **Field semantics checked.** For every database field in the chain you can state what the field measures, its threshold/filter, and what an absence means. | "Missing from the list" was read as "does not exist". |
-| A3 | **Two independent sources agree**, or you say the question is unsettled. One field or one paper is a data point, never an adjudication. | Single HPA field; single GTEx call; single review. |
-| A4 | **Negatives are search-shaped.** A claim of absence names the exact queries run, including a full-text (not title/abstract-only) query and at least one alias set. | `TITLE_ABS:` only. Verified: `TITLE_ABS:(CSF3R) AND TITLE_ABS:(monocyte)` returns 16 hits and **does not** contain the decisive paper (PMID 20067595). A wrong-shaped search returns a false negative that *confirms* the error. |
+| **A1 Sufficiency, not relevance** | The retrieved passage must contain *the specific entity or quantity asked about*. Topical relevance is not sufficiency. If the passage is about the right gene but not the right comparison, you have nothing — widen or abstain. | Joren et al., *Sufficient Context*, arXiv 2411.06037 (ICLR 2025): models answer instead of abstaining when context is relevant but insufficient. HPA was relevant to CSF3R and insufficient. |
+| **A2 Restate the threshold and the field** | If any step involved a cutoff (enrichment, FDR, p<5e-8, phase, "significant"), the output names the threshold *and* the table/field it came from, so a reader can check it. | BiomedSQL, arXiv 2505.20321 (COLM 2026): best agent 62.6% vs expert 90.0%; the commonest errors are wrong table selection and improper application of statistical thresholds. |
+| **A3 Zero rows ≠ zero effect** | An empty result reads "not recorded in \<source\> as of \<date\>", never "no association exists". Write it that way. | Heuristic — no published rate for this confusion (see §D). Mechanically identical to A2's threshold error. |
+| **A4 Identifiers come from an API, never recall** | Every gene symbol↔ID↔alias, locus, rsID or ontology term is resolved by a call. Confidence is not a competence signal for this task. | GeneTuring (PMID 36993670, bioRxiv preprint): plain GPT-4o errs in ~99% of gene-name-conversion cases, ~99% accurate *with* API access, and incapacity awareness is low — the model does not know it cannot do it. |
+| **A5 Numbers carry their quote** | Every effect size, CI, n or p is quoted with the sentence or table cell it came from. No quote ⇒ `[unverified]`. Do not try a different model instead. | Jansen et al., *Psychol Bull* 2025 (10.1037/bul0000501), 312,329 data points: unacceptable accuracy on 20% of variables; variance largest *between variables*, smallest between models — so only re-reading the source fixes it. |
+| **A6 Citations: check the numbers, not just existence** | A resolving DOI is not a verified citation. Verify the numeric fields. Treat a bare URL as *raising* suspicion, and ignore formatting polish entirely. | Walters & Wilder, *Sci Rep* 2023 (10.1038/s41598-023-41032-5): GPT-4 18% fabricated; among *real* citations 24% carry a substantive error, concentrated in numeric fields (dates 16%, vol/issue/page 13%; author/title/journal each <7%). Formatting quality does not discriminate fabricated from real, and fabricated citations carried hyperlinks *more* often (18% vs 6%). |
+| **A7 Surface conflicts; never silently adopt** | When a retrieved document disagrees with what you believe, state both and adjudicate explicitly. Low internal confidence plus a disagreeing document is the peak-error configuration, not a licence to defer. | ClashEval, arXiv 2404.10198 (incl. drug dosages): models override their own correct prior >60% of the time, and adoption of the wrong external number *rises* as their own confidence falls. |
+| **A8 Reversal needs a post-pushback source** | Changing a factual position after the user pushes back requires naming a source retrieved **after** the pushback. Verify unsourced premises embedded in a question ("given that X…") *before* answering what is built on them. | SycEval, arXiv 2502.08177: 58.19% sycophancy, regressive right→wrong 14.66%; an embedded unsourced premise induces more sycophancy than an explicit challenge (61.75% vs 56.52%). |
+| **A9 At least one disconfirming query** | The search plan contains a query phrased to *break* the claim — "no association", "failed to replicate", "negative trial", "did not differ". Zero disconfirming queries ⇒ the search is incomplete by definition. | *Failing to Falsify*, arXiv 2604.02485 (ICLR 2026): prompting for counterexamples raised rule discovery 42%→56%. |
+| **A10 Full-text, aliased search for any negative** | A claim of absence names its exact queries, at least one of them full-text rather than title/abstract, with an alias set. | Verified here 2026-10-18: `TITLE_ABS:(CSF3R) AND TITLE_ABS:(monocyte)` returns 16 hits and **does not** include the decisive paper (PMID 20067595). A wrong-shaped search returns a false negative that *confirms* the error. |
+
+**A8 and the original failure are the same gate.** Contradicting without
+evidence and capitulating without evidence are one error with two signs.
+Both are answered by: retrieve first, then hold or revise on what you found.
 
 Cheapest honest exit when a gate fails: **"What source are you working
-from? Before I disagree I want to read it."** That is not weakness; it is
-the step whose absence caused this skill's worst recorded failure.
+from? Before I disagree I want to read it."**
 
 ---
 
 ## B. Trigger table
 
-| Observable trigger (phrase / question shape / situation) | Thin area | First move | Delegate to | Cap |
+| Observable trigger (what is said, asked, or about to be written) | Thin area | First move | Delegate | Cap |
 |---|---|---|---|---|
-| "is X a marker of", "X is/isn't specific to", "canonical marker", "which cell expresses X", "X is a neutrophil gene", any claim attributing a gene to a cell type or subset | §C1 Cell-type markers | `biodata.py blood-cells X` (full table, not the `specific` field) | `copd-marker-resolver` | 250 w |
-| A sentence you are writing contains an effect size, CI, n, p, HR/OR, %, or "approximately" — and you did not fetch it this session | §C2 Exact quantities | `biodata.py trials --cond ...` → CT.gov results, or `pubmed-fetch` | `copd-verifier` | 300 w |
-| "latest", "current", "now approved", "still in phase 3", "as of", "has anyone", "state of the art", or any landscape claim with a date | §C3 Staleness | `epmc-search --sort date`, `trials --updated-since` | `copd-scout` (exists) | 1200 w |
-| "does GSVA/deconvolution/coloc/MR/LDSC/CIBERSORT behave…", "is it valid to", "should I regress out", a method's failure mode, or you are about to reason from first principles about a named method | §C4 Methods behaviour | Find the method's own paper + benchmark papers that tried to break it | `copd-methods-check` | 300 w |
-| "specify the coloc/MR/LDSC/finemapping analysis", priors, window sizes, instrument selection, which sumstats, overlapping samples | §C5 Stat-gen mechanics | Read the tool's documentation, not your memory of the method | `copd-methods-check` | 300 w |
-| The question leaves COPD: IPF, bronchiectasis, lung cancer immunology, aging/senescence, cardiometabolic, asthma-only | §C6 Adjacent fields | Treat as a frontier sweep in a field whose graveyard you do not know | `copd-researcher` (analog lane) | 1500 w |
-| "has this been tried and failed", "why was it discontinued", "unpublished", "was there a negative trial" | §C7 Negative results | Registry-first, not literature-first | `copd-scout` | 1200 w |
-| "what do clinicians actually do", "is this used in practice", dosing, pathway, coding, workflow | §C8 Clinical texture | **Do not retrieve a verdict.** Say what guidelines state, label practice variation as outside scope | none | — |
+| "is X a marker of", "X is/isn't specific to", "canonical marker", "which cell expresses X"; **any subtype-level** claim (classical vs non-classical, cDC1 vs cDC2, Tcm vs Tem, AT1 vs AT2) | §C1 markers | `biodata.py blood-cells X` — the full table, not the `specific` field | `copd-marker-resolver` | 250 w |
+| A token ≤5 uppercase chars used in a literature query or treated as a gene | §C1 aliases | `rest.genenames.org` / mygene before the query | inline | — |
+| You are about to write an effect size, CI, n, p, HR/OR, % or "approximately" that you did not fetch this session | §C2 quantities | CT.gov v2 `resultsSection`, then `pubmed-fetch` | `copd-verifier` | 300 w |
+| A citation is about to be emitted, or one was handed to you | §C2 citations | `pubmed-fetch` + Crossref `update-to` | `copd-verifier` | 300 w |
+| "latest", "current", "now approved", "still in phase 3", "as of", "has anyone yet", "state of the art" | §C3 staleness | `epmc-search --sort date`; `trials --updated-since` | `copd-scout` | 1200 w |
+| "does GSVA/deconvolution/coloc/MR/LDSC/CIBERSORT behave…", "is it valid to", or you are reasoning from first principles about a named method | §C4 methods | Find the benchmark that tried to break it | `copd-methods-check` | 300 w |
+| "specify the coloc/MR/LDSC/fine-mapping analysis"; priors, windows, instruments, LD reference, which sumstats | §C5 stat-gen | Read the tool's docs, not your memory | `copd-methods-check` | 300 w |
+| The question leaves COPD: IPF, bronchiectasis, lung cancer immunology, aging, cardiometabolic | §C6 adjacent | Treat as a frontier sweep in a field whose graveyard you do not know | `copd-researcher` (analog lane) | 1500 w |
+| "has this been tried and failed", "why discontinued", "unpublished", "was there a negative trial" | §C7 negatives | Registry first, literature second | `copd-scout` | 1200 w |
+| "what do clinicians actually do", dosing habits, referral, coding, local pathway | §C8 practice | **Do not retrieve a verdict.** State guidelines; declare the boundary | none | — |
+| The user pushed back and you are inclined to fold | §A8 | Retrieve *now*; then hold or revise on what came back | `copd-verifier` | 300 w |
 
-Dispatch rule: one trigger, one agent, one message. Two or more triggers in
-the same question → launch them in a single message, in parallel, and
-compose only the returned schemas. The point of these agents is that their
-searching stays out of your context; if you find yourself reading their raw
-evidence, you have defeated them.
+Dispatch rule: one trigger, one agent, one message; several triggers →
+launch them in a single message, in parallel, and compose only the returned
+schemas. These agents exist to keep searching out of your context. If you
+find yourself reading their raw evidence, you have defeated them.
 
 ---
 
@@ -61,11 +77,19 @@ evidence, you have defeated them.
 
 ### C1. Cell-type marker attribution — the recorded failure
 
-**Why thin.** Marker knowledge is held as a flat consensus list ("CSF3R =
-neutrophil", "CD14 = classical monocyte") without the primary-paper
-granularity that says *which comparison, which panel, which modality*. The
-same hole applies to T-cell/ILC subsets, macrophage polarisation states, DC
-subsets (cDC1/cDC2/pDC/AS-DC) and lung epithelial states.
+**Why thin, with the measured shape.** Marker knowledge is held as a flat
+consensus list ("CSF3R = neutrophil") without the primary-paper granularity
+that says *which comparison, which panel, which modality*. Hou & Ji,
+*Nat Methods* 2024 (PMID 38528186) measured the degradation: >75%
+full-or-partial agreement with manual annotation, but only ~85% *identical*
+labels on repeated identical queries, κ≈0.65 across GPT-4 versions, and
+worst performance **on subtypes rather than major lineages**. CSF3R was a
+subtype question — classical vs non-classical monocyte.
+
+Two rules follow directly: **a subtype-level marker claim always escalates
+to a reference**, and **if the same marker query run twice gives different
+answers, stop** — ~15% disagreement is the measured base rate, so one run
+is not a result (this is §A's semantic-entropy check, applied).
 
 **The failure was not a literature gap.** It was a field-choice gap, and
 the correction lives in the *same* database that produced the error:
@@ -76,202 +100,194 @@ the correction lives in the *same* database that produced the error:
 | per-gene XML `immuneCell` blocks (19 cell types) | Neutrophil 1924.2 · **Classical mono 279.2** · Myeloid DC 97.4 · **Intermediate 56.7** · **Non-classical 24.2** | The actual value table. Classical > non-classical **11.5x**. |
 
 Retrieved 2026-10-18 via `biodata.py blood-cells CSF3R`. Both numbers are
-HPA's; the first is a filtered view of the second.
+HPA's; the first is a filtered view of the second. This is gates A1+A2 in
+one object: relevant but insufficient, and a threshold silently applied.
 
-**Second, structural trap.** Three different questions, three different
-answers, one gene:
+**Alias collisions are real and verified.** `COPD` resolves to HGNC:649 =
+**ARCN1**, whose `prev_symbol` is literally `COPD` (checked against the
+HGNC REST API, 2026-10-18). Any ≤5-character uppercase token must be
+resolved to an HGNC/Ensembl ID before it enters a literature query or the
+counts are polluted. `data-sources.md` records the same trap in text-mined
+annotations.
+
+**Third trap: three questions, three answers, one gene.**
 
 | Question | Right resource | Wrong resource |
 |---|---|---|
-| Is X a *discriminating marker* between subsets A and B? | Primary sorted-subset comparisons; the panel the question implies | Any whole-blood atlas |
-| How much X mRNA is in sorted population A? | HPA/Monaco/Schmiedel bulk nTPM; DICE | A PBMC scRNA atlas (granulocytes absent by design) |
-| Whose mRNA is X in this *bulk tissue*? | Deconvolution with a panel that contains the candidate cells | A marker-specificity paper |
+| Is X a *discriminating marker* between subsets A and B? | Primary sorted-subset comparisons in a panel containing both | Any whole-blood atlas |
+| How much X mRNA is in sorted population A? | HPA/Monaco/Schmiedel bulk nTPM; DICE | A PBMC scRNA atlas (no granulocytes by construction) |
+| Whose mRNA is X in this *bulk tissue*? | Deconvolution with a panel containing the candidate cells | A marker-specificity paper |
 
-A paper answering one is silent on the others. Markers derived against a
-PBMC atlas cannot speak to granulocytes, because PBMC preparation removes
-them.
+A paper answering one is silent on the others. No published error rate
+exists for this confusion — it is our exact failure class and it is
+unmeasured (§D), so the rule is heuristic: name which question you are
+answering.
 
-**Resources.** HPA per-gene XML (all 19 immune cell types) ·
-Monaco *Cell Rep* 2019 / Schmiedel *Cell* 2018 (DICE, dice-database.org —
-browse only, no JSON API as of 2026-10-18) · CELLxGENE Census pseudobulk
-per `cell_type` · HLCA for lung · the primary subset-comparison papers.
-
-**Cheapest decisive query** (one command, settles the CSF3R class of
-question):
-```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py blood-cells CSF3R
-```
-Then, if contradicting someone, their paper:
-```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py fulltext-grep 20067595 CSF3R
-```
-
-**Return schema** (`copd-marker-resolver`, ≤250 words):
-```json
-{"gene": "...", "question_type": "discriminating-marker|abundance-in-sorted|bulk-attribution",
- "values": [{"cell_type": "...", "metric": "nTPM|logFC|MFI", "value": 0, "source": "...", "retrieved": "..."}],
- "primary_papers": [{"id": "PMID", "comparison": "...", "modality": "mRNA|protein", "direction": "...", "quote": "..."}],
- "field_semantics": "what the fields used actually measure and what absence means",
- "verdict": "supported|contradicted|question-is-ill-posed|unsettled",
- "caveats": ["..."]}
-```
-
-### C2. Exact quantities
-
-**Why thin.** Directions of effect are recalled reliably; magnitudes,
-CIs, n and p-values are not, and drift silently toward round or
-often-quoted numbers. Treat any remembered number as a placeholder.
-
-**Resources, cheapest first.** ClinicalTrials.gov v2
-`resultsSection.outcomeMeasuresModule` returns primary-outcome values with
-95% CIs and no paywall — verified 2026-10-18 on NCT02164513 (IMPACT):
-annual moderate/severe exacerbation rate 0.91 (0.87-0.95) vs 1.07
-(1.02-1.12) vs 1.21 (1.14-1.29). Then `pubmed-fetch` for abstract numbers,
-Europe PMC OA full text for tables, FDA/EMA review documents for
-regulator-recomputed numbers.
+**Resources.** HPA per-gene XML (19 immune cell types) · Monaco *Cell Rep*
+2019 / Schmiedel *Cell* 2018 (DICE, dice-database.org — browse only, no
+JSON API as of 2026-10-18) · CELLxGENE Census pseudobulk per `cell_type` ·
+HLCA for lung · the primary subset-comparison papers.
 
 **Cheapest decisive query.**
 ```bash
-curl -s "https://clinicaltrials.gov/api/v2/studies/NCT02164513?fields=resultsSection.outcomeMeasuresModule"
+python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py blood-cells CSF3R
+python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py fulltext-grep 20067595 CSF3R   # their source, before contradicting
 ```
 
-**Return schema** (`copd-verifier`, ≤300 words):
-```json
-{"claims": [{"claim_as_stated": "...", "status": "confirmed|corrected|unverifiable|fabricated",
-  "retrieved_value": "effect (95% CI), absolute diff, n", "vs_mcid": "...",
-  "source": {"id": "...", "field": "...", "retrieved": "..."}}],
- "citation_audit": [{"id": "...", "exists": true, "supports_claim": "yes|partial|no"}],
- "net": "one line: what changes in the answer"}
+**Return schema** — `copd-marker-resolver`, ≤250 words. Full schema in that
+agent's definition.
+
+### C2. Exact quantities, and citation integrity
+
+**Why thin.** Directions of effect are recalled reliably; magnitudes, CIs,
+n and p drift toward round and often-quoted values, worst on particular
+variables rather than particular models (Jansen 2025 — §A5). Separately,
+~24% of *real* citations an LLM emits carry a substantive error concentrated
+in numeric fields (Walters & Wilder 2023 — §A6). So the gate is **not "is
+the paper real" but "are its numbers right"**.
+
+**Retraction status is never recalled.** Chatbots find <50% of retractions
+and mislabel ~18% of valid papers as retracted. Use Crossref: the per-DOI
+check is whether `update-to` is present in the message; the corpus-level
+filter `update-type:retraction` returns **76,296** records (verified
+2026-10-18). Fabrication base rate in the literature is now ~1 in 277
+PubMed-indexed papers in early 2026, up from ~1 in 2,828 in 2023 (Topaz et
+al., *Lancet* letter 2026; AI-assisted classifier, so method-dependent).
+**Detection rule: a title absent from all four of PubMed, Crossref,
+OpenAlex and Google Scholar ⇒ fabricated. One database missing it is not
+enough.**
+
+**Cheapest decisive query for an effect size.** ClinicalTrials.gov v2
+returns primary-outcome values with 95% CIs and no paywall — verified
+2026-10-18 on NCT02164513 (IMPACT): annual moderate/severe exacerbation
+rate 0.91 (0.87-0.95) vs 1.07 (1.02-1.12) vs 1.21 (1.14-1.29).
+```bash
+curl -s "https://clinicaltrials.gov/api/v2/studies/NCT02164513?fields=resultsSection.outcomeMeasuresModule"
 ```
+Then `pubmed-fetch` for abstract numbers, Europe PMC OA full text for
+tables, FDA advisory briefing documents / EMA EPARs for regulator-recomputed
+effects. Always report effect **with CI, absolute difference, n, and vs
+MCID** (FEV1 ~100 mL, SGRQ 4, CAT 2, 6MWD ~26-30 m).
 
 ### C3. Proximity to training cutoff
 
-**Why thin.** The boundary is not felt (§ header). It is also uneven:
-trial *status*, approvals and pipeline moves go stale in months; biology
-and genetics in years. `copd-landscape.md` is a dated snapshot and says so.
+**Why thin.** The boundary is not felt, and the *declared* cutoff is not
+the *effective* one — gaps of months to years (LLMLagBench, arXiv
+2511.12116). Never reason from your own stated cutoff. Staleness is also
+uneven: trial status, approvals and pipeline moves go stale in months;
+biology and genetics in years. `copd-landscape.md` is a dated snapshot and
+says so.
 
-**Trigger is lexical.** The words "latest / current / now / still / as of /
-has anyone / state of the art", a present-tense regulatory or trial-status
-verb, or a superlative about the field.
+**Retrieval is not a cure.** One source (TempoMed-Bench, identifier
+unverified) reports that adding agentic search did **not** resolve guideline
+staleness. Design for *"the document I retrieved says X, version V, dated
+D"* — not for *"we searched, therefore we are current"*.
 
-**Cheapest decisive query.** Date-sorted Europe PMC plus a registry delta:
+**Trigger is lexical:** "latest / current / now / still / as of / has anyone
+yet", a present-tense regulatory or trial-status verb, or a superlative
+about the field.
+
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py epmc-search '<topic> AND "chronic obstructive"' --sort date --n 10
 python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py trials --cond COPD --updated-since 2026-07-01
 ```
-If the newest hit predates your snapshot, the snapshot is probably still
-current — say so with the date. If it postdates it, the snapshot is stale
-and you have the correction.
+State the newest retrieved record's own date and version in the answer.
 
 ### C4. Methods behaviour and failure modes
 
-**Why thin.** Methods are held as *descriptions*, so first-principles
-reasoning about how one behaves under violated assumptions feels sound and
-is unverified. This has already happened in this project once (a GSVA
-inference presented without checking the literature).
+**Why thin.** Methods are held as *descriptions*, so a first-principles
+inference about behaviour under violated assumptions feels sound and is
+unverified. This has already happened in this project (a GSVA inference
+presented without checking the literature).
 
 **Anchor, verified 2026-10-18.** Noureen et al., *eLife* 2022;11:e71994
-(PMC8916770) show per-cell gene-detection differences bias ssGSEA and GSVA
-in single-cell data while sparing single-cell-native scorers (AUCell,
-JASMINE) — a benchmark on cancer scRNA-seq, so transfer is an assumption,
-not a result. **Unverified and still open: GSVA behaviour on *correlated*
-gene sets specifically.** Do not state a direction for it.
+(PMC8916770): per-cell gene-detection differences bias ssGSEA and GSVA in
+single-cell data while sparing single-cell-native scorers (AUCell,
+JASMINE). Tested on cancer scRNA-seq, so transfer to bulk COPD lung is an
+assumption, not a result. **Still open and unverified: GSVA behaviour on
+*correlated* gene sets specifically.** Do not state a direction for it.
 
-**Resources.** The method's own paper; the Bioconductor/CRAN vignette (the
-assumptions section is usually explicit); benchmark papers whose stated aim
-was to break it; the tool's GitHub issues for known failure modes.
-
-**Cheapest decisive query.** Europe PMC for the method name with
-adversarial vocabulary — `"<method>" AND (bias OR pitfall OR benchmark OR
-"fails" OR misleading)` — then read the one benchmark, not five reviews.
-
-**Return schema** (`copd-methods-check`, ≤300 words):
-```json
-{"method": "...", "claim_tested": "...",
- "verdict": "established|contested|no-evidence-found|claim-ill-posed",
- "evidence": [{"id": "...", "design": "simulation|benchmark|theory", "finding": "...", "domain_tested": "..."}],
- "transfer_risk": "why the tested domain may not be the asker's domain",
- "assumption_violated": "...", "safer_alternative": "...",
- "what_remains_unverified": "..."}
-```
+**Search adversarially** (this is gate A9 applied to methods):
+`"<method>" AND (bias OR pitfall OR benchmark OR fails OR misleading)`.
+Prefer simulation studies and independent benchmarks over reviews and over
+the authors' own paper. Then read the vignette's assumptions section.
 
 ### C5. Statistical-genetics mechanics
 
 **Why thin.** Prose fluency about coloc/MR/LDSC/fine-mapping outruns the
-ability to specify one correctly: priors (`p12`), window size, LD reference
-and ancestry match, instrument selection and clumping thresholds, sample
-overlap, which sumstats build. These are the parameters a reviewer checks
-and the ones most often wrong.
+ability to *specify* one: `p12` priors, window size, LD reference and
+ancestry match, instrument selection and clumping, sample overlap, genome
+build. These are exactly what a reviewer checks and what is most often
+wrong — and by A4 none of the identifiers in them may come from memory.
 
-**Rule.** Never hand over a specification from memory. Name the tool and
-version, read its documentation, and state every parameter with its source
-and default. `appraisal-and-rigor.md` §B17-B19 is the appraisal checklist;
-this row is about *authoring*.
-
-**Resources.** coloc vignette (Giambartolomei 2014; Wallace 2021 on
-sensitivity to `p12`); TwoSampleMR / MR-Base docs and STROBE-MR; LDSC
-README (ancestry-matched LD scores; `--no-intercept` semantics);
-SuSiE/FINEMAP docs; eQTL Catalogue credible sets. Builds are mixed — see
-`data-sources.md`.
-
-Return schema: `copd-methods-check`, same as §C4.
+**Rule.** Never hand over a specification from memory. Name tool and
+version; state every parameter with its source and its default. coloc
+(Giambartolomei 2014; Wallace 2021 on `p12` sensitivity) · TwoSampleMR /
+MR-Base + STROBE-MR · LDSC README (ancestry-matched LD scores, intercept
+handling) · SuSiE/FINEMAP (L, window) · eQTL Catalogue credible sets.
+Builds are mixed — see `data-sources.md`. `appraisal-and-rigor.md`
+§B17-B19 is the *appraisal* checklist; this row is about *authoring*.
 
 ### C6. Adjacent fields
 
-**Why thin.** IPF, bronchiectasis, lung cancer immunology, aging biology
-and cardiometabolic disease each have their own graveyard, their own
-contested results and their own MCIDs, and none of that is loaded here.
-The specific risk is importing a COPD prior into a field where it is wrong
-— e.g. assuming an anti-fibrotic target behaves in emphysema as in IPF,
-where the genetics point in *opposite* directions at shared loci.
-
-**Rule.** When a question crosses out of COPD, say which field you have
-entered and that your prior there is weaker. Route to
-`copd-researcher` with an analog-disease lane, and require the graveyard
-check in that field before any target claim.
+IPF, bronchiectasis, lung cancer immunology, aging biology and
+cardiometabolic disease each have their own graveyard, contested results
+and MCIDs, none loaded here. The specific risk is importing a COPD prior
+where it is wrong — e.g. assuming an anti-fibrotic target behaves in
+emphysema as in IPF, where genetics point in *opposite* directions at
+shared loci. Say which field you have entered and that your prior there is
+weaker; route to `copd-researcher` with an analog-disease lane; require the
+graveyard check in *that* field before any target claim.
 
 ### C7. Negative and unpublished results
 
-**Why thin.** Training weights published, cited work; silent
-discontinuations and completed-but-unpublished trials are the evidence most
-likely to kill an idea and least likely to be recalled.
-
-**Registry first, literature second.** ClinicalTrials.gov terminated /
-withdrawn / completed-without-results, EU CTIS, company pipeline-page
-diffs, FDA advisory briefing documents, conference abstracts with no
-follow-up paper. Absence of a paper is weak evidence of absence of a trial.
-
+Training weights published, cited work; silent discontinuations and
+completed-but-unpublished trials are the evidence most likely to kill an
+idea and least likely to be recalled. **Registry first, literature
+second**: ClinicalTrials.gov terminated/withdrawn/completed-without-results,
+EU CTIS, company pipeline-page diffs, FDA advisory briefing documents,
+conference abstracts with no follow-up paper. Absence of a paper is weak
+evidence of absence of a trial (gate A3).
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py trials --cond COPD --intr <drug>  # read OverallStatus and HasResults
+python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py trials --cond COPD --intr <drug>   # read OverallStatus, HasResults
 ```
 
 ### C8. Clinical practice texture
 
-**Why thin.** What clinicians actually do — local pathways, real dosing
-habits, which patients get referred, how coding is done — is tacit,
-geographically variable and barely in the literature.
-
-**Do not retrieve a verdict here.** State what GOLD/ATS/ERS say, state
-that real-world practice varies and that you cannot characterise it, and
-stop. Combined with non-negotiable 7 (no patient-level advice), this is a
-boundary to declare, not a gap to fill.
+What clinicians actually do — local pathways, real dosing habits, referral,
+coding — is tacit, geographically variable and barely in the literature.
+**Do not retrieve a verdict here.** State what GOLD/ATS/ERS say, state that
+real-world practice varies and that you cannot characterise it, and stop.
+With non-negotiable 7 (no patient-level advice), this is a boundary to
+declare, not a gap to fill.
 
 ---
 
-## D. What no cheap query fixes
+## D. What no cheap query fixes, and what is unmeasured
 
-| Gap | Why retrieval does not close it | What to do instead |
+| Gap | Why | What to do instead |
 |---|---|---|
-| Unpublished negative data | Not indexed anywhere | Registry delta (§C7) + say the evidence base is publication-biased |
-| Practice texture | Tacit and variable | Declare the boundary (§C8) |
-| Your own calibration | Confidence does not track correctness | Apply §A mechanically; do not consult your feeling |
-| Whether a *novel* mechanistic inference is right | No source exists yet | Label `Speculative`, give the kill criterion |
+| Unpublished negative data | Not indexed anywhere | Registry delta (§C7) + say the base is publication-biased |
+| Practice texture | Tacit, variable | Declare the boundary (§C8) |
+| Your own calibration | Confidence does not track correctness; hedges are mimicked | Apply §A mechanically; use semantic entropy, not introspection |
+| Guideline staleness | Retrieval alone did not fix it (TempoMed-Bench, unverified) | Report the retrieved document's version and date |
+| Whether a *novel* mechanistic inference is right | No source exists yet | Label `Speculative`; give the kill criterion |
+
+**Evidence gaps — these rules are heuristic, not measured.** Labelled so
+nobody later cites them as established: (a) no published rate for
+marker-specificity vs signal-attribution confusion — our exact failure
+class is unmeasured; (b) no rate for an LLM judge overturning a *correct*
+human answer; (c) no measured rate for absence-of-record vs
+absence-of-effect confusion (gate A3 is encoded anyway because the cost is
+asymmetric).
 
 ## E. Maintaining this file
 
 When a gap is found the hard way, add the row the same day: the observable
 trigger in the asker's own words, the resource, the one command that
-settles it, and the word cap. When a command here stops working, fix it in
-`scripts/biodata.py` and `data-sources.md` and note the date. A trigger
-that has never fired is probably worded as a feeling rather than a signal —
-rewrite it as a phrase someone would actually type.
+settles it, the word cap. Mark each new rule **measured** (with the
+citation) or **heuristic** — the distinction is the point of §D. When a
+command here stops working, fix it in `scripts/biodata.py` and
+`data-sources.md` and date it. A trigger that has never fired is probably
+worded as a feeling rather than a signal; rewrite it as a phrase someone
+would actually type.

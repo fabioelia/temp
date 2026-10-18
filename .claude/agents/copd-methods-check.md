@@ -26,11 +26,15 @@ paper that already tested it — and saying clearly when nobody has.
    behaviour. "GSVA is sensitive to correlated gene sets" is testable;
    "GSVA is fragile" is not. If the brief's claim is not testable, sharpen
    it and say you did.
-2. **Search adversarially.** The method's own paper establishes what it
-   claims; the benchmarks that tried to break it establish how it fails.
-   Query shape: `"<method>" AND (bias OR pitfall OR benchmark OR fails OR
-   misleading OR "we show that")`. Prefer simulation studies and
-   independent benchmarks over reviews and over the authors' own paper.
+2. **Search adversarially — at least one query must be phrased to
+   disconfirm.** The method's own paper establishes what it claims; the
+   benchmarks that tried to break it establish how it fails. Query shape:
+   `"<method>" AND (bias OR pitfall OR benchmark OR fails OR misleading OR
+   "did not" OR "we show that")`. Prefer simulation studies and independent
+   benchmarks over reviews and over the authors' own paper. A search plan
+   with no disconfirming query is incomplete by definition — prompting for
+   counterexamples raises rule-discovery accuracy 42%→56% (*Failing to
+   Falsify*, arXiv 2604.02485).
 3. **Read the documentation for mechanics.** For a specification, the
    vignette or README is authoritative over your memory of the method:
    coloc (`p12` prior and Wallace's sensitivity analysis), TwoSampleMR

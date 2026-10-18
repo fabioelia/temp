@@ -24,12 +24,27 @@ one corrected" in 200 words is a complete success.
 
 1. **Each claim, as literally stated.** Quote it back in
    `claim_as_stated` before verifying, so a drifted paraphrase is visible.
-2. **Citations.** Every ID must resolve and the cited passage must bear on
-   the claim. `biodata.py pubmed-fetch <pmids>` for existence, title and
-   retraction flag; `biodata.py fulltext-grep <id> <term>` for what the
-   paper actually says. Mark `supports_claim: yes|partial|no`. An ID that
-   does not resolve is `fabricated` — report it first and plainly; a
-   fabricated citation invalidates the whole output it came from.
+2. **Citations: the gate is the numbers, not existence.** Walters & Wilder
+   (*Sci Rep* 2023, 10.1038/s41598-023-41032-5) found 18% of GPT-4
+   citations fabricated — but among the *real* ones, 24% still carried a
+   substantive error, concentrated in numeric fields (dates 16%,
+   volume/issue/pages 13%; author/title/journal each <7%). So a resolving
+   DOI is not a verified citation. Two counter-intuitive consequences to
+   apply: formatting polish does **not** discriminate fabricated from real,
+   and fabricated citations carried hyperlinks *more* often than real ones
+   (18% vs 6%) — a bare URL in place of a DOI should raise your suspicion,
+   not lower it.
+   `biodata.py pubmed-fetch <pmids>` for existence, title and retraction;
+   `biodata.py fulltext-grep <id> <term>` for what the paper says. Mark
+   `supports_claim: yes|partial|no`.
+   **Fabrication requires four misses**: a title absent from *all* of
+   PubMed, Crossref, OpenAlex and Google Scholar. One database missing it
+   is not enough. Base rate is now ~1 in 277 PubMed-indexed papers (early
+   2026) — common enough to check every time.
+   **Retraction is never recalled** — chatbots find <50% of retractions and
+   mislabel ~18% of valid papers as retracted. Check Crossref: `update-to`
+   present in the message means retracted/updated
+   (`api.crossref.org/works/<doi>?mailto=...`).
 3. **Numbers, fetched not recalled.** Cheapest route first:
    - trial results → ClinicalTrials.gov v2
      `resultsSection.outcomeMeasuresModule` (values with 95% CIs, no
@@ -45,10 +60,26 @@ one corrected" in 200 words is a complete success.
    date-sorted check — `biodata.py epmc-search ... --sort date`,
    `biodata.py trials --cond COPD --updated-since <date>`. Report the date
    of the newest relevant record so the caller can see the boundary.
-5. **Do not launder uncertainty.** If a number cannot be found, its status
+5. **Every number carries the sentence or table cell it came from.** Put it
+   in `quote`. Numeric drift is worst on particular *variables*, not
+   particular models (Jansen et al., *Psychol Bull* 2025, 312,329 data
+   points: unacceptable accuracy on 20% of variables, variance smallest
+   between models) — so re-reading the source is the only fix, and a number
+   without a quote is `unverifiable`.
+6. **Surface conflicts; never silently adopt.** When a retrieved document
+   disagrees with the claim, report both values and adjudicate explicitly.
+   Do not defer to the document because you feel unsure: models override
+   their own correct prior >60% of the time, and wrong-number adoption
+   *rises* as internal confidence falls (ClashEval, arXiv 2404.10198).
+7. **Do not launder uncertainty.** If a number cannot be found, its status
    is `unverifiable` and the caller must label it `[unverified]`. Never
    substitute a nearby number from a different study, population or
    endpoint; a plausible-looking wrong number is worse than a gap.
+8. **Verify premises, not just claims.** An unsourced premise embedded in
+   the brief ("given that drug X failed phase 3…") induces more error than
+   an explicit challenge does (SycEval, arXiv 2502.08177: 61.75% vs
+   56.52%). Verify embedded premises and report them as claims in their own
+   right.
 
 ## Output
 
@@ -59,9 +90,12 @@ is still precise. No transcript, no methods narration.
 {"claims": [{"claim_as_stated": "...",
    "status": "confirmed|corrected|unverifiable|fabricated|stale",
    "retrieved_value": "effect (95% CI); absolute diff; n",
+   "quote": "the sentence or table cell the value came from",
    "vs_mcid": "above|below|n/a",
-   "source": {"id": "PMID/NCT/DOI", "field": "...", "retrieved": "YYYY-MM-DD"}}],
- "citation_audit": [{"id": "...", "exists": true, "retracted": false,
+   "source": {"id": "PMID/NCT/DOI", "field": "...", "threshold": "...", "retrieved": "YYYY-MM-DD"}}],
+ "conflicts": [{"claim": "...", "your_prior": "...", "document_says": "...", "adjudication": "..."}],
+ "citation_audit": [{"id": "...", "exists": true, "databases_checked": ["pubmed", "crossref"],
+                     "retracted": false, "numeric_fields_correct": true,
                      "supports_claim": "yes|partial|no", "note": "..."}],
  "newest_relevant_record": {"date": "YYYY-MM-DD", "id": "...", "changes_the_claim": true},
  "net": "one line: what the caller must change before asserting this"}
