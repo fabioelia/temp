@@ -55,29 +55,43 @@ and one run is never a result.
    HPA's `RNA blood cell specific nTPM` is threshold-filtered: a cell
    absent from it is *not enriched*, not *not expressed*. For lung cells
    use CELLxGENE Census / HLCA pseudobulk per `cell_type`
-   (`references/data-sources.md`); for T/NK/B subsets, DICE and Monaco.
-3. **Check the panel.** Which cell types did the reference actually
+   (`references/data-sources.md`).
+3. **Two datasets minimum. There is no right answer, only a sourced one.**
+   Atlases disagree by orders of magnitude and can invert the lineage
+   ranking: for CCL20 (TPM), HPA consensus tops out at MAIT T-cell 2.7
+   while Monaco gives classical monocyte 73.2 — T-cell-topped versus
+   monocyte-topped. CSF3R by contrast replicates (classical ≫ non-classical
+   in both: 206.2 vs 18.8 and 532.8 vs 42.0). Agreement across datasets is
+   what distinguishes a real marker from an artefact of which atlas you
+   opened, so **always report two and name them**; disagreement ⇒
+   `unsettled`. The bulk TSV paths and columns are in `data-sources.md`
+   (note `TPM`/`pTPM`/`nTPM` give different magnitudes for the same cell).
+4. **Beware endpoints that fail silently.** HPA `search_download.php`
+   silently drops unrecognised `columns=` codes and returns 200 with just
+   `[{"Gene":"X"}]` — there is no per-cell-type column code at all. An
+   empty-looking result from it is not evidence of anything.
+5. **Check the panel.** Which cell types did the reference actually
    contain? A PBMC atlas has no granulocytes by construction, so it cannot
    speak to them. State this whenever it bites.
-4. **At least one primary paper for direction**, with the quote. Search
+6. **At least one primary paper for direction**, with the quote. Search
    full text, not title/abstract only: `TITLE_ABS:` misses sorted-subset
    comparisons whose abstracts name no genes. Use gene aliases and protein
    names (CSF3R / G-CSFR / CD114) and surface marker phrasings
    (CD16-, CD14++CD16-, classical).
-5. **Modality separately.** mRNA and surface protein can disagree, and a
+7. **Modality separately.** mRNA and surface protein can disagree, and a
    protein-level confirmation is stronger for a marker claim. Report them
    as separate lines, never merged.
-6. **Restate the threshold.** Name the cutoff and the exact field every
+8. **Restate the threshold.** Name the cutoff and the exact field every
    number came from, so the caller can check it — the commonest structured-
    query error is an improperly applied statistical threshold (BiomedSQL,
    arXiv 2505.20321). A zero-row or absent-cell result means "not recorded
    in this source above this cutoff as of this date", never "not expressed".
-7. **Stability check on subtype questions.** Re-derive the answer a second
+9. **Stability check on subtype questions.** Re-derive the answer a second
    way (different resource, or the same question posed from the other
    subset's side). If the two disagree, the verdict is `unsettled` — the
    measured disagreement base rate is ~15%, so a single consistent-looking
    run is not evidence.
-8. **Rule, or decline to.** Two independent sources agreeing, or the
+10. **Rule, or decline to.** Two independent sources agreeing, or the
    verdict is `unsettled`. One field is never an adjudication.
 
 ## Output
@@ -93,6 +107,7 @@ records. If you must cut, cut `caveats` before `values` or
              "value": 0, "source": "...", "retrieved": "YYYY-MM-DD"}],
  "primary_papers": [{"id": "PMID", "comparison": "A vs B", "modality": "mRNA|protein",
                      "direction": "...", "quote": "..."}],
+ "datasets_compared": ["name + which dataset gave which value"],
  "panel_caveat": "which cell types the reference data could and could not see",
  "field_semantics": "what each field used measures; what an absence in it means",
  "verdict": "supported|contradicted|question-is-ill-posed|unsettled",

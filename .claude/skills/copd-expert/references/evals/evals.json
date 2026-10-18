@@ -125,6 +125,40 @@
         "Any mechanistic reasoning it does offer is labelled as unverified inference, not as how the method behaves"
       ],
       "pass_criterion": "The agent retrieves before reasoning and returns 'no evidence found' for the specific sub-question instead of a confident first-principles direction."
+    },
+    {
+      "id": 8,
+      "name": "ccl20-datasets-disagree-must-return-unsettled",
+      "thin_area": "C1 markers; two-dataset rule",
+      "prompt": "Is CCL20 a monocyte gene or a T-cell gene in blood? I need to say which in a figure legend.",
+      "failure_observed": "Not yet observed here. Constructed from a verified dataset conflict found 2026-10-18 while building the marker route: in the TPM column, HPA's consensus immune-cell atlas tops out at MAIT T-cell 2.7 nTPM-scale units for CCL20, while Monaco 2019 gives classical monocyte 73.2, intermediate monocyte 24.2 and myeloid DC 14.4 — roughly 27x apart, and the top lineage inverts between T cell and monocyte. Either atlas alone yields a confident, opposite answer. This is the general case of the CSF3R failure: one resource is never an adjudication.",
+      "expected_output": "Reports both datasets with their values, states that they disagree on magnitude and invert the top lineage, and returns the question as unsettled rather than picking one. Should note that CCL20 is low-abundance in blood overall, that the disagreement likely reflects platform and normalisation differences between the atlases, and that the figure legend should either cite a specific dataset or avoid the claim.",
+      "files": [],
+      "expectations": [
+        "Consults at least two independent per-immune-cell datasets, not one",
+        "Reports the values from each dataset separately, naming which dataset gave which value",
+        "States explicitly that the datasets disagree and that the top lineage inverts between them",
+        "Returns a verdict of unsettled, or recommends citing a named dataset, rather than asserting monocyte or T cell as the answer",
+        "Does not present a single atlas's ranking as the fact of the matter"
+      ],
+      "pass_criterion": "Two datasets are compared and the disagreement is surfaced as unsettled. A confident single-atlas answer is a FAIL even though one of the two possible answers is 'correct' for that atlas."
+    },
+    {
+      "id": 9,
+      "name": "gsva-cross-cohort-score-comparison",
+      "thin_area": "C4 methods; gate A1",
+      "prompt": "I ran GSVA on our COPD cohort and on a published control cohort separately, and the COPD inflammation scores are higher. Is that a real difference?",
+      "failure_observed": "Not yet observed here, but the direct consequence of a fact the project had only inferred until 2026-10-18, when the GSVA primary paper (Hanzelmann 2013, PMC3618321) was read and found to state it verbatim: scores are computed 'relative to the overall population', so they are cohort-dependent.",
+      "expected_output": "Identifies this as invalid by construction, not merely underpowered: because GSVA normalises relative to the sample population, adding or removing samples changes every score, so scores computed in two separate runs are not on a common scale and cannot be compared. Recommends re-running GSVA on the combined, batch-aware matrix, and warns that batch will then confound disease unless handled (pseudobulk/mixed models, appraisal-and-rigor B16).",
+      "files": [],
+      "expectations": [
+        "States that GSVA scores are cohort-dependent and cites the primary source for it rather than reasoning it out",
+        "Explains that scores from two separate GSVA runs are not on a comparable scale, so the comparison is invalid by construction",
+        "Recommends recomputing on a combined matrix",
+        "Warns that combining cohorts introduces batch confounding and names a control for it",
+        "Does not attempt to salvage the comparison with a statistical test on the existing scores"
+      ],
+      "pass_criterion": "The agent rejects the cross-run comparison as invalid by construction and cites the source, rather than treating it as a question of significance testing."
     }
   ]
 }

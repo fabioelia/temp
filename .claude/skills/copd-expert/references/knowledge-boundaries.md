@@ -123,10 +123,37 @@ exists for this confusion — it is our exact failure class and it is
 unmeasured (§D), so the rule is heuristic: name which question you are
 answering.
 
-**Resources.** HPA per-gene XML (19 immune cell types) · Monaco *Cell Rep*
-2019 / Schmiedel *Cell* 2018 (DICE, dice-database.org — browse only, no
-JSON API as of 2026-10-18) · CELLxGENE Census pseudobulk per `cell_type` ·
-HLCA for lung · the primary subset-comparison papers.
+**Fourth trap, and the most important one: there is no single authoritative
+per-blood-cell value.** Datasets disagree by orders of magnitude and can
+invert the lineage ranking. Verified 2026-10-18 from the HPA bulk TSVs, TPM
+column, same gene, same nominal unit:
+
+| Gene | HPA consensus (19 cell types) | Monaco 2019 (30) | Verdict |
+|---|---|---|---|
+| **CCL20** | max = MAIT T-cell **2.7** | classical monocyte **73.2**, intermediate 24.2, myeloid DC 14.4 | T-cell-topped vs monocyte-topped. ~27x, **opposite lineage** ⇒ `unsettled` |
+| **CSF3R** | classical **206.2** vs non-classical **18.8** (11.0x) | classical **532.8** vs non-classical **42.0** (12.7x) | Replicates in both ⇒ `supported` |
+
+So: **quote at least two datasets for any marker-level claim and name which
+you used.** There is no right answer, only a sourced one. The two-dataset
+rule is what separates CSF3R (robust) from CCL20 (an artefact of which
+atlas you opened). Note also that `TPM`/`pTPM`/`nTPM` columns give different
+numbers for the same cell — the column changes the magnitude, though here
+not the direction.
+
+**Resources.** HPA per-gene XML (19 immune cell types) · the four bulk
+TSVs (Monaco 4.97 MB, Schmiedel/DICE 1.64 MB, HPA consensus 2.75 MB, HPA
+single-cell 16.3 MB — exact paths and columns in `data-sources.md`;
+`rna_blood_cell*.tsv.zip` is 404, the live names use `immune_cell`) ·
+CELLxGENE Census pseudobulk per `cell_type` · HLCA for lung · the primary
+subset-comparison papers. Haemopedia/Haemosphere and DICE have no public
+JSON API (404) — use the HPA redistributions as the proxy.
+
+**Silent-failure endpoints make absence look like evidence.** HPA
+`search_download.php` drops unrecognised `columns=` codes and returns 200
+with `[{"Gene":"CCL20"}]`; GTEx `singleTissueEqtl` ignores `snpId=`
+entirely and returns 250/page, so a per-variant query reads as a clean
+negative when it is pagination plus a dead filter. Full table in
+`data-sources.md`. This is gate A3 with teeth.
 
 **Cheapest decisive query.**
 ```bash
@@ -150,24 +177,42 @@ the paper real" but "are its numbers right"**.
 and mislabel ~18% of valid papers as retracted. Use Crossref: the per-DOI
 check is whether `update-to` is present in the message; the corpus-level
 filter `update-type:retraction` returns **76,296** records (verified
-2026-10-18). Fabrication base rate in the literature is now ~1 in 277
+2026-10-18). **Europe PMC `pubType` is unreliable here** — it was `None` on
+a confirmed retracted record while
+`commentCorrectionList.commentCorrection[].type == "Retraction in"`
+carried it. Read the correction list, and the per-DOI Crossref
+`updated-by[]` with `source:"retraction-watch"`. Do not pull the Retraction
+Watch CSV for a single check (200, but 67.6 MB). Watch for **"Author
+Correction"** too: not a retraction, but it changes the numbers — one
+exists on the Avila Cobos deconvolution benchmark (PMID 33268785). Fabrication base rate in the literature is now ~1 in 277
 PubMed-indexed papers in early 2026, up from ~1 in 2,828 in 2023 (Topaz et
 al., *Lancet* letter 2026; AI-assisted classifier, so method-dependent).
 **Detection rule: a title absent from all four of PubMed, Crossref,
 OpenAlex and Google Scholar ⇒ fabricated. One database missing it is not
 enough.**
 
-**Cheapest decisive query for an effect size.** ClinicalTrials.gov v2
-returns primary-outcome values with 95% CIs and no paywall — verified
-2026-10-18 on NCT02164513 (IMPACT): annual moderate/severe exacerbation
-rate 0.91 (0.87-0.95) vs 1.07 (1.02-1.12) vs 1.21 (1.14-1.29).
+**Route 1 for any registered trial: the registry, not the paper.**
+ClinicalTrials.gov v2 `resultsSection.outcomeMeasuresModule` →
+`analyses[]` carries `paramType`, `paramValue`, `ciLowerLimit`,
+`ciUpperLimit`, `pValue`, `statisticalMethod` and the covariate list, with
+no paywall. Verified 2026-10-18: NCT02164513 (IMPACT) annual
+moderate/severe exacerbation rate 0.91 (0.87-0.95) vs 1.07 (1.02-1.12) vs
+1.21 (1.14-1.29); NCT03930732 (BOREAS) 1.01 (0.931-1.301) vs 0.776
+(0.645-0.934), difference -0.324 (-0.508 to -0.140), p=0.0005, negative
+binomial — while the pivotal NEJM paper (PMID 37272521) is **neither open
+access nor in Europe PMC full text**. The registry had the number and the
+paper did not.
 ```bash
-curl -s "https://clinicaltrials.gov/api/v2/studies/NCT02164513?fields=resultsSection.outcomeMeasuresModule"
+curl -s "https://clinicaltrials.gov/api/v2/studies/NCT03930732?fields=resultsSection.outcomeMeasuresModule"
 ```
+Caveats: `HasResults` is false for most trials, and registry results are
+sponsor-entered. Where both exist, cite both and flag disagreement rather
+than picking one.
+
 Then `pubmed-fetch` for abstract numbers, Europe PMC OA full text for
 tables, FDA advisory briefing documents / EMA EPARs for regulator-recomputed
-effects. Always report effect **with CI, absolute difference, n, and vs
-MCID** (FEV1 ~100 mL, SGRQ 4, CAT 2, 6MWD ~26-30 m).
+effects (PDF only — see §D). Always report effect **with CI, absolute
+difference, n, and vs MCID** (FEV1 ~100 mL, SGRQ 4, CAT 2, 6MWD ~26-30 m).
 
 ### C3. Proximity to training cutoff
 
@@ -200,12 +245,37 @@ inference about behaviour under violated assumptions feels sound and is
 unverified. This has already happened in this project (a GSVA inference
 presented without checking the literature).
 
-**Anchor, verified 2026-10-18.** Noureen et al., *eLife* 2022;11:e71994
-(PMC8916770): per-cell gene-detection differences bias ssGSEA and GSVA in
-single-cell data while sparing single-cell-native scorers (AUCell,
-JASMINE). Tested on cancer scRNA-seq, so transfer to bulk COPD lung is an
-assumption, not a result. **Still open and unverified: GSVA behaviour on
-*correlated* gene sets specifically.** Do not state a direction for it.
+**GSVA — now verified from the primary source, cite these rather than
+re-deriving them.** The original paper (Hänzelmann 2013, PMC3618321, OA
+full text) states both directly:
+
+| Fact (GSVA paper's own words) | Consequence for your analysis |
+|---|---|
+| Scores are computed "relative to the overall population" | **Scores are cohort-dependent.** Adding or removing samples changes *every* score, and scores from two cohorts are not comparable. Never pool or compare GSVA scores across datasets. |
+| "many gene sets are highly overlapping and therefore not merely correlated, but essentially duplicated" | **FDR across overlapping set scores is invalid.** The tests are not independent in the way BH assumes. |
+| `maxDiff=TRUE` (a current default) | **Cancels pathways whose genes move in both directions** — a real false-negative source for any mixed-direction signature. |
+
+Current Bioconductor defaults to state when specifying a run:
+`kcdf="auto"`, `kcdfNoneMinSampleSize=200`, `maxDiff=TRUE`, `tau=1`.
+
+This corrects the record: an earlier first-principles inference in this
+project that overlapping sets are not independent and could mechanically
+produce correlated scores — correctly flagged unverified at the time — is
+confirmed by the primary source. The lesson is unchanged: the inference was
+only worth asserting *after* someone read PMC3618321.
+
+**Separate anchor, verified 2026-10-18.** Noureen et al., *eLife*
+2022;11:e71994 (PMC8916770): per-cell gene-detection differences bias
+ssGSEA and GSVA in single-cell data while sparing single-cell-native
+scorers (AUCell, JASMINE). Tested on cancer scRNA-seq, so transfer to bulk
+COPD lung is an assumption, not a result.
+
+**Still open:** no source found establishing a *direction* for the effect of
+correlated gene sets on score magnitude. Cohort-dependence and invalid FDR
+are established; "does correlation inflate or shrink my scores" is not.
+Say so and give the empirical check (permute or subsample the signature on
+the user's own data; compare against a rank-based or single-cell-native
+scorer).
 
 **Search adversarially** (this is gate A9 applied to methods):
 `"<method>" AND (bias OR pitfall OR benchmark OR fails OR misleading)`.
@@ -222,11 +292,30 @@ wrong — and by A4 none of the identifiers in them may come from memory.
 
 **Rule.** Never hand over a specification from memory. Name tool and
 version; state every parameter with its source and its default. coloc
-(Giambartolomei 2014; Wallace 2021 on `p12` sensitivity) · TwoSampleMR /
-MR-Base + STROBE-MR · LDSC README (ancestry-matched LD scores, intercept
-handling) · SuSiE/FINEMAP (L, window) · eQTL Catalogue credible sets.
-Builds are mixed — see `data-sources.md`. `appraisal-and-rigor.md`
-§B17-B19 is the *appraisal* checklist; this row is about *authoring*.
+(Giambartolomei 2014; Wallace 2021 on `p12` sensitivity — **enumerate
+vignette names from the CRAN index rather than guessing**: `a04_sensitivity`
+exists, `a06_sensitivity` 404s) · TwoSampleMR / MR-Base + **STROBE-MR 2025
+update, PMID 41223895 / PMC12611437, open access** — route that rather than
+the 2021 original (PMID 34698778), which is not OA · LDSC README
+(ancestry-matched LD scores, intercept handling) · SuSiE/FINEMAP (L,
+window) · eQTL Catalogue credible sets. Builds are mixed — see
+`data-sources.md`. `appraisal-and-rigor.md` §B17-B19 is the *appraisal*
+checklist; this row is about *authoring*.
+
+**Direction of effect and "is there a cis-instrument?" — use Open Targets
+`target.credibleSets`, not GTEx.** One call returns signed `beta`,
+`standardError`, lead `variant.id`, `isTransQtl` and `studyType` per
+credible set, so instrument availability is answered directly and disease
+direction chains to expression direction in two calls (NPNT: 153 sets = 84
+sQTL + 34 eQTL + 16 tuQTL + 6 sc-eQTL). GTEx `singleTissueEqtl` fails
+*silently* for this: rs34712979 is absent from the 320 returned NPNT lung
+eQTLs because `snpId=` is ignored and results are paginated.
+
+**GWAS Catalog signs are words, not numbers.** `beta: "0.0633781 unit
+decrease"` is an unsigned magnitude plus an English direction term — parse
+the word. Then read `reported_trait`: the top COPD hit is "COPD liability
+(machine learning-based score)", a continuous proxy, so "decrease" means
+lower predicted liability, not lower FEV1.
 
 ### C6. Adjacent fields
 
@@ -272,6 +361,18 @@ declare, not a gap to fill.
 | Your own calibration | Confidence does not track correctness; hedges are mimicked | Apply §A mechanically; use semantic entropy, not introspection |
 | Guideline staleness | Retrieval alone did not fix it (TempoMed-Bench, unverified) | Report the retrieved document's version and date |
 | Whether a *novel* mechanistic inference is right | No source exists yet | Label `Speculative`; give the kill criterion |
+
+**Not cheaply resolvable — stop trying, and say which of these you hit.**
+All checked 2026-10-18.
+
+| Target | Why it does not yield | Best available proxy |
+|---|---|---|
+| GOLD / ATS / ERS guideline text | No API; registration wall | Europe PMC `PUB_TYPE:"Guideline"` — found JRS 7th ed (2026-07-14), Chest CT in COPD (2026-08-01), Spanish AATD CPG (2026-06-13) |
+| Why a trial actually stopped | `whyStopped` is boilerplate ("Sponsor's decision", "Recruitment failure", or blank); nothing public distinguishes futility from a portfolio call | Require **four agreeing signals**: terminated + no results posted + no publication on the NCT ID + a line item in an SEC filing (EDGAR full-text search, `data-sources.md`) |
+| Cell abundance in your own tissue | CELLxGENE abundance is dissociation-biased | Report proportions as dissociation-dependent; prefer within-study contrasts |
+| Leaf-only CELLxGENE cell types | `is_rollup:false` → HTTP 500 | De-duplicate the CL hierarchy client-side; ancestor terms otherwise eat 40%+ of any signal-share calculation |
+| FDA reviewer-adjusted estimates | PDF only | Read the PDF; do not expect a structured field |
+| MR at scale | OpenGWAS 401 without a JWT | FinnGen, Pan-UKBB, GWAS Catalog sumstats |
 
 **Evidence gaps — these rules are heuristic, not measured.** Labelled so
 nobody later cites them as established: (a) no published rate for

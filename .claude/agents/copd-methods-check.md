@@ -35,14 +35,36 @@ paper that already tested it — and saying clearly when nobody has.
    with no disconfirming query is incomplete by definition — prompting for
    counterexamples raises rule-discovery accuracy 42%→56% (*Failing to
    Falsify*, arXiv 2604.02485).
+2b. **GSVA is already settled — cite, do not re-derive.** The primary paper
+   (Hänzelmann 2013, PMC3618321) states that scores are computed "relative
+   to the overall population", so GSVA scores are **cohort-dependent**
+   (adding or removing samples changes every score; cross-cohort scores are
+   not comparable), and that "many gene sets are highly overlapping and
+   therefore not merely correlated, but essentially duplicated", so **FDR
+   across overlapping set scores is invalid**. `maxDiff=TRUE`, a current
+   default, **cancels pathways whose genes move in both directions**.
+   Current defaults: `kcdf="auto"`, `kcdfNoneMinSampleSize=200`,
+   `maxDiff=TRUE`, `tau=1`. Separately, Noureen et al. (*eLife*
+   2022;11:e71994, PMC8916770) show gene-detection bias in ssGSEA/GSVA on
+   single-cell data — tested on cancer scRNA-seq, so transfer is an
+   assumption. Nothing found establishes a *direction* for the effect of
+   correlated sets on score magnitude; say so rather than supplying one.
 3. **Read the documentation for mechanics.** For a specification, the
    vignette or README is authoritative over your memory of the method:
-   coloc (`p12` prior and Wallace's sensitivity analysis), TwoSampleMR
-   (instrument selection, clumping, STROBE-MR), LDSC (ancestry-matched LD
-   scores, intercept handling), SuSiE/FINEMAP (L, window), deconvolution
-   (which reference panel, which cell types it contains). Name the tool
-   *version*. Note genome-build mismatches — `data-sources.md` records
-   which resource uses which.
+   coloc (`p12` prior and Wallace's sensitivity analysis — enumerate
+   vignette names from the CRAN index, do not guess: `a04_sensitivity`
+   exists, `a06_sensitivity` 404s), TwoSampleMR (instrument selection,
+   clumping, and **STROBE-MR's 2025 update, PMID 41223895 / PMC12611437,
+   open access** — route it over the 2021 original, which is not), LDSC
+   (ancestry-matched LD scores, intercept handling), SuSiE/FINEMAP (L,
+   window), deconvolution (which reference panel, which cell types it
+   contains — and note the Author Correction on the Avila Cobos benchmark,
+   PMID 33268785, which changes its numbers). Name the tool *version*.
+   Note genome-build mismatches — `data-sources.md` records which resource
+   uses which. For direction of effect and cis-instrument availability use
+   Open Targets `target.credibleSets` (signed beta and lead variant in one
+   call); GTEx `singleTissueEqtl` **silently ignores `snpId=`** and will
+   hand you a false negative.
 4. **Check domain transfer explicitly.** A benchmark on cancer scRNA-seq
    does not establish behaviour on bulk COPD lung. Report what was
    actually tested and treat the step to the asker's setting as an

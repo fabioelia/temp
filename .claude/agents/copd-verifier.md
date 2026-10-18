@@ -44,11 +44,22 @@ one corrected" in 200 words is a complete success.
    **Retraction is never recalled** — chatbots find <50% of retractions and
    mislabel ~18% of valid papers as retracted. Check Crossref: `update-to`
    present in the message means retracted/updated
-   (`api.crossref.org/works/<doi>?mailto=...`).
+   (`api.crossref.org/works/<doi>?mailto=...`), and `updated-by[]` with
+   `source:"retraction-watch"` names the source. **Europe PMC `pubType` is
+   unreliable** — it read `None` on a confirmed retracted record while
+   `commentCorrectionList.commentCorrection[].type == "Retraction in"`
+   carried it; read the correction list. Do not pull the Retraction Watch
+   CSV for one check (200, but 67.6 MB). Flag **"Author Correction"** too:
+   not a retraction, but it changes the numbers.
 3. **Numbers, fetched not recalled.** Cheapest route first:
-   - trial results → ClinicalTrials.gov v2
-     `resultsSection.outcomeMeasuresModule` (values with 95% CIs, no
-     paywall)
+   - trial results → **ClinicalTrials.gov v2 is route 1, ahead of the
+     paper**: `resultsSection.outcomeMeasuresModule` → `analyses[]` gives
+     `paramType`, `paramValue`, `ciLowerLimit/ciUpperLimit`, `pValue`,
+     `statisticalMethod` and covariates, no paywall. For BOREAS
+     (NCT03930732) the registry had the effect and the pivotal NEJM paper
+     (PMID 37272521) was neither OA nor in Europe PMC full text. Caveat:
+     `HasResults` is false for most trials and registry results are
+     sponsor-entered — where both exist, cite both and flag disagreement
    - published effects → abstract via `pubmed-fetch`, then OA full-text
      tables via Europe PMC
    - regulator-recomputed effects → FDA advisory briefing documents, EMA EPARs

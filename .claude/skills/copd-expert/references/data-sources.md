@@ -162,7 +162,7 @@ curl -s -H "Authorization: Bearer $OPENGWAS_JWT" -X POST https://api.opengwas.io
 ### Expression and single cell
 
 ```bash
-curl -s "https://gtexportal.org/api/v2/reference/gene?geneId=HHIP&gencodeVersion=v26&genomeBuild=GRCh38%2FHg38"   # get versioned gencodeId
+curl -s "https://gtexportal.org/api/v2/reference/gene?geneId=HHIP&gencodeVersion=v26&genomeBuild=GRCh38%2Fhg38"   # get versioned gencodeId
 curl -s "https://gtexportal.org/api/v2/expression/medianGeneExpression?gencodeId=ENSG00000164161.9&tissueSiteDetailId=Lung&datasetId=gtex_v8"
 curl -s "https://gtexportal.org/api/v2/association/singleTissueEqtl?gencodeId=ENSG00000164161.9&tissueSiteDetailId=Lung&datasetId=gtex_v8"
 curl -s https://raw.githubusercontent.com/eQTL-Catalogue/eQTL-Catalogue-resources/master/tabix/tabix_ftp_paths.tsv | grep -i lung
@@ -171,8 +171,21 @@ curl -s https://www.proteinatlas.org/ENSG00000197249.json
 ```
 
 GTEx: gencodeId version must match dataset (v26 for gtex_v8, v39 for
-gtex_v10); empty `data:[]` = no significant eQTL. eQTL Catalogue paths are
-`ftp://` — rewrite to `https://ftp.ebi.ac.uk/`.
+gtex_v10); `genomeBuild=GRCh38%2Fhg38` — capital `Hg38` returns 422. Empty
+`data:[]` = no *significant* eQTL at GTEx's threshold, not "no eQTL".
+eQTL Catalogue paths are `ftp://` — rewrite to `https://ftp.ebi.ac.uk/`.
+
+**Silent-failure endpoints — these return 200 and look like clean
+negatives. Treat an absence from any of them as unproven, never as
+evidence** (see `knowledge-boundaries.md` gate A3):
+
+| Endpoint | Silent failure | Do this instead |
+|---|---|---|
+| GTEx `singleTissueEqtl` | **Ignores `snpId=` entirely** and returns all eQTLs for the gene, 250/page. A per-variant query looks like a negative when it is pagination plus a dead filter. Verified: rs34712979 is absent from the 320 returned NPNT lung eQTLs yet is a real NPNT signal. | Page to exhaustion and filter client-side — or use Open Targets `target.credibleSets` (below), which answers it in one call. |
+| HPA `search_download.php` | Unrecognised `columns=` codes are **silently dropped**; the response is 200 with `[{"Gene":"CCL20"}]` and no error. Valid blood codes are only `rnabcs/rnabcd/rnabcss/rnabcsm` — there is **no per-cell-type column code**. | Use the per-gene XML (`/<ENSG>.xml`, `immuneCell` blocks) or the bulk TSVs below. |
+| GWAS Catalog v2 | The **sign of the effect lives in an English string**, not the number: `beta: "0.0633781 unit decrease"`. Also check `reported_trait` — the top COPD hit is "COPD liability (machine learning-based score)", a continuous proxy, so "decrease" means lower predicted liability, not lower FEV1. | Parse the direction word; never take `beta` as signed. |
+| Europe PMC retraction | `pubType` was `None` on a confirmed retracted record. | Read `commentCorrectionList.commentCorrection[].type == "Retraction in"`, and the per-DOI Crossref `updated-by[]` with `source:"retraction-watch"`. Also watch "Author Correction" — not a retraction, but it changes the numbers (one exists on the Avila Cobos deconvolution benchmark, PMID 33268785). Do **not** pull the Retraction Watch CSV for a single check (200 but 67.6 MB). |
+| CELLxGENE | `is_rollup:false` → HTTP 500, so you cannot ask for leaf-only cell types. | De-duplicate the CL hierarchy client-side; ancestor terms otherwise eat 40%+ of any signal-share calculation. |
 
 CELLxGENE Census (pip install `cellxgene-census` in a venv; works through
 the proxy). HLCA collection `6f6d381a-7701-4781-935c-db10d30de293`; COPD
@@ -188,6 +201,68 @@ with cellxgene_census.open_soma(census_version="2025-11-08") as c:   # pin versi
     # ~90k COPD lung cells. For expression use get_anndata(..., var_value_filter="feature_name in ['HHIP','GLI1']")
     # Aggregate to pseudobulk per donor before any case-control comparison.
 ```
+
+**Per-immune-cell expression: there is no single authoritative value.**
+All four download at 200 (verified 2026-10-18); `rna_blood_cell*.tsv.zip`
+is 404 — the live names use `immune_cell`. Each has `TPM`, `pTPM` and
+`nTPM` columns, and the column choice changes the number.
+
+| File (`proteinatlas.org/download/tsv/`) | Size | Content |
+|---|---|---|
+| `rna_immune_cell_monaco.tsv.zip` | 4.97 MB | Monaco 2019, 29 sorted cell types + total PBMC |
+| `rna_immune_cell_schmiedel.tsv.zip` | 1.64 MB | Schmiedel/DICE 2018 |
+| `rna_immune_cell.tsv.zip` | 2.75 MB | HPA consensus, 19 cell types |
+| `rna_single_cell_type.tsv.zip` | 16.3 MB | HPA single-cell |
+
+Datasets disagree by **orders of magnitude and can invert the lineage
+ranking**. CCL20, same gene, same nominal unit, TPM column: HPA consensus
+tops out at MAIT T-cell 2.7, while Monaco gives classical monocyte 73.2,
+intermediate 24.2, myeloid DC 14.4 — T-cell-topped versus monocyte-topped.
+CSF3R, by contrast, replicates: classical ≫ non-classical monocyte in both
+(Monaco 532.8 vs 42.0 = 12.7x; HPA consensus 206.2 vs 18.8 = 11.0x). So
+quote **at least two datasets** for any marker-level claim and name which
+you used. Haemopedia/Haemosphere and DICE have no public JSON API (404) —
+use these HPA redistributions as the proxy.
+
+`biodata.py blood-cells <GENE>` returns the HPA per-gene XML table; add a
+second dataset from the TSVs before ruling on a contested marker.
+
+### Trial effect sizes: the registry often beats the paper
+
+ClinicalTrials.gov v2 `resultsSection.outcomeMeasuresModule` →
+`analyses[]` carries `paramType`, `paramValue`, `ciLowerLimit`,
+`ciUpperLimit`, `pValue`, `statisticalMethod` and the covariate list.
+Verified on BOREAS (NCT03930732): 1.01 (0.931-1.301) vs 0.776
+(0.645-0.934), difference -0.324 (-0.508 to -0.140), p=0.0005, negative
+binomial — while the pivotal NEJM paper (PMID 37272521) is **not** open
+access and **not** in Europe PMC full text. Make this route 1 for any
+registered trial.
+
+```bash
+curl -s "https://clinicaltrials.gov/api/v2/studies/NCT03930732?fields=resultsSection.outcomeMeasuresModule"
+```
+
+Caveats: `HasResults` is false for most trials, and registry results are
+sponsor-entered. Cite both registry and paper where both exist, and flag
+any disagreement rather than picking one.
+
+### Direction of effect and cis-instrument availability
+
+Use Open Targets `target.credibleSets`, **not** GTEx. One call returns
+signed `beta`, `standardError`, lead `variant.id`, `isTransQtl` and
+`studyType` per credible set, so "is there a cis-instrument for this gene?"
+is answered directly, and disease direction chains to expression direction
+in two calls. NPNT returns 153 credible sets (84 sQTL, 34 eQTL, 16 tuQTL,
+6 sc-eQTL).
+
+### Discontinuations: SEC EDGAR full-text search
+
+```bash
+curl -s -A "you@example.org" -G https://efts.sec.gov/LATEST/search-index \
+  --data-urlencode 'q="itepekimab"' --data 'forms=10-K'      # 11 Regeneron hits
+```
+Needs a descriptive User-Agent, and `--data-urlencode` for `q` — a raw
+quoted string 400s.
 
 ### Networks, pathways, knowledge graphs
 

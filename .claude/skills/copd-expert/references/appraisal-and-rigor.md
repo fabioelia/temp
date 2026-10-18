@@ -182,6 +182,10 @@ interpretation.
     eQTL), Open Targets (datatype scores are not effect sizes), and FAERS
     (report counts are not incidence). Check what the resource is actually
     measuring before drawing a conclusion from an absence.
+    The trigger phrases, the one command that settles this class of
+    question, and the assertion gate are in
+    [knowledge-boundaries.md](knowledge-boundaries.md) — consult it
+    *before* answering, not after being contradicted.
 16. **Confusing marker specificity with signal attribution.** "Does gene X
     distinguish cell A from cell B in this panel" and "whose mRNA is gene X
     in this bulk tissue" are different questions with different answers, and
