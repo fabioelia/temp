@@ -253,15 +253,22 @@ instructive part — read it before trusting any dossier:
   and GLI1 nuclear translocation is *required* for AT2 proliferation
   (PMID 42399584) — so SMO inhibition predicts **harm**, not protection.
 - **The "ongoing, not developmental" premise has no supporting experiment.**
-  No adult inducible Hhip deletion exists; the best model (PMID 40333979,
+  **No adult inducible *Hhip* deletion was found in the critic's 2026-10-18
+  literature search** — an absence in that search on that date, not a
+  property of the world (gate A3); the best model found (PMID 40333979,
   Sci Adv 2025) places the effect in alveologenesis and its therapeutic was
   **neonatal** HHIP-Fc. HHIP is overwhelmingly a *height* locus (p ≤ 1e-300)
   — developmental pleiotropy.
-- **The nominated cheap test was not runnable.** GTEx v8 has no significant
-  HHIP lung cis-eQTL; the real coloc is with a lung *splicing* QTL and is
+- **The nominated cheap test was not runnable.** GTEx v8 reports no HHIP
+  lung cis-eQTL passing its significance threshold at its lung sample size
+  (v8, queried 2026-10-18) — a threshold result, not an absence of
+  regulation; the real coloc is with a lung *splicing* QTL and is
   already published (PMID 40798880).
-- **Target substitution.** Genetic support is for HHIP; **SMO has zero
-  genetic evidence for COPD** (Open Targets 0.083, literature only).
+- **Target substitution.** Genetic support is for HHIP; **no genetic
+  evidence for SMO in COPD is recorded in Open Targets (v26.09, queried
+  2026-10-18): association score 0.083, literature-only datatypes, no
+  genetic datatype contribution.** Stated that way, not as "zero evidence" —
+  an unqueried resource or a later release can change it (gate A3).
 - **Safety gate 2.** FAERS for vismodegib/sonidegib is dominated by muscle
   spasms, raised CPK, dysgeusia and weight loss — the worst possible profile
   in sarcopenic, cachectic, elderly patients.
@@ -282,3 +289,8 @@ instructive part — read it before trusting any dossier:
    genetic support for the node your drug hits.
 5. **Confirm the nominated cheap test is actually executable** (the
    instrument exists, in the right tissue) before promising it.
+6. **A number is a measurement, not a fact.** Mouse-, platform-, cohort- and
+   date-conditional values do not transport; carry the ordinal claim and
+   leave the constant behind, and write every absence as "not recorded in
+   \<source\> as of \<date\>, query \<string\>"
+   (`knowledge-boundaries.md` §E and gate A3).

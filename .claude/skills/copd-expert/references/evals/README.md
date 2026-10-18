@@ -16,6 +16,15 @@ what the field meant, did it compare two datasets, did it name the
 threshold. Case 8 is built so that a confident single-atlas answer *is* one
 of the two defensible answers and still fails.
 
+**And ground truth is a relationship, never an absolute value.** No
+expectation may require a specific nTPM, rate or effect size to be
+reproduced: those move with the next HPA/GTEx/registry release, so a
+value-pinned eval both breaks silently and teaches the fallacy case 10
+exists to unteach (`../knowledge-boundaries.md` §E). Numbers inside
+`failure_observed` are dated provenance, not the answer key. Grade
+direction, rank order, a fold-change band, and whether the generating
+conditions were attached.
+
 | # | Case | Tests |
 |---|---|---|
 | 1 | CSF3R classical-monocyte contradiction | The real 2026-10-17 failure: sufficiency, field semantics, steelman |
@@ -27,6 +36,7 @@ of the two defensible answers and still fails.
 | 7 | GSVA on correlated gene sets | Retrieve before reasoning; return "no evidence found" |
 | 8 | CCL20 monocyte or T cell | Two-dataset rule; disagreement ⇒ unsettled |
 | 9 | GSVA scores across two cohorts | Cohort-dependence; invalid by construction, not underpowered |
+| 10 | HPA nTPM as a composition-correction constant | §E transport: units, disease state, and a quantity that is a function of the variable under study |
 
 ## Running them
 
@@ -38,8 +48,9 @@ the baseline should be this skill at the commit **before**
 `knowledge-boundaries.md` was added, so the comparison measures the
 boundaries machinery rather than the skill as a whole.
 
-Cases 1-5 and 8-9 have verified ground truth recorded inside
-`failure_observed`, so they can also be graded by hand without a harness.
+Cases 1-5 and 8-10 have verified provenance recorded inside
+`failure_observed`, so they can also be graded by hand without a harness —
+grading the actions, not the digits.
 
 ## Adding a case
 
@@ -54,6 +65,9 @@ is still available:
 - `expectations` — observable actions a grader can check in the transcript.
 - `pass_criterion` — one sentence, and say which lucky-but-wrong path still
   counts as a failure.
+- Never pin an expectation to an absolute value; pin it to the relationship
+  and the retrieval action, and put the value in `failure_observed` with its
+  source and date.
 
 Then make the matching fix in `knowledge-boundaries.md` (trigger, route,
 semantics or gate — see `.claude/agents/agent-architect.md` for which

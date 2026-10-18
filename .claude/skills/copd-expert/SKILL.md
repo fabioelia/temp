@@ -52,8 +52,11 @@ true, what is contested, and what nobody has connected yet.
     field or single paper is a data point, not an adjudication. And know
     what the field *means*: "absent from this list" usually means "below
     this resource's threshold", not "does not exist". Restate the threshold
-    and the field you used so a reader can check it. A zero-row result says
-    "not recorded in this source as of this date", never "no effect".
+    and the field you used so a reader can check it. **Every absence claim
+    — zero rows, "no RCT", "no model exists", "nobody has shown" — is
+    written "not recorded in <source> <version> as of <date>, query
+    <string>", never "no effect" and never in flat present tense. Date is a
+    condition like any other** (gate A3).
 12. **Know where you are thin, and go get it.**
     [references/knowledge-boundaries.md](references/knowledge-boundaries.md)
     lists this skill's measured blind spots with the phrase that should
@@ -108,7 +111,9 @@ Targets, GWAS Catalog, and more). Prefer it over hand-written curl. Two
 commands exist specifically to close the failures above:
 `blood-cells <GENE>` (every immune cell type's nTPM, not the
 threshold-filtered field) and `fulltext-grep <id> <term>` (what the source
-someone cited actually says).
+someone cited actually says). Payloads carry the field's semantics and the
+number's generating conditions in `note` / `transportable_claim` — read
+them before quoting a value.
 
 ## Gap-filling subagents
 

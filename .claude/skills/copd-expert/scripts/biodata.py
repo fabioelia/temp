@@ -325,7 +325,11 @@ def cmd_gtex_lung(a):
          "n_tissues": len(ranked), "top_tissues": [(x["tissueSiteDetailId"], x["median"]) for x in ranked[:5]],
          "lung_eqtls": [{"variant": e.get("variantId"), "snp": e.get("snpId"), "nes": e.get("nes"),
                          "p": e.get("pValue")} for e in eqtl],
-         "note": "Empty lung_eqtls = no significant lung eQTL in GTEx v8, not an error."})
+         "retrieved": dt.date.today().isoformat(),
+         "note": ("Empty lung_eqtls = no lung eQTL passing GTEx v8's significance threshold "
+                  "at v8's lung sample size, as of the retrieved date - not an error and not "
+                  "absence of regulation. Report it as 'not recorded in GTEx v8 as of <date>' "
+                  "(gate A3). lung_median_tpm is a GTEx v8 bulk-lung median, not a per-cell value.")})
 
 
 # ------------------------------------------------- cell-type attribution
@@ -384,12 +388,29 @@ def cmd_blood_cells(a):
          "all_cell_types_ntpm": rows if a.n <= 0 else rows[: a.n],
          "fold_over_lowest": round(top / max(rows[-1]["ntpm"], 0.01), 1),
          "hpa_specific_field": specific,
+         "transportable_claim": {
+             "rank_order": " > ".join(r["cell_type"] for r in rows
+                                      if r["lineage"] != "Total PBMC")  # full ordering
+                           .split(" > ")[:6],
+             "fold_top_over_second": (round(top / max(rows[1]["ntpm"], 0.01), 1)
+                                      if len(rows) > 1 else None),
+             "conditions": ("healthy adult donors; bulk-sorted populations; nTPM = "
+                            "length-normalised share of that cell's OWN transcriptome, "
+                            "not molecules per cell; no disease or activation state"),
+             "use": "quote the rank order and fold-change, not the absolute nTPM"},
          "note": ("hpa_specific_field is threshold-filtered and is NOT the marker table; "
                   "all_cell_types_ntpm is. Absence from the specific field means "
                   "'not enriched above HPA cutoff', not 'not expressed'. HPA blood data is "
                   "bulk-sorted (Monaco/Schmiedel/HPA consortia): it answers 'how much mRNA "
                   "in this sorted population', not 'is this a discriminating marker in panel X'. "
-                  "Confirm direction in >=1 primary paper before contradicting anyone.")})
+                  "Confirm direction in >=1 primary paper before contradicting anyone. "
+                  "TRANSPORT: do NOT multiply these values by a cell fraction to apportion a "
+                  "bulk signal - nTPM is a within-cell share and total mRNA per cell differs "
+                  "severalfold across leukocytes (neutrophils < monocytes); attribution "
+                  "arithmetic uses the study's own counts. These are healthy donors, and for "
+                  "activation-responsive genes (CSF3R, S100A8/A9) per-cell expression moves "
+                  "with inflammation, so an external constant biases a disease comparison. "
+                  "See references/knowledge-boundaries.md section E.")})
 
 
 def cmd_fulltext_grep(a):

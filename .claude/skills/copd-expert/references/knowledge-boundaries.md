@@ -2,15 +2,26 @@
 
 A lookup table, not an essay. Run §A before any contested claim leaves your
 mouth; scan §B when a question matches a trigger; read the one row of §C
-you need. §D is the gaps retrieval cannot close. §E is how to maintain it.
+you need. §D is the gaps retrieval cannot close. §E is what transports
+across contexts and what does not. §F is how to maintain it.
+
+**Every rate in this file is a measurement of some model or some corpus on
+some task format on some date — including the rates about LLMs.** They are
+cited as evidence for a *direction* and as the reason a gate exists, never
+as this agent's error rate on your question. The gates stand on the
+asymmetric cost of the error, not on the decimal. Transport the ordinal
+claim (§E); a file about epistemics does not get to commit the fallacy it
+documents.
 
 **Triggers here are structural, never felt.** Do not wait to feel
 uncertain. Hedging language is mimicked from pretraining, not computed:
-high-certainty expressions ("it is well established") correlate with a ~7%
-*decrease* in accuracy, and accuracy varies >80% across certainty markers
-(Zhou, Jurafsky & Hashimoto, EMNLP 2023, 2023.emnlp-main.335). Asking
-yourself how confident you are underperforms a cheap recalibration
-baseline (arXiv 2409.03225). So every trigger below is a property of the
+measured in 2023 on then-current models over QA benchmarks, high-certainty
+expressions ("it is well established") accompanied *lower* accuracy (~7% in
+that setting) and accuracy varied >80% across certainty markers (Zhou,
+Jurafsky & Hashimoto, EMNLP 2023, 2023.emnlp-main.335). Self-reported
+confidence underperformed a cheap recalibration baseline on other models and
+other tasks (arXiv 2409.03225). Direction, not rate: your hedges do not
+track your correctness. So every trigger below is a property of the
 *question, the field, or the sentence you are about to write* — a negation,
 a number, a threshold, a bare gene token, a date word.
 
@@ -32,10 +43,10 @@ failing any gate becomes a question or carries `[unverified]`.
 |---|---|---|
 | **A1 Sufficiency, not relevance** | The retrieved passage must contain *the specific entity or quantity asked about*. Topical relevance is not sufficiency. If the passage is about the right gene but not the right comparison, you have nothing — widen or abstain. | Joren et al., *Sufficient Context*, arXiv 2411.06037 (ICLR 2025): models answer instead of abstaining when context is relevant but insufficient. HPA was relevant to CSF3R and insufficient. |
 | **A2 Restate the threshold and the field** | If any step involved a cutoff (enrichment, FDR, p<5e-8, phase, "significant"), the output names the threshold *and* the table/field it came from, so a reader can check it. | BiomedSQL, arXiv 2505.20321 (COLM 2026): best agent 62.6% vs expert 90.0%; the commonest errors are wrong table selection and improper application of statistical thresholds. |
-| **A3 Zero rows ≠ zero effect** | An empty result reads "not recorded in \<source\> as of \<date\>", never "no association exists". Write it that way. | Heuristic — no published rate for this confusion (see §D). Mechanically identical to A2's threshold error. |
-| **A4 Identifiers come from an API, never recall** | Every gene symbol↔ID↔alias, locus, rsID or ontology term is resolved by a call. Confidence is not a competence signal for this task. | GeneTuring (PMID 36993670, bioRxiv preprint): plain GPT-4o errs in ~99% of gene-name-conversion cases, ~99% accurate *with* API access, and incapacity awareness is low — the model does not know it cannot do it. |
+| **A3 Absence is dated, sourced and queried** | Every absence claim — zero rows, "no RCT", "no model exists", "nobody has shown", "the first to" — is written **"not recorded in \<source\> \<version\> as of \<date\>, query \<string\>"**. Never "no association exists", never flat present tense. Time is a stripped condition exactly like a threshold: a true 2026-10-18 observation silently becomes false, and a reader cannot tell when it was looked for. If you did not run a query, the claim is `[unverified]`, not an absence. | Heuristic — no published rate for this confusion (see §D). Mechanically identical to A2's threshold error, and to §E's transport failure with *date* as the stripped condition. |
+| **A4 Identifiers come from an API, never recall** | Every gene symbol↔ID↔alias, locus, rsID or ontology term is resolved by a call. Confidence is not a competence signal for this task. | GeneTuring (PMID 36993670, bioRxiv preprint): plain GPT-4o errs in ~99% of gene-name-conversion cases, ~99% accurate *with* API access, and incapacity awareness is low — the model does not know it cannot do it. **A different model, one benchmark's task format, one date: take the direction (recall fails, an API fixes it, the failure is not felt), not the rate.** |
 | **A5 Numbers carry their quote** | Every effect size, CI, n or p is quoted with the sentence or table cell it came from. No quote ⇒ `[unverified]`. Do not try a different model instead. | Jansen et al., *Psychol Bull* 2025 (10.1037/bul0000501), 312,329 data points: unacceptable accuracy on 20% of variables; variance largest *between variables*, smallest between models — so only re-reading the source fixes it. |
-| **A6 Citations: check the numbers, not just existence** | A resolving DOI is not a verified citation. Verify the numeric fields. Treat a bare URL as *raising* suspicion, and ignore formatting polish entirely. | Walters & Wilder, *Sci Rep* 2023 (10.1038/s41598-023-41032-5): GPT-4 18% fabricated; among *real* citations 24% carry a substantive error, concentrated in numeric fields (dates 16%, vol/issue/page 13%; author/title/journal each <7%). Formatting quality does not discriminate fabricated from real, and fabricated citations carried hyperlinks *more* often (18% vs 6%). |
+| **A6 Citations: check the numbers, not just existence** | A resolving DOI is not a verified citation. Verify the numeric fields. Treat a bare URL as *raising* suspicion, and ignore formatting polish entirely. | Walters & Wilder, *Sci Rep* 2023 (10.1038/s41598-023-41032-5), GPT-4 on a 2023 bibliography-generation task: 18% fabricated; among *real* citations 24% carried a substantive error, concentrated in numeric fields (dates 16%, vol/issue/page 13%; author/title/journal each <7%). Formatting quality does not discriminate fabricated from real, and fabricated citations carried hyperlinks *more* often (18% vs 6%). |
 | **A7 Surface conflicts; never silently adopt** | When a retrieved document disagrees with what you believe, state both and adjudicate explicitly. Low internal confidence plus a disagreeing document is the peak-error configuration, not a licence to defer. | ClashEval, arXiv 2404.10198 (incl. drug dosages): models override their own correct prior >60% of the time, and adoption of the wrong external number *rises* as their own confidence falls. |
 | **A8 Reversal needs a post-pushback source** | Changing a factual position after the user pushes back requires naming a source retrieved **after** the pushback. Verify unsourced premises embedded in a question ("given that X…") *before* answering what is built on them. | SycEval, arXiv 2502.08177: 58.19% sycophancy, regressive right→wrong 14.66%; an embedded unsourced premise induces more sycophancy than an explicit challenge (61.75% vs 56.52%). |
 | **A9 At least one disconfirming query** | The search plan contains a query phrased to *break* the claim — "no association", "failed to replicate", "negative trial", "did not differ". Zero disconfirming queries ⇒ the search is incomplete by definition. | *Failing to Falsify*, arXiv 2604.02485 (ICLR 2026): prompting for counterexamples raised rule discovery 42%→56%. |
@@ -64,6 +75,7 @@ from? Before I disagree I want to read it."**
 | The question leaves COPD: IPF, bronchiectasis, lung cancer immunology, aging, cardiometabolic | §C6 adjacent | Treat as a frontier sweep in a field whose graveyard you do not know | `copd-researcher` (analog lane) | 1500 w |
 | "has this been tried and failed", "why discontinued", "unpublished", "was there a negative trial" | §C7 negatives | Registry first, literature second | `copd-scout` | 1200 w |
 | "what do clinicians actually do", dosing habits, referral, coding, local pathway | §C8 practice | **Do not retrieve a verdict.** State guidelines; declare the boundary | none | — |
+| "what fraction of the signal", "how much of this is driven by", "adjust for / correct for cell composition", "X% of the signal is", "deconvolve", "scale it by", "use the reference value"; or you are about to multiply a reference expression value by a cell fraction, or reuse any absolute value (nTPM/TPM, MCID, prevalence, event rate, cell fraction) as a constant in a new context | §E transport | Name the number's generating conditions; drop to the highest transportable rung (existence → direction → rank order); take attribution counts from the study's own data | `copd-marker-resolver` (expression) · `copd-verifier` (effect sizes) | 250 / 300 w |
 | The user pushed back and you are inclined to fold | §A8 | Retrieve *now*; then hold or revise on what came back | `copd-verifier` | 300 w |
 
 Dispatch rule: one trigger, one agent, one message; several triggers →
@@ -140,6 +152,17 @@ atlas you opened). Note also that `TPM`/`pTPM`/`nTPM` columns give different
 numbers for the same cell — the column changes the magnitude, though here
 not the direction.
 
+**Units are a condition, not a label.** `nTPM`/`pTPM`/`TPM` are
+length-normalised *shares of that cell's own transcriptome* — not molecules
+per cell. Leukocyte types differ severalfold in total mRNA per cell
+(neutrophils carry notably less than monocytes), so a per-cell share may
+**not** be multiplied by a cell fraction to apportion a bulk signal; that
+arithmetic needs total mRNA per cell, which none of these atlases report.
+All four atlases are **healthy adult donors**, sorted by each study's own
+protocol, so they carry no disease state and no activation state. Any "what
+fraction of this bulk signal comes from cell X" question is answered from
+the study's own counts and its own measurements — §E.
+
 **Resources.** HPA per-gene XML (19 immune cell types) · the four bulk
 TSVs (Monaco 4.97 MB, Schmiedel/DICE 1.64 MB, HPA consensus 2.75 MB, HPA
 single-cell 16.3 MB — exact paths and columns in `data-sources.md`;
@@ -160,6 +183,9 @@ negative when it is pagination plus a dead filter. Full table in
 python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py blood-cells CSF3R
 python3 ${CLAUDE_SKILL_DIR}/scripts/biodata.py fulltext-grep 20067595 CSF3R   # their source, before contradicting
 ```
+The `blood-cells` payload returns `transportable_claim` (rank order,
+fold-over-second, the conditions) next to the values, plus the units and
+no-constant-arithmetic warning in `note` — quote that, not a bare nTPM.
 
 **Return schema** — `copd-marker-resolver`, ≤250 words. Full schema in that
 agent's definition.
@@ -169,12 +195,16 @@ agent's definition.
 **Why thin.** Directions of effect are recalled reliably; magnitudes, CIs,
 n and p drift toward round and often-quoted values, worst on particular
 variables rather than particular models (Jansen 2025 — §A5). Separately,
-~24% of *real* citations an LLM emits carry a substantive error concentrated
-in numeric fields (Walters & Wilder 2023 — §A6). So the gate is **not "is
-the paper real" but "are its numbers right"**.
+24% of the *real* citations GPT-4 emitted in one 2023 bibliography task
+carried a substantive error, concentrated in numeric fields (Walters &
+Wilder 2023 — §A6). What transports is **where** the errors land, not the
+24%. So the gate is **not "is the paper real" but "are its numbers
+right"**.
 
-**Retraction status is never recalled.** Chatbots find <50% of retractions
-and mislabel ~18% of valid papers as retracted. Use Crossref: the per-DOI
+**Retraction status is never recalled.** Consumer chatbots tested in
+2024-25 found <50% of retractions and mislabelled ~18% of valid papers as
+retracted — other models, other prompts; the transportable part is that
+retraction status is not a recallable property. Use Crossref: the per-DOI
 check is whether `update-to` is present in the message; the corpus-level
 filter `update-type:retraction` returns **76,296** records (verified
 2026-10-18). **Europe PMC `pubType` is unreliable here** — it was `None` on
@@ -382,12 +412,73 @@ human answer; (c) no measured rate for absence-of-record vs
 absence-of-effect confusion (gate A3 is encoded anyway because the cost is
 asymmetric).
 
-## E. Maintaining this file
+## E. What transports and what does not
+
+A number is a measurement made under conditions — population, platform and
+units, normalisation, isolation protocol, disease state, date, model
+measured (SKILL.md rule 14). Moving it to a new context without those
+conditions imports them as hidden assumptions. The fix is not silence: it
+is to carry the most transportable form of the claim that still answers the
+question.
+
+**The ladder, most to least transportable.**
+
+| # | Form | Example | Safe for | Broken by |
+|---|---|---|---|---|
+| 1 | **Existence** | "CSF3R is expressed in classical monocytes" | Refuting an absence claim; justifying that a measurement is worth making | A detection/enrichment threshold being the only reason it appears or disappears — restate it (A2) |
+| 2 | **Direction** | "higher in classical than non-classical" | Mechanism, hypothesis framing, sanity-checking someone's data | Sign flips across platforms (CCL20 inverts lineage between HPA and Monaco, §C1); or the comparison measured is not the one asked |
+| 3 | **Rank order** | "neutrophil ≫ classical > intermediate > non-classical" | Marker-panel choice; predicting which cell dominates a sorted comparison | Normalisation reordering near-ties; a cell type absent from the panel by construction (no granulocytes in any PBMC atlas) |
+| 4 | **Fold-change** | "classical ~11-13x non-classical in two atlases" | Powering a comparison; order-of-magnitude plausibility | Arms measured in different assays; ratios from different datasets do not compose |
+| 5 | **Ratio / proportion / share** | "~20-40% eosinophilic"; "share of bulk signal" | Nothing until the threshold, the denominator and the measurement occasion are all stated | A moved threshold, a different denominator, or within-person instability (BEC moves; GOLD 2026 advises repeating 2-3x) |
+| 6 | **Absolute value** | "279.2 nTPM"; "0.91 exacerbations/yr"; "MCID 100 mL" | Reproducing *that* table; serving as a declared anchor | Any change of population, platform, unit, normalisation, disease state, era or date — i.e. almost always |
+
+Rungs 1-3 survive a change of dataset; 4 survives within an assay; 5-6
+travel only with their conditions attached. **Report the highest rung that
+answers the question, and attach the generating conditions to anything
+below rung 4.** A number with its conditions beats no number; a number
+without them is a liability.
+
+**The corollary that bites hardest: when the quantity is itself a function
+of the variable under study, an external constant assumes away the
+hypothesis.** CSF3R, S100A8/A9 and inducible inflammatory
+transcripts generally are activation-responsive, so per-cell expression — and therefore the share of
+a bulk signal a given cell contributes — *moves with inflammation*. A
+healthy-donor per-cell value used to adjust a disease comparison is biased
+against the priming hypothesis it was meant to test. Same shape: reference
+cell fractions used to "correct" a disease cohort; a pre-COVID event rate
+used to power a post-COVID trial; an MCID estimated in one severity
+stratum applied to another (rule 6).
+
+**Attribution arithmetic comes from the study's own measurements.** To ask
+"whose signal is this in bulk?", use that study's CBC/differential, its
+sorted fractions or its matched single-cell data, and deconvolve with a
+panel containing the candidate cells (§C1, trap three). Never multiply a
+reference-atlas expression value by a reference cell fraction.
+
+**Templates that keep the condition attached.**
+
+| Instead of | Write |
+|---|---|
+| "CSF3R is 279.2 nTPM in classical monocytes" | "classical ≫ non-classical, 11-13x in HPA consensus and Monaco (healthy adult donors, sorted bulk, nTPM, retrieved 2026-10-18)" |
+| "tozorakimab RR 0.71" | "RR 0.71 (0.57-0.88) in OBERON's *former-smoker* subgroup, on background inhaled therapy, COVID-era event rates" |
+| "~30% of COPD is eosinophilic" | "~20-40% depending on the BEC cut and the occasion measured; BEC is unstable within person" |
+| "no trial exists" | "not recorded in ClinicalTrials.gov as of \<date\>, query \<string\>" (A3) |
+| "LLMs err ~99% on gene-name conversion" | "one benchmark, one model, one task format: recall fails, API access fixes it — direction, not rate" |
+
+Trigger phrases that put you here are in §B. If you are about to write a
+bare absolute value into a context that did not generate it, you are in the
+failure this section exists for.
+
+---
+
+## F. Maintaining this file
 
 When a gap is found the hard way, add the row the same day: the observable
 trigger in the asker's own words, the resource, the one command that
 settles it, the word cap. Mark each new rule **measured** (with the
-citation) or **heuristic** — the distinction is the point of §D. When a
+citation) or **heuristic** — the distinction is the point of §D. Any number
+you add carries its generating conditions in the same cell, and any rate
+measured on another model or corpus says so (§E). When a
 command here stops working, fix it in `scripts/biodata.py` and
 `data-sources.md` and date it. A trigger that has never fired is probably
 worded as a feeling rather than a signal; rewrite it as a phrase someone

@@ -34,6 +34,16 @@ pitfalls.
 - Report effect sizes, direction, n, and uncertainty. Do not overinterpret:
   apply the batch, pseudo-replication, ancestry, pleiotropy and multiple-
   testing checks.
+- **Every value carries its generating conditions** — cohort, platform,
+  units, normalisation, disease state, date — and the headline is the
+  relationship (direction, rank order, fold-change), not the constant.
+  **Never import an external constant into an attribution or composition
+  calculation**: reference per-cell expression (nTPM/TPM) is a share of
+  that cell's own transcriptome from healthy donors, and for
+  activation-responsive genes it moves with the exposure under study. Cell
+  fractions come from the study's own CBC/differential, sorted fractions or
+  matched single-cell data (`knowledge-boundaries.md` §E). Write absences
+  as "not recorded in <source> <version> as of <date>, query <string>".
 - If an endpoint fails, say so and try the documented fallback; never
   invent numbers.
 
@@ -45,7 +55,10 @@ Return only JSON (≤ 900 words):
 {"hypothesis_id": "...", "analysis": "...",
  "prediction_if_true": "...", "prediction_if_false": "...",
  "data_sources": [{"name": "...", "id_or_url": "...", "retrieved": "YYYY-MM-DD"}],
- "results": [{"metric": "...", "value": "...", "n": "...", "note": "..."}],
+ "results": [{"metric": "...", "value": "...", "n": "...",
+              "conditions": "cohort, platform, units, normalisation, date",
+              "relationship": "the direction/rank-order/fold-change claim that survives a change of dataset",
+              "note": "..."}],
  "interpretation": "supports|weakens|falsifies|inconclusive",
  "caveats": ["..."], "files": ["research/analyses/..."],
  "next_analysis": "..."}

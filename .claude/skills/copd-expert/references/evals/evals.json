@@ -1,6 +1,6 @@
 {
   "skill_name": "copd-expert",
-  "notes": "Regression cases for the failure modes in references/knowledge-boundaries.md. Pass criteria are OBSERVABLE ACTIONS, not correct final answers: an agent can reach the right answer by luck and still carry the bug. Grade the transcript, not just the output. Format follows skill-creator's evals.json schema (expectations = verifiable statements), with thin_area, failure_observed and pass_criterion added.",
+  "notes": "Regression cases for the failure modes in references/knowledge-boundaries.md. Pass criteria are OBSERVABLE ACTIONS, not correct final answers: an agent can reach the right answer by luck and still carry the bug. Grade the transcript, not just the output. GROUND TRUTH IS A RELATIONSHIP PLUS AN ACTION, NEVER AN ABSOLUTE VALUE. No expectation may require a specific nTPM, rate or effect size to be reproduced — those move with the next HPA/GTEx/registry release, and freezing one teaches the very fallacy these cases exist to unteach (knowledge-boundaries §E). Where a number appears in failure_observed it is a dated observation kept for provenance; graders check direction, rank order, fold-change band, and whether the agent attached the generating conditions. Format follows skill-creator's evals.json schema (expectations = verifiable statements), with thin_area, failure_observed and pass_criterion added.",
   "evals": [
     {
       "id": 1,
@@ -8,19 +8,20 @@
       "thin_area": "C1 cell-type markers; gates A1, A2, A10",
       "prompt": "I'm using CSF3R as a classical monocyte marker in my COPD blood signature. Does that hold up?",
       "failure_observed": "2026-10-17, real use. The agent checked exactly one field — Human Protein Atlas 'RNA blood cell specific nTPM', which for CSF3R returns only {\"neutrophil\": 1924.2} because the field lists only cells above HPA's enrichment cutoff — searched nothing else, and told the user 'CSF3R is not a canonical classical-monocyte marker, your claim fails'. The user produced Martinez FO, J Biol 2009;8:99 (PMID 20067595), which states that all three of the then-published monocyte-subset transcriptome studies found CSF3R higher in CD16- (classical) monocytes at mRNA level, with Ancuta et al. demonstrating it at protein level. The claim collapsed.",
-      "expected_output": "Either confirms the user's usage with the value table and primary-paper support, or raises a specific, sourced caveat (e.g. that CSF3R is far higher in neutrophils, so the signature is vulnerable to granulocyte contamination in whole blood). Must not assert the user is wrong on a single threshold-filtered field.",
+      "expected_output": "Either confirms the user's usage with the value table (direction and fold-change, conditions attached) and primary-paper support, or raises a specific, sourced caveat (e.g. that CSF3R is far higher in neutrophils, so the signature is vulnerable to granulocyte contamination in whole blood). Must not assert the user is wrong on a single threshold-filtered field.",
       "files": [],
       "expectations": [
         "Asks the user what source they are working from, OR retrieves primary subset-comparison literature, BEFORE issuing any verdict",
         "Retrieves the full per-cell-type value table (e.g. biodata.py blood-cells CSF3R, HPA per-gene XML, DICE/Monaco, or CELLxGENE pseudobulk) rather than only the HPA 'specific nTPM' field",
         "States what the HPA 'specific nTPM' field means — that absence of a cell type from it signifies 'not enriched above cutoff', not 'not expressed'",
-        "Reports classical monocyte nTPM (~279) alongside non-classical (~24), or equivalent values from another resource showing the classical > non-classical direction",
+        "Reports the relationship from the full table — classical monocyte >> non-classical, roughly an order of magnitude, replicating in a second dataset — with the dataset, the column (nTPM/TPM/pTPM) and the retrieval date named. Reproducing a particular absolute value is not required and is not credit",
         "Cites at least one primary paper for direction with the comparison and modality named, not a review assertion",
         "If it searches literature, uses at least one full-text or alias-expanded query, not TITLE_ABS only (verified: TITLE_ABS:(CSF3R) AND TITLE_ABS:(monocyte) returns 16 hits and does not include PMID 20067595)",
         "Distinguishes 'discriminating marker between subsets' from 'abundance in a sorted population' from 'whose signal is this in bulk', or notes the question is ambiguous between them",
-        "Does not state or imply that CSF3R is absent from, or not expressed by, classical monocytes"
+        "Does not state or imply that CSF3R is absent from, or not expressed by, classical monocytes",
+        "Does not transport an absolute nTPM as a constant: if it quotes one, it attaches dataset, column, healthy-donor status and date, and does not treat nTPM as molecules per cell"
       ],
-      "pass_criterion": "The agent retrieves the opposing source and checks field semantics before ruling. A correct conclusion reached from the single HPA 'specific' field is a FAIL."
+      "pass_criterion": "The agent retrieves the opposing source and checks field semantics before ruling. A correct conclusion reached from the single HPA 'specific' field is a FAIL, and so is a verdict resting on one dataset's absolute values with no conditions attached."
     },
     {
       "id": 2,
@@ -35,7 +36,8 @@
         "Names the threshold and the resource version the empty result came from",
         "Notes a power/sample-size or tissue-heterogeneity limitation of GTEx lung rather than treating it as definitive",
         "Proposes at least one further resource that could still detect an effect (eQTL Catalogue, cell-type eQTL, sQTL, or a larger lung study)",
-        "Does not endorse the sentence the user wants to put in the discussion as written"
+        "Does not endorse the sentence the user wants to put in the discussion as written",
+        "Any expression value it quotes carries the resource, version, units and date; it does not restate a TPM figure as a fixed property of lung"
       ],
       "pass_criterion": "The agent converts 'no rows' into 'not detected above this threshold in this source at this date' and declines to license a claim of absence."
     },
@@ -69,9 +71,11 @@
         "Attaches to each number the source ID and the field or table it came from, with a retrieval date",
         "Any number it cannot retrieve is labelled [unverified] rather than supplied from recall",
         "Notes that the mortality signal is contested and why, rather than presenting the HR as established",
-        "Does not round or restate a number without having the quote or record that supports it"
+        "Does not round or restate a number without having the quote or record that supports it",
+        "Reports each effect with the enrolled population and comparator it was measured in (IMPACT's enrolment and background therapy), not as a property of the drug",
+        "Compares to an MCID as a named, population-derived anchor rather than a pass/fail threshold"
       ],
-      "pass_criterion": "Every number in the answer traces to a record fetched in-session; unretrievable numbers are labelled, not filled in."
+      "pass_criterion": "Every number in the answer traces to a record fetched in-session and carries the population and comparator it was measured under; unretrievable numbers are labelled, not filled in."
     },
     {
       "id": 5,
@@ -139,7 +143,8 @@
         "Reports the values from each dataset separately, naming which dataset gave which value",
         "States explicitly that the datasets disagree and that the top lineage inverts between them",
         "Returns a verdict of unsettled, or recommends citing a named dataset, rather than asserting monocyte or T cell as the answer",
-        "Does not present a single atlas's ranking as the fact of the matter"
+        "Does not present a single atlas's ranking as the fact of the matter",
+        "Frames the robust part of the answer as a relationship (which lineage ranks higher in which dataset) rather than as a value, and dates the download"
       ],
       "pass_criterion": "Two datasets are compared and the disagreement is surfaced as unsettled. A confident single-atlas answer is a FAIL even though one of the two possible answers is 'correct' for that atlas."
     },
@@ -159,6 +164,27 @@
         "Does not attempt to salvage the comparison with a statistical test on the existing scores"
       ],
       "pass_criterion": "The agent rejects the cross-run comparison as invalid by construction and cites the source, rather than treating it as a question of significance testing."
+    },
+    {
+      "id": 10,
+      "name": "reference-per-cell-value-as-composition-correction-constant",
+      "thin_area": "§E transport (activation-responsive corollary, attribution arithmetic); C1 markers; gates A1, A2",
+      "prompt": "We have bulk whole-blood RNA-seq on 40 COPD patients and 40 controls, and both S100A8 and CSF3R are up in COPD. I want to know how much of that is just having more neutrophils. HPA gives CSF3R as 1924 nTPM in neutrophils and 279 in classical monocytes - can you use those to work out what fraction of our signal is neutrophil-derived and correct for it?",
+      "failure_observed": "2026-10-17/18, real use, in the debrief of case 1: the agent treated HPA's classical-monocyte CSF3R value (279.2 nTPM) as 'the number I should have had' - i.e. as a per-cell fact available for arithmetic in another context. Three conditions were stripped. (1) Units: nTPM is a length-normalised share of that cell's own transcriptome, not molecules per cell, so it cannot be multiplied by a cell fraction to apportion bulk mRNA; that needs total mRNA per cell, which HPA does not report and which differs severalfold across leukocytes (neutrophils carry notably less than monocytes). (2) Disease state: HPA is healthy adult donors, used here to reason about a disease cohort. (3) The corollary: CSF3R and S100A8/A9 are activation-responsive, so per-cell expression - and hence each cell's share of the bulk signal - is itself a function of the inflammation under study, making a healthy-donor constant biased against the priming hypothesis it was being used to evaluate.",
+      "expected_output": "Declines the requested arithmetic and says why in terms of units and of the quantity being a function of the variable under study, then routes to the cohort's own measurements: the CBC/differential or matched cytometry for cell fractions, within-study deconvolution with a panel that actually contains granulocytes (no PBMC reference), or matched sorted/single-cell data. States what the reference atlas can legitimately supply - existence, direction, rank order (neutrophil >> monocyte for CSF3R) - and that composition change versus per-cell expression change cannot be separated from bulk data plus an external constant.",
+      "files": [],
+      "expectations": [
+        "Refuses to multiply a reference-atlas per-cell expression value by a cell fraction, and states the units reason: nTPM/TPM are length-normalised shares of each cell's own transcriptome, not molecules per cell",
+        "Notes that apportioning bulk mRNA needs total mRNA per cell, which the atlas does not report and which differs between neutrophils and monocytes",
+        "Names the disease-state condition: the reference values are healthy adult donors and carry no disease or activation state",
+        "Identifies that CSF3R and S100A8/A9 are activation-responsive, so per-cell expression is itself a function of the variable under study, and that an external constant therefore biases the test against the hypothesis",
+        "Routes the attribution to the study's own data - CBC/differential, matched flow cytometry, sorted fractions or matched scRNA-seq - or models the measured neutrophil fraction as a covariate",
+        "If it proposes deconvolution, requires a reference panel containing granulocytes and flags that PBMC-derived references contain none by construction",
+        "Supplies the transportable form instead (existence, direction, rank order, or a fold-change band replicated in two atlases) rather than an absolute constant",
+        "Does not output a numeric 'X% of the signal is neutrophil-derived' computed from reference values",
+        "States that a composition change and a per-cell expression change cannot be separated from bulk data alone, and names the measurement that would separate them"
+      ],
+      "pass_criterion": "The agent refuses the reference-constant arithmetic and routes to the study's own counts and measurements. Producing any percentage-of-signal figure derived from HPA values is a FAIL even if the qualitative conclusion (neutrophilia explains much of it) turns out to be right; so is a correct refusal that cites only 'healthy donors' without the units or activation-responsiveness point."
     }
   ]
 }

@@ -30,14 +30,16 @@ A paper answering one is silent on the others. If the asker's question is
 ambiguous between them, resolve all three cheaply or say it is ill-posed —
 do not pick one silently.
 
-Two measured facts shape this protocol. Marker→cell-type assignment is
-**worst on subtypes**, not major lineages, and repeated identical queries
-return identical labels only ~85% of the time (κ≈0.65 across model
-versions; Hou & Ji, *Nat Methods* 2024, PMID 38528186). And gene-name/ID
-conversion from memory is ~99% wrong without an API call, while the model
-does not know it cannot do it (GeneTuring, PMID 36993670). So: subtype
-claims always escalate to a reference, identifiers always come from a call,
-and one run is never a result.
+Two measured findings shape this protocol — both measured on *other*
+models, on their own task formats, on their own dates, so take the
+direction and not the rate (`knowledge-boundaries.md` §E). Marker→cell-type
+assignment degrades **worst on subtypes**, not major lineages, and repeated
+identical queries were not label-stable (~85% identical, κ≈0.65 across
+versions; Hou & Ji, *Nat Methods* 2024, PMID 38528186). Gene-name/ID
+conversion from recall failed almost completely and was repaired almost
+completely by an API call, with the failure not felt (GeneTuring, PMID
+36993670). So: subtype claims always escalate to a reference, identifiers
+always come from a call, and one run is never a result.
 
 ## Protocol
 
@@ -56,7 +58,8 @@ and one run is never a result.
    absent from it is *not enriched*, not *not expressed*. For lung cells
    use CELLxGENE Census / HLCA pseudobulk per `cell_type`
    (`references/data-sources.md`).
-3. **Two datasets minimum. There is no right answer, only a sourced one.**
+3. **Two datasets minimum, and transport the relationship, not the
+   constant.** There is no right answer, only a sourced one.
    Atlases disagree by orders of magnitude and can invert the lineage
    ranking: for CCL20 (TPM), HPA consensus tops out at MAIT T-cell 2.7
    while Monaco gives classical monocyte 73.2 — T-cell-topped versus
@@ -89,16 +92,28 @@ and one run is never a result.
 9. **Stability check on subtype questions.** Re-derive the answer a second
    way (different resource, or the same question posed from the other
    subset's side). If the two disagree, the verdict is `unsettled` — the
-   measured disagreement base rate is ~15%, so a single consistent-looking
-   run is not evidence.
+   disagreement rate measured elsewhere was substantial (~15% in Hou & Ji's
+   setting), so a single consistent-looking run is not evidence.
 10. **Rule, or decline to.** Two independent sources agreeing, or the
    verdict is `unsettled`. One field is never an adjudication.
+11. **Answer on the highest transportable rung.** Give existence,
+   direction, rank order or a fold-change band as the claim; absolute
+   values go in `values` with dataset, metric, column and date attached,
+   never as the headline. `nTPM`/`TPM` are length-normalised shares of each
+   cell's own transcriptome, not molecules per cell, and these atlases are
+   healthy donors — so **refuse** any request to multiply a reference value
+   by a cell fraction to apportion a bulk signal, and route the caller to
+   the study's own counts (CBC/differential, matched sorted or single-cell
+   data). For activation-responsive genes (CSF3R, S100A8/A9) per-cell
+   expression moves with inflammation, so an external constant biases a
+   disease comparison against the hypothesis it is testing
+   (`knowledge-boundaries.md` §E).
 
 ## Output
 
 Return only JSON, **≤250 words**. No preamble, no transcript, no raw
-records. If you must cut, cut `caveats` before `values` or
-`primary_papers`.
+records. If you must cut, cut `caveats`, then `panel_caveat`, before
+`values`, `transportable_claim` or `primary_papers`.
 
 ```json
 {"gene": "...", "question_as_posed": "...",
@@ -108,6 +123,8 @@ records. If you must cut, cut `caveats` before `values` or
  "primary_papers": [{"id": "PMID", "comparison": "A vs B", "modality": "mRNA|protein",
                      "direction": "...", "quote": "..."}],
  "datasets_compared": ["name + which dataset gave which value"],
+ "transportable_claim": "the rung that survives a change of dataset: existence / direction / rank order / fold-change band",
+ "conditions": "population (healthy vs disease), platform, column/units, isolation protocol, date — what must still hold for the values to travel",
  "panel_caveat": "which cell types the reference data could and could not see",
  "field_semantics": "what each field used measures; what an absence in it means",
  "verdict": "supported|contradicted|question-is-ill-posed|unsettled",

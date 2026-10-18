@@ -11,25 +11,45 @@ Confidence: [H] verified primary/official source; [M] secondary or trade
 press; [L] unverified. "⚑" marks a candidate unmade connection worth
 probing.
 
+**Conditions attached, or the number does not travel.** Every effect size
+here is conditional on its enrolled population (smoking status, BEC
+stratum, exacerbation history), its background therapy and its era's event
+rate — a property of that trial, not of the drug. Dating the file is
+necessary and not sufficient, because the body reads as flat present tense.
+Where the condition is known it is in the line; `[cond?]` marks a number
+whose enrolment and background therapy have **not** been checked here —
+fetch them from the registry (`biodata.py trials`, CT.gov
+`eligibilityModule`) before reusing it. Prevalence percentages are
+threshold- and definition-dependent; transport the ordinal statement, not
+the constant. See `knowledge-boundaries.md` §E for the ladder
+(existence → direction → rank order → fold-change → ratio → absolute).
+
 ## 0. What changed most in 2025-2026
 
 - **IL-33 is the first non-T2 biologic class to work.** Tozorakimab (AZ;
   blocks reduced IL-33→ST2 *and* oxidised IL-33→RAGE/EGFR): OBERON/TITANIA
   (Sciurba NEJM 2026, doi:10.1056/NEJMoa2606998; ERS 8 Sep 2026), 300 mg
-  q4w, former smokers RR 0.71 (0.57-0.88) and 0.66 (0.55-0.80); overall ~0.70;
+  q4w, **in the pre-specified former-smoker subgroups** RR 0.71 (0.57-0.88)
+  and 0.66 (0.55-0.80); overall ~0.70 — on background inhaled therapy, in a
+  COVID-era event-rate environment, with that trial's eosinophil
+  distribution; the subgroup and the background are conditions of the
+  number, not properties of the drug;
   effect across all eosinophil strata incl. <150, and in current smokers;
   fewer CT mucus plugs. MIRANDA (q2w) positive topline Apr 2026. BLA
   priority review, decision ~Q1 2027. [H trial / M regulatory]
 - **Rest of the IL-33/ST2 class split.** Itepekimab: AERIFY-1 −27%, AERIFY-2
-  ~−2% (May 2025); **discontinued in COPD** (Sanofi Q2 2026). Astegolimab
-  (anti-ST2): ALIENTO/ARNASA (Papi Lancet 2026), RR ~0.82-0.93, ARNASA primary
-  missed. [H] ⚑ *Why does tozorakimab win?* Dual ST2 + RAGE/EGFR blockade vs
+  ~−2% (May 2025) `[cond?]`; **discontinued in COPD** (Sanofi Q2 2026).
+  Astegolimab (anti-ST2): ALIENTO/ARNASA (Papi Lancet 2026), RR ~0.82-0.93
+  `[cond?]`, ARNASA primary missed. [H] Cross-trial comparison of these
+  numbers assumes comparable enrolment and event rates — unverified here, so
+  compare *directions*, not magnitudes. ⚑ *Why does tozorakimab win?* Dual ST2 + RAGE/EGFR blockade vs
   low COVID-era event rates vs former-smoker biology.
 - **T2 biologics approved for eosinophilic COPD.** Dupilumab BOREAS/NOTUS
   −30/−34%, FEV1 +83-160 mL; EU Jul 2024, FDA 27 Sep 2024 (BEC ≥300).
   Mepolizumab MATINEE −21% (−35% ED/hospital); FDA 22 May 2025, label BEC
-  ≥150 though trial enrolled ≥300. Benralizumab GALATHEA/TERRANOVA (2019) and
-  **RESOLUTE (2025) all failed.** [H] ⚑ Eosinophil *depletion* is not the
+  ≥150 though trial enrolled ≥300 — the label's threshold is not the one the
+  number was measured under. Benralizumab GALATHEA/TERRANOVA (2019) and
+  **RESOLUTE (2025) all failed** `[cond?]`. [H] ⚑ Eosinophil *depletion* is not the
   mechanism; IL-5/IL-4Rα signalling and IL-13 effects on mucus/smooth muscle
   may be.
 - **PDE:** ensifentrine (PDE3/4) FDA Jun 2024; Merck acquired Verona (~$10B,
@@ -60,7 +80,8 @@ probing.
 - **Pre-COPD** (Han AJRCCM 2021). RETHINC (Han NEJM 2022): LABA/LAMA did
   **not** help symptomatic smokers with preserved spirometry. No proven
   therapy. [H]
-- **PRISm** (ratio ≥0.70, FEV1 <80%): 5-20%; excess CV and all-cause
+- **PRISm** (ratio ≥0.70, FEV1 <80%): 5-20% — range is across cohorts with
+  different age and smoking mixes, and depends on the reference equation; excess CV and all-cause
   mortality; unstable (Rotterdam: ~49% to COPD, 16% normalise); enriched for
   obesity/diabetes/restriction. [H]
 - **Exacerbations:** Rome proposal (Celli AJRCCM 2021) objective severity.
@@ -83,7 +104,12 @@ probing.
 
 ## 2. Pathobiology
 
-**Type-2.** ~20-40% eosinophilic. Airway IL-13 signature (POSTN, CLCA1,
+**Type-2.** Eosinophilic in ~20-40% of patients — **a threshold, not a
+prevalence**: the figure moves with the BEC cut (≥150 vs ≥300 cells/µL),
+the occasion measured and the cohort, and BEC is unstable within person
+(GOLD 2026 advises repeating 2-3x), so this file is internally inconsistent
+if the percentage is quoted as a constant. Transportable claim: *a
+substantial minority, rising as the cut falls.* Airway IL-13 signature (POSTN, CLCA1,
 SERPINB2; Christenson AJRCCM 2015). BEC dynamic and imperfect.
 
 **IL-33 / ST2 / RAGE.** Epithelial alarmin; COPD basal progenitors expand
@@ -123,8 +149,12 @@ AT2 cells are a genetic-susceptibility hub across respiratory diseases [M].
 **Aging.** Senescence (p16/p21, SASP), telomeres (*TERT* emphysema),
 PINK1 mitophagy → necroptosis (Mizumura JCI 2014), ferroptosis via NCOA4/GPX4
 (Yoshida Nat Commun 2019), iron (*IREB2*, Cloonan Nat Med 2016), NAD+/
-sirtuins. Senolytics reduce SASP ex vivo/mice; **no human COPD senolytic
-trial results.** Proteomic organ-aging clocks (Nat Med 2026) untested as
+sirtuins. Senolytics reduce SASP ex vivo/mice; **no COPD senolytic trial with posted
+results recorded in ClinicalTrials.gov as of 2026-10-18**: two quercetin
+trials are registered (NCT03989271 Ph1/2, NCT06003270 Ph2) with status
+"unknown" and no results posted; `--intr dasatinib` and `--intr fisetin`
+return 0 studies (queries `trials --cond COPD --intr <drug>`). Absence of a
+posted readout is not absence of a trial (gate A3). Proteomic organ-aging clocks (Nat Med 2026) untested as
 COPD endpoints. [H/M]
 
 **Adaptive immunity.** B-cell follicles increase with stage (Hogg NEJM
@@ -158,7 +188,10 @@ shared COPD→cancer field effect.
 **Sex.** Women: airway-predominant, higher risk per pack-year, severe early-
 onset; mechanism unresolved.
 
-**Non-smoking COPD** (~25-45% globally): biomass, PM2.5, occupation, post-TB,
+**Non-smoking COPD** (reported ~25-45% globally; varies with region, case
+definition and the spirometric criterion — transport "a large minority,
+highest where biomass exposure is common", not the percentage): biomass,
+PM2.5, occupation, post-TB,
 prematurity/BPD, asthma, HIV. Biomass COPD: airway-predominant, less
 emphysema, more eosinophilia. Trials exclude these patients.
 
@@ -172,8 +205,9 @@ emphysema, more eosinophilia. Trials exclude these patients.
   direction in IPF), *MMP12*, *SERPINA1* (Z, S), *TNS1*, *HTR4*, *ADGRG6*,
   *THSD4*, *TGFB2*, *RIN3*, *DDT/MIF*, *CYP2A6*, *SFTPD*. Many act in
   development (etiotype D).
-- PRS: top vs bottom decile OR ~4-7 (Moll Lancet Respir Med 2020); not in
-  clinic.
+- PRS: top vs bottom decile OR ~4-7 (Moll Lancet Respir Med 2020) — that
+  PRS, those cohorts, largely European ancestry, that case mix; decile
+  contrasts do not transport across scores or populations. Not in clinic.
 - Rare: SERPINA1 ZZ/MZ; TERT/TERC.
 - MR: low sRAGE causal for emphysema [M]; proteomic MR hits incl. MMP12,
   IL-6R [M]; GLP-1 and IL-1 MR inconsistent [L].
@@ -203,8 +237,8 @@ emphysema, more eosinophilia. Trials exclude these patients.
 | Azithromycin | Albert 2011, BACE | Works, mostly non-eos former smokers | H |
 | Statins | STATCOPE | Negative | H |
 | Metformin | Small RCTs negative | Undertested | M |
-| GLP-1 RA | Observational ~20% fewer exacerbations | **No RCT** ⚑ | H |
-| Senolytics / NAD+ | Preclinical | — | H |
+| GLP-1 RA | Observational ~20% fewer exacerbations `[cond?]` | **No outcome RCT with posted results in CT.gov as of 2026-10-18**: liraglutide NCT03466021 (Ph4, completed, no results posted), semaglutide NCT05746039 (Ph1/2 feasibility, recruiting), tirzepatide NCT07747805 (Ph2, not yet recruiting) ⚑ | H |
+| Senolytics / NAD+ | Quercetin NCT03989271, NCT06003270 | No posted results as of 2026-10-18 | H |
 | Regenerative | Retinoids, MSCs failed; P63+ progenitor Ph1 | Stalled | M/L |
 | AAT augmentation | RAPID slowed density loss | SPARTA unknown | L |
 | Efdoralprin alfa (AAT-Fc) | ElevAATe Ph2 | Superior functional AAT | H |
@@ -214,8 +248,12 @@ emphysema, more eosinophilia. Trials exclude these patients.
 | ARO-RAGE (inh. siRNA) | Ph1/2a | Target engagement | H/L |
 
 **Meta-lessons:** COVID-era trials under-ran event rates; former-smoker
-splits matter (smoking suppresses ST2 / oxidises IL-33); nothing modifies
-FEV1 decline or emphysema progression; biologic effects cluster at 20-35%.
+splits matter (smoking suppresses ST2 / oxidises IL-33); **no agent has
+been shown in a published RCT to modify FEV1 decline or emphysema
+progression as of this snapshot** (2026-10-17 — an absence of readouts, not
+a proof of futility); biologic effects cluster at 20-35% relative reduction
+*in these trials' event-rate environment*, which is part of why they
+cluster.
 
 ## 5. Cohorts and what they share
 
@@ -236,7 +274,9 @@ FEV1 decline or emphysema progression; biologic effects cluster at 20-35%.
 ## 6. Open problems (ranked) — where new connections matter
 
 1. **Susceptibility:** why only ~20-30% of heavy smokers get COPD, and why
-   ~25-45% of patients never smoked. Gene × exposure × development.
+   ~25-45% of patients never smoked (both figures are cohort- and
+   case-definition-dependent; the robust claim is "a minority of smokers, a
+   large minority of patients"). Gene × exposure × development.
 2. **No disease-modifying therapy;** no feasible endpoint (PRM-fSAD, CT
    density, mucus score, proteomic/aging clocks?).
 3. **Regeneration failure:** progenitor exhaustion, niche signals (WNT, FGF,
@@ -263,7 +303,8 @@ FEV1 decline or emphysema progression; biologic effects cluster at 20-35%.
 16. **Accelerated aging** hypothesis; untested geroprotectors; clocks as
     surrogates.
 17. **Metabolic repurposing** (GLP-1 RA, SGLT2i): weight/hyperinflation vs
-    direct mechanism; no RCT.
+    direct mechanism; no outcome RCT with posted results as of 2026-10-18
+    (registry detail in §4).
 18. **Microbiome causality;** macrolide-responder signature.
 19. **AATD editing:** does AAT >11 µM halt density loss? MZ population.
 20. **Trial methodology:** post-COVID low event rates; new composites; GOLD

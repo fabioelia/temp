@@ -42,6 +42,15 @@ Contact params use `BIODATA_EMAIL` (default placeholder `you@example.org`).
 
 ## Status table
 
+**Read the Status column as a dated observation, not a property.** `OK`
+means one successful call from *this container's network path* on
+2026-10-17/18, through the agent proxy, unauthenticated unless noted. The
+same is true of every byte size, record count and row count in this file
+(e.g. 4.97 MB, 76,296 retraction records, 320 NPNT eQTLs): single
+observations that move with the next release, your IP's rate-limit state
+and the proxy. Re-run before quoting one, and date what you quote
+(`knowledge-boundaries.md` §E, gate A3).
+
 | Source | Use | Base URL | Auth | Status |
 |---|---|---|---|---|
 | NCBI E-utilities | PubMed, PMC XML, GEO (`db=gds`) | eutils.ncbi.nlm.nih.gov/entrez/eutils/ | optional key | OK |
@@ -203,9 +212,14 @@ with cellxgene_census.open_soma(census_version="2025-11-08") as c:   # pin versi
 ```
 
 **Per-immune-cell expression: there is no single authoritative value.**
-All four download at 200 (verified 2026-10-18); `rna_blood_cell*.tsv.zip`
-is 404 — the live names use `immune_cell`. Each has `TPM`, `pTPM` and
-`nTPM` columns, and the column choice changes the number.
+All four downloaded at 200 on 2026-10-18; `rna_blood_cell*.tsv.zip` was 404
+— the live names use `immune_cell`. Each has `TPM`, `pTPM` and `nTPM`
+columns, and the column choice changes the number. All four are **healthy
+adult donors**, each with its own sorting protocol: they carry no disease
+or activation state, and `nTPM`/`TPM` are length-normalised *shares of a
+cell's own transcriptome*, never molecules per cell — so they cannot be
+multiplied by a cell fraction to apportion a bulk signal
+(`knowledge-boundaries.md` §E).
 
 | File (`proteinatlas.org/download/tsv/`) | Size | Content |
 |---|---|---|

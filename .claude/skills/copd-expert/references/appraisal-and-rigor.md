@@ -102,9 +102,13 @@ before leaning on them.
   restriction. Smoking variants are classic pleiotropy violators. Require
   MR-Egger, weighted median, MR-PRESSO, colocalisation, reverse MR, F-stat,
   sample-overlap check. Report to STROBE-MR.
-- **B20 Clinical vs statistical significance.** MCIDs: trough FEV1 ~100 mL;
-  SGRQ 4 units; CAT 2 points; 6MWD ~26-30 m. Report absolute differences,
-  responder proportions, NNT.
+- **B20 Clinical vs statistical significance.** MCID anchors: trough FEV1
+  ~100 mL (argued to 140); SGRQ 4 units; CAT 2 points; 6MWD ~26-30 m. Each
+  is a population-derived estimate with a method (anchor- vs
+  distribution-based) and a severity stratum, not a constant of nature —
+  name the anchor you used and use it as an order of magnitude, never as a
+  pass/fail line (SKILL.md rule 6; §E of knowledge-boundaries). Report
+  absolute differences, responder proportions, NNT.
 
 ## C. Translational heuristics
 
@@ -192,6 +196,18 @@ interpretation.
     a paper answering one is silent on the other. Name which you are asking,
     and check which cells the reference panel actually contained — markers
     derived against a PBMC atlas cannot speak to granulocytes.
+17. **Transporting a constant.** Reusing an absolute value — a reference
+    nTPM, an MCID, a prevalence, a healthy-donor cell fraction, a
+    pre-COVID event rate — in a context that did not generate it, so its
+    population, platform, units and date ride along as hidden assumptions.
+    Worst case: the quantity is itself a function of the variable under
+    study (activation-responsive expression, BEC), where an external
+    constant assumes away the hypothesis. Carry the ordinal relationship
+    and get attribution counts from the study's own data; ladder and
+    templates in [knowledge-boundaries.md](knowledge-boundaries.md) §E.
+18. **Undated absence.** "No trial has", "no model exists", "the first to"
+    written in flat present tense. Write "not recorded in <source> as of
+    <date>, query <string>" (gate A3).
 
 ## F. Five-minute paper read
 
