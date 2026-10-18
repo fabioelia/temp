@@ -79,3 +79,5 @@ review will pick the first shot. Note: the owner's screenshots showed the main a
 Reuters, Seeking Alpha, BLS and others block this cloud IP), generic RSS (Fed press feed tested), and SEC EDGAR commands (recent filings with 8-K item meanings, Form 4 insider
 buys/sells with 10b5-1 flags, full-text search). SEC refuses anonymous automated requests; its policy requires a contact email in the User-Agent, so the SEC commands wait for one.
 Added a 09:13 ET pre-open news run (no agents, proposals only, never confirms). Agent briefs now require the toolkit; the catalyst agent must check filings and insider activity.
+
+**SEC access verified (2026-10-18).** Contact email set outside the repo (container home file; the environment variable `SEC_CONTACT_EMAIL` is the durable home for it). Live test: NVDA filings, Form 4 insider sales (director sales of ~$298M on 9/18, a 10b5-1 plan sale by the general counsel), EDGAR full-text search for "CoreWeave" 8-Ks. Fixed a parser bug that read Form 4 prices as $0 when footnotes sit beside the value.

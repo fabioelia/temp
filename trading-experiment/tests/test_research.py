@@ -2,6 +2,7 @@
 import os
 import subprocess
 import sys
+import tempfile
 import unittest
 from datetime import date
 from pathlib import Path
@@ -15,7 +16,7 @@ FORM4 = """<ownershipDocument><aff10b5One>1</aff10b5One>
 <nonDerivativeTable>
 <nonDerivativeTransaction><transactionDate><value>2026-10-10</value></transactionDate>
 <transactionCoding><transactionFormType>4</transactionFormType><transactionCode>S</transactionCode></transactionCoding>
-<transactionAmounts><transactionShares><value>75000</value></transactionShares><transactionPricePerShare><value>212.5</value></transactionPricePerShare>
+<transactionAmounts><transactionShares><value>75000</value></transactionShares><transactionPricePerShare><value>212.5</value><footnoteId id="F1"/></transactionPricePerShare>
 <transactionAcquiredDisposedCode><value>D</value></transactionAcquiredDisposedCode></transactionAmounts></nonDerivativeTransaction>
 <nonDerivativeTransaction><transactionDate><value>2026-10-11</value></transactionDate>
 <transactionCoding><transactionCode>P</transactionCode></transactionCoding>
@@ -62,6 +63,7 @@ class Research(unittest.TestCase):
 
     def test_sec_refuses_without_contact_email(self):
         env = {k: v for k, v in os.environ.items() if k != "SEC_CONTACT_EMAIL"}
+        env["HOME"] = tempfile.mkdtemp()  # no ~/.config/trading-experiment/sec_contact_email here
         r = subprocess.run([sys.executable, "research.py", "sec", "filings", "NVDA"], cwd=Path(research.__file__).parent,
                            env=env, capture_output=True, text=True)
         if research.CFG.get("research", {}).get("sec_contact_email"):
