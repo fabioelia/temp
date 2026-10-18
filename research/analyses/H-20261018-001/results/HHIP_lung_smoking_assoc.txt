@@ -1,0 +1,19 @@
+['vital capacity'] |p= 2e-47 |beta= - |OR= None | rs1492820 ? | GCST90270083 PMID 36641522
+['peak expiratory flow'] |p= 5e-40 |beta= 0.0384 unit increase |OR= None | rs2353940 T | GCST007430 PMID 30804560
+['forced expiratory volume'] |p= 2e-39 |beta= - |OR= None | rs6854783 ? | GCST90270081 PMID 36641522
+['forced expiratory volume'] |p= 2e-24 |beta= 0.0275 unit increase |OR= None | rs2353940 T | GCST007432 PMID 30804560
+['vital capacity'] |p= 1e-22 |beta= - |OR= None | rs75686861 ? | GCST007081 PMID 30595370
+['FEV/FVC ratio'] |p= 5e-19 |beta= 0.0246 unit increase |OR= None | rs2353940 T | GCST007431 PMID 30804560
+['vital capacity'] |p= 6e-19 |beta= 8.89 z score increase |OR= None | rs11727676 T | GCST90244093 PMID 36914875
+['vital capacity'] |p= 2e-18 |beta= 0.028798595 unit increase |OR= None | rs11727676 C | GCST90468167 PMID 39789286
+['FEV/FVC ratio'] |p= 3e-12 |beta= 6.959 z score decrease |OR= None | rs1355601 A | GCST90244094 PMID 36914875
+['forced expiratory volume'] |p= 2e-10 |beta= 0.0162566 unit decrease |OR= None | rs62343067 G | GCST90565844 PMID 40374629
+['vital capacity'] |p= 5e-10 |beta= 0.0169 unit increase |OR= None | rs2353940 T | GCST007429 PMID 30804560
+['25-hydroxyvitamin D3 measurement', 'forced expiratory volume'] |p= 2e-08 |beta= - |OR= None | rs11727676 C | GCST90590341 PMID 38484975
+['forced expiratory volume'] |p= 2e-08 |beta= 0.0276743 unit decrease |OR= None | rs71614518 A | GCST90565844 PMID 40374629
+['BMI-adjusted waist circumference', 'smoking behavior'] |p= 2e-08 |beta= 0.0375 unit decrease |OR= None | rs1812175 A | GCST004500 PMID 28443625
+['irritable bowel syndrome', 'FEV/FVC ratio'] |p= 3.0000000000000004e-08 |beta= - |OR= None | rs113268581 ? | GCST90454182 PMID 38102678
+['forced expiratory volume'] |p= 3.0000000000000004e-08 |beta= 0.0237089 unit decrease |OR= None | rs114633728 T | GCST90565844 PMID 40374629
+['BMI-adjusted waist circumference', 'smoking behavior'] |p= 4e-07 |beta= 0.024 unit decrease |OR= None | rs1812175 A | GCST004500 PMID 28443625
+['BMI-adjusted waist circumference', 'smoking behavior'] |p= 5e-07 |beta= - |OR= None | rs1812175 A | GCST004501 PMID 28443625
+['BMI-adjusted waist circumference', 'smoking behavior'] |p= 4e-06 |beta= - |OR= None | rs1812175 A | GCST004501 PMID 28443625
