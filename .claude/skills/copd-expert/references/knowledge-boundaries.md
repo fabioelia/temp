@@ -154,10 +154,31 @@ not the direction.
 
 **Units are a condition, not a label.** `nTPM`/`pTPM`/`TPM` are
 length-normalised *shares of that cell's own transcriptome* — not molecules
-per cell. Leukocyte types differ severalfold in total mRNA per cell
-(neutrophils carry notably less than monocytes), so a per-cell share may
-**not** be multiplied by a cell fraction to apportion a bulk signal; that
-arithmetic needs total mRNA per cell, which none of these atlases report.
+per cell. So a per-cell share may **not** be multiplied by a cell fraction
+to apportion a bulk signal.
+
+The best-sourced reason is **transcriptome heterogeneity, not an unmeasured
+mass constant**. Monaco (PMID 30726743) reports that low-density neutrophils
+"have a few highly expressed genes that crowd the total mRNA pool", and that
+TMM and housekeeping normalisation "may overestimate the mRNA scaling
+factor" for them. A top-heavy transcriptome distorts every share computed
+within it, which breaks the arithmetic without needing any factor — and so,
+unlike a factor, it cannot be applied in the wrong direction.
+
+Do **not** reach for a per-cell mass correction instead: **no per-cell mRNA
+mass ratio for any leukocyte pair was retrievable** (not recorded in Europe
+PMC as of 2026-10-18; queries `"RNA per neutrophil"` 0 hits, `("pg total
+RNA" OR "pg of RNA") AND (neutrophil AND monocyte AND lymphocyte)` 22 hits
+with none a per-cell measurement). Any numeric factor is `[unverified]`.
+What Monaco does report is *total RNA* yield per sorted cell — high for
+plasmablasts, DCs and monocytes; low for LD granulocytes, progenitors and
+CD4 T_TE. Read that as **lower than monocytes only**: it is subset-dependent,
+not lineage-dependent, since plasmablasts are the highest-RNA cell measured
+and a CD4 subset sits in the low group. Conditions on even that: total RNA
+rather than mRNA, *low-density* granulocytes from the PBMC fraction rather
+than normal-density circulating neutrophils, n=4 healthy donors, RiboGreen
+linear range 1-200 ng — **and the authors disavow their own estimate**
+("it is preferable not to use the total RNA yield estimates").
 All four atlases are **healthy adult donors**, sorted by each study's own
 protocol, so they carry no disease state and no activation state. Any "what
 fraction of this bulk signal comes from cell X" question is answered from

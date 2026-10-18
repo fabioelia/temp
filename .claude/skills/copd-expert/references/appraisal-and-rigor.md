@@ -190,13 +190,22 @@ interpretation.
     question, and the assertion gate are in
     [knowledge-boundaries.md](knowledge-boundaries.md) — consult it
     *before* answering, not after being contradicted.
-16. **Confusing marker specificity with signal attribution.** "Does gene X
+16. **Using a number past the limits its own authors set on it.** A value
+    carries the conditions the people who measured it attached. Before
+    reusing one, check whether the source endorses that use. Real example:
+    Monaco's per-cell RNA yield estimate was leaned on here as a correction
+    factor while the paper itself says "it is preferable not to use the
+    total RNA yield estimates", giving two reasons (total RNA not mRNA, and
+    accuracy only within a 1-200 ng range). A caveat in the source is a
+    condition on the number, and stripping it is the same fallacy as
+    stripping the population or the units.
+17. **Confusing marker specificity with signal attribution.** "Does gene X
     distinguish cell A from cell B in this panel" and "whose mRNA is gene X
     in this bulk tissue" are different questions with different answers, and
     a paper answering one is silent on the other. Name which you are asking,
     and check which cells the reference panel actually contained — markers
     derived against a PBMC atlas cannot speak to granulocytes.
-17. **Transporting a constant.** Reusing an absolute value — a reference
+18. **Transporting a constant.** Reusing an absolute value — a reference
     nTPM, an MCID, a prevalence, a healthy-donor cell fraction, a
     pre-COVID event rate — in a context that did not generate it, so its
     population, platform, units and date ride along as hidden assumptions.
@@ -205,7 +214,7 @@ interpretation.
     constant assumes away the hypothesis. Carry the ordinal relationship
     and get attribution counts from the study's own data; ladder and
     templates in [knowledge-boundaries.md](knowledge-boundaries.md) §E.
-18. **Undated absence.** "No trial has", "no model exists", "the first to"
+19. **Undated absence.** "No trial has", "no model exists", "the first to"
     written in flat present tense. Write "not recorded in <source> as of
     <date>, query <string>" (gate A3).
 
