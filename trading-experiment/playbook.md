@@ -45,6 +45,13 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 **Press bearish** (QQQ/SMH puts): S&P closes below 7,428; VIX closes above 28; 10y above 5.25%; HY OAS above 346bp; an Oracle junk cut; a surprise hike on 10/28.
 **Oil** (XLE calls or puts): Hormuz escalation versus a deal; WTI settling above $105 or below $94.
 
+## SEC filings as an input (evidence grades as in the historian memo)
+* **Insider open-market purchases** clustered across several officers (not 10b5-1 plan sales) predict modest outperformance over months [B]; useful as a tie-breaker for direction,
+  not a timing signal for a two-week option.
+* **8-K item 2.02 / 7.01** sets the real catalyst dates and the guidance the market reacts to [A, mechanically].
+* **Debt and capex disclosures** (8-K 2.03, 10-Q notes) test the AI-credit and AI-capex theses directly [B].
+* **Offerings and lockups** (S-1, 424B) add share supply; avoid calls into a known overhang [B-].
+
 ## Hypotheses to test during the month
 1. Does buying after a confirming earnings reaction beat holding through the print, net of the volatility collapse?
 2. How much of each shot's result came from direction versus implied-volatility changes? Log the IV at entry and exit.
@@ -53,4 +60,5 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 
 ## Changelog
 * 2026-10-17: v1 written (stocks/ETFs, energy core).
+* 2026-10-18: research toolkit (headlines, full text, Fed/EIA RSS, SEC filings and insider trades) and a 09:13 ET pre-open news run added at the owner's request.
 * 2026-10-17: v2. Owner chose options with the $500 loss budget; stock buys off; $1,500 cash floor enforced in code; XLE/GUSH proposals cancelled.

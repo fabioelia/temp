@@ -29,11 +29,13 @@ An AI portfolio manager (Claude) runs the account. Every trading day after the c
 | `research/<date>/` | Each agent's memo, one folder per day |
 | `data/` | `ledger.csv`, `orders.csv`, `marks.csv`, `equity.csv`, `exits.json`, `dashboard.json`, `export/` |
 | `tracker.py` | The rules engine and reporter (Python stdlib only) |
+| `research.py` | Headlines (Google News RSS), full-text reading, RSS feeds, SEC EDGAR filings and insider trades |
 | `quotes.py` | Cross-checked quote layer (Yahoo, Stooq, Finnhub, Alpaca); fails closed. Setup: `QUOTES_SETUP.md` |
 | `DAILY_ROUTINE.md` | The procedure the scheduled run follows |
 
 ## Schedule
-Three durable scheduled tasks wake the portfolio manager (times are New York time, so the Nov 1 clock change is handled):
+Four durable scheduled tasks wake the portfolio manager (times are New York time, so the Nov 1 clock change is handled):
+* **Weekdays 9:13 AM ET (pre-open news)**: overnight and pre-market news and new SEC filings; adjusts proposals only, never trades.
 * **Weekdays 2:43 PM ET (pre-close decision)**: re-evaluate every position and every proposal with fresh information; confirm, cancel or add orders for today's close.
 * **Weekdays 5:13 PM ET (post-close)**: book the day, fire the research agents, write the next session's *proposals*, journal, refresh the dashboard, commit and push.
 * **Sundays 6:22 PM ET**: weekly review with all six personas, post-mortem, playbook revision, re-plan Monday.

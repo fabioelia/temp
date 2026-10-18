@@ -74,3 +74,8 @@ game caps the chance of $4,000 at about 1 in 5; stocks/ETFs only ~1-3%; buying o
 (41 tests): options in the tracker and the real-money gate (OCC symbols, whole contracts, 100x multiplier, fills at the decision-time bid/ask from Cboe's delayed chain, $0.05/contract
 fees), a $1,500 cash floor that premium can never touch, refusal of stock buys, auto-sale one session before expiry. O001/O002 (XLE/GUSH) cancelled. Playbook v2 written. The Sunday
 review will pick the first shot. Note: the owner's screenshots showed the main account (options Level 2, margin investing off); the agent account needs its own options approval.
+
+**Research upgrades (owner asked, 2026-10-18).** Added `research.py`: Google News RSS headlines, full-text reading (works for Yahoo Finance articles, PR Newswire, Fed, EIA, SEC; AP, CNBC,
+Reuters, Seeking Alpha, BLS and others block this cloud IP), generic RSS (Fed press feed tested), and SEC EDGAR commands (recent filings with 8-K item meanings, Form 4 insider
+buys/sells with 10b5-1 flags, full-text search). SEC refuses anonymous automated requests; its policy requires a contact email in the User-Agent, so the SEC commands wait for one.
+Added a 09:13 ET pre-open news run (no agents, proposals only, never confirms). Agent briefs now require the toolkit; the catalyst agent must check filings and insider activity.

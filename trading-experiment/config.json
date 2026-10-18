@@ -98,5 +98,8 @@
     "option_fee_per_contract": 0.05,
     "option_auto_sell_haircut": 0.1,
     "note": "2026-10-17 owner chose 'Options with the $500 budget': buy calls/puts only, total premium may only use cash above starting_cash - loss_limit ($1,500 floor), so every open option can expire worthless and the loss still stops at $500. Stock buys off; options closed at least a session before expiry."
+  },
+  "research": {
+    "sec_contact_email": ""
   }
 }
