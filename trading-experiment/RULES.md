@@ -15,9 +15,14 @@ crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` fi
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
 
-## Universe
-US-listed stocks and ETFs (including leveraged and inverse ETFs), fractional shares allowed. Minimum order $1. A name needs a verifiable official close each
-day or it cannot be traded.
+## Strategy and universe (changed 2026-10-17 by the owner: "Options with the $500 budget")
+* **Options only, buying only.** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
+  exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
+* **The loss budget is the only money at risk.** Premium may only be paid from cash above a **$1,500 floor** (starting $2,000 minus the $500 loss limit). Every open option can
+  expire worthless and the account still ends at or above $1,500. Profits raise the budget (they lift cash above the floor), so winners can be rolled into the next bet.
+* The other $1,500 stays in cash. Doubling needs the budget to grow about 5x; the most likely outcome is that the $500 is lost and the experiment stops.
+* Whole contracts only (1 contract = 100 shares). A ticker needs a quote at decision time; options fill at the bid/ask stamped when the order is confirmed (Cboe delayed chain in paper,
+  the broker's live quote with a limit order in live mode). Option marks are single-source (Cboe), flagged as such.
 
 ## Execution protocol (no look-ahead, nothing locked in)
 1. Orders queued by the evening and Sunday runs are **proposals**. They are not binding and fill nothing by themselves (`tracker.py order add ...`, each with a written thesis).
@@ -46,6 +51,7 @@ day or it cannot be traded.
 | FINRA TAF | $0.000195 per share sold, max $9.79 | Waived on sales of 50 shares or less |
 | CAT fee | ~$0.000001 per share | Immaterial; Robinhood reports it stopped passing CAT through |
 | **Slippage** | Tier A 5 bps (mega-cap/liquid ETF), B 15 bps (mid-cap), C 30 bps (small/volatile), D 60 bps (stressed/illiquid) | Buys fill above the close, sells below it. **This is the real cost.** |
+| Options | $0.05 per contract each way (regulatory/clearing, conservative) + SEC fee on sales; fills at the ask (buy) / bid (sell), so the spread is paid in full | Tier `O` |
 | Memo: tax | 24% federal on gains | Shown as an after-tax memo line, not deducted from equity |
 
 Fee numbers come from search extracts of the Robinhood fee page and SEC/FINRA notices (see the risk memo). Regulatory fees are cents per trade at this size.

@@ -17,6 +17,7 @@ import csv
 import json
 import math
 import os
+import re
 import sys
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
@@ -37,7 +38,8 @@ DASH_JSON = DATA / "dashboard.json"
 LEDGER_COLS = ["id", "date", "ticker", "side", "qty", "close_price", "fill_price", "gross", "fees",
                "cash_delta", "tier", "slip_bps", "order_id", "thesis", "price_source"]
 ORDER_COLS = ["id", "created", "ticker", "side", "size_type", "size_value", "tier", "max_price",
-              "min_price", "stop", "target", "stop_pct", "target_pct", "priority", "gtd", "status", "filled_date", "reason", "thesis", "auto", "confirmed_on", "confirmed_at"]
+              "min_price", "stop", "target", "stop_pct", "target_pct", "priority", "gtd", "status", "filled_date", "reason", "thesis", "auto", "confirmed_on", "confirmed_at",
+              "q_bid", "q_ask", "q_time", "q_source"]
 MARK_COLS = ["date", "ticker", "close", "source"]
 EQUITY_COLS = ["date", "cash", "positions_value", "equity", "pnl", "pnl_pct", "fees_cum", "slippage_cum",
                "realized", "unrealized", "trades_today", "bench_close", "bench_value"]
@@ -46,6 +48,8 @@ ET = ZoneInfo("America/New_York")
 CUTOFF = time(15, 50)  # NYSE market-on-close order cutoff; confirmations after this cannot fill today
 HOLIDAYS = {date.fromisoformat(x) for x in CFG["holidays"]}
 FEES = CFG["fees"]
+STRAT = CFG.get("strategy", {})
+OCC_RE = re.compile(r"^([A-Z]{1,6})(\d{2})(\d{2})(\d{2})([CP])(\d{8})$")
 
 
 # ---------------------------------------------------------------- helpers
@@ -106,7 +110,32 @@ def fnum(x, default=None):
     return float(x) if x not in ("", None) else default
 
 
-def calc_fees(side, qty, price):
+def is_option(t):
+    return bool(OCC_RE.match(t or ""))
+
+
+def mult(t):
+    """Option contracts control 100 shares; prices are quoted per share."""
+    return 100 if is_option(t) else 1
+
+
+def occ_expiry(t):
+    m = OCC_RE.match(t)
+    return date(2000 + int(m[2]), int(m[3]), int(m[4]))
+
+
+def cash_floor():
+    """Cash that option premium may never touch: starting cash minus the loss limit ($2,000 - $500)."""
+    return CFG["starting_cash"] - STRAT.get("loss_limit_usd", CFG["starting_cash"])
+
+
+def calc_fees(side, qty, price, ticker=""):
+    if is_option(ticker):
+        notional = qty * price * 100
+        f = STRAT.get("option_fee_per_contract", 0.05) * qty
+        if side == "sell" and notional > FEES.get("sec_waived_if_sale_usd_le", 0):
+            f += FEES["sec_per_million_sold"] * notional / 1e6
+        return round(math.ceil(f * 100 - 1e-9) / 100, 4) if f > 0 else 0.0
     notional = qty * price
     f = FEES["commission_per_order"] + FEES["cat_per_share"] * qty
     if side == "sell":
@@ -160,22 +189,23 @@ def replay(upto=None):
             break
         t, q = r["ticker"], float(r["qty"])
         fp, cp, f = float(r["fill_price"]), float(r["close_price"]), float(r["fees"])
+        m = mult(t)
         cash += float(r["cash_delta"])
         fees += f
-        slip += abs(fp - cp) * q
+        slip += abs(fp - cp) * q * m
         per_day.setdefault(r["date"], []).append(r)
         p = pos.setdefault(t, {"qty": 0.0, "cost": 0.0, "opened": r["date"]})
         if r["side"] == "buy":
             if p["qty"] <= 1e-9:
                 p["opened"] = r["date"]
             p["qty"] += q
-            p["cost"] += q * fp + f
+            p["cost"] += q * fp * m + f
         else:
             avg = p["cost"] / p["qty"]
-            pl = (q * fp - f) - avg * q
+            pl = (q * fp * m - f) - avg * q
             realized += pl
             closed.append({"ticker": t, "opened": p["opened"], "closed": r["date"], "qty": q,
-                           "entry": avg, "exit": fp, "pl": pl, "ret": pl / (avg * q)})
+                           "entry": avg / m, "exit": fp, "pl": pl, "ret": pl / (avg * q)})
             p["cost"] -= avg * q
             p["qty"] -= q
             if p["qty"] <= 1e-6:
@@ -222,6 +252,14 @@ def cmd_order_add(a):
     if not a.thesis:
         sys.exit("--thesis is required (every order needs a written reason)")
     now = now_et()
+    t = a.ticker.upper()
+    if a.side == "buy" and is_option(t):
+        if not STRAT.get("allow_options"):
+            sys.exit("options are not allowed by config.strategy.allow_options")
+        if (occ_expiry(t) - created).days < STRAT.get("min_days_to_expiry", 3):
+            sys.exit(f"{t} expires {occ_expiry(t)}: too close (min {STRAT.get('min_days_to_expiry', 3)} days)")
+    if a.side == "buy" and not is_option(t) and not STRAT.get("allow_stock_buys", True):
+        sys.exit("stock/ETF buys are switched off by config.strategy.allow_stock_buys (options-only strategy)")
     if a.confirm:
         check_confirmable(now)
     gtd = d(a.gtd) if a.gtd else (now.date() if a.confirm else next_trading_day(created))
@@ -235,6 +273,7 @@ def cmd_order_add(a):
          "priority": a.priority, "gtd": gtd.isoformat(), "status": "pending", "filled_date": "",
          "reason": "", "thesis": a.thesis, "auto": "", "confirmed_on": "", "confirmed_at": ""}
     if a.confirm:
+        stamp_quote(o)
         o["confirmed_on"], o["confirmed_at"] = now.date().isoformat(), now.isoformat(timespec="minutes")
     orders.append(o)
     write_csv(ORDERS, ORDER_COLS, orders)
@@ -244,6 +283,21 @@ def cmd_order_add(a):
     else:
         print(f"PROPOSED {o['id']}: {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} (not binding). It fills only if "
               f"re-confirmed (`order confirm {o['id']}`) before {CUTOFF:%H:%M} ET on a fill day between {next_trading_day(created)} and {gtd}")
+
+
+def stamp_quote(o):
+    """Options fill at the bid/ask seen when the order is confirmed (post-close option quotes are stale and wide)."""
+    if not is_option(o["ticker"]):
+        return
+    import quotes
+    try:
+        q = quotes.option_quote(o["ticker"])
+    except quotes.ProviderError as e:
+        sys.exit(f"cannot confirm {o['ticker']}: no option quote ({e}). Fail closed: nothing confirmed")
+    if o["side"] == "buy" and not q["ask"]:
+        sys.exit(f"cannot confirm {o['ticker']}: no ask price")
+    o["q_bid"], o["q_ask"], o["q_time"], o["q_source"] = q["bid"], q["ask"], now_et().isoformat(timespec="minutes"), q["source"]
+    print(f"  {o['ticker']} quote at confirmation: bid {q['bid']} / ask {q['ask']} (iv {q['iv']}, delta {q['delta']}, oi {q['oi']})")
 
 
 def check_confirmable(now):
@@ -264,6 +318,7 @@ def cmd_order_confirm(a):
     if missing and not a.all:
         sys.exit(f"cannot confirm {sorted(missing)}: not pending, not valid today ({now.date()}), or automatic")
     for r in targets:
+        stamp_quote(r)
         r["confirmed_on"], r["confirmed_at"] = now.date().isoformat(), now.isoformat(timespec="minutes")
         print(f"confirmed {r['id']} {r['side']} {r['ticker']} for today's close ({now:%H:%M} ET)")
     write_csv(ORDERS, ORDER_COLS, rows)
@@ -291,8 +346,9 @@ def cmd_order_cancel(a):
     sys.exit(f"no pending order {a.id}")
 
 
-def process_orders(D, prices, sources):
-    """Fill eligible pending orders at the close of D. Returns list of messages."""
+def process_orders(D, prices, sources, ba=None):
+    """Fill eligible pending orders at the close of D (options at their decision-time quote). Returns messages."""
+    ba = ba or {}
     msgs = []
     day = D.isoformat()
     orders = read_csv(ORDERS)
@@ -317,9 +373,14 @@ def process_orders(D, prices, sources):
 
     for o in elig:
         t, side = o["ticker"], o["side"]
+        opt = is_option(t)
         px = prices.get(t)
         state = replay()
         cash, held = state["cash"], state["pos"].get(t, {"qty": 0.0})["qty"]
+        if opt and side == "buy" and o.get("q_ask"):
+            px = px if px is not None else float(o["q_ask"])
+        if opt and side == "sell" and px is None and (o.get("q_bid") not in ("", None)):
+            px = float(o["q_bid"])
         if px is None:
             skip(o, "no closing price supplied")
             continue
@@ -329,8 +390,49 @@ def process_orders(D, prices, sources):
         if t in touched:
             skip(o, "ticker already traded today (no same-day round trips)")
             continue
-        slip_bps = CFG["slippage_bps"][o["tier"]]
-        if side == "buy":
+        slip_bps = CFG["slippage_bps"].get(o["tier"], 0)
+        if opt and side == "buy":
+            if not STRAT.get("allow_options"):
+                skip(o, "options switched off")
+                continue
+            fp = float(o.get("q_ask") or 0)
+            if fp <= 0:
+                skip(o, "no decision-time ask for this option")
+                continue
+            if o["max_price"] and fp > float(o["max_price"]):
+                skip(o, f"ask {fp} above max_price {o['max_price']}")
+                continue
+            if (occ_expiry(t) - D).days < STRAT.get("min_days_to_expiry", 3):
+                skip(o, f"expires {occ_expiry(t)}, too close")
+                continue
+            avail = cash - cash_floor()
+            want = float(o["size_value"]) * fp * 100 if o["size_type"] == "qty" else float(o["size_value"])
+            qty = int(min(want, avail) // (fp * 100))
+            while qty > 0 and qty * fp * 100 + calc_fees("buy", qty, fp, t) > avail + 1e-9:
+                qty -= 1
+            if qty < 1:
+                skip(o, f"loss budget left ({money(max(avail, 0))} above the {money(cash_floor())} cash floor) buys no contract at {fp}")
+                continue
+            slip_bps = 0
+        elif opt:
+            if held <= 1e-9:
+                skip(o, "no option position to sell (never sell to open)")
+                continue
+            q_bid = o.get("q_bid")
+            if q_bid not in ("", None):
+                fp = float(q_bid)
+            elif t in ba and ba[t][0] is not None:
+                fp = float(ba[t][0])
+            else:
+                fp = round(px * (1 - STRAT.get("option_auto_sell_haircut", 0.10)), 4)
+            kind = o["size_type"]
+            qty = held if kind == "all" else (min(int(float(o["size_value"])), held) if kind == "qty"
+                                              else max(1, int(held * float(o["size_value"]) / 100)))
+            slip_bps = 0
+        elif side == "buy" and not STRAT.get("allow_stock_buys", True):
+            skip(o, "stock/ETF buys switched off (options-only strategy)")
+            continue
+        elif side == "buy":
             if o["max_price"] and px > float(o["max_price"]):
                 skip(o, f"close {px} above max_price {o['max_price']}")
                 continue
@@ -364,13 +466,14 @@ def process_orders(D, prices, sources):
                 qty = min(floor6(float(o["size_value"]) / fp), held)
             if held - qty < 1e-5:
                 qty = held
-        fees = calc_fees(side, qty, fp)
-        gross = round(qty * fp, 2)
+        fees = calc_fees(side, qty, fp, t)
+        gross = round(qty * fp * mult(t), 2)
         delta = round(-(gross + fees) if side == "buy" else gross - fees, 2)
         row = {"id": next_id("T", ledger), "date": day, "ticker": t, "side": side, "qty": f"{qty:.6f}",
                "close_price": px, "fill_price": fp, "gross": gross, "fees": fees, "cash_delta": delta,
                "tier": o["tier"], "slip_bps": slip_bps, "order_id": o["id"], "thesis": o["thesis"],
-               "price_source": sources.get(t, "")}
+               "price_source": (f"decision-time quote {o['q_time']} ({o['q_source']})" if opt and o.get("q_source")
+                                else sources.get(t, ""))}
         ledger.append(row)
         write_csv(LEDGER, LEDGER_COLS, ledger)
         n_today += 1
@@ -386,7 +489,7 @@ def process_orders(D, prices, sources):
                 ex["target"] = float(o["target"])
             elif o.get("target_pct"):
                 ex["target"] = round(fp * (1 + float(o["target_pct"]) / 100), 4)
-        msgs.append(f"FILL {row['id']} {side.upper()} {qty:.4f} {t} @ {fp} (close {px}, fees ${fees:.2f}) "
+        msgs.append(f"FILL {row['id']} {side.upper()} {qty:.4f} {t} @ {fp} (ref {px}, fees ${fees:.2f}) "
                     f"cash {money(delta)}")
     after = replay()
     for t in list(exits):
@@ -399,17 +502,19 @@ def process_orders(D, prices, sources):
 
 # ---------------------------------------------------------------- day close
 def load_prices(a):
-    prices, sources = {}, {}
+    prices, sources, ba = {}, {}, {}
     if a.prices_file:
         for r in read_csv(Path(a.prices_file)):
             prices[r["ticker"].upper()] = float(r["close"])
             sources[r["ticker"].upper()] = r.get("source", "")
+            if r.get("bid") not in ("", None):
+                ba[r["ticker"].upper()] = (float(r["bid"]), fnum(r.get("ask")))
     if a.prices:
         for kv in a.prices.split(","):
             k, v = kv.split("=")
             prices[k.strip().upper()] = float(v)
             sources.setdefault(k.strip().upper(), a.source or "")
-    return prices, sources
+    return prices, sources, ba
 
 
 def snapshot(D):
@@ -423,8 +528,8 @@ def snapshot(D):
             sys.exit(f"no mark for held ticker {t}; supply its close")
         if pd != day:
             stale.append(f"{t} (last mark {pd})")
-        value += p["qty"] * px
-        unreal += p["qty"] * px - p["cost"]
+        value += p["qty"] * px * mult(t)
+        unreal += p["qty"] * px * mult(t) - p["cost"]
     equity = st["cash"] + value
     bench = CFG["benchmark"]
     bpx, _ = mark_on(marks, bench, day)
@@ -452,9 +557,18 @@ def check_exits(D, prices):
     for t, p in st["pos"].items():
         px = prices.get(t)
         ex = exits.get(t, {})
+        pending_sell = any(o["ticker"] == t and o["side"] == "sell" and o["status"] == "pending" for o in orders)
+        if is_option(t) and not pending_sell and occ_expiry(t) <= next_trading_day(next_trading_day(D)):
+            o = {"id": next_id("O", orders), "created": day, "ticker": t, "side": "sell", "size_type": "all",
+                 "size_value": 1, "tier": "A", "max_price": "", "min_price": "", "stop": "", "target": "",
+                 "priority": 0, "gtd": next_trading_day(D).isoformat(), "status": "pending", "filled_date": "",
+                 "reason": "", "thesis": f"AUTO-EXPIRY: {t} expires {occ_expiry(t)}; close at least a session before",
+                 "auto": "1", "confirmed_on": "", "confirmed_at": ""}
+            orders.append(o)
+            msgs.append(f"EXPIRY {t} ({occ_expiry(t)}) -> queued {o['id']} sell-all for next session")
+            continue
         if px is None:
             continue
-        pending_sell = any(o["ticker"] == t and o["side"] == "sell" and o["status"] == "pending" for o in orders)
         if ex.get("stop") and px <= ex["stop"] and not pending_sell:
             o = {"id": next_id("O", orders), "created": day, "ticker": t, "side": "sell", "size_type": "all",
                  "size_value": 1, "tier": "A", "max_price": "", "min_price": "", "stop": "", "target": "",
@@ -474,16 +588,25 @@ def auto_prices(D, extra):
     import quotes
     tickers = set(replay()["pos"]) | {o["ticker"] for o in read_csv(ORDERS) if o["status"] == "pending"}
     tickers |= {CFG["benchmark"]} | {t.strip().upper() for t in extra.split(",") if t.strip()}
-    prices, sources, msgs = {}, {}, []
-    for sym, r in quotes.closes(D.isoformat(), sorted(tickers)).items():
+    prices, sources, ba, msgs = {}, {}, {}, []
+    stocks = sorted(t for t in tickers if not is_option(t))
+    for sym, r in quotes.closes(D.isoformat(), stocks).items():
         if r["status"] == "ok":
             prices[sym], sources[sym] = r["price"], r["source"]
         else:
             msgs.append(f"NO VERIFIED CLOSE {sym}: {r['status']} {r['errors'] or ''}")
+    for sym in sorted(t for t in tickers if is_option(t)):
+        try:
+            mark, q, how = quotes.option_mark(sym, D.isoformat())
+            prices[sym], ba[sym] = mark, (q["bid"], q["ask"])
+            sources[sym] = f"cboe option {how} {D.isoformat()} (single source, 15-min delayed chain)"
+        except quotes.ProviderError as e:
+            msgs.append(f"NO OPTION MARK {sym}: {e}")
     if prices:
-        write_csv(DATA / "prices" / f"{D.isoformat()}.csv", ["ticker", "close", "source"],
-                  [{"ticker": t, "close": prices[t], "source": sources[t]} for t in sorted(prices)])
-    return prices, sources, msgs
+        write_csv(DATA / "prices" / f"{D.isoformat()}.csv", ["ticker", "close", "bid", "ask", "source"],
+                  [{"ticker": t, "close": prices[t], "bid": ba.get(t, ("", ""))[0], "ask": ba.get(t, ("", ""))[1],
+                    "source": sources[t]} for t in sorted(prices)])
+    return prices, sources, ba, msgs
 
 
 def cmd_day(a):
@@ -492,13 +615,15 @@ def cmd_day(a):
         sys.exit(f"{D} is not a US trading day")
     if D < d(CFG["start_date"]):
         sys.exit(f"experiment starts {CFG['start_date']}")
-    prices, sources, feed_msgs = {}, {}, []
+    prices, sources, ba, feed_msgs = {}, {}, {}, []
     if a.auto_prices:
-        prices, sources, feed_msgs = auto_prices(D, a.also or "")
-    manual, manual_src = load_prices(a)
+        prices, sources, ba, feed_msgs = auto_prices(D, a.also or "")
+    manual, manual_src, manual_ba = load_prices(a)
     for t, px in manual.items():  # manual/search prices only fill gaps the feed could not verify
         if t not in prices:
             prices[t], sources[t] = px, manual_src.get(t, "") or "manual entry"
+            if t in manual_ba:
+                ba[t] = manual_ba[t]
     if not prices:
         sys.exit("no prices: quote feed returned nothing and none were supplied (use --prices-file or --prices)\n" + "\n".join(feed_msgs))
     marks = [r for r in read_csv(MARKS) if not (r["date"] == D.isoformat() and r["ticker"] in prices)]
@@ -506,7 +631,7 @@ def cmd_day(a):
         marks.append({"date": D.isoformat(), "ticker": t, "close": px, "source": sources.get(t, "")})
     marks.sort(key=lambda r: (r["date"], r["ticker"]))
     write_csv(MARKS, MARK_COLS, marks)
-    msgs = feed_msgs + process_orders(D, prices, sources)
+    msgs = feed_msgs + process_orders(D, prices, sources, ba)
     row, stale = snapshot(D)
     msgs += check_exits(D, prices)
     write_reports(D)
@@ -539,7 +664,7 @@ def stats():
             "max_drawdown": mdd, "best_day": max(daily) if daily else None,
             "worst_day": min(daily) if daily else None, "total_fills": sum(len(v) for v in st["per_day"].values()),
             "verified_fills": sum(1 for v in st["per_day"].values() for r in v
-                                  if "official close" in r["price_source"] or " live " in r["price_source"])}
+                                  if any(k in r["price_source"] for k in ("official close", " live ", "cboe")))}
 
 
 def build_dashboard(D):
@@ -551,10 +676,11 @@ def build_dashboard(D):
     positions = []
     for t, p in sorted(st["pos"].items()):
         px, pd = mark_on(marks, t, day)
-        positions.append({"ticker": t, "qty": round(p["qty"], 6), "avg_cost": round(p["cost"] / p["qty"], 4),
-                          "last": px, "last_date": pd, "value": round(p["qty"] * px, 2),
-                          "unrealized": round(p["qty"] * px - p["cost"], 2),
-                          "unrealized_pct": round(p["qty"] * px / p["cost"] - 1, 4),
+        m = mult(t)
+        positions.append({"ticker": t, "qty": round(p["qty"], 6), "avg_cost": round(p["cost"] / p["qty"] / m, 4),
+                          "last": px, "last_date": pd, "value": round(p["qty"] * px * m, 2),
+                          "unrealized": round(p["qty"] * px * m - p["cost"], 2),
+                          "unrealized_pct": round(p["qty"] * px * m / p["cost"] - 1, 4),
                           "stop": exits.get(t, {}).get("stop"), "target": exits.get(t, {}).get("target"),
                           "opened": p["opened"]})
     last = eq_rows[-1] if eq_rows else None
@@ -717,7 +843,7 @@ def cmd_validate(a):
         if len(ts) != len(set(ts)):
             errs.append(f"{day}: ticker traded twice (round trip)")
     for r in rows:
-        if "official close" not in r["price_source"] and " live " not in r["price_source"]:
+        if not any(k in r["price_source"] for k in ("official close", " live ", "cboe")):
             print(f"WARN {r['id']}: priced from a fallback source, not the cross-checked feed: {r['price_source'][:80]}")
     print("OK: ledger satisfies all rules" if not errs else "\n".join(errs))
     sys.exit(1 if errs else 0)

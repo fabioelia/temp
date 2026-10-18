@@ -8,9 +8,9 @@
   "stop": "64.00",
   "target": "74.00",
   "max_price": 69.5,
-  "status": "pending",
+  "status": "cancelled",
   "state": "Proposal, not yet confirmed",
-  "reason": "",
+  "reason": "strategy changed 2026-10-17 to options with the loss budget; stock buys switched off",
   "thesis": "Core energy long (17.5%). Only sector with rising EPS revisions (Q3 energy EPS +121%); WTI ~101/Brent ~110 on Hormuz flows ~68% of normal; XLE at 52-wk high 10/16 (68.24). Macro, momentum, catalyst and contrarian memos 2026-10-17 all favour energy; hedges the stagflation tail. Risk: Hormuz deal/ceasefire could gap oil -10-15%. Max-price 69.5 stops us chasing a gap; closing stop 64.0 (~-6.5%)."
  },
  {
@@ -22,9 +22,9 @@
   "stop": "-12% of fill",
   "target": "+25% of fill",
   "max_price": null,
-  "status": "pending",
+  "status": "cancelled",
   "state": "Proposal, not yet confirmed",
-  "reason": "",
+  "reason": "strategy changed 2026-10-17 to options with the loss budget; stock buys switched off",
   "thesis": "High-variance 2x E&P sleeve (10% of equity, counts 2x vs the 40% energy theme cap) for the 2x goal: same oil-spike thesis as XLE with leverage (macro conf 5, momentum conf 3). Price not verified on 10/17, so stop/target are % of the actual fill: stop -12%, target +25%. Manual exits: WTI settles <94 or XLE closes <65; time stop after 8 sessions without +5%. Risk: oil de-escalation gap through the stop; 2x decay."
  }
 ]

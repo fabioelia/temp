@@ -68,3 +68,9 @@ connections from this IP and is off; Nasdaq times out; CNBC refuses. Live intrad
 **Robinhood agent access, researched (owner finishing setup on desktop).** Per Robinhood's help center: trades only in a dedicated MCP account (fund it with the $2,000); read access to all
 accounts (we read only the MCP account); no money-movement tools exist; trade approvals off by default (matches "fully automatic"); no market-on-close order type; `get_equity_quotes` is
 real-time and becomes the second live quote source. Tool allow/deny list written into `LIVE_MODE.md`.
+
+**Strategy change, Day 0 (owner: "I'm looking for you to help drive to hit the targets"; chose "Options with the $500 budget").** Explained first: with a $500 loss limit, even a fair
+game caps the chance of $4,000 at about 1 in 5; stocks/ETFs only ~1-3%; buying options with the budget ~5-15% (judgment), most likely ending at -$500 and stopping. Built and tested
+(41 tests): options in the tracker and the real-money gate (OCC symbols, whole contracts, 100x multiplier, fills at the decision-time bid/ask from Cboe's delayed chain, $0.05/contract
+fees), a $1,500 cash floor that premium can never touch, refusal of stock buys, auto-sale one session before expiry. O001/O002 (XLE/GUSH) cancelled. Playbook v2 written. The Sunday
+review will pick the first shot. Note: the owner's screenshots showed the main account (options Level 2, margin investing off); the agent account needs its own options approval.

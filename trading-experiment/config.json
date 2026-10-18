@@ -12,7 +12,8 @@
     "A": 5,
     "B": 15,
     "C": 30,
-    "D": 60
+    "D": 60,
+    "O": 0
   },
   "fees": {
     "commission_per_order": 0.0,
@@ -29,9 +30,45 @@
     "enabled": false,
     "capital_cap_usd": 2000.0,
     "loss_limit_usd": 500.0,
-    "max_single_order_pct": 0.30,
+    "max_single_order_pct": 0.3,
     "max_leveraged_each_pct": 0.15,
-    "leveraged_etfs": ["GUSH", "ERX", "SOXL", "TQQQ", "SQQQ", "SOXS", "SPXL", "SPXS", "UPRO", "SPXU", "TECL", "TECS", "LABU", "LABD", "NUGT", "DUST", "FNGU", "FNGD", "UVXY", "UVIX", "SVIX", "BOIL", "KOLD", "YINN", "YANG", "TNA", "TZA", "QLD", "SSO", "SDS", "QID", "NVDL", "TSLL", "CONL", "MSTU"],
+    "leveraged_etfs": [
+      "GUSH",
+      "ERX",
+      "SOXL",
+      "TQQQ",
+      "SQQQ",
+      "SOXS",
+      "SPXL",
+      "SPXS",
+      "UPRO",
+      "SPXU",
+      "TECL",
+      "TECS",
+      "LABU",
+      "LABD",
+      "NUGT",
+      "DUST",
+      "FNGU",
+      "FNGD",
+      "UVXY",
+      "UVIX",
+      "SVIX",
+      "BOIL",
+      "KOLD",
+      "YINN",
+      "YANG",
+      "TNA",
+      "TZA",
+      "QLD",
+      "SSO",
+      "SDS",
+      "QID",
+      "NVDL",
+      "TSLL",
+      "CONL",
+      "MSTU"
+    ],
     "last_order_cutoff_et": "15:50",
     "flatten_cutoff_et": "15:58",
     "authorization": "2026-10-17, owner: 'I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again.' Earlier the owner chose 'Real trades, fully automatic' after being told the committee odds (about 1-5% to double, 2-14% chance of losing half on aggressive routes). enabled stays false until the broker connector is connected and verified in a fresh session."
@@ -51,5 +88,15 @@
   "early_close": [
     "2026-11-27",
     "2026-12-24"
-  ]
+  ],
+  "strategy": {
+    "name": "options with the loss budget",
+    "allow_stock_buys": false,
+    "allow_options": true,
+    "loss_limit_usd": 500.0,
+    "min_days_to_expiry": 3,
+    "option_fee_per_contract": 0.05,
+    "option_auto_sell_haircut": 0.1,
+    "note": "2026-10-17 owner chose 'Options with the $500 budget': buy calls/puts only, total premium may only use cash above starting_cash - loss_limit ($1,500 floor), so every open option can expire worthless and the loss still stops at $500. Stock buys off; options closed at least a session before expiry."
+  }
 }

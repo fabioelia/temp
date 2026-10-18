@@ -13,10 +13,13 @@ Everything the gate checks is enforced here, in code, from files in the repo:
   * LOSS LIMIT: when the experiment is down live.loss_limit_usd (default $500) it STOPS: buys are refused, everything
     is sold to cash, then KILL_SWITCH is created. Only the owner re-arms it, after talking.
   * one ticket per order id, so a crashed or repeated run cannot place the same order twice
+  * OPTIONS (strategy.allow_options): buy calls/puts only, whole contracts, limit orders; premium may only use cash above
+    capital_cap - loss_limit, so every open option can expire worthless and the loss still stops at the limit
 
   live.py status
   live.py check [--marks XLE=68.1,GUSH=24.9]      run every pre-close and post-close; trips the loss limit
   live.py gate --order O003 [--ref-price 68.5] [--marks ...]
+  live.py gate --order O004 --limit 2.55        options: limit = per-share premium from the broker's live quote
   live.py placed --ticket K001 --broker-order-id ABC
   live.py record --ticket K001 --qty 5.1 --avg-price 68.55 [--fees 0.01] [--broker-order-id ABC]
   live.py fail --ticket K001 --reason "..."
@@ -56,12 +59,13 @@ def live_state():
         t, q, px, fee = r["ticker"], float(r["qty"]), float(r["avg_price"]), float(r["fees"] or 0)
         per_day.setdefault(r["date"], []).append(r)
         p = pos.setdefault(t, {"qty": 0.0, "cost": 0.0})
+        m = T.mult(t)
         if r["side"] == "buy":
             p["qty"] += q
-            p["cost"] += q * px + fee
+            p["cost"] += q * px * m + fee
         else:
             avg = p["cost"] / p["qty"]
-            realized += q * px - fee - avg * q
+            realized += q * px * m - fee - avg * q
             p["cost"] -= avg * q
             p["qty"] -= q
             if p["qty"] <= 1e-6:
@@ -81,7 +85,7 @@ def experiment_equity(st, day, extra=None):
     for t, p in st["pos"].items():
         px = (extra or {}).get(t) or T.mark_on(paper, t, day)[0]
         if px:
-            unreal += p["qty"] * px - p["cost"]
+            unreal += p["qty"] * px * T.mult(t) - p["cost"]
     return LIVE["capital_cap_usd"] + st["realized"] + unreal
 
 
@@ -157,6 +161,35 @@ def cmd_gate(a):
     ref = a.ref_price
     usd = qty = None
     note = ""
+    opt = T.is_option(tk)
+    strat = T.STRAT
+    if side == "buy" and not opt and not strat.get("allow_stock_buys", True):
+        refuse("stock/ETF buys are switched off (options-only strategy)")
+    if opt and side == "buy":
+        if halted:
+            refuse(f"LOSS LIMIT hit (experiment down ${loss:,.2f}): no new buys")
+        if not strat.get("allow_options"):
+            refuse("options are switched off (strategy.allow_options)")
+        if not a.limit or a.limit <= 0:
+            refuse("an option order needs --limit (per-share premium from the broker's live quote)")
+        if (T.occ_expiry(tk) - now.date()).days < strat.get("min_days_to_expiry", 3):
+            refuse(f"{tk} expires {T.occ_expiry(tk)}: too close")
+        if o["max_price"] and a.limit > float(o["max_price"]):
+            refuse(f"limit {a.limit} above the order's max_price {o['max_price']}")
+        cash_live = cap + st["realized"] - st["deployed"]
+        avail = cash_live - (cap - LIVE.get("loss_limit_usd", 500))
+        want = float(o["size_value"]) * a.limit * 100 if o["size_type"] == "qty" else float(o["size_value"])
+        fee = strat.get("option_fee_per_contract", 0.05)
+        qty = int(min(want, avail) // (a.limit * 100 + fee))
+        if qty < 1:
+            refuse(f"loss budget left (${max(avail, 0):,.2f} above the floor) buys no contract at {a.limit}")
+        usd = round(qty * a.limit * 100, 2)
+        tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
+                          "side": side, "usd": f"{usd:.2f}", "qty": str(qty), "status": "approved", "reason": ""})
+        print(json.dumps({"verdict": "APPROVED", "ticket": tid, "order": o["id"], "ticker": tk, "side": "buy_to_open",
+                          "contracts": qty, "order_type": "limit", "limit_price": a.limit, "premium_usd": usd,
+                          "budget_left_after": round(avail - usd - qty * fee, 2), "stopped": halted}, indent=1))
+        return
     if side == "buy":
         if halted:
             refuse(f"LOSS LIMIT hit (experiment down ${loss:,.2f}): no new buys; sell everything to cash. Owner re-arms after talking")
@@ -176,7 +209,10 @@ def cmd_gate(a):
         if held <= 1e-9:
             refuse(f"the live ledger holds no {tk} to sell (no shorting)")
         kind = o["size_type"]
-        if halted or kind == "all":
+        if opt:
+            qty = held if (halted or kind == "all") else (min(int(float(o["size_value"])), held) if kind == "qty"
+                                                           else max(1, int(held * float(o["size_value"]) / 100)))
+        elif halted or kind == "all":
             qty = held
         elif kind == "pct":
             qty = held * float(o["size_value"]) / 100
@@ -186,12 +222,14 @@ def cmd_gate(a):
             if not ref:
                 refuse("a dollar-sized sell needs --ref-price")
             qty = min(float(o["size_value"]) / ref, held)
-        qty = round(qty, 6)
+        qty = qty if opt else round(qty, 6)
     tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
                       "side": side, "usd": f"{usd:.2f}" if usd else "", "qty": f"{qty:.6f}" if qty else "",
                       "status": "approved", "reason": ""})
-    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "order": o["id"], "ticker": tk, "side": side,
-                      "notional_usd": usd, "shares": qty, "sell_all": bool(side == "sell" and (halted or o["size_type"] == "all")),
+    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "order": o["id"], "ticker": tk,
+                      "side": "sell_to_close" if opt else side, "order_type": "limit" if (opt and a.limit) else "market",
+                      "limit_price": a.limit if opt else None, "notional_usd": usd,
+                      ("contracts" if opt else "shares"): qty, "sell_all": bool(side == "sell" and (halted or o["size_type"] == "all")),
                       "stopped": halted, "note": note}, indent=1))
 
 
@@ -232,7 +270,7 @@ def cmd_record(a):
     rows = T.read_csv(LIVE_LEDGER)
     rows.append({"id": f"L{len(rows) + 1:03d}", "ts_et": now.isoformat(timespec="seconds"), "date": now.date().isoformat(),
                  "ticker": tk["ticker"], "side": tk["side"], "qty": f"{a.qty:.6f}", "avg_price": a.avg_price,
-                 "notional": round(a.qty * a.avg_price, 2), "fees": a.fees, "order_id": tk["order_id"], "ticket": a.ticket,
+                 "notional": round(a.qty * a.avg_price * T.mult(tk["ticker"]), 2), "fees": a.fees, "order_id": tk["order_id"], "ticket": a.ticket,
                  "broker_order_id": a.broker_order_id or "", "note": a.note or ""})
     T.write_csv(LIVE_LEDGER, LEDGER_COLS, rows)
     set_ticket(a.ticket, status="recorded")
@@ -277,6 +315,7 @@ def main():
     g.add_argument("--order", required=True)
     g.add_argument("--ref-price", type=float)
     g.add_argument("--marks", help="fresh prices for held tickers, e.g. XLE=68.1,GUSH=24.9")
+    g.add_argument("--limit", type=float, help="option orders: per-share limit price from the broker's live quote")
     g.set_defaults(fn=cmd_gate)
     c = sub.add_parser("check")
     c.add_argument("--marks")

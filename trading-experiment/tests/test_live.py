@@ -18,6 +18,10 @@ class Live(unittest.TestCase):
         for f in ("tracker.py", "live.py", "quotes.py", "config.json"):
             shutil.copy(SRC / f, self.dir)
         self.set_live(enabled=True)
+        p = Path(self.dir, "config.json")  # these tests exercise the stock path of the gate
+        c = json.loads(p.read_text())
+        c["strategy"]["allow_stock_buys"] = True
+        p.write_text(json.dumps(c))
 
     def tearDown(self):
         shutil.rmtree(self.dir, ignore_errors=True)
@@ -149,3 +153,43 @@ class Live(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LiveOptions(unittest.TestCase):
+    """Options through the real-money gate: limit orders, whole contracts, the $1,500 cash floor."""
+    CALL = "XLE261120C00068000"
+
+    def setUp(self):
+        self.dir = tempfile.mkdtemp()
+        for f in ("tracker.py", "live.py", "quotes.py", "config.json"):
+            shutil.copy(SRC / f, self.dir)
+        p = Path(self.dir, "config.json")
+        c = json.loads(p.read_text())
+        c["live"]["enabled"] = True
+        p.write_text(json.dumps(c))
+        # orders are confirmed with stored quotes directly, so no network is needed
+        Path(self.dir, "data").mkdir()
+        cols = "id,created,ticker,side,size_type,size_value,tier,max_price,min_price,stop,target,stop_pct,target_pct,priority,gtd,status,filled_date,reason,thesis,auto,confirmed_on,confirmed_at,q_bid,q_ask,q_time,q_source"
+        rows = [f"O001,{MON},{self.CALL},buy,usd,2000,O,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,2.4,2.55,,cboe",
+                f"O002,{MON},XLE,buy,usd,300,A,,,,,,,5,{MON},pending,,,t,,{MON},{MON}T14:50-04:00,,,,"]
+        Path(self.dir, "data", "orders.csv").write_text(cols + "\n" + "\n".join(rows) + "\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def gate(self, *args, at=f"{MON}T14:55"):
+        r = subprocess.run([sys.executable, "live.py", "gate", *args], cwd=self.dir,
+                           env=dict(os.environ, TRACKER_NOW=at), capture_output=True, text=True)
+        return r.returncode, r.stdout + r.stderr
+
+    def test_option_needs_limit_and_respects_the_floor(self):
+        rc, out = self.gate("--order", "O001")
+        self.assertEqual((rc, "--limit" in out), (2, True))
+        rc, out = self.gate("--order", "O001", "--limit", "2.55")
+        self.assertEqual(rc, 0, out)
+        t = json.loads(out)
+        self.assertEqual((t["contracts"], t["order_type"], t["premium_usd"]), (1, "limit", 255.0))  # $500 budget
+
+    def test_stock_buy_refused_in_options_strategy(self):
+        rc, out = self.gate("--order", "O002")
+        self.assertEqual((rc, "switched off" in out), (2, True))

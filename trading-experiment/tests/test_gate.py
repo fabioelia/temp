@@ -1,4 +1,5 @@
 """The pre-close confirmation gate: proposals do not fill unless re-confirmed on the fill day before 15:50 ET."""
+import json
 import os
 import shutil
 import subprocess
@@ -15,6 +16,10 @@ class Gate(unittest.TestCase):
         self.dir = tempfile.mkdtemp()
         for f in ("tracker.py", "quotes.py", "config.json"):
             shutil.copy(SRC / f, self.dir)
+        cfg = Path(self.dir, "config.json")  # these tests exercise the stock engine, so allow stock buys here
+        c = json.loads(cfg.read_text())
+        c["strategy"]["allow_stock_buys"] = True
+        cfg.write_text(json.dumps(c))
 
     def tearDown(self):
         shutil.rmtree(self.dir, ignore_errors=True)

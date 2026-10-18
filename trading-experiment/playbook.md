@@ -1,57 +1,56 @@
 # Playbook (living document; revised as the experiment teaches it something)
 
-Version 1, written Sat 2026-10-17 from the six committee memos in `research/2026-10-17/`. Each change gets a dated line in the changelog at the bottom.
+Version 2, 2026-10-17. The owner chose "Options with the $500 budget" to go after the $4,000 target. Version 1 (stocks and ETFs, bounded convexity) is in git history.
 
-## Stance: bounded convexity
-The committee's numbers: P(+100% in 23 sessions) is about 1-5% for any strategy that does not also carry a double-digit chance of losing half. So the account
-is run as: **a core in what is working, a small convex satellite for the 2x shot, cash for the confirmed bounce, and hard loss limits**. The realistic aim is to
-beat SPY with controlled risk; the 2x is a lottery ticket we keep a strict price on. Doing nothing is a valid trade.
+## Stance: bold play with a capped budget
+* **The arithmetic.** $4,000 needs +$2,000 from a $500 risk budget, about a 5x on premium. With the $500 loss limit, no strategy can do better than roughly a 1-in-5 chance even in a
+  fair game; with option costs, a disciplined version is perhaps 5-15% (judgment, not a backtest). The most likely outcome is losing the $500 and stopping.
+* **The structure (enforced in code).** Premium is paid only from cash above the $1,500 floor. Every open option can go to zero and the account still ends at $1,500 or better.
+* **Few, deliberate shots.** Plan for two or three bets over the month, not twenty trades. Shot 1 is about half the budget (~$250) on the best dated catalyst in the next one to
+  two weeks. If it wins, the budget grows and the next shot is sized from the new budget (roll the winnings). If it loses, shot 2 is the remaining ~$250. Doing nothing while
+  waiting for a good setup is fine; the budget is the scarce resource, not time.
+
+## What to buy
+* **Underlyings:** liquid names and ETFs with large, dated catalysts: NVDA, MSFT, META, AMZN, GOOGL, TSLA, SMH, QQQ, SPY, XLE.
+* **Liquidity filter:** open interest at least 1,000 at the strike; bid-ask spread at most 5% of the mid for stocks (10% for sector ETFs). Check with
+  `python3 trading-experiment/quotes.py chain NVDA --expiry 2026-11-20 --type C --near 214`.
+* **Strike:** delta about 0.30-0.45 (out of the money, not a lottery ticket).
+* **Expiry:** two to five weeks out, covering the catalyst plus a few days. Never a weekly that expires before the event.
+* **Direction from the regime switches below:** flip bullish means calls on semis and AI leaders; press bearish means QQQ or SMH puts; an oil spike means XLE calls.
+* **Volatility:** implied volatility is high just before earnings and collapses after. Prefer buying the run-up and selling before the print, or buying after the print when the
+  reaction confirms a trend. Hold through a print only when the expected move clearly exceeds the implied move, and say why in the journal.
+
+## Exits
+* Sell half at +100% on premium, the rest at +200% or right after the catalyst plays out.
+* Closing-basis stop at -50% of premium, so a failed shot leaves half of it for the next one (set with `--stop-pct 50`).
+* The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
+
+## Catalyst calendar for shots (re-judge every run)
+* **Week of 10/19:** META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test. Trade the reaction (decide 10/22) rather than holding through.
+* **10/28:** MSFT and GOOGL after the close, FOMC decision at 2pm. **10/29:** AMZN, INTC. **10/30:** XOM/CVX (unverified). **11/1:** OPEC+. **11/2:** AAPL. **11/3:** midterms.
+  **11/6:** jobs. **~11/10:** CPI.
+* **11/9-11/18: the NVDA run-up.** NVDA reports after the close on 11/18 (expected); the experiment ends at the 11/18 close, so a run-up position carries no earnings-gap risk to the
+  scored value, but it must still be sold by 11/18 (and before expiry).
 
 ## Read of the tape (2026-10-17)
 * Late-cycle correction driven by liquidity and credit, not earnings. Stagflation flavour: Fed hiked 9/16 to 3.75-4.00%, CPI 3.7%, payrolls +29k, 10y ~5.1%,
   WTI ~$101 / Brent ~$110 (Hormuz). AI-capex credit is cracking (CoreWeave ~15% yield, Oracle CDS record), semis down 8 straight sessions.
 * S&P 7,659 is 2% below its 10/6 record; Nasdaq is in a correction. No follow-through day yet (earliest Thu 10/22).
-* Leaders: energy, then utilities and staples. Fragile: debt-funded AI infrastructure, memory, small caps.
-* Committee odds to 11/18 (macro): new S&P high 38%, chop 44%, -8% or worse 18%. Contrarian: 60% pullback in a bull market, 40% AI-credit deflation.
+* Committee odds to 11/18 (macro): new S&P high 38%, chop 44%, -8% or worse 18%.
+* Verified closes 10/16 (Yahoo + Cboe): SPY 763.25, XLE 68.24, NVDA 214.13, SOXL 93.67, SQQQ 38.90. NVDA 11/20 options: about 40% IV, 1-2% spreads, very deep open interest.
 
 ## Regime switches (act on these, not on feelings)
-**Flip bullish** (add NVDA/SOXL/TQQQ, trim energy): any two of: S&P closes above 7,745 with the semis index up >2% on the day; Brent closes below $100 two days running;
-Oracle 5y CDS below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that the stock rewards; Nasdaq follow-through day.
-**Press bearish** (cut energy leverage, build SQQQ/cash): S&P closes below 7,428; VIX closes above 28; 10y above 5.25%; HY OAS above 346bp; an Oracle junk cut;
-a surprise hike on 10/28.
-**Energy exit:** WTI settles below $94 or XLE closes below 65 means review at once; Hormuz deal headlines are the main gap risk.
+**Flip bullish** (calls on semis/AI leaders): any two of: S&P closes above 7,745 with the semis index up >2% on the day; Brent closes below $100 two days running; Oracle 5y CDS
+below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that the stock rewards; a Nasdaq follow-through day.
+**Press bearish** (QQQ/SMH puts): S&P closes below 7,428; VIX closes above 28; 10y above 5.25%; HY OAS above 346bp; an Oracle junk cut; a surprise hike on 10/28.
+**Oil** (XLE calls or puts): Hormuz escalation versus a deal; WTI settling above $105 or below $94.
 
-## Phase plan
-1. **10/19-10/23, probe:** energy core only, <= 30% Monday and <= 55% by Tuesday. Watch META/TSLA (10/21 after close), TXN/LRCX/IBM (10/21). Decide any NVDA tranche
-   on the evening of 10/21 (fills 10/22, after the prints). No tech longs before a follow-through day unless two flip signals fire.
-2. **10/26-11/6, events:** MSFT/GOOGL/FOMC (10/28), INTC/AMZN (10/29), XOM/CVX (~10/30), AAPL (11/2), OPEC+ (11/1), midterms (11/3), jobs (11/6).
-   <= 50% invested at the 10/28 close, <= 35% at the 11/3 close. Prefer trading reactions to events over holding through them.
-3. **11/9-11/18, press or protect:** if ahead of pace and the regime is constructive, build into the NVDA run-up (report expected 11/18 after the close, so the scored
-   value has no gap risk). If behind pace, the only lottery ticket allowed is one leveraged position <= 15% of equity with a hard stop. If the circuit breakers have
-   tripped, protect: cash or SPY.
-
-## Entry and exit rules
-* Entry: buy leaders at or near highs only with the close-based trigger met; buy oversold quality only on a confirmed turn (first close above the prior day's high after a
-  capitulation day), staged in thirds. Use `--max-price` so a gap never makes us chase (>2.5% above the reference).
-* Stops are closing-basis, set when the order is queued. Stocks and 1x ETFs: -6/-7%. 2x: -10 to -12%. 3x: -15%.
-  Assume the realised loss is 1.5x planned (2x for 3x ETFs); size so that planned risk to the stop is <= 2% of equity (<= 3% satellite).
-* Targets: sell a third at +15% (+25% on 2x/3x), trail the rest under the 8-10 day low close.
-* Add only to winners (up 3-5%, new closing high), then move the whole stop to breakeven. Never average down.
-* Time stops: 3x ETFs after 8 sessions without +5%; others after 8-10 sessions flat.
-* A stop breach on a close auto-queues a sell for the next close. Targets are a prompt for a committee decision, not an automatic sale.
-
-## Evidence grades used to weigh ideas
-* **A/B (use):** cross-sectional and industry momentum, 52-week-high effect, volatility-scaled sizing, loss limits, the daily-reset decay of leveraged ETFs, overtrading costs.
-* **C (tie-breakers only):** seasonality (midterm Q4, Halloween, turn of month: worth about 1-3 points of a 100-point goal), the "worst week" bounce, FTD day counts, cup-and-handle
-  geometry, pre-FOMC drift (the 24h window cannot be captured with close-to-close fills).
-* **Never:** post-earnings drift in mega-caps as a standalone reason; trading a gap we cannot see.
-
-## Hypotheses to test during the month (so the playbook learns)
-1. Does the energy leadership survive a Hormuz headline? Measure the largest one-day XLE drawdown against the stop distance.
-2. Does waiting for a follow-through day beat a Monday oversold bounce in NVDA? Track the paper "shadow" entry of NVDA at the 10/19 and 10/22 closes.
-3. Close-to-close fills versus the decision close: how much does the one-day delay cost or save per trade?
-4. Which committee member's ideas earn their keep? Log each agent's ranked picks and score them weekly.
-5. Is the 2x-ETF sleeve worth its decay and gap risk versus holding the underlying with more size?
+## Hypotheses to test during the month
+1. Does buying after a confirming earnings reaction beat holding through the print, net of the volatility collapse?
+2. How much of each shot's result came from direction versus implied-volatility changes? Log the IV at entry and exit.
+3. How costly are spreads? Compare each fill with the mid at the same moment.
+4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
-* 2026-10-17: v1 written. Energy core adopted by consensus; NVDA/SOXL/SQQQ held as conditional ideas pending flip signals.
+* 2026-10-17: v1 written (stocks/ETFs, energy core).
+* 2026-10-17: v2. Owner chose options with the $500 loss budget; stock buys off; $1,500 cash floor enforced in code; XLE/GUSH proposals cancelled.

@@ -18,11 +18,17 @@ printed or written to disk.
   quotes.py check                         which providers are reachable from this environment
   quotes.py get SPY XLE                   live consensus quote
   quotes.py closes --date 2026-10-19 --tickers SPY,XLE --out data/prices/2026-10-19.csv
+  quotes.py chain XLE --expiry 2026-11-20 --type C --near 68      option chain slice (Cboe, 15-min delayed)
+  quotes.py option XLE261120C00068000                              one contract
+
+Options use OCC symbols (XLE261120C00068000 = XLE, 2026-11-20, call, strike 68). Their only free source is Cboe's
+delayed chain, so option prices are single-source; in live mode the broker's real-time quote is the second check.
 """
 import argparse
 import csv
 import json
 import os
+import re
 import statistics
 import sys
 import urllib.error
@@ -243,6 +249,58 @@ LIVE = {"yahoo": yahoo_live, "finnhub": finnhub_live, "alpaca": alpaca_live}
 DAILY = {"yahoo": yahoo_daily, "cboe": cboe_daily, "alpaca": alpaca_daily}  # stooq_daily available but off
 
 
+# ---------------------------------------------------------------- options (Cboe delayed chain)
+OCC = re.compile(r"^([A-Z]{1,6})(\d{2})(\d{2})(\d{2})([CP])(\d{8})$")
+_CHAINS = {}
+
+
+def parse_occ(sym):
+    m = OCC.match(sym or "")
+    if not m:
+        return None
+    u, yy, mm, dd, cp, k = m.groups()
+    return {"underlying": u, "expiry": date(2000 + int(yy), int(mm), int(dd)), "type": cp, "strike": int(k) / 1000}
+
+
+def cboe_chain(underlying):
+    if underlying not in _CHAINS:
+        url = f"{base('cboe', 'https://cdn.cboe.com')}/api/global/delayed_quotes/options/{urllib.parse.quote(underlying)}.json"
+        data = get_json(url)
+        try:
+            _CHAINS[underlying] = {o["option"]: o for o in data["data"]["options"]}
+        except (KeyError, TypeError) as e:
+            raise ProviderError("parse", f"cboe chain: {e}") from e
+    return _CHAINS[underlying]
+
+
+def option_quote(sym):
+    """Bid/ask/mid/last for one contract from Cboe's delayed chain (single source)."""
+    occ = parse_occ(sym)
+    if not occ:
+        raise ProviderError("parse", f"{sym} is not an OCC option symbol")
+    o = cboe_chain(occ["underlying"]).get(sym)
+    if o is None:
+        raise ProviderError("nodata", f"{sym} not in Cboe chain")
+    bid, ask, last = positive(o.get("bid")) or 0.0, positive(o.get("ask")) or 0.0, positive(o.get("last_trade_price"))
+    mid = round((bid + ask) / 2, 4) if bid and ask else None
+    ltt = o.get("last_trade_time")
+    return {"symbol": sym, "bid": bid, "ask": ask, "mid": mid, "last": last, "theo": positive(o.get("theo")),
+            "iv": o.get("iv"), "delta": o.get("delta"), "oi": o.get("open_interest"), "volume": o.get("volume"),
+            "last_trade_time": ltt, "source": f"cboe delayed chain (single source) {datetime.now(ET):%Y-%m-%dT%H:%M} ET"}
+
+
+def option_mark(sym, day):
+    """End-of-day mark for an option: mid if the market is sane, else last trade of that day, else theo, else bid."""
+    q = option_quote(sym)
+    if q["mid"] and q["ask"] and (q["ask"] - q["bid"]) / q["mid"] <= 0.5:
+        return q["mid"], q, "mid"
+    if q["last"] and str(q["last_trade_time"])[:10] == day:
+        return q["last"], q, "last trade"
+    if q["theo"]:
+        return q["theo"], q, "cboe theo"
+    return q["bid"], q, "bid"
+
+
 # ---------------------------------------------------------------- consensus
 def consensus(quotes, tol=TOL, need=2):
     """quotes: list of quote dicts for one symbol. Returns dict with status ok|single|disagree|none."""
@@ -343,6 +401,27 @@ def cmd_get(a):
     sys.exit(1 if bad else 0)
 
 
+def cmd_chain(a):
+    rows = []
+    for sym, o in cboe_chain(a.underlying.upper()).items():
+        occ = parse_occ(sym)
+        if not occ or (a.expiry and occ["expiry"].isoformat() != a.expiry) or (a.type and occ["type"] != a.type.upper()):
+            continue
+        rows.append((abs(occ["strike"] - a.near) if a.near else 0, occ, o))
+    rows.sort(key=lambda r: (r[1]["expiry"], r[0]))
+    print(f"{'contract':20} {'exp':10} {'type':4} {'strike':>8} {'bid':>7} {'ask':>7} {'spread%':>7} {'iv':>6} {'delta':>6} {'oi':>7} {'vol':>6}")
+    for _, occ, o in rows[: a.n]:
+        bid, ask = o.get("bid") or 0, o.get("ask") or 0
+        mid = (bid + ask) / 2 if bid and ask else 0
+        spr = f"{(ask - bid) / mid:.0%}" if mid else "-"
+        print(f"{o['option']:20} {occ['expiry']} {occ['type']:4} {occ['strike']:8.2f} {bid:7.2f} {ask:7.2f} {spr:>7} "
+              f"{(o.get('iv') or 0):6.2f} {(o.get('delta') or 0):6.2f} {int(o.get('open_interest') or 0):7d} {int(o.get('volume') or 0):6d}")
+
+
+def cmd_option(a):
+    print(json.dumps(option_quote(a.symbol.upper()), indent=1, default=str))
+
+
 def cmd_closes(a):
     syms = [s.strip().upper() for s in a.tickers.split(",") if s.strip()]
     res = closes(a.date, syms, allow_single=a.allow_single)
@@ -375,6 +454,16 @@ def main():
     cl.add_argument("--out")
     cl.add_argument("--allow-single", action="store_true")
     cl.set_defaults(fn=cmd_closes)
+    ch = sub.add_parser("chain")
+    ch.add_argument("underlying")
+    ch.add_argument("--expiry")
+    ch.add_argument("--type", choices=["C", "P", "c", "p"])
+    ch.add_argument("--near", type=float, help="sort by distance of strike from this price")
+    ch.add_argument("-n", type=int, default=12)
+    ch.set_defaults(fn=cmd_chain)
+    op = sub.add_parser("option")
+    op.add_argument("symbol")
+    op.set_defaults(fn=cmd_option)
     a = p.parse_args()
     a.fn(a)
 

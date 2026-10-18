@@ -37,6 +37,8 @@ happens: nothing new fills.
    * Live prices: `python3 trading-experiment/quotes.py get TICKER ... --allow-single` for every held ticker, every pending proposal, and the benchmark (Yahoo, single source until
      a second live source exists: Finnhub key or the broker connector). Compare them with each proposal's `--max-price`, each position's stop and target. They are decision inputs
      only, never an execution price.
+   * Options (the current strategy): `python3 trading-experiment/quotes.py option <OCC>` for every held or proposed contract (bid, ask, IV, delta, open interest), and
+     `quotes.py chain <UNDERLYING> --expiry ... --type C|P --near <price>` to re-check the strike choice. Reject anything that fails the liquidity filter in `playbook.md`.
    * Feed not READY: WebSearch for the last hours' news on the same tickers and the swing factors (oil/Hormuz headlines, rates, AI-credit stress, index direction today). Treat any
      intraday price from search as unverified color, never as an execution price.
 2. **Re-evaluate each position.** Hold, trim or exit? Check the stop, the target, the regime switches and time stops in `playbook.md`, and the guardrails in `RULES.md`
@@ -50,8 +52,10 @@ happens: nothing new fills.
    python3 trading-experiment/tracker.py order add ... --confirm           # new idea, decided now, fills at today's close
    ```
    Anything left unconfirmed does not fill. At most 4 fills in total; doing nothing is a valid outcome. Prefer smaller steps and staging when the information is mixed.
+   Confirming an option stamps its current bid/ask into the order; that is its paper fill price. If the spread is wide or the quote looks stale, do not confirm.
 5. **Real orders (only if `live.enabled` is true in `config.json`; follow `LIVE_MODE.md` exactly).** After the confirmations, run `live.py check --marks ...` with broker prices, then pass each
-   confirmed order through `live.py gate`. Place only what a gate ticket approves, then `placed` / `record` / `fail`. If the loss limit has tripped, flatten and halt as `check` instructs. Never
+   confirmed order through `live.py gate`. Options: take the live ask from the broker's `get_option_quotes` and pass it as `--limit`; place a single-leg
+   buy-to-open LIMIT order for exactly the approved contracts with `place_option_order` (sell-to-close the same way at the bid). Place only what a gate ticket approves, then `placed` / `record` / `fail`. If the loss limit has tripped, flatten and halt as `check` instructs. Never
    place an order the gate refused, and never work around a refusal.
 6. **Red-team when it matters.** If today's confirmed buys total 20% or more of equity, or include a leveraged ETF, spawn one fresh `risk` agent with the order list, the portfolio
    and the guardrails (reply in at most 100 words: approve / modify / reject per order) and heed it before confirming.
@@ -85,6 +89,9 @@ happens: nothing new fills.
    python3 trading-experiment/tracker.py order add --ticker XYZ --side buy --usd 400 --tier A --stop 95.50 --target 120 --max-price 104 --priority 2 --thesis "why, catalyst, risk"
    ```
    These are non-binding. Tomorrow's Run A will re-judge them with fresh information. Use `--max-price` so a gap cannot make us chase. Every order needs a written thesis.
+   Options strategy (current): propose contracts by OCC symbol, sized in premium dollars, with the -50% premium stop, e.g.
+   `tracker.py order add --ticker NVDA261120C00225000 --side buy --usd 250 --tier O --stop-pct 50 --max-price 6.60 --thesis "..."`.
+   Premium can only come from cash above the $1,500 floor (the code refuses more). Plan shots per `playbook.md`.
 4. **Journal and playbook.** Append to `journal.md`: date, two-line market recap, equity versus SPY, which orders filled and why they had been confirmed, agent opinions in one line each,
    the proposals queued, one lesson. If a lesson changes how we trade, edit `playbook.md` and log it in the changelog.
 5. **Publish.** `python3 trading-experiment/tracker.py report`, refresh the dashboard per `DASHBOARD.md`, then commit and push:
@@ -106,4 +113,5 @@ scheduled tasks and disable them with `update_trigger enabled=false`.
 * Never fabricate a price, headline or date. If data is missing, say so and skip.
 * Never edit past ledger rows. Never use information from after an order's fill date when deciding it.
 * A confirmation is a fresh decision, not a rubber stamp: write the reason in the journal.
+* Options: buy-to-open and sell-to-close only. Never sell to open, never multi-leg, never exercise, never hold into expiry.
 * Real orders exist only in live mode, only through `live.py gate` tickets, within the $2,000 / $500-loss limits of `LIVE_MODE.md`. Never transfers, account changes, options, crypto, margin or shorting. Never remove `KILL_SWITCH`.

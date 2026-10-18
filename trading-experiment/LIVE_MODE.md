@@ -12,6 +12,8 @@
 | Real capital at work | **$2,000 at most**, whatever the account holds |
 | Loss limit | **Down $500** (experiment equity at or below $1,500): no new buys, everything sold to cash, then `KILL_SWITCH` is created and all orders stop **until the owner and Claude talk** |
 | Largest single order | 30% of the cap ($600) |
+| Options (current strategy) | buy-to-open / sell-to-close only, whole contracts, **limit orders at the broker's live quote**; premium only from cash above the **$1,500 floor**, so the $500 limit holds even if every option expires worthless |
+| Stock / ETF buys | switched off by the options strategy (were: 30% per order, leveraged ETFs 15%) |
 | Leveraged / inverse ETF | 15% of the cap ($300) per name |
 | Fills per day | 4, no same-day round trips, no shorting |
 | Orders allowed | only those the pre-close run confirmed that day, only through a `live.py gate` ticket, before 15:50 ET (flatten sells until 15:58) |
@@ -69,16 +71,19 @@ https://robinhood.com/us/en/support/articles/setting-up-an-agent/
 | Prices and research | `get_equity_quotes` (real-time, up to 20 symbols; the second live source for `quotes.py`), `get_index_quotes`, `get_equity_historicals`, `get_equity_fundamentals`, `get_equity_news`, `get_earnings_calendar`, `get_earnings_results`, `get_equity_analyst_ratings` |
 | Before an order | `get_equity_tradability` (tradable? fractional?), `review_equity_order` (pre-trade warnings) |
 | Orders (only with an approved `live.py gate` ticket) | `place_equity_order`, `get_equity_orders`, `cancel_equity_order` (own experiment orders only) |
-| Reconciliation | `get_equity_positions` (MCP account) |
+| Reconciliation | `get_equity_positions`, `get_option_positions` (MCP account) |
+| Options (current strategy) | `get_option_chains`, `get_option_instruments`, `get_option_quotes` (live bid/ask: the `--limit` for the gate), `review_option_order`, `place_option_order` (single-leg buy-to-open / sell-to-close, gate ticket only), `get_option_orders`, `cancel_option_order` (own orders only) |
 
-**Never call:** any `*option*` tool (`place_option_order`, `exercise_option`, ...), any `*crypto*` tool, `place_advanced_order`, margin-upgrade tools, and no watchlist, alert, scan or Legend writes.
-In the connector's tool permissions, turn off at least: `place_option_order`, `exercise_option`, `cancel_option_exercise`, `place_crypto_order`, `place_advanced_order`.
+**Never call:** `exercise_option`, `cancel_option_exercise`, any multi-leg or sell-to-open option order, any `*crypto*` tool, `place_advanced_order`, margin-upgrade tools, and no
+watchlist, alert, scan or Legend writes. `get_option_level_upgrade_info` only to give the owner the link if the agent account lacks options approval.
+In the connector's tool permissions: keep `place_option_order` ON (the strategy needs it); turn off at least `exercise_option`, `cancel_option_exercise`, `place_crypto_order`,
+`place_advanced_order`. The agent account needs **options Level 2** (single-leg) approval of its own; the owner applies in the app if it is missing.
 
 ## Enabling checklist (all of it must pass before `live.enabled` becomes true)
 1. Connect the connector at https://claude.ai/customize/connectors (custom connector, URL `https://agent.robinhood.com/mcp/trading`), sign in, and set every transfer, ACH, option, crypto and account-setting tool to off in its tool permissions.
 2. Start a fresh session (connectors are read when a session starts). List the connector's tools; write them to `data/live_tools.md`, marked read-only or order-placing, and confirm the
    forbidden ones above are off. Identify the MCP account with `get_accounts` and record only its id.
-3. Read-only test: `get_equity_quotes` for SPY, XLE, GUSH; `get_equity_tradability` for each proposal ticker (incl. GUSH, a leveraged ETF); `get_portfolio` for the MCP account
+3. Read-only test: `get_option_quotes` for one NVDA and one XLE contract (compare with `quotes.py option`); confirm the agent account's options level; `get_equity_quotes` for SPY, XLE, GUSH; `get_equity_tradability` for each proposal ticker (incl. GUSH, a leveraged ETF); `get_portfolio` for the MCP account
    (expect $2,000 buying power, no positions). Nothing placed.
 4. Make the connector available to the unattended runs (the scheduled tasks were created without connectors, so they are recreated with it attached) and test that a scheduled run sees it.
 5. Only then commit `live.enabled: true`. Watch the first live day closely.
