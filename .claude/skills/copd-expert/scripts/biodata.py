@@ -386,7 +386,6 @@ def cmd_blood_cells(a):
     out({"symbol": a.symbol, "ensembl": ens, "source": "Human Protein Atlas per-gene XML",
          "retrieved": dt.date.today().isoformat(), "n_cell_types": len(rows),
          "all_cell_types_ntpm": rows if a.n <= 0 else rows[: a.n],
-         "fold_over_lowest": round(top / max(rows[-1]["ntpm"], 0.01), 1),
          "hpa_specific_field": specific,
          "transportable_claim": {
              "rank_order": " > ".join(r["cell_type"] for r in rows
