@@ -183,6 +183,6 @@ WTI 98.37, 10y 5.136% (+3.8bp), QQQ +1.3% (AI rebound), TLT -0.6%. Since last ev
   approval (owner's standing confirmation). Placed 14:47:05, **filled 1 @ 3.75 at 14:47:06** (agent account ••••5318). Robinhood position reconciled: 1 long, avg $375.00.
   Cost $375.04; budget left above the $1,000 floor $624.96. Live paid 0.13 more than the paper stamp (delayed Cboe quote vs live).
 - **Plan for the position:** -50% stop = bid <= 1.87, checked on live quotes every pre-close; sell the whole contract at bid >= 7.50 (2x); out if no S&P record close by 11/4;
-  out by the 11/18 pre-close. No other new buy before 10/28 while it is open (protects the MSFT reserve). Next earnings risk on the tape: NFLX tonight is Tuesday; META/TSLA Wed.
+  out by the 11/18 pre-close. No other new buy before 10/28 while it is open (protects the MSFT reserve). Earnings on the tape: NFLX reports Tue 10/20, META and TSLA Wed 10/21, all after the close.
 - Feed: official closes READY (Yahoo + Cboe); live stock quotes single-source (Yahoo); option quotes Robinhood live and Cboe delayed.
 - Lesson: run quote -> gate -> review -> place back to back; a minute's delay moved this quote 3%.
