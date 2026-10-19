@@ -164,3 +164,9 @@ the cap; $600 single order, 4 positions, 4 fills, -6% day cool-off and the $1,00
 MSFT, 3-day expiry note, verified base rate, universe (TLT/IWM/COP in, XLE out).
 
 **Lesson.** A red team that reads the actual code path is worth more than another opinion on direction: dry-run the gate at the planned size before every decision day.
+
+**Pre-open 2026-10-19 (09:13-09:25 ET).** Futures ES +0.5%, NQ +1.3%, RTY +0.5%; WTI 97.56 (-1.5%), Brent 107.88 (-1.8%); 10y 5.10% (flat); VIX 18.41 (-7.9%); SPY pre-market 767.23.
+Drivers: AI/semis rebound after the 8-session slide (CoreWeave +6% on a Goldman upgrade, Intel and Micron up to +6%), China GDP beat, softer oil; Hormuz rhetoric continues (Trump and
+Araghchi trade threats; Macron's Gulf tour seeks to reopen the strait). Plan unchanged; O003's conditions look on track (SPY inside 752-772, VIX inside 17-24, Brent < 112), but
+the Cboe chain already shows the 11/20 785C at 5.32/5.39, above its 5.00 ceiling, so **O005** adds the 11/20 790C (3.75/3.82, delta 0.24, OI 15,312, ceiling 4.40) as an alternate:
+one of the two, never both. O004 (TLT) is unlikely: its 10y <= 5.05% condition is not met. Nothing confirmed; the 14:43 run decides on live quotes.
