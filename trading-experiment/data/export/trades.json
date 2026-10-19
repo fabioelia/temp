@@ -1,1 +1,15 @@
-[]
+[
+ {
+  "id": "T001",
+  "date": "2026-10-19",
+  "side": "buy",
+  "ticker": "SPY261120C00790000",
+  "qty": 1.0,
+  "fill_price": 3.62,
+  "gross": 362.0,
+  "fees": 0.04,
+  "slippage_bps": 0.0,
+  "thesis": "Alternate to O003, added pre-open 10/19: with SPY pre-market 767.23 the 11/20 785C shows 5.32/5.39 on Cboe, above O003's 5.00 ceiling. Same thesis, conditions and exits as O003 (historian base rate; confirm only if at 14:43 SPY 752-772, VIX 17-24, VIX9D <= VIX3M, Brent < 112, spread <= 5%; sell whole at bid >= 2x fill, -50% stop, out if no S&P record by 11/4, out by 11/18). Use only if O003's live ask is above 5.00; never both (one new shot a day). 790C pre-open 3.75/3.82, delta 0.24, OI 15,312; keeps the 11/20 expiry so the 22-session base-rate window fits, and keeps the MSFT reserve.",
+  "price_source": "decision-time quote 2026-10-19T14:45-04:00 (cboe delayed chain (single source) 2026-10-19T14:45 ET)"
+ }
+]

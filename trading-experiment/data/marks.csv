@@ -1,0 +1,11 @@
+date,ticker,close,source
+2026-10-19,COP,145.24,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,IWM,271.28,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,META,705.44,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,MSFT,533.52,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,NVDA,217.09,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,QQQ,718.36,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,SPY,766.48,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,SPY261120C00790000,3.58,"cboe option mid 2026-10-19 (single source, 15-min delayed chain)"
+2026-10-19,TLT,79.46,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"
+2026-10-19,USO,160.81,"yahoo+cboe official close 2026-10-19 (2 sources, spread 0.00%)"

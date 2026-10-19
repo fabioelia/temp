@@ -360,10 +360,14 @@ def live(symbols, need=2, allow_single=False, max_age=120):
 
 
 # ---------------------------------------------------------------- cli
-def last_weekday(today=None):
-    d = (today or datetime.now(ET).date()) - timedelta(days=1)
-    while d.weekday() >= 5:
+def last_weekday(now=None):
+    """The latest weekday session with an official close: today once it is past 16:15 ET, else the one before."""
+    now = now or datetime.now(ET)
+    d = now.date()
+    if d.weekday() >= 5 or now.time() < datetime.strptime("16:15", "%H:%M").time():
         d -= timedelta(days=1)
+        while d.weekday() >= 5:
+            d -= timedelta(days=1)
     return d.isoformat()
 
 
