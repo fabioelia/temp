@@ -186,3 +186,20 @@ WTI 98.37, 10y 5.136% (+3.8bp), QQQ +1.3% (AI rebound), TLT -0.6%. Since last ev
   out by the 11/18 pre-close. No other new buy before 10/28 while it is open (protects the MSFT reserve). Earnings on the tape: NFLX reports Tue 10/20, META and TSLA Wed 10/21, all after the close.
 - Feed: official closes READY (Yahoo + Cboe); live stock quotes single-source (Yahoo); option quotes Robinhood live and Cboe delayed.
 - Lesson: run quote -> gate -> review -> place back to back; a minute's delay moved this quote 3%.
+
+## 2026-10-19 (Mon) Run B: day 1 booked
+**Recap.** SPY 766.48 (+0.42%), QQQ 718.36 (+1.2%) on the AI/semis rebound, but on light volume (SPY 38.4M shares vs 64.0M Friday) and SPY closed under its 50-day
+(768.37). VIX ~18.4 (-8%); 10y 5.14-5.15% (+4-6bp, all real yield; breakeven flat at 2.35%); Brent ~109.4. Closes cross-checked by Yahoo + Cboe.
+**Equity.** Real $1,982.96 (-$17.04, -0.85%: 1 x SPY 11/20 790C bought 3.75, marked 3.58 by Robinhood at 16:15). Paper $1,995.96 (-0.20%: same contract at the stamped
+3.62, marked 3.58). SPY buy-and-hold from today's close $1,999.0 (-0.05%). Fees to date $0.04. Real and paper differ by the 0.13 gap between the delayed Cboe stamp and the live fill.
+**Feed fix.** `quotes.py check` asked for the previous weekday even after the close, so Cboe (already serving 10/19) reported NODATA and the feed read NOT READY; it now uses
+today's close after 16:15 ET. Closes were verified before booking.
+**Committee (research/2026-10-19/).** All four: hold shot 1; no reason to break the no-new-buy rule before 10/28.
+- macro: add a rates exit (10y > 5.31% with breakeven > 2.40%); skip MSFT if the Fed hikes or 10y > 5.31%; October hike odds ~14.5% (Polymarket).
+- momentum: day 1 of a rally attempt on lower volume; add a rally-failure exit (SPY 760.64 / Nasdaq 26,023.10) and a 10/27 time stop; skip MSFT below its 50-day (506.20).
+- catalyst: dates confirmed (FOMC 10/27-28, MSFT 10/28); the 580C now asks 4.70, 590C 3.05/3.20 fits; SpaceX ($2.0T) reports Tue night, missing from our calendar.
+- options-vol: theta -$90 to -$104/week; 2x needs SPY 782-785 by 10/23 or 788-791 by 11/4; the -50% stop sits at SPY ~760 on 10/23; MSFT event vol 0.68x history.
+- risk: approve a, c, d, e; modify b to the 14:43 price (not intraday lows); MSFT by `--qty 1` (dollar sizing buys 2 below 1.82), lowest strike >= 8% OTM.
+**Proposals for Tue 10/20:** none (pacing rule). Exits a-e and the shot-2 tree are in playbook.md "Open shots".
+**Lesson.** On a 0.24-delta, one-month index call the -50% premium stop sits less than 1% below spot: it is a time-and-noise stop more than a thesis stop. Next time, set
+option stops in underlying terms first (where is the thesis wrong?) and size so that level, not a premium percentage, is the exit.

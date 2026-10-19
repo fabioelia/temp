@@ -33,6 +33,15 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * Closing-basis stop at -50% of premium, so a failed shot leaves half of it for the next one (set with `--stop-pct 50`).
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
 
+## Open shots (exits checked at every 14:43 pre-close on live quotes)
+* **Shot 1: 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
+  a) bid <= 1.87 (-50%; about SPY 760 on 10/23, 764-765 by 10/28); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
+  not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
+  2.40%; e) bid >= 7.50 (2x), no S&P record close by 11/4, or the 11/18 pre-close.
+* **Shot 2 plan, Wed 10/28 ~15:30 ET** (after the 14:30 press conference, before 15:50): skip if the Fed hiked, ^TNX is above 5.31% at 15:30, MSFT closed below its 50-day
+  (506.20) beforehand, or MSFT's event implied move is above 6.2%. Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
+  whose ask is <= 3.60 with a spread <= 5% (580C today, 590C as fallback); else skip. Sell it at the 10/29 14:43 decision. Keep >= $361 above the floor until then.
+
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
   No event trade on META (no edge on an expiry that clears the 3-day rule); trade the reaction (decide 10/22) rather than holding through. Thu 10/22: earliest follow-through day.
@@ -76,6 +85,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-19: shot 1 opened (SPY 11/20 790C @ 3.75 real); its exit set (a-e) and the shot-2 decision tree written down after the Run B committee and risk
+  review; MSFT sizing by contract, not dollars. SpaceX reports Tue 10/20 after the close (catalyst, $2.0T).
 * 2026-10-18 (Sunday review, v2.1): event-vol rule, FOMC-day timing, one shot a day with a reserve for the 10/28 MSFT shot, the 3-day expiry note, the verified S&P base
   rate, TLT/IWM/COP added to the universe (XLE out), ETF spread limit covers commodity ETFs, calendar fixes (AMD 11/3; META event trade dropped).
 * 2026-10-17: v1 written (stocks/ETFs, energy core).
