@@ -282,7 +282,7 @@ def cmd_order_add(a):
               f"(fills at today's close, {gtd})")
     else:
         print(f"PROPOSED {o['id']}: {o['side']} {o['ticker']} {o['size_type']}={o['size_value']} (not binding). It fills only if "
-              f"re-confirmed (`order confirm {o['id']}`) before {CUTOFF:%H:%M} ET on a fill day between {next_trading_day(created)} and {gtd}")
+              f"re-confirmed (`order confirm {o['id']}`) before {CUTOFF:%H:%M} ET on a fill day between {created if is_trading_day(created) else next_trading_day(created)} and {gtd}")
 
 
 def stamp_quote(o):

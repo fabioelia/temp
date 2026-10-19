@@ -169,4 +169,4 @@ MSFT, 3-day expiry note, verified base rate, universe (TLT/IWM/COP in, XLE out).
 Drivers: AI/semis rebound after the 8-session slide (CoreWeave +6% on a Goldman upgrade, Intel and Micron up to +6%), China GDP beat, softer oil; Hormuz rhetoric continues (Trump and
 Araghchi trade threats; Macron's Gulf tour seeks to reopen the strait). Plan unchanged; O003's conditions look on track (SPY inside 752-772, VIX inside 17-24, Brent < 112), but
 the Cboe chain already shows the 11/20 785C at 5.32/5.39, above its 5.00 ceiling, so **O005** adds the 11/20 790C (3.75/3.82, delta 0.24, OI 15,312, ceiling 4.40) as an alternate:
-one of the two, never both. O004 (TLT) is unlikely: its 10y <= 5.05% condition is not met. Nothing confirmed; the 14:43 run decides on live quotes.
+one of the two, never both (O005 can be confirmed today: an order created on a trading day is valid that day; the proposal message wrongly printed 10/20 and is fixed). O004 (TLT) is unlikely: its 10y <= 5.05% condition is not met. Nothing confirmed; the 14:43 run decides on live quotes.
