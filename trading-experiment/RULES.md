@@ -24,6 +24,21 @@ multi-leg options or exercise (buying calls/puts is the strategy, below); never 
 * Whole contracts only (1 contract = 100 shares). A ticker needs a quote at decision time; options fill at the bid/ask stamped when the order is confirmed (Cboe delayed chain in paper,
   the broker's live quote with a limit order in live mode). Option marks are single-source (Cboe), flagged as such.
 
+## Taxes (US; a memo for the owner, not tax advice)
+* Every trade here is held for days or weeks, so every gain is **short-term**: taxed as ordinary income at the owner's marginal rate plus state tax. `config.json`
+  `tax_rate_memo` (24% now) drives the estimate in `STATUS.md`; set it to the owner's real combined rate when known. Net losses offset other capital gains, then up to
+  $3,000 a year of ordinary income, and the rest carries forward. Robinhood's 1099-B for the agent account is the official record; `data/live_ledger.csv` is the backup.
+* **Wash sales.** A loss is disallowed (deferred into the replacement's cost) when the same or a substantially identical security is bought within 30 days before or
+  after the losing sale, **in any of the owner's accounts, IRAs included** (an IRA purchase makes the loss permanent). Options on one underlying at nearby strikes may
+  count as substantially identical, and buying calls within 30 days of a losing sale of the shares counts. `tracker.py report` and `live.py status` flag possible cases.
+  Within the experiment a flag only shifts timing: every position closes by 11/18, so a deferred loss is released inside 2026 unless a replacement is bought after the
+  last exit, before 12/18. The owner's main account and IRAs are never read here, so the owner checks that side (see `LIVE_MODE.md`).
+* **No same-day round trips** (enforced by the gate) keeps the account clear of the pattern-day-trader rule.
+* Section 1256 index options (SPX, XSP) would be taxed 60% long-term / 40% short-term, which saves roughly $20-40 per $400 of gain (24-37% brackets). Checked
+  2026-10-19: XSP 11/20 calls quote 1-2% spreads, as tight as SPY's, but open interest is only 16-304 per strike (the liquidity filter wants 1,000), and the quote, ledger
+  and gate code handle stock/ETF options only (index roots, cash settlement). So the experiment keeps SPY/ETF/stock options for now; revisit for a large index shot
+  (code support, tests and a Robinhood order review for any index-option fee first).
+
 ## Execution protocol (no look-ahead, nothing locked in)
 1. Orders queued by the evening and Sunday runs are **proposals**. They are not binding and fill nothing by themselves (`tracker.py order add ...`, each with a written thesis).
 2. A pre-close run on the fill day re-evaluates every position and every proposal with the newest information, then **confirms** (`order confirm`), cancels, or adds a new order

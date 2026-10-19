@@ -129,6 +129,50 @@ def cash_floor():
     return CFG["starting_cash"] - STRAT.get("loss_limit_usd", CFG["starting_cash"])
 
 
+def underlying(t):
+    m = OCC_RE.match(t or "")
+    return m[1] if m else t
+
+
+def tax_memo(fills):
+    """US tax view of a list of fills ({date, side, ticker, qty, price, fees}; price per share). Average cost per
+    contract, like the ledger. Holding period decides short- vs long-term (over one year). A loss sale is flagged as a
+    possible wash sale when the same underlying is bought within 30 days after it, or a different contract on it was
+    bought within 30 days before it: options on one underlying may count as substantially identical. Memo only."""
+    pos, sales, buys = {}, [], []
+    for r in sorted(fills, key=lambda r: r["date"]):
+        t, q, px, f = r["ticker"], float(r["qty"]), float(r["price"]), float(r["fees"] or 0)
+        m, day = mult(t), date.fromisoformat(r["date"])
+        p = pos.setdefault(t, {"qty": 0.0, "cost": 0.0, "opened": day})
+        if r["side"] == "buy":
+            if p["qty"] <= 1e-9:
+                p["opened"] = day
+            p["qty"] += q
+            p["cost"] += q * px * m + f
+            buys.append((day, t))
+        else:
+            avg = p["cost"] / p["qty"]
+            pl = (q * px * m - f) - avg * q
+            sales.append({"date": day, "ticker": t, "pl": pl, "long": (day - p["opened"]).days > 365})
+            p["cost"] -= avg * q
+            p["qty"] -= q
+    wash = []
+    for x in sales:
+        if x["pl"] >= 0:
+            continue
+        u = underlying(x["ticker"])
+        hits = [(d, t) for d, t in buys if underlying(t) == u and (
+                (x["date"] < d <= x["date"] + timedelta(days=30)) or
+                (t != x["ticker"] and x["date"] - timedelta(days=30) <= d < x["date"]))]
+        if hits:
+            wash.append({"sale": x["date"].isoformat(), "ticker": x["ticker"], "loss": round(x["pl"], 2),
+                         "replacements": [f"{d} {t}" for d, t in hits]})
+    st = sum(x["pl"] for x in sales if not x["long"])
+    lt = sum(x["pl"] for x in sales if x["long"])
+    return {"short_term": round(st, 2), "long_term": round(lt, 2), "net": round(st + lt, 2), "wash": wash,
+            "est_tax": round(max(st + lt, 0) * CFG["tax_rate_memo"], 2)}
+
+
 def calc_fees(side, qty, price, ticker=""):
     if is_option(ticker):
         notional = qty * price * 100
@@ -804,6 +848,16 @@ def write_reports(D):
           f"- Win rate: {s['win_rate'] * 100:.0f}%" if s["win_rate"] is not None else "- Win rate: n/a",
           f"- Payoff (avg win / avg loss): {s['payoff']:.2f}" if s["payoff"] else "- Payoff: n/a",
           f"- Max drawdown: {pct(s['max_drawdown'])}"]
+    tx = tax_memo([{"date": r["date"], "side": r["side"], "ticker": r["ticker"], "qty": r["qty"],
+                    "price": r["fill_price"], "fees": r["fees"]} for r in read_csv(LEDGER)])
+    L += ["", "## Taxes (memo, not tax advice)", "",
+          f"- Realized this year: short-term {money(tx['short_term'])}, long-term {money(tx['long_term'])}. Options held under a year are "
+          f"short-term, taxed as ordinary income.",
+          (f"- Est. tax on the net gain at {int(CFG['tax_rate_memo'] * 100)}%: {money(tx['est_tax'])}" if tx["net"] > 0 else
+           f"- Net loss {money(tx['net'])}: offsets other capital gains, or up to $3,000 of ordinary income a year; the rest carries forward."
+           if tx["net"] < 0 else "- Nothing realized yet."),
+          f"- Possible wash sales: {len(tx['wash'])}" + "".join(
+              f"\n  - {w['sale']} {w['ticker']} loss {money(w['loss'])} -> replaced by {', '.join(w['replacements'])}" for w in tx["wash"])]
     L += ["", "## Last 10 fills", "", "| Date | Side | Ticker | Qty | Fill | Fees | Thesis |", "|---|---|---|---|---|---|---|"]
     for t in b["trades"][-10:]:
         L.append(f"| {t['date']} | {t['side']} | {t['ticker']} | {float(t['qty']):.4f} | {t['fill_price']} | "

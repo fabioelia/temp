@@ -26,6 +26,12 @@ _All cash._
 - Payoff: n/a
 - Max drawdown: +0.00%
 
+## Taxes (memo, not tax advice)
+
+- Realized this year: short-term $0.00, long-term $0.00. Options held under a year are short-term, taxed as ordinary income.
+- Nothing realized yet.
+- Possible wash sales: 0
+
 ## Last 10 fills
 
 | Date | Side | Ticker | Qty | Fill | Fees | Thesis |

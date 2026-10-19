@@ -27,6 +27,12 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 Deposits, withdrawals, transfers, ACH, wires; changing any account setting; selling options to open, multi-leg options, exercising options (buying calls/puts through the gate is allowed, owner's choice 2026-10-17); crypto, margin, short selling; any order the gate did not approve; touching holdings that are not part of
 the experiment; reading anything of the account beyond what the routine needs (prices, the experiment's positions and orders, buying power). If a tool looks like it does one of these, do not call it.
 
+## Taxes: what the owner checks
+Gains here are short-term (ordinary income). The wash-sale rule spans all of the owner's accounts, and the agent cannot see the others. If you sell shares or
+options at a loss in your main account or an IRA, tell me the tickers and dates: I will not buy options on those underlyings within 30 days. And avoid buying the
+experiment's underlyings (currently SPY, TLT, MSFT) in an IRA within 30 days after one of its losing exits. `live.py status` lists possible wash sales on the
+experiment's own fills.
+
 ## Stop it yourself, any time
 1. Create a file named `KILL_SWITCH` in `trading-experiment/` on the branch (GitHub "Add file" does it in seconds). Every run pulls first and refuses all orders while it exists.
 2. Or tell me in chat. Or disable the scheduled tasks (`AI Trading Challenge: pre-close decision` is the only one that can place orders).

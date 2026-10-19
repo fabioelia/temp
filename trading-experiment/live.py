@@ -315,6 +315,12 @@ def cmd_status(a):
     if LIVE.get("enabled"):
         print(f"experiment equity (last known prices): ${experiment_equity(st, day):,.2f}")
     print(f"real fills today: {len(st['per_day'].get(day, []))} of {T.CFG['max_trades_per_day']}")
+    tx = T.tax_memo([{"date": r["date"], "side": r["side"], "ticker": r["ticker"], "qty": r["qty"],
+                      "price": r["avg_price"], "fees": r["fees"]} for r in T.read_csv(LIVE_LEDGER)])
+    print(f"tax memo (real fills, this year): short-term ${tx['short_term']:+,.2f}, long-term ${tx['long_term']:+,.2f}, "
+          f"possible wash sales {len(tx['wash'])}")
+    for w in tx["wash"]:
+        print(f"  WASH? {w['sale']} {w['ticker']} loss ${w['loss']:,.2f} -> {', '.join(w['replacements'])}")
     for t, p in sorted(st["pos"].items()):
         print(f"  {t:6} {p['qty']:.4f} sh, cost ${p['cost']:,.2f}")
     open_t = [t for t in tickets() if t["status"] in ("approved", "placed")]
