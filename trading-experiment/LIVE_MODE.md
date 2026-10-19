@@ -63,7 +63,8 @@ the app for one-tap approval instead, and the runs simply place it for approval 
 ## Placing a real option order, step by step
 1. `get_accounts` → use the single agent-tradable account (nickname MCP, ending 5318). Never the main account.
 2. `get_option_instruments` (chain_symbol, expiration, strike, type) → the contract's `id`; `get_option_quotes` → live bid/ask, mark, `high_fill_rate_buy_price`.
-3. Choose the limit: for a buy, the high-fill-rate buy price rounded **down** to the tick ($0.05 at/above $3.00, $0.01 below), never above the ask or the order's `--max-price`.
+3. Choose the limit: for a buy, the high-fill-rate buy price rounded **down** to the contract's tick (`min_ticks` from `get_option_instruments`; SPY and other penny classes
+   trade in $0.01, others $0.05 at/above $3.00), never above the ask or the order's `--max-price`. Pass that tick to the gate with `--tick`.
 4. `live.py gate --order Oxxx --limit <price> --marks ...` → APPROVED ticket with `contracts`, `limit_price`, `ref_id`, or REFUSED (stop).
 5. `review_option_order` (single leg, `side` buy, `position_effect` open, `quantity` = contracts, `type` limit, `price` = limit). If it returns order_checks alerts, stop and journal them.
 6. `place_option_order` with the same legs/quantity/price and `ref_id` from the ticket → `live.py placed --ticket K... --broker-order-id <id>`.

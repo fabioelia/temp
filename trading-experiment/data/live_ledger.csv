@@ -1,0 +1,2 @@
+id,ts_et,date,ticker,side,qty,avg_price,notional,fees,order_id,ticket,broker_order_id,note
+L001,2026-10-19T14:47:22-04:00,2026-10-19,SPY261120C00790000,buy,1.000000,3.75,375.0,0.04,O005,K002,6ad665a9-923f-41f5-828e-6989de7919f2,

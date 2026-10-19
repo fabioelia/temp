@@ -170,3 +170,19 @@ Drivers: AI/semis rebound after the 8-session slide (CoreWeave +6% on a Goldman 
 Araghchi trade threats; Macron's Gulf tour seeks to reopen the strait). Plan unchanged; O003's conditions look on track (SPY inside 752-772, VIX inside 17-24, Brent < 112), but
 the Cboe chain already shows the 11/20 785C at 5.32/5.39, above its 5.00 ceiling, so **O005** adds the 11/20 790C (3.75/3.82, delta 0.24, OI 15,312, ceiling 4.40) as an alternate:
 one of the two, never both (O005 can be confirmed today: an order created on a trading day is valid that day; the proposal message wrongly printed 10/20 and is fixed). O004 (TLT) is unlikely: its 10y <= 5.05% condition is not met. Nothing confirmed; the 14:43 run decides on live quotes.
+
+**Pre-close 2026-10-19 (Run A, 14:44-14:48 ET). First real trade.** Live at 14:44: SPY 767.41 (+0.55%, high 770.46), VIX 18.44 (-7.8%), VIX9D 18.0 <= VIX3M 19.65, Brent 109.36,
+WTI 98.37, 10y 5.136% (+3.8bp), QQQ +1.3% (AI rebound), TLT -0.6%. Since last evening: the AI/semis rebound held into the afternoon, VIX came off its spike, oil eased, yields rose.
+- **O005 CONFIRMED**: BUY 1 SPY261120C00790000. Every O003 condition held (SPY 752-772, VIX 17-24, VIX9D <= VIX3M, Brent < 112, spread 0.5%); the thesis (base rate of a new
+  high within 22 sessions 60%, VIX falling off a spike) is if anything stronger today. Paper fill at the stamped Cboe ask 3.62 (delayed quote).
+- **O003 CANCELLED**: the 11/20 785C's live ask 5.26 (Robinhood) is above its 5.00 ceiling; O005 is its planned alternate (one shot a day).
+- **O004 CANCELLED**: 10y 5.136% fails the <= 5.05% condition.
+- **Real order.** Ticket K001 was gated at 3.65 (the gate forced the $0.05 tick above $3), but the quote moved to 3.76/3.78 within a minute and SPY options trade in $0.01
+  (`min_ticks` from Robinhood), so a 3.65 bid sat below the market; it was never sent and is marked failed. Fix: `live.py gate --tick` takes the contract's tick (test added,
+  58 tests; LIVE_MODE step 3 updated). Re-gated once: K002 at 3.75 (high-fill-rate buy 3.758 rounded down to the cent); `review_option_order` no alerts, fees $0.04, no in-app
+  approval (owner's standing confirmation). Placed 14:47:05, **filled 1 @ 3.75 at 14:47:06** (agent account ••••5318). Robinhood position reconciled: 1 long, avg $375.00.
+  Cost $375.04; budget left above the $1,000 floor $624.96. Live paid 0.13 more than the paper stamp (delayed Cboe quote vs live).
+- **Plan for the position:** -50% stop = bid <= 1.87, checked on live quotes every pre-close; sell the whole contract at bid >= 7.50 (2x); out if no S&P record close by 11/4;
+  out by the 11/18 pre-close. No other new buy before 10/28 while it is open (protects the MSFT reserve). Next earnings risk on the tape: NFLX tonight is Tuesday; META/TSLA Wed.
+- Feed: official closes READY (Yahoo + Cboe); live stock quotes single-source (Yahoo); option quotes Robinhood live and Cboe delayed.
+- Lesson: run quote -> gate -> review -> place back to back; a minute's delay moved this quote 3%.

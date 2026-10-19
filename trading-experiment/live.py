@@ -180,7 +180,9 @@ def cmd_gate(a):
             refuse("an option order needs --limit (per-share premium from the broker's live quote)")
         if (T.occ_expiry(tk) - now.date()).days < strat.get("min_days_to_expiry", 3):
             refuse(f"{tk} expires {T.occ_expiry(tk)}: too close")
-        tick = 0.05 if a.limit >= 3 else 0.01  # Robinhood option ticks: $0.05 at/above $3.00, $0.01 below
+        # the contract's tick from get_option_instruments min_ticks when given (penny classes like SPY trade in $0.01); else the
+        # standard option ticks: $0.05 at/above $3.00, $0.01 below
+        tick = a.tick if a.tick else (0.05 if a.limit >= 3 else 0.01)
         if abs(round(a.limit / tick) * tick - a.limit) > 1e-9:
             refuse(f"limit {a.limit} is not on the ${tick:.2f} tick; round it (down for a buy) first")
         if o["max_price"] and a.limit > float(o["max_price"]):
@@ -338,6 +340,7 @@ def main():
     g.add_argument("--ref-price", type=float)
     g.add_argument("--marks", help="fresh prices for held tickers, e.g. XLE=68.1,GUSH=24.9")
     g.add_argument("--limit", type=float, help="option orders: per-share limit price from the broker's live quote")
+    g.add_argument("--tick", type=float, help="option orders: the contract's tick (min_ticks from get_option_instruments)")
     g.set_defaults(fn=cmd_gate)
     c = sub.add_parser("check")
     c.add_argument("--marks")

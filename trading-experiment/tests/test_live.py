@@ -192,6 +192,13 @@ class LiveOptions(unittest.TestCase):
         t = json.loads(out)
         self.assertEqual((t["contracts"], t["order_type"], t["premium_usd"]), (1, "limit", 255.0))  # $500 budget
 
+    def test_penny_tick_contract_accepts_a_cent_limit_when_told(self):
+        rc, out = self.gate("--order", "O001", "--limit", "3.12")
+        self.assertEqual((rc, "tick" in out), (2, True))
+        rc, out = self.gate("--order", "O001", "--limit", "3.12", "--tick", "0.01")
+        self.assertEqual(rc, 0, out)
+        self.assertEqual(json.loads(out)["limit_price"], 3.12)
+
     def test_option_limit_must_be_on_tick_and_ref_id_is_stable(self):
         rc, out = self.gate("--order", "O001", "--limit", "3.12")
         self.assertEqual((rc, "tick" in out), (2, True))
