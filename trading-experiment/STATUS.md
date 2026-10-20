@@ -1,18 +1,18 @@
-# Paper-trading scoreboard (as of 2026-10-19)
+# Paper-trading scoreboard (as of 2026-10-20)
 
 > SIMULATION. No real money. Prices come from public web sources; fills are modeled at the close with slippage and fees (see RULES.md).
 
-**Equity $1,995.96** | P/L -$4.04 (-0.20%) | goal $4,000.00 by 2026-11-18 | -0.2% of the way
+**Equity $2,049.46** | P/L $49.46 (+2.47%) | goal $4,000.00 by 2026-11-18 | 2.5% of the way
 - Cash $1,637.96 | realized $0.00 | fees paid $0.04 | slippage cost $4.00
-- SPY buy-and-hold with same $: $1,999.00
-- Trading days left: 22 | needed per day to hit goal: +3.21%
-- Est. after-tax equity if liquidated (memo, 24% on gains): $1,995.96
+- SPY buy-and-hold with same $: $2,005.70
+- Trading days left: 21 | needed per day to hit goal: +3.24%
+- Est. after-tax equity if liquidated (memo, 24% on gains): $2,037.59
 
 ## Positions
 
 | Ticker | Qty | Avg cost | Last | Value | Unreal. | Stop | Target |
 |---|---|---|---|---|---|---|---|
-| SPY261120C00790000 | 1.0000 | 3.62 | 3.58 | $358.00 | -$4.04 (-1.12%) | 1.81 | 7.24 |
+| SPY261120C00790000 | 1.0000 | 3.62 | 4.12 | $411.50 | $49.46 (+13.66%) | 1.81 | 7.24 |
 
 ## Pending orders (fill at next close)
 

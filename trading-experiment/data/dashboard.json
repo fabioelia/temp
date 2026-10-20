@@ -1,19 +1,19 @@
 {
-  "asof": "2026-10-19",
+  "asof": "2026-10-20",
   "start_cash": 2000.0,
   "goal": 4000.0,
   "end_date": "2026-11-18",
-  "equity": 1995.96,
-  "pnl": -4.039999999999964,
-  "pnl_pct": -0.0020200000000000218,
+  "equity": 2049.46,
+  "pnl": 49.460000000000036,
+  "pnl_pct": 0.02472999999999992,
   "cash": 1637.96,
   "fees": 0.04,
   "slippage": 4.0000000000000036,
   "realized": 0.0,
-  "progress_to_goal": -0.002019999999999982,
-  "trading_days_left": 22,
-  "required_daily_return": 0.032103137050999875,
-  "bench_value": 1999.0,
+  "progress_to_goal": 0.02473000000000002,
+  "trading_days_left": 21,
+  "required_daily_return": 0.03235615102900269,
+  "bench_value": 2005.7,
   "benchmark": "SPY",
   "series": [
     {
@@ -25,6 +25,11 @@
       "date": "2026-10-19",
       "equity": 1995.96,
       "bench": 1999.0
+    },
+    {
+      "date": "2026-10-20",
+      "equity": 2049.46,
+      "bench": 2005.7
     }
   ],
   "positions": [
@@ -32,11 +37,11 @@
       "ticker": "SPY261120C00790000",
       "qty": 1.0,
       "avg_cost": 3.6204,
-      "last": 3.58,
-      "last_date": "2026-10-19",
-      "value": 358.0,
-      "unrealized": -4.04,
-      "unrealized_pct": -0.0112,
+      "last": 4.115,
+      "last_date": "2026-10-20",
+      "value": 411.5,
+      "unrealized": 49.46,
+      "unrealized_pct": 0.1366,
       "stop": 1.81,
       "target": 7.24,
       "opened": "2026-10-19"
@@ -213,10 +218,10 @@
     "avg_loss": null,
     "payoff": null,
     "max_drawdown": -0.0020200000000000218,
-    "best_day": -0.0020200000000000218,
+    "best_day": 0.0268041443716307,
     "worst_day": -0.0020200000000000218,
     "total_fills": 1,
     "verified_fills": 1
   },
-  "est_after_tax_equity": 1995.96
+  "est_after_tax_equity": 2037.5896
 }
