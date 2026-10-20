@@ -203,3 +203,8 @@ today's close after 16:15 ET. Closes were verified before booking.
 **Proposals for Tue 10/20:** none (pacing rule). Exits a-e and the shot-2 tree are in playbook.md "Open shots".
 **Lesson.** On a 0.24-delta, one-month index call the -50% premium stop sits less than 1% below spot: it is a time-and-noise stop more than a thesis stop. Next time, set
 option stops in underlying terms first (where is the thesis wrong?) and size so that level, not a premium percentage, is the exit.
+
+**Pre-close 2026-10-20 (Run A, 14:44 ET).** No pending proposals; no orders. Shot 1 re-checked on live quotes and **held**: SPY 768.35 (+0.24%, range 764.26-772.28),
+Nasdaq Composite 26,419.94 (-0.04%), 10y 5.123%, VIX 17.26 (-6.4%), Brent 108.79; SPY 11/20 790C bid 3.69 / ask 3.70 (Robinhood 14:44:52, OI 20,291). Exits: a) bid 3.69 vs stop
+1.87; b) SPY above 760.64 and Nasdaq above 26,023.10; c) not before 10/27; d) 10y below 5.31%; e) below the 7.50 target. Robinhood position reconciled (1 long, avg $375).
+Since last evening: the AI-credit wobble (CoreWeave -4% on HSBC) and Hormuz attacks were absorbed intraday; VIX fell again. Tonight: NFLX and SpaceX after the close.
