@@ -39,8 +39,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
   2.40%; e) bid >= 7.50 (2x), no S&P record close by 11/4, or the 11/18 pre-close.
 * **Shot 2 plan, Wed 10/28 ~15:30 ET** (after the 14:30 press conference, before 15:50): skip if the Fed hiked, ^TNX is above 5.31% at 15:30, MSFT closed below its 50-day
-  (506.20) beforehand, or MSFT's event implied move is above 6.2%. Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
-  whose ask is <= 3.60 with a spread <= 5% (580C today, 590C as fallback); else skip. Sell it at the 10/29 14:43 decision. Keep >= $361 above the floor until then.
+  (its live 50-day, ~510 by 10/27) beforehand, MSFT's event implied move is above 6.2%, or FRED's HY OAS for 10/27 is above 3.46% (its 2026 high; 3.29% on 10/19). Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
+  whose ask is <= 3.60 with a spread <= 5%, walking up from 575 on the live chain and re-checking the spread by 15:45 (closing spreads read 7-12% wide
+  on 10/20, so judge on the live quote); else skip. Sell it at the 10/29 14:43 decision. Keep >= $361 above the floor until then.
 
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
@@ -85,6 +86,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-20: shot 2 tree gains a credit veto (HY OAS > 3.46%) and a live strike walk; shot 1 exits unchanged after the Run B committee.
 * 2026-10-19: shot 1 opened (SPY 11/20 790C @ 3.75 real); its exit set (a-e) and the shot-2 decision tree written down after the Run B committee and risk
   review; MSFT sizing by contract, not dollars. SpaceX reports Tue 10/20 after the close (catalyst, $2.0T).
 * 2026-10-18 (Sunday review, v2.1): event-vol rule, FOMC-day timing, one shot a day with a reserve for the 10/28 MSFT shot, the 3-day expiry note, the verified S&P base

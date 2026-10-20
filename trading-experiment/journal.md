@@ -208,3 +208,17 @@ option stops in underlying terms first (where is the thesis wrong?) and size so 
 Nasdaq Composite 26,419.94 (-0.04%), 10y 5.123%, VIX 17.26 (-6.4%), Brent 108.79; SPY 11/20 790C bid 3.69 / ask 3.70 (Robinhood 14:44:52, OI 20,291). Exits: a) bid 3.69 vs stop
 1.87; b) SPY above 760.64 and Nasdaq above 26,023.10; c) not before 10/27; d) 10y below 5.31%; e) below the 7.50 target. Robinhood position reconciled (1 long, avg $375).
 Since last evening: the AI-credit wobble (CoreWeave -4% on HSBC) and Hormuz attacks were absorbed intraday; VIX fell again. Tonight: NFLX and SpaceX after the close.
+
+## 2026-10-20 (Tue) Run B
+**Recap.** SPY 769.05 (+0.34%), closing back above its 50-day (768.29) on lower volume; QQQ 717.63 (-0.1%); Nasdaq flat, not a distribution day. VIX ~17.3 (-6%), 10y 5.12%
+(-3bp, breakeven 2.35%), Brent ~108.8 (Iran-deal headlines). After the close: SpaceX and Netflix beat (8-Ks confirm), Supermicro raised its revenue range; SPY 771.3 after hours.
+**Equity.** Real $2,036.46 (+$36.46, +1.82%); paper $2,049.46 (+2.47%); SPY buy-and-hold from 10/19 $2,005.7 (+0.29%). SPY 11/20 790C closed 4.115 (Robinhood = Cboe, 16:15 ET);
+the option's 16:15 close includes SPY's 16:00-16:15 move (769.05 -> 769.67), so it reads a little richer than the 16:00 equity close. No fills; fees to date $0.04.
+**Committee (research/2026-10-20/).** All four: hold shot 1, exits unchanged; no reason to break the pacing rule; no proposals.
+- macro: new MSFT veto, HY OAS above 3.46% (2026 high); HY OAS 3.29% on 10/19, widening since August while equities rallied; TLT trigger 7bp away, 20y/5y-TIPS auctions first.
+- momentum: day 2 held quietly; a Thursday follow-through day needs Nasdaq +1.5% (QQQ ~729.8, SPY ~776.7) on higher volume.
+- catalyst: SpaceX/Netflix beats confirmed by 8-K; Wednesday's META capex guide against a 7.2% implied move is the week's swing event for shot 1.
+- options-vol: theta about -$110/week; 2x needs SPY 780-782 by 10/23 or 786-788 by 11/4; the stop sits at SPY ~762 Friday, ~771 by 11/4; no take-profit below 7.50 (one
+  contract cannot be split; a lower full target cuts P(2x) to ~9% for an EV change of <= 0.10). MSFT: walk strikes up from 575 on the live chain, spreads re-checked by 15:45.
+- risk: no proposals tonight, so no red-team; the veto addition is a tightening.
+**Proposals for Wed 10/21:** none (pacing rule). **Lesson:** the credit market (HY OAS widening) disagrees with the equity rally; the MSFT shot now waits on credit too.
