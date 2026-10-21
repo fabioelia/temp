@@ -35,7 +35,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 
 ## Open shots (exits checked at every 14:43 pre-close on live quotes)
 * **Shot 1: 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
-  a) bid <= 1.87 (-50%; about SPY 760 on 10/23, 764-765 by 10/28); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
+  a) bid <= 3.00 (raised 10/21 from 1.87 once the call was +38%: about SPY 767 on 10/23; checked once a day, so a gap can fill far lower, ~1.4 at SPY 760;
+  on 10/28 a) and b) are checked at the ~15:30 MSFT decision, not during the 14:30 press conference); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
   not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
   2.40%; e) bid >= 7.50 (2x), no S&P record close by 11/4, or the 11/18 pre-close.
 * **Shot 2 plan, Wed 10/28 ~15:30 ET** (after the 14:30 press conference, before 15:50): skip if the Fed hiked, ^TNX is above 5.31% at 15:30, MSFT closed below its 50-day
@@ -86,6 +87,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-21: shot 1 stop raised to bid <= 3.00 (options-vol, risk-modified: checked at ~15:30 on FOMC day); momentum's SPY 768.30 trail rejected
+  (inside one day's range). META's 2026 capex was narrowed to $135-145B, not raised (8-K), despite the headlines.
 * 2026-10-20: shot 2 tree gains a credit veto (HY OAS > 3.46%) and a live strike walk; shot 1 exits unchanged after the Run B committee.
 * 2026-10-19: shot 1 opened (SPY 11/20 790C @ 3.75 real); its exit set (a-e) and the shot-2 decision tree written down after the Run B committee and risk
   review; MSFT sizing by contract, not dollars. SpaceX reports Tue 10/20 after the close (catalyst, $2.0T).

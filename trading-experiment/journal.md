@@ -228,3 +228,19 @@ the option's 16:15 close includes SPY's 16:00-16:15 move (769.05 -> 769.67), so 
 10/27; e) below 7.50. Held through tonight's META/TSLA prints deliberately: the committee rejected a take-profit below 7.50 (one contract cannot be halved; a lower full exit cuts
 P(2x) to ~9% for <= 0.10 of EV), and META is ~3% of the index. Today's Nasdaq gain is day 3 of the rally attempt; a follow-through day can only count from Thursday (day 4).
 Robinhood position reconciled (1 long, avg $375).
+
+## 2026-10-21 (Wed) Run B
+**Recap.** SPY 773.09 (+0.53%), QQQ 725.20 (+1.1%), Nasdaq Composite +1.05% at the close (my 14:44 snapshot said +1.25%; corrected) on SpaceX/Supermicro AI enthusiasm. 10y 5.13%,
+20y auction 5.469% (highest since 2020, 0.9bp tail); VIX ~16.7; Brent ~108.8. After the close: META +3.6% after hours (723.51), TSLA -0.4%, LRCX -5.8%; SPY flat (773.0).
+Headline vs filing: META's 8-K narrows 2026 capex to $135-145B (from $130-145B), not the "raise" in headlines; the $25B is a New Mexico court penalty, not in the 8-K.
+After hours, an unverified headline says the US ordered staff out of Saudi Arabia.
+**Equity.** Real $2,142.46 (+$142.46, +7.12%); paper $2,155.46 (+7.77%); SPY buy-and-hold from 10/19 $2,016.24 (+0.81%). SPY 11/20 790C closed 5.175 (Robinhood = Cboe), +38%
+on cost. No fills; fees to date $0.04.
+**Committee (research/2026-10-21/).** All: hold, no new buy before 10/28.
+- macro: d) is 18bp (10y) and 3bp (breakeven 2.37%) away; FRED is down, so if it still is on 10/28 the HY veto uses an HYG close below 76.39 on 10/27; watch Brent > $115.
+- momentum: wanted b) trailed to SPY 768.30 (rejected); Thursday's follow-through day needs a Nasdaq close >= 27,103 on higher volume; MSFT skip line ~510.6.
+- catalyst: META/TSLA verified from 8-Ks; on tonight's quotes the 3.60 ceiling buys the MSFT 590C (2.82/3.05), not the 580C (4.10/4.55).
+- options-vol: raise a) to bid <= 3.00 (P(ending <= 1.87) 29-35% -> 6-11% for 1.4-3.7 pts of P(2x)); reject a cost stop (inside one day's range); 7.50 needs SPY ~780 by 10/23.
+- risk: approve the 3.00 stop, but on 10/28 check a) and b) at ~15:30, not mid-press-conference; keep b) for its Nasdaq leg; the "worst case -$75" is wrong (a gap fills lower).
+**Change.** Shot 1 stop a) raised to bid <= 3.00 (playbook "Open shots"). **Proposals for Thu 10/22:** none. **Open item:** the Sunday review sets a ~15:25 ET run on 10/28.
+**Lesson.** Read the filing before the headline: tonight's "capex raise" was a narrowed range.
