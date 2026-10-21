@@ -222,3 +222,9 @@ the option's 16:15 close includes SPY's 16:00-16:15 move (769.05 -> 769.67), so 
   contract cannot be split; a lower full target cuts P(2x) to ~9% for an EV change of <= 0.10). MSFT: walk strikes up from 575 on the live chain, spreads re-checked by 15:45.
 - risk: no proposals tonight, so no red-team; the veto addition is a tightening.
 **Proposals for Wed 10/21:** none (pacing rule). **Lesson:** the credit market (HY OAS widening) disagrees with the equity rally; the MSFT shot now waits on credit too.
+
+**Pre-close 2026-10-21 (Run A, 14:44 ET).** No pending proposals; no orders. Shot 1 **held**: SPY 774.25 (+0.68%, high 774.43), Nasdaq Composite 26,755.33 (+1.25%), QQQ +1.3%,
+10y 5.111%, VIX 16.65 (-3.8%), Brent 108.84; SPY 11/20 790C bid 5.50 / ask 5.52 (Robinhood 14:44:22, delta 0.32), +47% on the 3.75 cost. Exits a, b, d clear; c not before
+10/27; e) below 7.50. Held through tonight's META/TSLA prints deliberately: the committee rejected a take-profit below 7.50 (one contract cannot be halved; a lower full exit cuts
+P(2x) to ~9% for <= 0.10 of EV), and META is ~3% of the index. Today's Nasdaq gain is day 3 of the rally attempt; a follow-through day can only count from Thursday (day 4).
+Robinhood position reconciled (1 long, avg $375).
