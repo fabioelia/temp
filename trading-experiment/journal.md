@@ -263,3 +263,17 @@ now unlikely, so the 10/27 time stop c) becomes the more likely exit if no stop 
 - No new buy today: the SPY flush trigger needs SPY <= 748 and VIX >= 24 (not met), and a new SPY option within 30 days would be a wash sale on this loss.
 - Lesson for the post-mortem: with one contract, an all-or-nothing 2x target plus a far stop left no way to bank a +47% move; next shot, size to 2+ contracts or pre-set a
   trailing stop once the gain passes ~+40%.
+
+## 2026-10-22 (Thu) Run B
+**Recap.** SPY 763.96 (-1.18%), QQQ 704.47 (-2.9%), Nasdaq rally attempt failed (low 25,918.09; the S&P's low held); distribution days QQQ 7, SPY 7; defensives led, XLE fell
+even on a +3.7% Brent day (112.87 settle 113.17). Bonds rallied: 10y 4.96% (-17bp), breakeven 2.32%, TLT 81.74 (+2%); October hike odds ~5%. The market fears growth, not
+inflation. MSFT 521.08 (-2.2%), 50-day ~507.9. Earnings beats tonight were sold; SPY flat after hours. HY OAS 3.27% on 10/21 (FRED), est. 3.35-3.40% today vs the 3.46% veto.
+**Equity.** Real $1,917.92 (-$82.08, -4.10%; Robinhood shows $1,917.91 cash, flat; the 1-cent gap is likely the SEC fee on the sale, outside the $0.04 the review showed;
+Robinhood also lists a $2,000 pending deposit). Paper $1,919.92 (-4.00%; sold at the stamped 2.82). SPY buy-and-hold from 10/19 $1,992.43 (-0.38%). Fees to date: paper $0.08.
+**Post-mortem, shot 1 (options-vol).** The thesis was right for two days (+47% at the 10/21 peak) and the exit design gave it back: one contract with an all-or-nothing 7.50
+target and no trailing stop until +38%. Cost vs the peak: $257. Rule added to the playbook: 2+ contracts when the budget allows, bank one at +50-100%, stop to cost past +40%.
+**Committee (research/2026-10-22/).** Ranking of the next shot: catalyst MSFT > USO (only on a Brent settle > $115) > flush > TLT > puts; momentum MSFT > TLT (pocket pivot;
+wants a close >= 83.60) > ...; macro TLT 83C first (conf 5), MSFT second; options-vol: wait for MSFT, TLT the only conditional before it, EV -0.12 to +0.04 per $ (conf 4);
+risk: MODIFY the TLT draft (zero-EV only with an uncapped runner; the 5.00% trigger filtered nothing; buy 5 only if TLT >= 81.74 and 10y <= 4.96%, ceiling 0.90).
+**Proposal for Fri 10/23: O007** BUY 5 TLT261120C00083000 (Robinhood = Cboe 0.75/0.76, delta ~0.35, OI 81,925), ceiling 0.90, conditions above; Friday's 14:43 run decides.
+**Lesson.** Read what the bond market is pricing, not only stocks: a +3.7% oil day with a 17bp yield fall is a growth scare, and it hit the call through tech, not through oil.

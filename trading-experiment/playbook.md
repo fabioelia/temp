@@ -41,8 +41,12 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   on 10/28 a) and b) are checked at the ~15:30 MSFT decision, not during the 14:30 press conference); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
   not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
   2.40%; e) bid >= 7.50 (2x), no S&P record close by 11/4, or the 11/18 pre-close.
+* **Shot 2a proposal (O007), Fri 10/23:** 5 x TLT261120C00083000, ceiling 0.90, only if TLT >= 81.74 and ^TNX <= 4.96% at 14:43 with >= $361 left for MSFT. Sell 2
+  at 2x; the other 3 run with a stop at cost once 2 are sold, else a -50% stop (on 10/28 judged at ~15:30); out by 11/12.
+* **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** buy 2+ contracts when the budget allows so one can be banked at +50-100%;
+  once the gain passes ~+40%, raise the stop to at least cost; never leave a single contract with an all-or-nothing 2x target.
 * **Shot 2 plan, Wed 10/28 ~15:30 ET** (after the 14:30 press conference, before 15:50): skip if the Fed hiked, ^TNX is above 5.31% at 15:30, MSFT closed below its 50-day
-  (its live 50-day, ~510 by 10/27) beforehand, MSFT's event implied move is above 6.2%, or FRED's HY OAS for 10/27 is above 3.46% (its 2026 high; 3.29% on 10/19). Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
+  (its live 50-day, ~510.3 by 10/28) beforehand, MSFT's event implied move is above 6.2%, or FRED's HY OAS for 10/27 is above 3.46% (its 2026 high; 3.29% on 10/19). Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
   whose ask is <= 3.60 with a spread <= 5%, walking up from 575 on the live chain and re-checking the spread by 15:45 (closing spreads read 7-12% wide
   on 10/20, so judge on the live quote); else skip. Sell it at the 10/29 14:43 decision. Keep >= $361 above the floor until then.
 
@@ -89,6 +93,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-22 (Run B): TLT shot 2a proposed (risk-modified: 5 lots, TLT >= 81.74 and 10y <= 4.96%, a runner); exit-design rule from the shot 1
+  post-mortem; MSFT strike walk starts at 565 on the live chain.
 * 2026-10-22: shot 1 closed by its raised stop and the Nasdaq rally-low exit on the Houthi/Saudi risk-off day (-$82.08 real). Budget above the floor $917.92.
   A new SPY option within 30 days of this loss would be a wash sale (deferral only; all positions close by 11/18).
 * 2026-10-21: shot 1 stop raised to bid <= 3.00 (options-vol, risk-modified: checked at ~15:30 on FOMC day); momentum's SPY 768.30 trail rejected
