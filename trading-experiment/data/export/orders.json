@@ -68,5 +68,19 @@
   "state": "Confirmed 2026-10-19 14:45 ET",
   "reason": "",
   "thesis": "Alternate to O003, added pre-open 10/19: with SPY pre-market 767.23 the 11/20 785C shows 5.32/5.39 on Cboe, above O003's 5.00 ceiling. Same thesis, conditions and exits as O003 (historian base rate; confirm only if at 14:43 SPY 752-772, VIX 17-24, VIX9D <= VIX3M, Brent < 112, spread <= 5%; sell whole at bid >= 2x fill, -50% stop, out if no S&P record by 11/4, out by 11/18). Use only if O003's live ask is above 5.00; never both (one new shot a day). 790C pre-open 3.75/3.82, delta 0.24, OI 15,312; keeps the 11/20 expiry so the 22-session base-rate window fits, and keeps the MSFT reserve."
+ },
+ {
+  "id": "O006",
+  "created": "2026-10-22",
+  "side": "sell",
+  "ticker": "SPY261120C00790000",
+  "size": "entire position",
+  "stop": "",
+  "target": "",
+  "max_price": null,
+  "status": "pending",
+  "state": "Confirmed 2026-10-22 14:45 ET",
+  "reason": "",
+  "thesis": "Shot 1 exit (Run A 10/22 14:45): exits a) and b) both triggered on live quotes. a) Robinhood bid 2.91 <= 3.00 stop (14:44:52); b) Nasdaq Composite 25,970.14 < 26,023.10 rally low (SPY 762.11, above 760.64). Risk-off on Houthi attacks on Saudi Arabia, US diplomats ordered out, Brent 112.91 (+3.8%), VIX 19.62 (+18%), QQQ -2.9%. Sell the whole contract to close at the bid side."
  }
 ]
