@@ -78,7 +78,7 @@
   "stop": "",
   "target": "",
   "max_price": null,
-  "status": "pending",
+  "status": "filled",
   "state": "Confirmed 2026-10-22 14:45 ET",
   "reason": "",
   "thesis": "Shot 1 exit (Run A 10/22 14:45): exits a) and b) both triggered on live quotes. a) Robinhood bid 2.91 <= 3.00 stop (14:44:52); b) Nasdaq Composite 25,970.14 < 26,023.10 rally low (SPY 762.11, above 760.64). Risk-off on Houthi attacks on Saudi Arabia, US diplomats ordered out, Brent 112.91 (+3.8%), VIX 19.62 (+18%), QQQ -2.9%. Sell the whole contract to close at the bid side."
