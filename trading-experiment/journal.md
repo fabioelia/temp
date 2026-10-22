@@ -244,3 +244,10 @@ on cost. No fills; fees to date $0.04.
 - risk: approve the 3.00 stop, but on 10/28 check a) and b) at ~15:30, not mid-press-conference; keep b) for its Nasdaq leg; the "worst case -$75" is wrong (a gap fills lower).
 **Change.** Shot 1 stop a) raised to bid <= 3.00 (playbook "Open shots"). **Proposals for Thu 10/22:** none. **Open item:** the Sunday review sets a ~15:25 ET run on 10/28.
 **Lesson.** Read the filing before the headline: tonight's "capex raise" was a narrowed range.
+
+**Pre-open 2026-10-22 (09:06-09:17 ET).** Risk-off overnight: ES -0.97%, NQ -1.74%, RTY -0.63%; SPY pre-market 765.80 (-0.9% vs 773.09); WTI 99.80 (+2.7%), Brent 112.22 (+3.1%);
+VIX 18.08 (+8%); 10y 5.03% (-11bp, flight to quality). Drivers: Houthi attacks on Saudi Arabia (one killed at King Fahd airport; i24/WaPo/Guardian), the US ordering some
+diplomats out, Aramco evacuating staff (Al-Monitor), Iran saying 7 tankers were damaged in Hormuz (AP), tech leading lower (JPMorgan note), weak housing data.
+Shot 1: SPY near the a) stop zone (bid <= 3.00 ~ SPY 766-767 today by the 10/21 options-vol grid; my rough estimate of the call at SPY 765.8 is 3.3-3.7 before the open,
+with higher IV cushioning delta); b) 760.64 not hit. Plan unchanged: the 14:43 run checks a) and b) on live quotes and sells if either holds. A follow-through day today is
+now unlikely, so the 10/27 time stop c) becomes the more likely exit if no stop fires. Macro's watch line, a Brent settle above $115, is 2.8 away. Nothing confirmed or placed.
