@@ -6,7 +6,7 @@
 - **Bonds rallied while oil rose.**
   - Brent was 112.87 (+3.7%), short of a $115 settle.
   - The 10y fell 17bp to 4.96%. The breakeven fell from 2.37% to 2.32%, and the 5y real yield fell 22bp.
-  - The odds of an October hike fell to 5% (from 12.5%); year-end pricing is 63.5bp (80-90bp earlier this month).
+  - Fed funds futures price a 5% chance of an October hike (Polymarket had 12.5% last night) and 63.5bp of hikes by year end (80-90bp earlier this month).
   - Drivers: AI capital-raising fears and a haven bid. **Oil now acts as a tax on growth, which is the regime TLT calls pay in.**
 - **Credit:** HY OAS was 3.27% on 10/21. HYG rose 0.16% while rates alone implied about +0.5%, so I estimate 3.35-3.40%.
 - **The deal headlines are recycled** (Iran's terms date from 9/25). The reported strike plans fall after the midterms.
