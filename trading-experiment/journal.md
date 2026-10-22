@@ -251,3 +251,15 @@ diplomats out, Aramco evacuating staff (Al-Monitor), Iran saying 7 tankers were 
 Shot 1: SPY near the a) stop zone (bid <= 3.00 ~ SPY 766-767 today by the 10/21 options-vol grid; my rough estimate of the call at SPY 765.8 is 3.3-3.7 before the open,
 with higher IV cushioning delta); b) 760.64 not hit. Plan unchanged: the 14:43 run checks a) and b) on live quotes and sells if either holds. A follow-through day today is
 now unlikely, so the 10/27 time stop c) becomes the more likely exit if no stop fires. Macro's watch line, a Brent settle above $115, is 2.8 away. Nothing confirmed or placed.
+
+**Pre-close 2026-10-22 (Run A, 14:44-14:46 ET). Shot 1 closed.** Live at 14:44: SPY 762.11 (-1.42%, low 761.41), Nasdaq Composite 25,970.14 (-2.74%), QQQ 703.91 (-2.9%),
+10y 4.949% (-20bp), VIX 19.62 (+18%), Brent 112.91 (+3.8%): risk-off on Houthi attacks on Saudi Arabia and the US ordering diplomats out, oil up, tech led down.
+- Exit **b) fired** (Nasdaq below the 26,023.10 rally low; SPY's 760.64 leg had not) and exit **a) fired** (Robinhood bid 2.91 <= 3.00 at 14:44:52).
+- **O006 SELL ALL SPY261120C00790000** added and confirmed 14:45 (paper stamp Cboe 2.82/2.86, delayed). Real: gate K003 approved at 2.93 (high-fill-rate sell 2.925 rounded up to
+  the cent, --tick 0.01); review no alerts, fees $0.04; placed 14:45:43, **filled 1 @ 2.93 at 14:45:51** (agent account ••••5318). Robinhood shows no open positions.
+- Result: bought 3.75 + $0.04, sold 2.93 - $0.04: **realized -$82.08 (-21.9%)**. Peak bid 5.50 on 10/21 (+47%); the take-profit rule (7.50 only) gave all of it back.
+  The raised stop did its job: without it (old 1.87 stop) the position would still be open into a -2.7% Nasdaq day with the 10/27 time stop next.
+- Real equity $1,917.92 (-4.10%); budget above the $1,000 floor $917.92. Loss limit far away.
+- No new buy today: the SPY flush trigger needs SPY <= 748 and VIX >= 24 (not met), and a new SPY option within 30 days would be a wash sale on this loss.
+- Lesson for the post-mortem: with one contract, an all-or-nothing 2x target plus a far stop left no way to bank a +47% move; next shot, size to 2+ contracts or pre-set a
+  trailing stop once the gain passes ~+40%.

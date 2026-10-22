@@ -34,7 +34,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
 
 ## Open shots (exits checked at every 14:43 pre-close on live quotes)
-* **Shot 1: 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
+* **Shot 1: CLOSED 10/22** at 2.93 real (bought 3.75 on 10/19; realized -$82.08 incl. fees; peak bid 5.50 on 10/21). Exits a) and b) fired together at the 10/22
+  14:43 decision. The exit set below is kept as the template for the next index shot.
+* **Shot 1 (template): 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
   a) bid <= 3.00 (raised 10/21 from 1.87 once the call was +38%: about SPY 767 on 10/23; checked once a day, so a gap can fill far lower, ~1.4 at SPY 760;
   on 10/28 a) and b) are checked at the ~15:30 MSFT decision, not during the 14:30 press conference); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
   not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
@@ -87,6 +89,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-22: shot 1 closed by its raised stop and the Nasdaq rally-low exit on the Houthi/Saudi risk-off day (-$82.08 real). Budget above the floor $917.92.
+  A new SPY option within 30 days of this loss would be a wash sale (deferral only; all positions close by 11/18).
 * 2026-10-21: shot 1 stop raised to bid <= 3.00 (options-vol, risk-modified: checked at ~15:30 on FOMC day); momentum's SPY 768.30 trail rejected
   (inside one day's range). META's 2026 capex was narrowed to $135-145B, not raised (8-K), despite the headlines.
 * 2026-10-20: shot 2 tree gains a credit veto (HY OAS > 3.46%) and a live strike walk; shot 1 exits unchanged after the Run B committee.
