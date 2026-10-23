@@ -1,11 +1,11 @@
-# Paper-trading scoreboard (as of 2026-10-22)
+# Paper-trading scoreboard (as of 2026-10-23)
 
 > SIMULATION. No real money. Prices come from public web sources; fills are modeled at the close with slippage and fees (see RULES.md).
 
 **Equity $1,919.92** | P/L -$80.08 (-4.00%) | goal $4,000.00 by 2026-11-18 | -4.0% of the way
 - Cash $1,919.92 | realized -$80.08 | fees paid $0.08 | slippage cost $25.00
-- SPY buy-and-hold with same $: $1,992.43
-- Trading days left: 19 | needed per day to hit goal: +3.94%
+- SPY buy-and-hold with same $: $1,982.02
+- Trading days left: 18 | needed per day to hit goal: +4.16%
 - Est. after-tax equity if liquidated (memo, 24% on gains): $1,919.92
 
 ## Positions
