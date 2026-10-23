@@ -92,9 +92,9 @@
   "stop": "-50% of fill",
   "target": "+100% of fill",
   "max_price": 0.9,
-  "status": "pending",
+  "status": "cancelled",
   "state": "Proposal, not yet confirmed",
-  "reason": "",
+  "reason": "Run A 10/23 14:44: both conditions failed on live quotes: TLT 81.46 < 81.74 (fading, -0.34%) and 10y 4.986% > 4.96%. Bonds gave back part of Thursday's rally as Brent rose to 111.52 (+2.6%); the growth-scare trade did not confirm.",
   "thesis": "Shot 2a (macro #1 conf 5; options-vol conditional, EV about flat; risk MODIFY). Growth scare: bonds rallied while oil rose (10y 4.96%, breakeven 2.32%, Oct hike odds ~5%). CONFIRM ONLY IF at 14:43: TLT >= 81.74 (not fading) and ^TNX <= 4.96%, spread <= 5%, ask <= 0.90, and >= $361 stays above the floor for MSFT 10/28. 5 contracts (--qty). Exits: sell 2 at bid >= 2x fill; the other 3 are the runner: once 2 are sold, stop them at cost; otherwise stop all at bid <= 50% of fill (checked at each 14:43, on 10/28 at ~15:30 after the press conference); out by the 11/12 pre-close. Hedges MSFT on the AI axis, but both draw on one budget."
  }
 ]
