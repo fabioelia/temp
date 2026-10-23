@@ -134,9 +134,26 @@ happens: nothing new fills.
 
 * No `tracker.py day` (no session). Fire all six personas (macro, momentum, catalyst, contrarian, historian, risk) with the week's results and the weekend news.
 * SEC deep read for the coming week's candidate underlyings: latest 10-Q/10-K highlights (guidance, capex, debt), 8-Ks from the past two weeks, and 30-day insider activity.
-* Post-mortem: which ideas worked or failed and why, which agent's calls earned their keep, fees and slippage, drawdown, how often Run A's re-check changed a proposal.
+* **Weekly retrospective first** (owner's request 2026-10-23; section below), then re-plan with what it taught.
 * Re-plan the week; cancel stale proposals and write Monday's proposals (created on the Sunday date). Monday's Run A makes the real decision.
 * Update `playbook.md` with a dated changelog line. Do not re-trade history: the ledger is append-only; fixes go in the journal as dated notes.
+
+## Weekly retrospective (every Sunday, before the re-plan)
+Goal: learn where, when and why things went well or badly, and evolve the process. Write `trading-experiment/reviews/<ISO year>-W<week>.md` from `reviews/TEMPLATE.md`.
+1. **Facts, generated, not remembered:** `python3 trading-experiment/review.py week --end <Friday> --out trading-experiment/reviews/<year>-W<week>.md`, then write the
+   analysis below the facts. Add the intraday facts the script cannot see from `journal.md` (peaks at the pre-close check, quotes that moved, tool failures).
+2. **Every decision graded twice:** the process (was the information right, were the rules followed, was the reasoning sound: A-D) and the outcome (good/bad). Put each in
+   the 2x2: good process + good outcome (repeat), good process + bad outcome (bad luck: do not overreact), bad process + good outcome (luck: fix anyway), bad process + bad
+   outcome (fix first). Decisions include holds and skips, not only trades.
+3. **Root cause for each thing that went badly**, one category each: thesis (the view was wrong), timing (right view, wrong entry or exit time), structure (strike, expiry,
+   size, exit design), execution (fills, ticks, delays, the gap to paper), data (a wrong fact or date), process (rules, contradictions, tooling, missed runs), discipline (a rule
+   was bent). For each thing that went well, say what made it work and whether it is repeatable.
+4. **Agent scorecard:** each persona's main calls this week, right or wrong and why; the dissent that turned out right; keep, adjust or drop each persona's brief.
+5. **Last week's changes:** did each one help (with the evidence), keep or revert.
+6. **At most three changes for next week**, each naming the file it changes (RULES.md, playbook.md, DAILY_ROUTINE.md, code with a test) and the check that will show next
+   Sunday whether it worked. Make the changes in this run.
+7. Have a fresh `risk` agent red-team the draft review (what did we credit to skill that was luck, or blame on luck that was process; what change is missing), then finish it.
+8. Summarize the review in `journal.md` (five lines) and in the run's message to the owner: what went well, what went badly, the root causes, the changes.
 
 ## Final report (first run after `end_date`)
 Write `FINAL_REPORT.md`: result against the $4,000 goal, against SPY buy-and-hold, win rate, payoff, max drawdown, fees plus slippage, how many fills used the cross-checked feed,

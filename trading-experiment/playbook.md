@@ -93,6 +93,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-23: weekly retrospective added to the Sunday review at the owner's request (review.py facts, process/outcome grading, root causes, at most 3 changes).
 * 2026-10-22 (Run B): TLT shot 2a proposed (risk-modified: 5 lots, TLT >= 81.74 and 10y <= 4.96%, a runner); exit-design rule from the shot 1
   post-mortem; MSFT strike walk starts at 565 on the live chain.
 * 2026-10-22: shot 1 closed by its raised stop and the Nasdaq rally-low exit on the Houthi/Saudi risk-off day (-$82.08 real). Budget above the floor $917.92.
