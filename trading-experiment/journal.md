@@ -288,3 +288,23 @@ The first review covers W43 (10/19-10/23) on Sunday 10/25. 62 tests.
 **Pre-close 2026-10-23 (Run A, 14:44 ET).** Flat; one proposal. **O007 (5 x TLT 11/20 83C) CANCELLED:** both risk-modified conditions failed on live quotes, TLT 81.46 (-0.34%,
 needed >= 81.74) and the 10y 4.986% (needed <= 4.96%), as bonds gave back part of Thursday's rally with Brent at 111.52 (+2.6%). SPY 760.50 (-0.45%, low 758.68), QQQ +0.1%,
 VIX 19.94. No orders; the next planned shot is MSFT on 10/28 (vetoes and strike walk in playbook "Open shots"). Real equity $1,917.92; budget above the floor $917.92.
+
+## 2026-10-23 (Fri) Run B
+**Recap.** SPY 759.97 (-0.52%), QQQ 704.40 (flat), MSFT 524.51 (+0.7%, ~16 above its 50-day), TLT 81.34 (-0.5%), USO 169.53 (+4.3%). Oil: Brent December (BZZ26, expires
+10/30) settled ~116.3-116.6, while Yahoo's BZ=F had already rolled to January (~111.5-111.7). VIX ~19.9; 10y ~4.99%; HY OAS ~3.40% (veto 3.46%).
+**Equity.** Real $1,917.92 (-4.10%; Robinhood $1,917.91 cash, no positions, the $2,000 deposit no longer pending); paper $1,919.92 (-4.00%); SPY buy-and-hold from 10/19
+$1,982.02 (-0.90%). No fills today; O007 (TLT) cancelled at 14:44.
+**Committee (research/2026-10-23/; each persona also scored its own week for Sunday's review).**
+- macro: right on TLT's thesis and the Fed/credit reads; its exit d) guarded the wrong tail, its Brent < $110 filter blocked TLT the day it paid, the oil read was wrong. Monday
+  idea: 1 x USO261120C00200000 (2.92/2.99) only if BZZ26 >= 115 and USO >= 169.53 (conf 3). MSFT: keep; HY OAS veto ~1-in-3 to fire.
+- momentum: right on no follow-through day and exit b); wrong to hold for 7.50 (its own 768.30 trail would have sold at the same 2.93). Monday idea: 2 x XLE 11/20 70C
+  (2.00/2.15) on conditions (conf 4). Change: test every exit against the single 14:43 check and overnight gaps.
+- catalyst: right on dates and on waiting 10/19; wrong to read META's +3.4% after-hours as support (it closed -7.0% on 10/22). Expects the MSFT shot to be skipped
+  (all strikes 9-15% wide at the close; event sigma 5.8-6.1% vs the 6.2% veto).
+- options-vol: the 3.00 stop saved $76; refusing a take-profit below 7.50 cost $257; the TLT trigger was too loose (83C 0.755 -> 0.54); the MSFT edge was overstated
+  (0.70x headline; 0.87x without July, 0.94x on the median). MSFT should be 1 contract (2 = $620 > the $600 cap).
+**Proposals for Mon 10/26: none.** Two of four say no trade; the two oil ideas are conditional and conf 3-4, and Sunday's review re-plans the week with the full committee,
+so they go to it. No drafts, so no red-team tonight.
+**Process issues found tonight (for Sunday's review):** (1) the nightly brief is built by editing the previous one, and Thursday's MSFT 521.08 and 10y 4.95% leaked into
+Friday's; (2) triggers must name the exact series: "Brent above $115" was true for December and false for Yahoo's rolled January contract; (3) after-hours moves are not
+closes: the META +3.4% read reversed to -7.0%.
