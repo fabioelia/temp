@@ -316,3 +316,10 @@ skew) or we pass; (b) a headline-versus-filing gap scan in Run B (this week: MET
 14:43 trade template that fades moves made on a misread headline; (c) a crowding filter: skip setups where the options already price the popular story (rich IV or skew,
 heavy call volume). Caveat recorded: every persona is the same model, so errors correlate; diversity has to come from different data (filings, computed base rates, option
 prices), not from more personas.
+
+**Goal changed (owner, 2026-10-24): "Aim for something more reasonable as a target then."** New goal: **$2,200 (+10%) by 11/18 and beat SPY buy-and-hold** over 10/19-11/18
+(was $4,000, +100%). From the 10/23 equity of $1,917.92 that is +14.7%, about +$282 on the $918 budget above the floor (+31%): one doubling shot on ~$300, or two +50% shots.
+Judgment: perhaps 25-35% to reach $2,200. Risk was matched to it: playbook pacing (shots $250-400, no single shot above $450, at most two open, 2+ contracts so one can be
+banked, stop to cost past +40%, a $1,700 pause line, protect gains near the goal); the gate's single-order cap lowered from 30% ($600) to 22.5% ($450). The owner's hard
+limits ($2,000 cap, $1,000 loss limit) are unchanged. Config, RULES, playbook, README (which wrongly still said no real money), LIVE_MODE, the final-report spec and the
+pre-close and post-close scheduled tasks updated; the post-close task now also says to write brief numbers fresh (the 10/23 stale-number issue). 62 tests pass.

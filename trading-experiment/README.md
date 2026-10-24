@@ -1,7 +1,8 @@
 # Can an AI make smart trades? A paper-trading challenge
 
-A simulated **$2,000** account, one month (**Mon 2026-10-19 to Wed 2026-11-18**, 23 trading days), one goal:
-**double it to $4,000**, or get as close as possible. No real money is involved and nothing here is financial advice.
+A **$2,000** account, one month (**Mon 2026-10-19 to Wed 2026-11-18**, 23 trading days): real orders in a Robinhood agent account through a capped, audited
+gate (`LIVE_MODE.md`), with a paper ledger as the shadow model. The goal was to double it; since 2026-10-24 it is **$2,200 (+10%) and beating SPY buy-and-hold**.
+Nothing here is financial advice.
 
 An AI portfolio manager (Claude) runs the account. Every trading day after the close it:
 

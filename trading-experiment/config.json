@@ -1,6 +1,6 @@
 {
   "starting_cash": 2000.0,
-  "goal_equity": 4000.0,
+  "goal_equity": 2200.0,
   "start_date": "2026-10-19",
   "end_date": "2026-11-18",
   "baseline_date": "2026-10-16",
@@ -30,7 +30,7 @@
     "enabled": true,
     "capital_cap_usd": 2000.0,
     "loss_limit_usd": 1000.0,
-    "max_single_order_pct": 0.3,
+    "max_single_order_pct": 0.225,
     "max_leveraged_each_pct": 0.15,
     "leveraged_etfs": [
       "GUSH",
@@ -73,7 +73,8 @@
     "flatten_cutoff_et": "15:58",
     "authorization": "2026-10-17, owner: 'I'm fine with 2000 play in real money. If we lose 500 we pull the plug until we talk again.' Earlier the owner chose 'Real trades, fully automatic' after being told the committee odds (about 1-5% to double, 2-14% chance of losing half on aggressive routes). enabled stays false until the broker connector is connected and verified in a fresh session. 2026-10-18, owner: 'Update the 500 budget to 1k instead' -> loss limit and option budget $1,000 (floor $1,000); hitting it sells to cash and halts until the owner and Claude talk.",
     "agent_account_last4": "5318",
-    "enabled_note": "2026-10-18: enabled after the LIVE_MODE.md checklist passed (see data/live_tools.md). Every run must confirm the Robinhood tools are present before any live step."
+    "enabled_note": "2026-10-18: enabled after the LIVE_MODE.md checklist passed (see data/live_tools.md). Every run must confirm the Robinhood tools are present before any live step.",
+    "max_single_order_note": "2026-10-24: lowered from 0.30 ($600) to 0.225 ($450) with the $2,200 goal (playbook pacing: no single shot above $450)."
   },
   "holidays": [
     "2026-01-01",
@@ -104,5 +105,6 @@
   },
   "research": {
     "sec_contact_email": ""
-  }
+  },
+  "goal_note": "2026-10-24, owner: 'Aim for something more reasonable as a target then.' Goal lowered from $4,000 (+100%) to $2,200 (+10% on the $2,000 start, +14.7% from the 10/23 equity of $1,917.92), with beating SPY buy-and-hold over 10/19-11/18 as the scorecard against the friend's challenge."
 }

@@ -22,6 +22,7 @@ class Live(unittest.TestCase):
         c = json.loads(p.read_text())
         c["strategy"]["allow_stock_buys"] = True
         c["live"]["loss_limit_usd"] = 500.0  # tests below assume the original $500 limit
+        c["live"]["max_single_order_pct"] = 0.3  # and the original 30% single-order cap
         p.write_text(json.dumps(c))
 
     def tearDown(self):
@@ -168,6 +169,7 @@ class LiveOptions(unittest.TestCase):
         c = json.loads(p.read_text())
         c["live"]["enabled"] = True
         c["live"]["loss_limit_usd"] = 500.0
+        c["live"]["max_single_order_pct"] = 0.3
         p.write_text(json.dumps(c))
         # orders are confirmed with stored quotes directly, so no network is needed
         Path(self.dir, "data").mkdir()

@@ -156,7 +156,7 @@ Goal: learn where, when and why things went well or badly, and evolve the proces
 8. Summarize the review in `journal.md` (five lines) and in the run's message to the owner: what went well, what went badly, the root causes, the changes.
 
 ## Final report (first run after `end_date`)
-Write `FINAL_REPORT.md`: result against the $4,000 goal, against SPY buy-and-hold, win rate, payoff, max drawdown, fees plus slippage, how many fills used the cross-checked feed,
+Write `FINAL_REPORT.md`: result against the $2,200 goal (and the original $4,000), against SPY buy-and-hold, win rate, payoff, max drawdown, fees plus slippage, how many fills used the cross-checked feed,
 the best and worst decisions, and what the experiment can and cannot show about AI trading skill. Commit, push, then use `list_triggers` to find all three "AI Trading Challenge"
 scheduled tasks (all of them: pre-open, pre-close, post-close, Sunday) and disable them with `update_trigger enabled=false`.
 

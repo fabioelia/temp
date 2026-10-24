@@ -1,10 +1,15 @@
 # Playbook (living document; revised as the experiment teaches it something)
 
-Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; Sunday review revisions on 2026-10-18). The owner chose options with the loss budget to go after the $4,000 target. Version 1 (stocks and ETFs, bounded convexity) is in git history.
+Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; Sunday review revisions on 2026-10-18). The owner chose options with the loss budget to go after the $4,000 target; on 2026-10-24 the target became $2,200 (+10%) and beating SPY. Version 1 (stocks and ETFs, bounded convexity) is in git history.
 
-## Stance: bold play with a capped budget
-* **The arithmetic.** $4,000 needs +$2,000 from a $1,000 risk budget, about a 3x on premium. With a $1,000 loss limit, no strategy can do better than roughly a 1-in-3 chance
-  even in a fair game; with option costs, a disciplined version is perhaps 8-20% (judgment, not a backtest). The most likely outcome is losing the $1,000 and stopping.
+## Stance: measured shots toward $2,200 (since 2026-10-24)
+* **The arithmetic.** From $1,917.92 (10/23) the $2,200 goal needs about +$282, +31% on the $918 budget: one shot that doubles on ~$300, or two that each make
+  +50%. Beating SPY needs about +3.3% more than SPY makes from here. Judgment, not a backtest: perhaps 25-35% to reach $2,200, and better than even to finish ahead of
+  a losing SPY; the most likely bad outcome is now a few hundred dollars lost, not the whole budget.
+* **Pacing for the lower target.** Shots of about $250-400 premium (no single shot above $450), at most two open at once, at least 2 contracts when the price allows so
+  one can be banked; bank part at +50-100% and move the stop to cost past +40%. **Pause line:** if real equity closes below $1,700, open no new shot until the Sunday review
+  re-plans. Near the goal, protect it: at or above $2,150, new shots only with house money above $2,000.
+* (Before 10/24) $4,000 needed +$2,000 from a $1,000 risk budget, about a 3x on premium; judged 8-20% at best.
 * **The structure (enforced in code).** Premium is paid only from cash above the $1,000 floor. Every open option can go to zero and the account still ends at $1,000 or better.
 * **Contract arithmetic.** One contract costs premium x 100. Shot 1 of about $500 buys contracts priced up to $5.00; an all-in $1,000 shot up to $10.00. Below those prices the
   choice is between fewer at-the-money contracts and more far out-of-the-money ones; prefer delta 0.30-0.45 when the budget allows.
@@ -93,6 +98,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-24: goal lowered to $2,200 (+10%) and beating SPY, by the owner; pacing for the lower target: $250-400 shots, max $450, two open, a $1,700 pause
+  line, protect gains near the goal.
 * 2026-10-23: weekly retrospective added to the Sunday review at the owner's request (review.py facts, process/outcome grading, root causes, at most 3 changes).
 * 2026-10-22 (Run B): TLT shot 2a proposed (risk-modified: 5 lots, TLT >= 81.74 and 10y <= 4.96%, a runner); exit-design rule from the shot 1
   post-mortem; MSFT strike walk starts at 565 on the live chain.

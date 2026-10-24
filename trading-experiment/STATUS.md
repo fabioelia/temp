@@ -2,10 +2,10 @@
 
 > SIMULATION. No real money. Prices come from public web sources; fills are modeled at the close with slippage and fees (see RULES.md).
 
-**Equity $1,919.92** | P/L -$80.08 (-4.00%) | goal $4,000.00 by 2026-11-18 | -4.0% of the way
+**Equity $1,919.92** | P/L -$80.08 (-4.00%) | goal $2,200.00 by 2026-11-18 | -40.0% of the way
 - Cash $1,919.92 | realized -$80.08 | fees paid $0.08 | slippage cost $25.00
 - SPY buy-and-hold with same $: $1,982.02
-- Trading days left: 18 | needed per day to hit goal: +4.16%
+- Trading days left: 18 | needed per day to hit goal: +0.76%
 - Est. after-tax equity if liquidated (memo, 24% on gains): $1,919.92
 
 ## Positions

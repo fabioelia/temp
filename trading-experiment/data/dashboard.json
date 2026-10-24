@@ -1,7 +1,7 @@
 {
   "asof": "2026-10-23",
   "start_cash": 2000.0,
-  "goal": 4000.0,
+  "goal": 2200.0,
   "end_date": "2026-11-18",
   "equity": 1919.92,
   "pnl": -80.07999999999993,
@@ -10,9 +10,9 @@
   "fees": 0.08,
   "slippage": 25.0,
   "realized": -80.08000000000004,
-  "progress_to_goal": -0.040039999999999965,
+  "progress_to_goal": -0.40039999999999965,
   "trading_days_left": 18,
-  "required_daily_return": 0.041621236016784025,
+  "required_daily_return": 0.007593901963110383,
   "bench_value": 1982.02,
   "benchmark": "SPY",
   "series": [

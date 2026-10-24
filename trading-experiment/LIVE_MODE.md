@@ -13,7 +13,7 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 |---|---|
 | Real capital at work | **$2,000 at most**, whatever the account holds |
 | Loss limit | **Down $1,000** (experiment equity at or below $1,000): no new buys, everything sold to cash, then `KILL_SWITCH` is created and all orders stop **until the owner and Claude talk** |
-| Largest single order | 30% of the cap ($600) |
+| Largest single order | 22.5% of the cap ($450; was 30%, $600, until the goal changed on 2026-10-24) |
 | Options (current strategy) | buy-to-open / sell-to-close only, whole contracts, **limit orders at the broker's live quote**; premium only from cash above the **$1,000 floor**, so the $1,000 limit holds even if every option expires worthless |
 | Stock / ETF buys | switched off by the options strategy (were: 30% per order, leveraged ETFs 15%) |
 | Leveraged / inverse ETF | 15% of the cap ($300) per name |

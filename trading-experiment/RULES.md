@@ -10,7 +10,8 @@ multi-leg options or exercise (buying calls/puts is the strategy, below); never 
 ## Account and goal
 * Start: **$2,000 cash**, Robinhood-style retail account. No margin, no shorting, no crypto, no OTC. Options only as the strategy below allows (buy to open, sell to close; owner's choice 2026-10-17).
 * Window: first fills **Mon 2026-10-19** (close) through **Wed 2026-11-18** (close). 23 sessions; no NYSE holiday inside it.
-* Goal: **$4,000** (+100%), or as close as possible. Doubling needs about +3.2% per day compounded over the 22 return days.
+* Goal: **$2,200** (+10%) by 11/18, and **beat SPY buy-and-hold** over the same window (owner, 2026-10-24: "Aim for something more reasonable as a target then."; it was
+  $4,000, +100%, until then). From the 10/23 equity of $1,917.92 that is +14.7%: about +$282 on the $918 budget left above the floor.
 * Primary scoreboard: equity at the final close. Secondary (reported daily): return vs SPY buy-and-hold with the same $2,000,
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
@@ -20,7 +21,8 @@ multi-leg options or exercise (buying calls/puts is the strategy, below); never 
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
 * **The loss budget is the only money at risk.** Premium may only be paid from cash above a **$1,000 floor** (starting $2,000 minus the $1,000 loss limit). Every open option can
   expire worthless and the account still ends at or above $1,000. Profits raise the budget (they lift cash above the floor), so winners can be rolled into the next bet.
-* The other $1,000 stays in cash. Doubling needs the budget to roughly triple; the most likely outcome is that the $1,000 is lost and the experiment stops.
+* The other $1,000 stays in cash. The $2,200 goal needs about +31% on the remaining budget, so the hard $1,000 loss limit is far more risk than the goal requires:
+  see the playbook's pacing rules (smaller shots, a $1,700 pause line).
 * Whole contracts only (1 contract = 100 shares). A ticker needs a quote at decision time; options fill at the bid/ask stamped when the order is confirmed (Cboe delayed chain in paper,
   the broker's live quote with a limit order in live mode). Option marks are single-source (Cboe), flagged as such.
 
@@ -76,8 +78,8 @@ The committee's own Monte Carlo says 2x is a 0-5% event and that the aggressive 
 convexity*: take the asymmetric shots, but cap the damage.
 * **Under the options strategy (owner's choice 2026-10-17; clarified 2026-10-18):** the loss budget and its $1,000 floor are the risk cap. An option's worst case is its premium,
   which is already inside the budget, so the stock-era limits below on risk per position, the regime gate, staging, event exposure, the -15%/-25% drawdown breakers and the
-  ratchet do not apply to option premium (profits raise the budget, as the strategy section says). Still in force: at most 4 positions, a single order at most 30% of $2,000
-  ($600, coded in the gate), 4 fills a day, no new buys the session after a -6% equity day, never average down, and the playbook's pacing (one new shot a day). The $1,000
+  ratchet do not apply to option premium (profits raise the budget, as the strategy section says). Still in force: at most 4 positions, a single order at most 22.5% of $2,000
+  ($450 since 2026-10-24, coded in the gate), 4 fills a day, no new buys the session after a -6% equity day, never average down, and the playbook's pacing (one new shot a day). The $1,000
   loss limit replaces the -25% breaker: hitting it sells everything to cash and halts until the owner and Claude talk.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
 * **Concentration:** max 4 positions, no single name above 30% of equity at entry. **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
