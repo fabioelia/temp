@@ -308,3 +308,11 @@ so they go to it. No drafts, so no red-team tonight.
 **Process issues found tonight (for Sunday's review):** (1) the nightly brief is built by editing the previous one, and Thursday's MSFT 521.08 and 10y 4.95% leaked into
 Friday's; (2) triggers must name the exact series: "Brent above $115" was true for December and false for Yahoo's rolled January contract; (3) after-hours moves are not
 closes: the META +3.4% read reversed to -7.0%.
+
+**Owner question (2026-10-24): "You are AI. Lots of folks are using AI for investing. How do we use that to our advantage and how do we behave differently than the
+standard to win big?"** Candidate changes for the W43 review to weigh (it picks at most three, with the process issues logged 10/23):
+(a) a "consensus AI" persona that states what a generic model would recommend; if our trade matches it, we need a measured pricing edge (event vol <= 0.9x history, cheap
+skew) or we pass; (b) a headline-versus-filing gap scan in Run B (this week: META "capex raise" was a narrowed range; META +3.4% after hours closed -7.0%), with a next-day
+14:43 trade template that fades moves made on a misread headline; (c) a crowding filter: skip setups where the options already price the popular story (rich IV or skew,
+heavy call volume). Caveat recorded: every persona is the same model, so errors correlate; diversity has to come from different data (filings, computed base rates, option
+prices), not from more personas.
