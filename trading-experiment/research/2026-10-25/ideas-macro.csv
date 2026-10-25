@@ -1,0 +1,2 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-25,macro,USO261120C00180000,6.90,Cboe 10/23 close (quotes.py 10/25 ~18:30 ET),deal-dip only: 14:43 10/27-10/30 (10/28 at 15:30): lowest 11/20 USO call at delta 0.30-0.40 with IV<=0.48 (USO 120d realized 48%) ask<=4.00 spread<=10% OI>=1000; CLZ26 (CL=F)>=92; no signed US-Iran deal; buy 1; sell all +50%; thesis stop USO close <50-day (146.47); out by 11/13 pre-close,3
