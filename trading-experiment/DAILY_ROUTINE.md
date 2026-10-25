@@ -75,6 +75,10 @@ happens: nothing new fills.
    (theme caps, staging caps, the 10/28 and 11/3 event caps, circuit breakers). A stop exit that auto-queued yesterday may be cancelled only with a written reason.
 3. **Re-evaluate each proposal as if it were new.** Ask: *given what I know right now, is this still the best use of this money, at this size?* Compare it with the alternatives on the
    shortlist. Did the thesis change (news, oil, rates, a failed level, a flipped regime switch)? Is the price still inside its limit? Would adding it breach a cap?
+   **Consensus check (W43 review):** if the idea is what a generic AI would recommend (the popular narrative), it needs a measured edge (event-vol ratio, IV vs realized, a
+   base rate translated into the option's own odds) or it is not a shot. **Exit at entry:** a buy is confirmed only with its exit plan written in the order's thesis: contracts,
+   the level where one is banked (+50-100%) or, with one contract, a full sale at +50%; the stop at the underlying level where the thesis is wrong, the premium stop as backstop;
+   the stop moves to cost once a 14:43 check shows +40% or more.
 4. **Act, all before 15:50 ET:**
    ```bash
    python3 trading-experiment/tracker.py order confirm O003 O004          # still the best bet: it will fill at today's close
@@ -110,8 +114,11 @@ happens: nothing new fills.
    (`QUOTES_SETUP.md` explains the fix).
 1b. **Live reconciliation (live mode only).** Compare broker positions with `data/live_ledger.csv`, run `live.py check --marks ...`, and report real P/L next to the paper P/L.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
-   market recap, the next five trading days' calendar, and the persona). Each writes `research/D/<name>.md` (max about 350 words, sources cited, never invent prices) and replies in at
-   most 100 words with ranked ideas (ticker, reference close + source, entry, closing-basis stop, target, confidence 1-10, liquidity tier):
+   market recap, the next five trading days' calendar, and the persona). **The brief's market numbers come from `python3 trading-experiment/review.py snapshot --date D`, pasted
+   fresh each night, never carried over from an earlier brief; oil and rate triggers name one of its series (W43 review).** Each writes `research/D/<name>.md` (max about 350 words,
+   sources cited, never invent prices), logs every proposal to `research/D/ideas-<name>.csv` (columns `date,persona,contract,ref_ask,ref_source,trigger,confidence`; the weekly
+   review marks them), and replies in at most 100 words with ranked ideas (contract, reference bid/ask + source, entry trigger in named series checkable at 14:43, exit plan,
+   confidence 1-10, **whether it matches the consensus AI view, and its measured edge**):
    `macro` (Druckenmiller/Soros school), `momentum` (Livermore, Darvas, O'Neil, Minervini), `catalyst` (event/earnings specialist), `options-vol` (picks the contract: strike, expiry,
    IV versus the expected move, theta per week, payoff odds; uses `quotes.py chain`). Add `contrarian` and `historian` when a regime change makes them useful, and the sector
    specialists from 2026-10-18 (`semis-ai`, `energy`, `flows`) when their theme is in play. Then `risk` red-teams the draft proposals (approve / modify / reject, at most 120 words).

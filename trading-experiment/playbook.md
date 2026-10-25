@@ -17,6 +17,11 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   two weeks. If it wins, the budget grows and the next shot is sized from the new budget (roll the winnings). If it loses, shot 2 is the remaining ~$500. Doing nothing while
   waiting for a good setup is fine; the budget is the scarce resource, not time.
 
+## Consensus check (W43 review)
+* Every proposal says what a generic AI would recommend and whether it matches. A match without a measured edge (event-vol ratio <= 0.9, IV at or below realized, or a base
+  rate translated into the option's own odds) is not a shot. The contrarian's best idea is always priced and ranked. Stated confidence is checked weekly against the shadow book;
+  in W43 it ran inverse to outcome.
+
 ## What to buy
 * **Underlyings:** liquid names and ETFs with large, dated catalysts: NVDA, MSFT, META, AMZN, GOOGL, TSLA, SMH, QQQ, SPY, IWM. TLT calls are the rates/credit hedge (they pay
   in a de-escalation and in an AI-credit crack). XLE options fail the spread filter (11-150%); use USO or COP for oil views.
@@ -33,9 +38,12 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **FOMC days:** the 14:43 run falls inside the 14:30 press conference. On 10/28 decide after the presser (~15:30 ET), still before the 15:50 cutoff.
 * **Pacing:** at most one new shot per day; keep at least $360 above the floor for the MSFT shot on 10/28 unless an earlier shot has already won.
 
-## Exits
-* Sell half at +100% on premium, the rest at +200% or right after the catalyst plays out.
-* Closing-basis stop at -50% of premium, so a failed shot leaves half of it for the next one (set with `--stop-pct 50`).
+## Exits (decided at entry; W43 review)
+* Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** bank one at +50-100% and let the rest run. **One contract:** sell all at
+  +50%, not 2x (W43: a single contract held for 2x gave back +47%). Once a 14:43 check shows +40% or more, the stop moves to cost.
+* Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
+  at 14:43, so a gap can fill well past either.
+* After the catalyst plays out, sell what is left.
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
 
 ## Open shots (exits checked at every 14:43 pre-close on live quotes)
@@ -98,6 +106,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-25 (W43 review): exits decided at entry (one contract sells at +50%); consensus check with a measured edge; fresh snapshot numbers and named series
+  in every brief; ideas logged per persona and marked weekly.
 * 2026-10-24: goal lowered to $2,200 (+10%) and beating SPY, by the owner; pacing for the lower target: $250-400 shots, max $450, two open, a $1,700 pause
   line, protect gains near the goal.
 * 2026-10-23: weekly retrospective added to the Sunday review at the owner's request (review.py facts, process/outcome grading, root causes, at most 3 changes).
