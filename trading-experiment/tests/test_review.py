@@ -44,6 +44,29 @@ class Review(unittest.TestCase):
         self.assertEqual([round(t["pl"], 2) for t in trips], [100.0, -50.0])
         self.assertAlmostEqual(open_pos[C]["qty"], 1.0)
 
+    def test_brent_contracts_name_the_two_nearest_months(self):
+        self.assertEqual(R.brent_contracts("2026-10-23"), [("BZZ26.NYM", "Brent Dec 2026"), ("BZF27.NYM", "Brent Jan 2027")])
+        self.assertEqual(R.brent_contracts("2026-11-30")[0], ("BZF27.NYM", "Brent Jan 2027"))
+
+    def test_prev_trading_day_skips_weekends(self):
+        self.assertEqual((R.prev_trading_day("2026-10-26"), R.prev_trading_day("2026-10-23")), ("2026-10-23", "2026-10-22"))
+
+    def test_ideas_are_filtered_by_their_own_date_and_marked(self):
+        d = self.dir / "research" / "2026-10-18"
+        d.mkdir(parents=True)
+        (d / "ideas-x.csv").write_text("date,persona,contract,ref_ask,ref_source,trigger,confidence\n"
+                                        f"2026-10-18,contrarian,{C},2.00,t,t,4\n2026-10-10,old,{C},1.00,t,t,1\n")
+        old_root, old_mark = R.T.ROOT, R.mark_now
+        R.T.ROOT, R.mark_now = self.dir, (lambda c: (3.0, "stub"))
+        try:
+            rows = R.ideas("2026-10-19", "2026-10-23")
+            self.assertEqual([r["persona"] for r in rows], ["contrarian"])
+            text = "\n".join(R.ideas_section("2026-10-19", "2026-10-23", [{"ticker": C, "side": "buy"}]))
+            self.assertIn("+50.0%", text)
+            self.assertIn("| yes |", text)
+        finally:
+            R.T.ROOT, R.mark_now = old_root, old_mark
+
     def test_num_keeps_the_third_decimal_only_when_needed(self):
         self.assertEqual((R.num(5.175), R.num(2.93), R.num(3.0)), ("5.175", "2.93", "3.00"))
 
