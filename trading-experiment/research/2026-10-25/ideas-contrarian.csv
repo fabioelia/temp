@@ -1,0 +1,2 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-25,contrarian,QQQ261120C00750000,3.37,Cboe 10/23 close (quotes.py 10/25 18:43 ET),"Mon 10/26 14:43: QQQ 698.00-716.00, ^VIX<24, ask<=3.60, IV<=22%, spread<=5%; else once Thu 10/29 14:43 with QQQ 701.16-716.00 and same price rules; buy 1; sell all +50%; thesis stop QQQ<690 at 14:43; backstop bid<=0.5x; out 11/4 14:43 (11/6 if Thu entry)",4
