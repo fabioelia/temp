@@ -323,3 +323,15 @@ Judgment: perhaps 25-35% to reach $2,200. Risk was matched to it: playbook pacin
 banked, stop to cost past +40%, a $1,700 pause line, protect gains near the goal); the gate's single-order cap lowered from 30% ($600) to 22.5% ($450). The owner's hard
 limits ($2,000 cap, $1,000 loss limit) are unchanged. Config, RULES, playbook, README (which wrongly still said no real money), LIVE_MODE, the final-report spec and the
 pre-close and post-close scheduled tasks updated; the post-close task now also says to write brief numbers fresh (the 10/23 stale-number issue). 62 tests pass.
+
+## 2026-10-25 (Sun) Run C: first weekly review (W43) and the week-44 plan
+**Review (reviews/2026-W43.md, red-teamed and revised):** (1) real -4.1% vs SPY -0.9%; one trade, SPY 790C, -$82 after a +47% peak. (2) Well: safety checks and the red-team
+caught real bugs before money moved; same-day exits; tight triggers kept us out of a falling TLT call. (3) Badly: one contract held for 2x gave back the gain (structure);
+oil and small caps ran while a trigger read the wrong Brent contract and nobody watched the contrarian's (data, process). "Dissents won" is a hypothesis (about four factor
+bets, mostly untriggered), not a finding. (4) Changes: generated snapshot numbers with named series (review.py snapshot); a consensus check with one governing edge figure
+plus a daily idea watch and fired-trigger marking (review.py shadow book); exits fixed at entry and no chasing a breached ceiling. (5) For the owner: a resting GTC take-profit.
+**Committee (research/2026-10-25/):** macro wait (Fed hold 93.5%, HY OAS 3.40% vs the 3.46% veto; Yahoo's BZ=F rolled tonight, a fake -5.4%); momentum: rally counts reset,
+Thursday is the earliest follow-through day, IWM 285C only on a Russell FTD; catalyst: no uncrowded print has an edge, MSFT call dropped (put conditional, conf 3); contrarian:
+the crowd switched sides (shorts at the 99th percentile), QQQ 750C (conf 4), stop adding to the rotation; historian: FOMC+MSFT weeks skew down (SPY >+2% once, <-2% six times
+in 24), rotation persistence is a coin flip, MSFT 9%-OTM call doubles 2 of 12; options-vol: almost everything is priced rich, IWM 288C x2 the only EV > 1 (seasonal 1.22x).
+**Decision:** no Monday proposals; MSFT shot dropped; wait through the Fed and the prints; Thursday triggers for IWM (2 contracts), QQQ 750C and a USO deal-dip call (playbook).

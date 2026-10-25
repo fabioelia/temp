@@ -59,14 +59,15 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   on 10/28 a) and b) are checked at the ~15:30 MSFT decision, not during the 14:30 press conference); b) at the 14:43 price, SPY below 760.64 or the Nasdaq Composite below 26,023.10 (the rally low;
   not intraday lows); c) at the 10/27 pre-close, no Nasdaq follow-through day and SPY below its 50-day (768.37); d) the 10y closed above 5.31% with the 10y breakeven above
   2.40%; e) bid >= 7.50 (2x), no S&P record close by 11/4, or the 11/18 pre-close.
-* **Shot 2a proposal (O007), Fri 10/23:** 5 x TLT261120C00083000, ceiling 0.90, only if TLT >= 81.74 and ^TNX <= 4.96% at 14:43 with >= $361 left for MSFT. Sell 2
-  at 2x; the other 3 run with a stop at cost once 2 are sold, else a -50% stop (on 10/28 judged at ~15:30); out by 11/12.
-* **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** buy 2+ contracts when the budget allows so one can be banked at +50-100%;
-  once the gain passes ~+40%, raise the stop to at least cost; never leave a single contract with an all-or-nothing 2x target.
-* **Shot 2 plan, Wed 10/28 ~15:30 ET** (after the 14:30 press conference, before 15:50): skip if the Fed hiked, ^TNX is above 5.31% at 15:30, MSFT closed below its 50-day
-  (its live 50-day, ~510.3 by 10/28) beforehand, MSFT's event implied move is above 6.2%, or FRED's HY OAS for 10/27 is above 3.46% (its 2026 high; 3.29% on 10/19). Else buy **1 contract (`--qty 1`)** of the lowest 11/20 MSFT call strike at least 8% out of the money
-  whose ask is <= 3.60 with a spread <= 5%, walking up from 575 on the live chain and re-checking the spread by 15:45 (closing spreads read 7-12% wide
-  on 10/20, so judge on the live quote); else skip. Sell it at the 10/29 14:43 decision. Keep >= $361 above the floor until then.
+* **Week of 10/26 plan (Sunday 10/25 committee):** no Monday proposals; wait through the FOMC (Wed 2pm) and the MSFT/GOOGL (Wed) and AMZN (Thu) prints. The MSFT
+  event shot is **dropped** (five of six personas: the consensus AI trade; robust edge 0.87-0.94x, call EV 0.59-1.11 by method; every >= 8%-OTM strike failed the spread
+  rule). Thursday 10/29 is the first decision point, with these triggers checked at 14:43 (the idea watch logs any that fire, taken or not):
+  - IWM 11/20 285C or 288C, 2 contracts (bank one at +50%): only on a Russell follow-through day (IWM >= +1.25% on the day and >= 279.00, volume >= 75% of the prior
+    day's); stop IWM < 274 (momentum, conf 4; options-vol's 288C variant, seasonal EV 1.22x, conf 4; historian: fair odds; contrarian: no longer contrarian).
+  - QQQ 11/20 750C, 1 contract (sell all at +50%): only on a Nasdaq follow-through day after the prints, VIX < 24, ask <= 3.60 (contrarian, conf 4: shorts crowded at the
+    99th percentile; historian: +50% by Friday in 1 of 24 FOMC+MSFT weeks, so not before the prints).
+  - USO 11/20 180C, 1 contract: deal-dip only, IV <= 48%, ask <= 4.00, WTI Dec (CLZ26) >= 92, no signed deal (macro, conf 3). Oil calls on strength are the crowd trade now.
+* **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
@@ -111,6 +112,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-25 (Sunday plan): MSFT event shot dropped (consensus, no robust edge, spreads); wait through the FOMC; Thursday triggers for IWM, QQQ, USO.
 * 2026-10-25 (W43 review): exits decided at entry (one contract sells at +50%); consensus check with a measured edge; fresh snapshot numbers and named series
   in every brief; ideas logged per persona and marked weekly.
 * 2026-10-24: goal lowered to $2,200 (+10%) and beating SPY, by the owner; pacing for the lower target: $250-400 shots, max $450, two open, a $1,700 pause
