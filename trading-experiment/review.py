@@ -164,21 +164,41 @@ def mark_now(contract):
     return px, f"close {d}" if px else "no close"
 
 
+def fired(end):
+    """Triggers recorded by the pre-close runs (research/<D>/ideas-fired.csv: date,persona,contract,ask_at_trigger,source)."""
+    out = {}
+    for f in sorted((T.ROOT / "research").glob("*/ideas-fired.csv")):
+        for r in T.read_csv(f):
+            if r["date"] <= end:
+                out.setdefault((r["persona"], r["contract"]), r)  # the first time it fired
+    return out
+
+
 def ideas_section(start, end, live_rows):
     rows = ideas(start, end)
     taken = {r["ticker"] for r in live_rows if r["side"] == "buy"}
+    hits = fired(end)
     L = ["", "### Ideas shadow book (every persona's proposal, marked now)", ""]
     if not rows:
         return L + ["- No ideas logged (research/<date>/ideas-<persona>.csv)."]
-    L += ["| Date | Persona | Contract | Ref ask | Mark now | Change | Taken | Confidence |", "|---|---|---|---|---|---|---|---|"]
+    L += ["| Date | Persona | Contract | Trigger fired | Entry ref | Mark now | Change | Taken | Confidence |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    seen = set()
     for r in rows:
-        ref = float(r["ref_ask"]) if r.get("ref_ask") else None
+        h = hits.get((r["persona"], r["contract"]))
+        if h:
+            ref, fired_on = float(h["ask_at_trigger"]), h["date"]
+        else:
+            ref, fired_on = (float(r["ref_ask"]) if r.get("ref_ask") else None), "no (marked from the quoted ask)"
         m, src = mark_now(r["contract"])
         chg = pct(m / ref - 1) if (m and ref) else "n/a"
-        L.append(f"| {r['date']} | {r['persona']} | {r['contract']} | {r.get('ref_ask', '')} | {m if m is not None else 'n/a'} | {chg} | "
-                 f"{'yes' if r['contract'] in taken else 'no'} | {r.get('confidence', '')} |")
+        dup = " (same contract as an earlier row)" if r["contract"] in seen else ""
+        seen.add(r["contract"])
+        L.append(f"| {r['date']} | {r['persona']} | {r['contract']}{dup} | {fired_on} | {num(ref) if ref else 'n/a'} | "
+                 f"{m if m is not None else 'n/a'} | {chg} | {'yes' if r['contract'] in taken else 'no'} | {r.get('confidence', '')} |")
     L.append("")
-    L.append("Marks are taken when the review runs; a Sunday run sees Friday's close. Ref ask is the price the persona quoted, not a fill.")
+    L.append("Marks are taken when the review runs; a Sunday run sees Friday's close. Untriggered ideas are not results: only fired triggers, entered at the live ask"
+             " and run with their own exits, count as evidence (W43 red-team). Reweight personas only after 30+ fired ideas.")
     return L
 
 

@@ -67,6 +67,24 @@ class Review(unittest.TestCase):
         finally:
             R.T.ROOT, R.mark_now = old_root, old_mark
 
+    def test_fired_trigger_sets_the_entry_reference(self):
+        d = self.dir / "research" / "2026-10-18"
+        d.mkdir(parents=True)
+        (d / "ideas-x.csv").write_text("date,persona,contract,ref_ask,ref_source,trigger,confidence\n"
+                                        f"2026-10-18,contrarian,{C},2.00,t,t,4\n2026-10-18,macro,{C},2.00,t,t,5\n")
+        (self.dir / "research" / "2026-10-22").mkdir(parents=True)
+        (self.dir / "research" / "2026-10-22" / "ideas-fired.csv").write_text(
+            f"date,persona,contract,ask_at_trigger,source\n2026-10-22,contrarian,{C},2.50,robinhood\n")
+        old_root, old_mark = R.T.ROOT, R.mark_now
+        R.T.ROOT, R.mark_now = self.dir, (lambda c: (3.0, "stub"))
+        try:
+            text = "\n".join(R.ideas_section("2026-10-19", "2026-10-23", []))
+            self.assertIn("| 2026-10-22 | 2.50 | 3.0 | +20.0% |", text)              # fired: marked from the trigger ask
+            self.assertIn("no (marked from the quoted ask) | 2.00 | 3.0 | +50.0% |", text)
+            self.assertIn("(same contract as an earlier row)", text)
+        finally:
+            R.T.ROOT, R.mark_now = old_root, old_mark
+
     def test_num_keeps_the_third_decimal_only_when_needed(self):
         self.assertEqual((R.num(5.175), R.num(2.93), R.num(3.0)), ("5.175", "2.93", "3.00"))
 

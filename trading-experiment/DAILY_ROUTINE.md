@@ -78,7 +78,10 @@ happens: nothing new fills.
    **Consensus check (W43 review):** if the idea is what a generic AI would recommend (the popular narrative), it needs a measured edge (event-vol ratio, IV vs realized, a
    base rate translated into the option's own odds) or it is not a shot. **Exit at entry:** a buy is confirmed only with its exit plan written in the order's thesis: contracts,
    the level where one is banked (+50-100%) or, with one contract, a full sale at +50%; the stop at the underlying level where the thesis is wrong, the premium stop as backstop;
-   the stop moves to cost once a 14:43 check shows +40% or more.
+   the stop moves to cost once a 14:43 check shows +40% or more. **Ceilings are not chased:** if a proposal's price ceiling is breached, skip it, unless the risk persona
+   approved a specific alternate contract in advance (W43: the 790C swap got around the 785C's ceiling).
+   **Idea watch (W43 red-team):** for every idea logged in `research/*/ideas-*.csv` in the last 10 days, check its trigger on live quotes now. If it fired, append a row to
+   `research/D/ideas-fired.csv` (`date,persona,contract,ask_at_trigger,source`) at the live ask, taken or not, so the weekly review marks it from the trigger.
 4. **Act, all before 15:50 ET:**
    ```bash
    python3 trading-experiment/tracker.py order confirm O003 O004          # still the best bet: it will fill at today's close

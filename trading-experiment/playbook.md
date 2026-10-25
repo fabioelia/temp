@@ -18,8 +18,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   waiting for a good setup is fine; the budget is the scarce resource, not time.
 
 ## Consensus check (W43 review)
-* Every proposal says what a generic AI would recommend and whether it matches. A match without a measured edge (event-vol ratio <= 0.9, IV at or below realized, or a base
-  rate translated into the option's own odds) is not a shot. The contrarian's best idea is always priced and ranked. Stated confidence is checked weekly against the shadow book;
+* Every proposal says what a generic AI would recommend and whether it matches. A match without a measured edge is not a shot. **One governing figure per test:** the
+  event-vol ratio uses the median of the last 8-12 reactions (not the RMS, not with outliers left in) and must be <= 0.9; or IV at or below 20-day realized; or a base rate
+  translated into the option's own payoff odds with EV > 1. Last week's crowd (AI mega-caps) lost; this week's may be the rotation trade (oil, small caps): screen it the same way. The contrarian's best idea is always priced and ranked. Stated confidence is checked weekly against the shadow book;
   in W43 it ran inverse to outcome.
 
 ## What to buy
@@ -43,6 +44,10 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   +50%, not 2x (W43: a single contract held for 2x gave back +47%). Once a 14:43 check shows +40% or more, the stop moves to cost.
 * Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
   at 14:43, so a gap can fill well past either.
+* Honest note from the W43 red-team: replayed on shot 1, the +50% one-contract rule would not have fired (the best 14:43 check was +46.7%) and a stop at cost would still
+  have filled at 2.93 after the gap; once-a-day checks cannot catch intraday peaks. **Proposed to the owner:** place a resting GTC sell-to-close limit at the take-profit level
+  right after each buy fills (it only ever reduces risk). Not used until the owner approves it.
+* A trigger's series must live through the trade (W43: BZZ26 expires 10/30, before an 11/3 exit); name the contract that does.
 * After the catalyst plays out, sell what is left.
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
 
