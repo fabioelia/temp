@@ -1,0 +1,2 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-25,historian,IWM261120C00285000,2.65,Cboe 10/23 close (quotes.py 10/25 18:35 ET),Fri 10/30 14:43 only: x2 at ask<=2.00 and spread<=5%; skip on a Fed hike or SPY<747.93; sell one at 1.5x and one at 2.0x; thesis stop IWM 3.5% under entry; backstop bid<=0.40x; out 11/18 14:43,3
