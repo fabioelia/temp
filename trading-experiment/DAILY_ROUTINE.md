@@ -68,6 +68,8 @@ happens: nothing new fills.
      only, never an execution price.
    * Options (the current strategy): `python3 trading-experiment/quotes.py option <OCC>` for every held or proposed contract (bid, ask, IV, delta, open interest), and
      `quotes.py chain <UNDERLYING> --expiry ... --type C|P --near <price>` to re-check the strike choice. Reject anything that fails the liquidity filter in `playbook.md`.
+   * **What is driving today** (10/26 lesson: the run called the Anthropic-S-1 rally "broad risk-on"): `research.py news "stock market today" --days 1` and
+     name the day's main driver in the journal before judging any regime switch.
    * Feed not READY: WebSearch for the last hours' news on the same tickers and the swing factors (oil/Hormuz headlines, rates, AI-credit stress, index direction today). Treat any
      intraday price from search as unverified color, never as an execution price.
 2. **Re-evaluate each position.** First check every resting take-profit with `get_option_orders` (record and mirror any fill; `LIVE_MODE.md`). To exit a position that

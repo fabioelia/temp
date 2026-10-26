@@ -6,7 +6,11 @@ Watch new filings with `python3 trading-experiment/research.py sec filings 21303
 **Conflict of interest, stated first.** Every persona here is Claude, which Anthropic builds. Our read of Anthropic's prospects is not neutral, and we hold
 no non-public information about the offering; only the public filing and public news are used. Guardrail in `playbook.md` ("Anthropic IPO").
 
-## Facts from the filing (initial S-1: price range, share counts, committed spend and the 10/31 run-rate are still blank)
+## Facts from the filing (initial S-1: price range, share counts, the commitments-table total and the 10/31 run-rate are still blank)
+* **Correction (Run B, 10/26):** the per-counterparty minimum commitments are disclosed (MD&A, Liquidity, Contractual Obligations). Google: at least
+  $114.5B (April 2026-July 2033), plus an estimated $125-150B of further TPU compute in 2028-31 outside the table. Amazon: at least $110.0B (May
+  2026-April 2036). Microsoft: at least $44.9B (November 2026-May 2033). Broadcom: equipment-lease rent of about $161.2B, with up to $42.0B of notes
+  to finance it. Plus NVIDIA-GPU compute through SpaceXAI and others. The catalyst agent found this; I had read the blank table total as no disclosure.
 * Class A common stock, Nasdaq Global Select, proposed symbol **"ANT"**. Representatives Goldman Sachs and Morgan Stanley; 21 underwriters. A controlled company:
   a founder LLC holds 50.1% of the vote (Class F), and the Long-Term Benefit Trust elects a board majority (Class T).
 * Revenue (Summary Consolidated Financial Data): 2023 $41M, 2024 $386M, 2025 $4,585M; **H1 2026 $16,286M vs $1,163M in H1 2025**. Compute and infrastructure
@@ -24,8 +28,8 @@ no non-public information about the offering; only the public filing and public 
 2. **It is a sentiment catalyst for AI names now.** Reuters and Forbes (10/26) credit the filing with today's AI rally: NVDA +2.4%, AVGO +2.3%, MSFT +1.5%,
    QQQ +1.1%; GOOGL fell 1.1% (Yahoo closes, single source). The 14:43 run read the day as broad risk-on and missed the cause.
 3. **Hard data for the AI-capex thesis.** Revenue is up 14x year on year and compute spend 3.8x. That is direct evidence the AI demand behind hyperscaler capex is real
-   and growing, and it counts against the "AI-capex credit cracking" bear case in the regime switches. The committed-spend figures (blank for now) will matter most for AMZN,
-   GOOGL, MSFT and AVGO.
+   and growing, and it counts against the "AI-capex credit cracking" bear case in the regime switches. The per-counterparty minimums above are large, but the catalyst agent finds them mostly in
+   the partners' disclosed backlog already (it cites a $50.5B mark-up in Amazon's Q2 10-Q; not re-checked here), so they do not change the setup into the prints.
 4. **"Buy the cloud providers and suppliers into the Anthropic IPO" is the consensus AI trade.** Under the W43 consensus check it needs a measured edge
    (event vol at or below 0.9x history, or IV at or below realized). This week the AMZN, GOOGL and MSFT options also carry their earnings, which options-vol found
    priced rich (1.11-1.14x).

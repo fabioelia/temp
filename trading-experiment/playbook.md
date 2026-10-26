@@ -68,6 +68,26 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - QQQ 11/20 750C, 1 contract (sell all at +50%): only on a Nasdaq follow-through day after the prints, VIX < 24, ask <= 3.60 (contrarian, conf 4: shorts crowded at the
     99th percentile; historian: +50% by Friday in 1 of 24 FOMC+MSFT weeks, so not before the prints).
   - USO 11/20 180C, 1 contract: deal-dip only, IV <= 48%, ask <= 4.00, WTI Dec (CLZ26) >= 92, no signed deal (macro, conf 3). Oil calls on strength are the crowd trade now.
+* **Revision, Mon 10/26 Run B (research/2026-10-26/).** Tue 10/27 and Wed 10/28: no shot (all four personas). Gates for any Thursday/Friday buy: no Fed hike
+  (Polymarket 6.5% on 10/26), ^TNX <= 5.10, HY OAS < 3.46% (3.38% on FRED), ^VIX <= 22. PCE and Q3 GDP print Thu 08:30 (BEA, per macro).
+  - **IWM, Thu 10/29 or Fri 10/30 at 14:43:** IWM >= **+1.5%** on the day and >= 279.00, with volume by 14:43 >= 75% of the prior session's. The trigger was tightened
+    from +1.25%: momentum's 75-day follow-through sample gives EV/$ 0.83 at +1.25% and 1.06 at +1.5%. Options-vol's 1.07-1.11 at +1.25% rests on n 10-14, and its
+    seasonal 1.22 falls to 0.85-0.91 at the limit prices.
+    Contract: 2 x the lowest 11/20 IWM call from 287 to 290 with ask <= 2.20, delta >= 0.26, spread <= 5%, OI >= 1000 ($440 at most).
+    Exits: GTC sells, 1 at +50% and 1 at +100%; stop to cost once a 14:43 check shows +40%. Thesis stop: IWM < 276.00 at a 14:43 check (momentum: a failed
+    follow-through; options-vol had 274). Backstop: -50%. Runner out 11/16 14:43.
+    Waiting to Thursday costs about 21% of the premium if IWM goes nowhere (options-vol). The red-team sees the draft in Wednesday's Run B.
+  - **Fri 10/30, only if IWM did not fire (one shot a day): INTC post-print continuation** (catalyst, conf 3; 34 of 48 pooled prints continued over 5 sessions;
+    replay EV/$ 1.17-1.31).
+    Trigger: INTC at least 5% above (call) or below (put) its 10/29 close at 14:43. Contract: an 11/20 strike at delta 0.30-0.45, ask <= 4.50, spread <= 5%,
+    OI >= 1000. Size: 2 lots if the ask is <= 2.25, else 1.
+    Exits: +50% GTC; thesis stop INTC back through its 10/29 close; -50% backstop; out 11/6 14:43. Alternate (conf 2): the same rule on AMZN puts.
+  - **Dropped:**
+    - QQQ 750C: delta 0.19, and on a real follow-through it prices above the 3.60 ceiling, so the trigger cannot fire.
+    - MSFT, GOOGL and AMZN event trades: no event ratio robustly <= 0.9 (catalyst: 0.97-2.58x; options-vol: 0.93-2.40x by window).
+    - XLE: the spread was 24% at the close.
+  - USO deal-dip stays, but no 11/20 strike has IV <= 48% (53-59%). On a dip, re-strike to delta ~0.35, not the 180C.
+  - Anthropic S-1: no persona proposes an AI trade on it. Momentum read the pop as narrow and on low volume; catalyst found the commitments mostly in existing backlog.
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -119,6 +139,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-26 (Run B): Thursday IWM trigger tightened to +1.5% (larger sample); QQQ 750C and the MSFT tripwires dropped; INTC continuation added for Friday;
+  Anthropic S-1 conflict guardrail (owner flagged the filing).
 * 2026-10-26: resting GTC take-profits at the broker (owner's go-ahead): +50% for one contract, half +50% / half +100% for two or more; placed after the close on the buy day.
 * 2026-10-25 (Sunday plan): MSFT event shot dropped (consensus, no robust edge, spreads); wait through the FOMC; Thursday triggers for IWM, QQQ, USO.
 * 2026-10-25 (W43 review): exits decided at entry (one contract sells at +50%); consensus check with a measured edge; fresh snapshot numbers and named series

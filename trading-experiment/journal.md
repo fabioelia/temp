@@ -366,3 +366,25 @@ pass decisions do not change (neither is an AI trade). **Decisions:** ANT is not
 only after the IPO; stock buys off). Run 0 now checks CIK 2130357 for amendments (`research.py` accepts a numeric CIK; 1 test). **Conflict:** every persona is Claude,
 built by Anthropic, so the playbook adds a guardrail: no Anthropic/ANT-thesis ideas; ideas on its cloud providers and suppliers use public facts only, must pass the
 consensus check, are red-teamed on whether the link is the thesis, and are disclosed in the journal.
+
+## 2026-10-26 (Mon) Run B: post-close
+**Market:** the Anthropic S-1 lifted AI names: NVDA +2.4%, MSFT +1.5%, QQQ +1.1%, SPY +0.7% to 765.37, IWM +0.4% to 276.99. GOOGL fell 1.1% and META 1.9%.
+Oil fell: USO -1.9%, CL=F 101.25, BZZ26 115.22. VIX 18.39 (-5.4%). Verified closes came from Yahoo and Cboe (feed READY for closes).
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders or resting take-profits); paper $1,919.92 (-4.0%). SPY buy-and-hold: $1,996.11 (-0.2%), so we
+trail by 3.8 points. $2,200 needs +14.7%, with 17 sessions left. **Fills:** none (nothing was confirmed). The two triggers that fired at 14:45 closed lower for IWM
+(288C at a 1.635 mid vs the 1.80 ask) and higher for XLE (70C at a 2.32 mid on a 24%-wide quote).
+**Agents (research/2026-10-26/, brief.md):**
+* **macro:** no shot Tue/Wed. The USO deal-dip call is 9 IV points above its cap. Thursday gates: no hike (6.5%), ^TNX <= 5.10, HY OAS < 3.46% (3.38%).
+* **momentum:** the S&P and Nasdaq are on day 1, so the earliest follow-through day is Thursday. Its IWM trigger fails at +1.25% (EV 0.83, n 75) and works at +1.5%
+  (1.06). It read the AI pop as narrow and on low volume. XLE stays dropped.
+* **catalyst:** no event trade (ratios 0.97x or more); the MSFT tripwires are retired. INTC post-print continuation for Friday (conf 3, EV/$ 1.17-1.31); the S-1 is
+  not the thesis.
+* **options-vol:** IWM x2 on a follow-through only (EV/$ 1.07-1.11). Its seasonal 1.22 falls to 0.85-0.91 at the limit prices, and waiting costs ~21% if IWM stays
+  flat. Index IV runs 1.2-1.5x 20-day realized.
+**Proposals for Tue 10/27: none.** All four say no shot before the Fed; no drafts, so no red-team tonight (Wednesday's Run B red-teams the Thursday draft).
+The playbook's week plan is revised: IWM at +1.5% Thu/Fri, INTC continuation Fri, QQQ 750C and the MSFT trades dropped.
+**Correction:** my S-1 memo said the committed spend was blank. Only the table total is. The minimums are disclosed: Google >= $114.5B, Amazon >= $110.0B,
+Microsoft >= $44.9B, Broadcom lease rent ~$161.2B. The catalyst agent caught it; checked against the filing text; memo fixed.
+**Lesson:** name the day's driver before reading the tape (the 14:43 run called the S-1 rally "broad risk-on"). Run A now runs a "stock market today" news check
+first (`DAILY_ROUTINE.md`). Also fixed two stale playbook lines (resting take-profit "not used until approved"; the dropped MSFT reserve).
+**Dashboard:** five files refreshed (summary e7338764, equity bc532d0d, positions ba473c16, orders 850feede, trades 386f8492); the old files were deleted.
