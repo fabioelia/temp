@@ -342,3 +342,17 @@ of average cost; two or more, half at +50% and the rest at +100%; the gate refus
 a fill on its execution date, mirrored into the paper ledger at the broker's price (`tracker.py broker-fill`). Any other exit cancels it first; the gate refuses a normal
 sell while it rests. No resting stops (stop-market fills badly on option gaps). Code: `live.py resting`, `record --date`, the sell guard, `tracker.py broker-fill`;
 7 new tests (72). Procedure in LIVE_MODE.md; routine and playbook updated.
+
+## 2026-10-26 (Mon) Pre-close (14:43 ET)
+**Picture:** SPY 765.39 (+0.71%), QQQ 713.57 (+1.30%), IWM 277.24 (+0.54%), ^VIX 18.36 (-5.6%), ^TNX 4.982; WTI Dec (CLZ26) 101.76 (-1.5%), Brent Dec (BZZ26) 115.72
+(-0.9%), USO 166.74 (-1.6%), XLE 69.615. Yahoo's BZ=F now shows January (BZF27 110.69), so its "-5.2%" is the roll, not a move. Feed: Yahoo only (live and closes NOT READY
+for two sources; Cboe has today's session only); option quotes from Robinhood. Agent account flat: no positions, no open or recent orders, so no resting take-profit to check.
+**Orders: none pending, none added.** The Sunday committee's plan (wait through Wednesday's FOMC and the MSFT/GOOGL/AMZN prints; first decision Thursday 10/29) still holds:
+today was a broad risk-on day, but the reason for waiting is the event risk, and that is unchanged.
+**Idea watch (research/2026-10-26/ideas-fired.csv):** two triggers fired, neither taken. (1) options-vol IWM 11/20 288C, every Monday condition met (IWM 273.50-279.50,
+^TNX <= 5.05, ^VIX <= 22, ask 1.80 <= 2.00, spread 1.1%; IV 18.1%): passed because the full committee moved the IWM shot to Thursday behind a Russell follow-through
+condition (today +0.54%, not +1.25%), and nothing today changes the Fed/prints risk it was waiting out. Theta is about $9 a day per contract, so the shadow book will
+show what the wait cost. (2) momentum's 10/23 XLE 11/20 70C (XLE 68.78-72.22, ask 2.10 <= 2.40): Sunday dropped it (oil calls on strength are the crowd trade; it has no
+measured edge figure, so it fails the consensus check). Not fired: contrarian QQQ 750C (ask 3.66 > the 3.60 ceiling; IV 19.5%, QQQ in range), momentum IWM 285C (needs
++1.25%), macro USO 200C (USO 166.74 < 169.53), momentum QQQ 760C (day 1 of a new rally attempt, not a follow-through day), flows SPY 785C (neither flush nor reclaim),
+macro TLT 82C (Brent above 110 in both December and January). Not due yet: the USO deal-dip (10/27-10/30), MSFT (10/28), AVGO (after GOOGL), historian IWM 285C (Fri 10/30).
