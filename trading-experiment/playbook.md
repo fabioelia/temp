@@ -40,8 +40,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **Pacing:** at most one new shot per day; keep at least $360 above the floor for the MSFT shot on 10/28 unless an earlier shot has already won.
 
 ## Exits (decided at entry; W43 review)
-* Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** bank one at +50-100% and let the rest run. **One contract:** sell all at
-  +50%, not 2x (W43: a single contract held for 2x gave back +47%). Once a 14:43 check shows +40% or more, the stop moves to cost.
+* Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** half at +50%, the rest at +100%. **One contract:** all at +50%, not 2x
+  (W43: a single contract held for 2x gave back +47%). These targets now rest at the broker as GTC limits from the evening of the buy (owner, 2026-10-26), so an
+  intraday spike is banked. Once a 14:43 check shows +40% or more, the stop moves to cost.
 * Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
   at 14:43, so a gap can fill well past either.
 * Honest note from the W43 red-team: replayed on shot 1, the +50% one-contract rule would not have fired (the best 14:43 check was +46.7%) and a stop at cost would still
@@ -112,6 +113,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-26: resting GTC take-profits at the broker (owner's go-ahead): +50% for one contract, half +50% / half +100% for two or more; placed after the close on the buy day.
 * 2026-10-25 (Sunday plan): MSFT event shot dropped (consensus, no robust edge, spreads); wait through the FOMC; Thursday triggers for IWM, QQQ, USO.
 * 2026-10-25 (W43 review): exits decided at entry (one contract sells at +50%); consensus check with a measured edge; fresh snapshot numbers and named series
   in every brief; ideas logged per persona and marked weekly.

@@ -903,6 +903,29 @@ def cmd_validate(a):
     sys.exit(1 if errs else 0)
 
 
+def cmd_broker_fill(a):
+    """Mirror into the paper ledger a real execution that happened between runs (a resting GTC take-profit), at the broker's price."""
+    t = a.ticker.upper()
+    rows = read_csv(LEDGER)
+    held = sum(float(r["qty"]) * (1 if r["side"] == "buy" else -1) for r in rows if r["ticker"] == t)
+    qty = min(a.qty, held)
+    if qty <= 1e-9:
+        sys.exit(f"the paper ledger holds no {t}")
+    if not is_trading_day(d(a.date)):
+        sys.exit(f"{a.date} is not a trading day")
+    if any(r["date"] > a.date for r in rows):
+        sys.exit("the ledger already has later rows; a broker fill must be booked on its own day")
+    m = mult(t)
+    fees = calc_fees("sell", qty, a.price, t)
+    gross = round(qty * a.price * m, 2)
+    rows.append({"id": next_id("T", rows), "date": a.date, "ticker": t, "side": "sell", "qty": f"{qty:.6f}", "close_price": a.price,
+                 "fill_price": a.price, "gross": gross, "fees": fees, "cash_delta": round(gross - fees, 2), "tier": "O", "slip_bps": 0,
+                 "order_id": f"BRK-{a.ticket}", "thesis": a.note or "resting GTC take-profit filled at the broker",
+                 "price_source": f"broker execution, live resting GTC take-profit (ticket {a.ticket}, order {a.broker_order_id or 'n/a'})"})
+    write_csv(LEDGER, LEDGER_COLS, rows)
+    print(f"booked {rows[-1]['id']}: sell {qty:g} {t} @ {a.price} on {a.date} (mirrors the real resting take-profit)")
+
+
 # ---------------------------------------------------------------- cli
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -954,6 +977,15 @@ def main():
         s.set_defaults(fn=fn)
     v = sub.add_parser("validate")
     v.set_defaults(fn=cmd_validate)
+    bf = sub.add_parser("broker-fill", help="mirror a real resting take-profit fill into the paper ledger")
+    bf.add_argument("--ticker", required=True)
+    bf.add_argument("--qty", type=float, required=True)
+    bf.add_argument("--price", type=float, required=True)
+    bf.add_argument("--date", required=True)
+    bf.add_argument("--ticket", required=True)
+    bf.add_argument("--broker-order-id")
+    bf.add_argument("--note")
+    bf.set_defaults(fn=cmd_broker_fill)
     a = p.parse_args()
     a.fn(a)
 

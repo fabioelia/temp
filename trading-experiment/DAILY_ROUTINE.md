@@ -69,7 +69,8 @@ happens: nothing new fills.
      `quotes.py chain <UNDERLYING> --expiry ... --type C|P --near <price>` to re-check the strike choice. Reject anything that fails the liquidity filter in `playbook.md`.
    * Feed not READY: WebSearch for the last hours' news on the same tickers and the swing factors (oil/Hormuz headlines, rates, AI-credit stress, index direction today). Treat any
      intraday price from search as unverified color, never as an execution price.
-2. **Re-evaluate each position.** For options, check every held contract against its stop and target with LIVE quotes now (Robinhood `get_option_quotes`, else
+2. **Re-evaluate each position.** First check every resting take-profit with `get_option_orders` (record and mirror any fill; `LIVE_MODE.md`). To exit a position that
+   has one, cancel it first. For options, check every held contract against its stop and target with LIVE quotes now (Robinhood `get_option_quotes`, else
    `quotes.py option`). If the stop is breached, sell to close TODAY with a confirmed order; do not wait for the end-of-day stop, which fills a session later (the 2026-10-18
    dry run showed a -50% stop realizing -58% that way). Hold, trim or exit? Check the stop, the target, the regime switches and time stops in `playbook.md`, and the guardrails in `RULES.md`
    (theme caps, staging caps, the 10/28 and 11/3 event caps, circuit breakers). A stop exit that auto-queued yesterday may be cancelled only with a written reason.
@@ -116,6 +117,8 @@ happens: nothing new fills.
    `--prices-file` instead of `--auto-prices`. These fills are flagged by `validate` and counted separately; say in the journal and the user message that the feed was down
    (`QUOTES_SETUP.md` explains the fix).
 1b. **Live reconciliation (live mode only).** Compare broker positions with `data/live_ledger.csv`, run `live.py check --marks ...`, and report real P/L next to the paper P/L.
+   Check every resting take-profit (`live.py status` lists them) with `get_option_orders`; a fill is recorded and mirrored as `LIVE_MODE.md` says. **After a buy filled
+   today, place its resting GTC take-profit now** (`LIVE_MODE.md`, "Resting take-profit"); this is the one real order Run B may place, and it only reduces risk.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
    market recap, the next five trading days' calendar, and the persona). **The brief's market numbers come from `python3 trading-experiment/review.py snapshot --date D`, pasted
    fresh each night, never carried over from an earlier brief; oil and rate triggers name one of its series (W43 review).** Each writes `research/D/<name>.md` (max about 350 words,

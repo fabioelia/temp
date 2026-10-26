@@ -71,6 +71,19 @@ the app for one-tap approval instead, and the runs simply place it for approval 
 7. `get_option_orders` until filled or the day's cutoff → `live.py record --ticket ... --qty <filled> --avg-price <avg>`; unfilled at 15:50 ET → `cancel_option_order`, `live.py fail`.
 Selling to close is the same with `side` sell, `position_effect` close, limit at the bid side (high_fill_rate_sell_price rounded up to the tick).
 
+## Resting take-profit (GTC), owner's choice 2026-10-26: "Yes you decide on best option for the Robin Hood take profit tool"
+A resting good-till-cancelled sell-to-close limit on contracts we hold, so an intraday spike is banked without waiting for the 14:43 check. It only reduces risk.
+* **Levels:** one contract: all at +50% of the average cost; two or more: half at +50%, the rest at +100%; each rounded to the contract's tick. The gate refuses any
+  resting limit below 1.4x the average cost (`strategy.take_profit_resting.min_multiple`).
+* **When:** in the post-close run of the day a buy fills (after 16:00, so it cannot fill the same day: no day trade). The gate refuses earlier on a buy day.
+* **How:** `live.py resting --ticker <OCC> --qty <n> --limit <price> --tick <tick>` -> `review_option_order` (side sell, position_effect close, type limit,
+  time_in_force **gtc**) -> `place_option_order` with the ticket's ref_id -> `live.py placed --ticket K.. --broker-order-id <id>`.
+* **Every run:** `get_option_orders` for each resting ticket. Filled -> `live.py record --ticket K.. --qty <n> --avg-price <px> --fees <f> --date <execution date>` and
+  `tracker.py broker-fill --ticker <OCC> --qty <n> --price <px> --date <execution date> --ticket K..` (the paper mirror), then journal it.
+* **Exiting any other way** (a stop, an exit rule, flattening at the loss limit): `cancel_option_order` on the resting order first, `live.py fail --ticket K.. --reason
+  "cancelled to exit"`, then the normal sell. The gate refuses a normal sell while a resting take-profit holds the contracts.
+* No resting stop orders: on options a stop-market can fill far below the stop in a gap; stops stay with the 14:43 decision.
+
 ## Real execution is not the paper model
 Robinhood has no market-on-close orders, so a real order executes when it is placed (around 15:00-15:50 ET), not at the 16:00 close that the paper ledger assumes. Fractional and dollar-sized
 orders are market orders only. Partial fills, rejected orders and wider live spreads are possible. The paper ledger keeps running as the shadow model; the live ledger records what actually

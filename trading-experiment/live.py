@@ -164,6 +164,8 @@ def cmd_gate(a):
         refuse(f"daily cap of {T.CFG['max_trades_per_day']} real fills reached")
     if tk in {r["ticker"] for r in todays} | {t["ticker"] for t in open_tickets}:
         refuse(f"{tk} already traded today (no same-day round trips or repeat fills)")
+    if side == "sell" and any(t["ticker"] == tk and t["status"] == "placed" and is_resting(t) for t in tickets()):
+        refuse(f"a resting GTC take-profit holds {tk}: cancel it at the broker (cancel_option_order) and `live.py fail` its ticket first")
     ref = a.ref_price
     usd = qty = None
     note = ""
@@ -275,6 +277,52 @@ def cmd_check(a):
     sys.exit(3)
 
 
+RESTING = "resting GTC take-profit"
+
+
+def is_resting(t):
+    return t["reason"].startswith(RESTING) or t.get("usd", "") == "resting"
+
+
+def cmd_resting(a):
+    """A resting GTC sell-to-close limit at a take-profit level for contracts we hold (owner, 2026-10-26). It only reduces risk:
+    a sell of held contracts, priced at least `min_multiple` x the average cost, never able to fill on the day of a buy."""
+    now = T.now_et()
+    day = now.date().isoformat()
+    tp = T.STRAT.get("take_profit_resting", {})
+    if not LIVE.get("enabled"):
+        refuse("live mode is not enabled in config.json (live.enabled is false)")
+    if KILL.exists():
+        refuse("KILL_SWITCH file is present: all real orders are halted until the owner removes it")
+    if not tp.get("enabled"):
+        refuse("resting take-profits are switched off (strategy.take_profit_resting.enabled)")
+    tk = a.ticker.upper()
+    if not T.is_option(tk):
+        refuse("resting take-profits are for option positions only")
+    st = live_state()
+    p = st["pos"].get(tk)
+    if not p:
+        refuse(f"the live ledger holds no {tk}")
+    resting = sum(float(t["qty"] or 0) for t in tickets() if t["ticker"] == tk and t["status"] in ("approved", "placed") and is_resting(t))
+    if a.qty < 1 or a.qty != int(a.qty) or a.qty > p["qty"] - resting + 1e-9:
+        refuse(f"{a.qty:g} contracts is not available: {p['qty']:g} held, {resting:g} already resting")
+    avg = p["cost"] / p["qty"] / T.mult(tk)
+    floor = round(avg * tp.get("min_multiple", 1.4), 2)
+    if a.limit < floor:
+        refuse(f"limit {a.limit} is below {tp.get('min_multiple', 1.4)}x the average cost {avg:.4f} ({floor}): a resting order may only take profit")
+    tick = a.tick if a.tick else (0.05 if a.limit >= 3 else 0.01)
+    if abs(round(a.limit / tick) * tick - a.limit) > 1e-9:
+        refuse(f"limit {a.limit} is not on the ${tick:.2f} tick")
+    bought_today = any(r["ticker"] == tk and r["side"] == "buy" for r in st["per_day"].get(day, []))
+    if bought_today and now.time() < hhmm("16:00"):
+        refuse(f"{tk} was bought today: place the take-profit after the 16:00 close so it cannot fill today (no same-day round trips)")
+    tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": f"TP-{tk}", "ticker": tk, "side": "sell",
+                      "usd": "resting", "qty": str(int(a.qty)), "status": "approved", "reason": f"{RESTING} @ {a.limit}"})
+    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "ticker": tk, "side": "sell_to_close",
+                      "contracts": int(a.qty), "order_type": "limit", "limit_price": a.limit, "time_in_force": "gtc",
+                      "avg_cost": round(avg, 4), "multiple": round(a.limit / avg, 3)}, indent=1))
+
+
 def cmd_placed(a):
     r = set_ticket(a.ticket, status="placed", reason=f"broker order {a.broker_order_id}")
     print(f"ticket {r['ticket']} marked placed")
@@ -286,7 +334,7 @@ def cmd_record(a):
     if tk is None or tk["status"] not in ("approved", "placed"):
         sys.exit(f"ticket {a.ticket} is not open")
     rows = T.read_csv(LIVE_LEDGER)
-    rows.append({"id": f"L{len(rows) + 1:03d}", "ts_et": now.isoformat(timespec="seconds"), "date": now.date().isoformat(),
+    rows.append({"id": f"L{len(rows) + 1:03d}", "ts_et": now.isoformat(timespec="seconds"), "date": a.date or now.date().isoformat(),
                  "ticker": tk["ticker"], "side": tk["side"], "qty": f"{a.qty:.6f}", "avg_price": a.avg_price,
                  "notional": round(a.qty * a.avg_price * T.mult(tk["ticker"]), 2), "fees": a.fees, "order_id": tk["order_id"], "ticket": a.ticket,
                  "broker_order_id": a.broker_order_id or "", "note": a.note or ""})
@@ -325,7 +373,10 @@ def cmd_status(a):
         print(f"  WASH? {w['sale']} {w['ticker']} loss ${w['loss']:,.2f} -> {', '.join(w['replacements'])}")
     for t, p in sorted(st["pos"].items()):
         print(f"  {t:6} {p['qty']:.4f} sh, cost ${p['cost']:,.2f}")
-    open_t = [t for t in tickets() if t["status"] in ("approved", "placed")]
+    rest = [t for t in tickets() if t["status"] == "placed" and is_resting(t)]
+    for t in rest:
+        print(f"  RESTING at the broker: {t['ticket']} sell {t['qty']} {t['ticker']} ({t['reason']}); check get_option_orders each run")
+    open_t = [t for t in tickets() if t["status"] in ("approved", "placed") and not (t["status"] == "placed" and is_resting(t))]
     if open_t:
         print("OPEN TICKETS (approved or placed but not recorded; reconcile with the broker before anything else):")
         for t in open_t:
@@ -356,7 +407,14 @@ def main():
     r.add_argument("--fees", type=float, default=0.0)
     r.add_argument("--broker-order-id")
     r.add_argument("--note")
+    r.add_argument("--date", help="the execution date at the broker, when it was not today (a resting order that filled earlier)")
     r.set_defaults(fn=cmd_record)
+    rs = sub.add_parser("resting", help="approve a resting GTC take-profit sell for held contracts")
+    rs.add_argument("--ticker", required=True)
+    rs.add_argument("--qty", type=float, required=True)
+    rs.add_argument("--limit", type=float, required=True)
+    rs.add_argument("--tick", type=float)
+    rs.set_defaults(fn=cmd_resting)
     f = sub.add_parser("fail")
     f.add_argument("--ticket", required=True)
     f.add_argument("--reason", required=True)

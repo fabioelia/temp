@@ -254,3 +254,82 @@ class LiveOptions(unittest.TestCase):
     def test_stock_buy_refused_in_options_strategy(self):
         rc, out = self.gate("--order", "O002")
         self.assertEqual((rc, "switched off" in out), (2, True))
+
+
+class LiveResting(unittest.TestCase):
+    """Resting GTC take-profits: only above 1.4x cost, never same-day, block other sells until cancelled, mirrored into paper."""
+    CALL = "SPY261120C00790000"
+
+    def setUp(self):
+        self.dir = tempfile.mkdtemp()
+        for f in ("tracker.py", "live.py", "quotes.py", "config.json"):
+            shutil.copy(SRC / f, self.dir)
+        p = Path(self.dir, "config.json")
+        c = json.loads(p.read_text())
+        c["live"]["enabled"] = True
+        c["live"]["loss_limit_usd"] = 1000.0
+        c["strategy"]["take_profit_resting"] = {"enabled": True, "min_multiple": 1.4}
+        p.write_text(json.dumps(c))
+        d = Path(self.dir, "data")
+        d.mkdir()
+        (d / "live_ledger.csv").write_text("id,ts_et,date,ticker,side,qty,avg_price,notional,fees,order_id,ticket,broker_order_id,note\n"
+                                           f"L001,{MON}T14:47:00-04:00,{MON},{self.CALL},buy,1.000000,3.75,375.0,0.04,O001,K001,x,\n")
+        (d / "live_tickets.csv").write_text("ticket,ts_et,date,order_id,ticker,side,usd,qty,status,reason\n"
+                                            f"K001,{MON}T14:46:00-04:00,{MON},O001,{self.CALL},buy,375.00,1,recorded,broker order x\n")
+        cols = "id,created,ticker,side,size_type,size_value,tier,max_price,min_price,stop,target,stop_pct,target_pct,priority,gtd,status,filled_date,reason,thesis,auto,confirmed_on,confirmed_at,q_bid,q_ask,q_time,q_source"
+        (d / "orders.csv").write_text(cols + "\n" + f"O002,2026-10-20,{self.CALL},sell,all,1,O,,,,,,,0,2026-10-20,pending,,,exit,,2026-10-20,2026-10-20T14:50-04:00,4.0,4.1,,cboe\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def live(self, at, *args):
+        r = subprocess.run([sys.executable, "live.py", *args], cwd=self.dir, env=dict(os.environ, TRACKER_NOW=at), capture_output=True, text=True)
+        return r.returncode, r.stdout + r.stderr
+
+    def test_only_a_take_profit_above_the_floor(self):
+        rc, out = self.live("2026-10-20T10:00", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.00", "--tick", "0.01")
+        self.assertEqual((rc, "below" in out), (2, True))                     # 5.00 < 1.4 x 3.7504
+        rc, out = self.live("2026-10-20T10:00", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        self.assertEqual(rc, 0, out)
+        t = json.loads(out)
+        self.assertEqual((t["time_in_force"], t["side"], t["contracts"]), ("gtc", "sell_to_close", 1))
+
+    def test_never_on_the_day_of_the_buy_before_the_close(self):
+        rc, out = self.live(f"{MON}T14:55", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        self.assertEqual((rc, "bought today" in out), (2, True))
+        rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        self.assertEqual(rc, 0, out)
+
+    def test_cannot_rest_more_than_is_held(self):
+        rc, out = self.live("2026-10-20T10:00", "resting", "--ticker", self.CALL, "--qty", "2", "--limit", "5.63", "--tick", "0.01")
+        self.assertEqual((rc, "not available" in out), (2, True))
+
+    def test_a_resting_order_blocks_other_sells_until_cancelled(self):
+        rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        tid = json.loads(out)["ticket"]
+        self.live(f"{MON}T16:31", "placed", "--ticket", tid, "--broker-order-id", "gtc1")
+        rc, out = self.live("2026-10-20T14:55", "gate", "--order", "O002", "--limit", "4.00", "--tick", "0.01")
+        self.assertEqual((rc, "cancel it at the broker" in out), (2, True))
+        self.live("2026-10-20T14:56", "fail", "--ticket", tid, "--reason", "cancelled to exit")
+        rc, out = self.live("2026-10-20T14:57", "gate", "--order", "O002", "--limit", "4.00", "--tick", "0.01")
+        self.assertEqual(rc, 0, out)
+
+    def test_a_fill_is_recorded_on_its_broker_date(self):
+        rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        tid = json.loads(out)["ticket"]
+        self.live(f"{MON}T16:31", "placed", "--ticket", tid, "--broker-order-id", "gtc1")
+        rc, out = self.live("2026-10-21T14:45", "record", "--ticket", tid, "--qty", "1", "--avg-price", "5.63", "--fees", "0.05", "--date", "2026-10-20")
+        self.assertEqual(rc, 0, out)
+        rows = Path(self.dir, "data", "live_ledger.csv").read_text().strip().splitlines()
+        self.assertTrue(rows[-1].split(",")[2] == "2026-10-20")
+
+    def test_paper_mirror_of_a_broker_fill(self):
+        d = Path(self.dir, "data")
+        d.joinpath("ledger.csv").write_text("id,date,ticker,side,qty,close_price,fill_price,gross,fees,cash_delta,tier,slip_bps,order_id,thesis,price_source\n"
+                                            f"T001,{MON},{self.CALL},buy,1.000000,3.58,3.62,362.0,0.04,-362.04,O,0,O001,t,cboe option ask\n")
+        r = subprocess.run([sys.executable, "tracker.py", "broker-fill", "--ticker", self.CALL, "--qty", "1", "--price", "5.63", "--date", "2026-10-20",
+                            "--ticket", "K002"], cwd=self.dir, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        r = subprocess.run([sys.executable, "tracker.py", "validate"], cwd=self.dir, capture_output=True, text=True)
+        self.assertIn("OK", r.stdout, r.stdout + r.stderr)
+        self.assertNotIn("WARN", r.stdout)

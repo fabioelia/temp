@@ -101,7 +101,13 @@
     "option_fee_per_contract": 0.04,
     "option_auto_sell_haircut": 0.1,
     "note": "2026-10-17 owner chose options with the loss budget; 2026-10-18 owner: 'Update the 500 budget to 1k instead'. Buy calls/puts only; premium may only use cash above starting_cash - loss_limit ($1,000 floor), so every open option can expire worthless and the loss still stops at $1,000. Stock buys off; options closed at least a session before expiry.",
-    "option_fee_source": "Robinhood review_option_order 2026-10-18: OCC $0.02 + ORF $0.02 per contract, no contract fee (Gold)"
+    "option_fee_source": "Robinhood review_option_order 2026-10-18: OCC $0.02 + ORF $0.02 per contract, no contract fee (Gold)",
+    "take_profit_resting": {
+      "enabled": true,
+      "min_multiple": 1.4,
+      "plan": "one contract: all at +50%; two or more: half at +50%, the rest at +100% (rounded to the contract's tick)",
+      "authorization": "2026-10-26, owner: 'Yes you decide on best option for the Robin Hood take profit tool' (asked whether to place a resting take-profit after each buy)."
+    }
   },
   "research": {
     "sec_contact_email": ""

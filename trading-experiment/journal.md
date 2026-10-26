@@ -335,3 +335,10 @@ Thursday is the earliest follow-through day, IWM 285C only on a Russell FTD; cat
 the crowd switched sides (shorts at the 99th percentile), QQQ 750C (conf 4), stop adding to the rotation; historian: FOMC+MSFT weeks skew down (SPY >+2% once, <-2% six times
 in 24), rotation persistence is a coin flip, MSFT 9%-OTM call doubles 2 of 12; options-vol: almost everything is priced rich, IWM 288C x2 the only EV > 1 (seasonal 1.22x).
 **Decision:** no Monday proposals; MSFT shot dropped; wait through the Fed and the prints; Thursday triggers for IWM (2 contracts), QQQ 750C and a USO deal-dip call (playbook).
+
+**Owner, 2026-10-26: "Yes you decide on best option for the Robin Hood take profit tool."** Decision: a resting GTC **sell-to-close limit** (the simplest Robinhood order;
+no advanced or bracket orders, which stay off), placed in the post-close run of the buy day so it cannot fill the same day (no day trade). Levels: one contract all at +50%
+of average cost; two or more, half at +50% and the rest at +100%; the gate refuses any resting sell below 1.4x cost. Each run checks it with get_option_orders and records
+a fill on its execution date, mirrored into the paper ledger at the broker's price (`tracker.py broker-fill`). Any other exit cancels it first; the gate refuses a normal
+sell while it rests. No resting stops (stop-market fills badly on option gaps). Code: `live.py resting`, `record --date`, the sell guard, `tracker.py broker-fill`;
+7 new tests (72). Procedure in LIVE_MODE.md; routine and playbook updated.
