@@ -1,0 +1,4 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-26,momentum,IWM261120C00289000,1.42,Cboe delayed close via quotes.py 10/26 17:20 ET (bid 1.40),"Thu 10/29 or Fri 10/30 at 14:43: IWM >= +1.5% over prior close and >= 279.00; IWM volume by 14:43 >= 75% of prior session; no print < 269.88; buy 2 of the lowest of 288/289/290C with ask <= 2.25, delta >= 0.27, spread <= 5%; stop IWM < 276.00 at 14:43",3
+2026-10-26,momentum,QQQ261120C00750000,3.65,Cboe delayed close via quotes.py 10/26 17:23 ET (bid 3.61),"Shadow (committee trigger, not supported by momentum: delta 0.19): Thu 10/29 14:43 Nasdaq FTD, QQQ >= +1.25% on volume >= 75% of prior by 14:43, Comp low 25866.15 intact, VIX < 24, ask <= 3.60",2
+2026-10-26,momentum,XLE261120C00070000,2.60,Cboe delayed close via quotes.py 10/26 17:23 ET (bid 2.04; spread 24%),"No trade (kept dropped). Shadow re-add only after the 10/30 XOM/CVX prints: XLE close > 69.86 on >= 1.3x 50-day volume and live spread <= 5%",1
