@@ -37,7 +37,7 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **Event vol rule (options-vol, 2026-10-18):** buy event premium only at the 14:43 decision on the print day, only where the implied event move is at most 0.9x the
   last seven reactions (MSFT 0.70x qualifies; NFLX 1.52x, AAPL and GOOGL 1.2x do not), and sell at the next day's decision. Buying the catalyst early pays the IV ramp twice.
 * **FOMC days:** the 14:43 run falls inside the 14:30 press conference. On 10/28 decide after the presser (~15:30 ET), still before the 15:50 cutoff.
-* **Pacing:** at most one new shot per day; keep at least $360 above the floor for the MSFT shot on 10/28 unless an earlier shot has already won.
+* **Pacing:** at most one new shot per day. (The $360 reserve for the 10/28 MSFT shot ended when the W43 review dropped that shot; only conditional tripwires remain.)
 
 ## Exits (decided at entry; W43 review)
 * Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** half at +50%, the rest at +100%. **One contract:** all at +50%, not 2x
@@ -46,8 +46,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
   at 14:43, so a gap can fill well past either.
 * Honest note from the W43 red-team: replayed on shot 1, the +50% one-contract rule would not have fired (the best 14:43 check was +46.7%) and a stop at cost would still
-  have filled at 2.93 after the gap; once-a-day checks cannot catch intraday peaks. **Proposed to the owner:** place a resting GTC sell-to-close limit at the take-profit level
-  right after each buy fills (it only ever reduces risk). Not used until the owner approves it.
+  have filled at 2.93 after the gap; once-a-day checks cannot catch intraday peaks. Hence the resting GTC take-profit (owner approved 2026-10-26; placed in Run B
+  on the evening of the buy, `LIVE_MODE.md` "Resting take-profit").
 * A trigger's series must live through the trade (W43: BZZ26 expires 10/30, before an 11/3 exit); name the contract that does.
 * After the catalyst plays out, sell what is left.
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
