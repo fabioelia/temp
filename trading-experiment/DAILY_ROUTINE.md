@@ -35,6 +35,7 @@ S-1/424B offerings and lockups (supply overhang).
 ## Run 0: pre-open news (weekdays ~09:13 ET; no agents, keep it short)
 1. Orient (below). Then for every held position, every pending proposal and the macro swing factors (oil/Hormuz, rates and Fed, AI-credit names, index futures direction):
    `research.py news ... --days 1`, plus `research.py sec filings <ticker> --days 2 --forms 8-K,4` for the underlyings in play (earnings released overnight, guidance, insider trades).
+   Until the Anthropic IPO prices: `research.py sec filings 2130357 --days 2` (S-1/A price range, roadshow; `playbook.md`, catalyst calendar).
 2. Adjust **proposals only**: cancel ones the news broke (`order cancel --reason`), add proposals for a better contract. **Never confirm** in this run; the pre-close run decides.
 3. Append a short "Pre-open" entry to `journal.md` only if something changed, commit and push. Message the user only when news materially changes the plan (for example a position's
    thesis broke overnight); otherwise stay quiet.

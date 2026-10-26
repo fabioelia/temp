@@ -75,6 +75,12 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   No event trade on META (no edge on an expiry that clears the 3-day rule); trade the reaction (decide 10/22) rather than holding through. Thu 10/22: earliest follow-through day.
 * **10/28:** MSFT and GOOGL after the close, FOMC decision at 2pm. **10/29:** AMZN, INTC. **10/30:** XOM/CVX (unverified). **11/1:** OPEC+. **11/2:** AAPL. **11/3:** midterms, AMD after the close.
   **11/6:** jobs. **~11/10:** CPI.
+* **Anthropic IPO (S-1 filed 10/26, Nasdaq "ANT"; owner flagged it; `research/2026-10-26/anthropic-s1.md`).** No price range yet; pricing is likely after our window
+  or at its edge, so ANT itself is not tradable here. Watch `research.py sec filings 2130357 --days 7` in Run 0 for the S-1/A (price range, September numbers),
+  then the roadshow and pricing dates. The filing moved AI names on 10/26 (NVDA, AVGO +2.3-2.4%). **Conflict guardrail:** every persona is Claude, built by
+  Anthropic, so (1) no idea whose thesis is Anthropic or ANT itself; (2) an AMZN/GOOGL/MSFT/AVGO/NVDA idea may use only facts quoted from public filings and news,
+  must pass the consensus check (the "IPO halo" is the consensus trade), and the red-team must say whether the Anthropic link is the thesis; (3) the journal
+  discloses the link on any such trade.
 * **11/9-11/17: the NVDA run-up.** NVDA reports **after the close on Tue 11/17** (company-verified per Robinhood `get_earnings_results`, checked 2026-10-18; it was wrongly assumed to be
   11/18). A run-up position must be **sold by the 11/17 close**; holding it overnight is a one-day bet on the print scored at the 11/18 close, and needs an explicit journal reason.
 

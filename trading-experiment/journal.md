@@ -356,3 +356,13 @@ show what the wait cost. (2) momentum's 10/23 XLE 11/20 70C (XLE 68.78-72.22, as
 measured edge figure, so it fails the consensus check). Not fired: contrarian QQQ 750C (ask 3.66 > the 3.60 ceiling; IV 19.5%, QQQ in range), momentum IWM 285C (needs
 +1.25%), macro USO 200C (USO 166.74 < 169.53), momentum QQQ 760C (day 1 of a new rally attempt, not a follow-through day), flows SPY 785C (neither flush nor reclaim),
 macro TLT 82C (Brent above 110 in both December and January). Not due yet: the USO deal-dip (10/27-10/30), MSFT (10/28), AVGO (after GOOGL), historian IWM 285C (Fri 10/30).
+
+## 2026-10-26 (Mon) Owner flag: the Anthropic S-1
+**Owner, 16:3x ET: "Interesting one to keep an eye out"** (link to Anthropic, PBC's S-1, filed today). Read in full; memo `research/2026-10-26/anthropic-s1.md`.
+Nasdaq "ANT", Goldman Sachs and Morgan Stanley lead; revenue H1 2026 $16.3B vs $1.2B (2025 $4.6B); compute $8.9B in H1; operating loss $0.7B; Series H at $589.01
+(Google $10B, Amazon $5B). The price range, share count and committed spend are blank. **Correction to today's pre-close note:** the "broad risk-on day" was largely
+this filing (Reuters/Forbes: AI stocks rallied on it; NVDA and AVGO +2.3-2.4%, MSFT +1.5%, GOOGL -1.1%); the 14:43 run did not identify the cause. The IWM and XLE
+pass decisions do not change (neither is an AI trade). **Decisions:** ANT is not tradable in our window (no range; pricing likely at or after 11/18; options list
+only after the IPO; stock buys off). Run 0 now checks CIK 2130357 for amendments (`research.py` accepts a numeric CIK; 1 test). **Conflict:** every persona is Claude,
+built by Anthropic, so the playbook adds a guardrail: no Anthropic/ANT-thesis ideas; ideas on its cloud providers and suppliers use public facts only, must pass the
+consensus check, are red-teamed on whether the link is the thesis, and are disclosed in the journal.

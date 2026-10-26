@@ -165,6 +165,8 @@ _TICKERS = {}
 
 
 def cik_for(ticker):
+    if ticker.isdigit():  # a CIK, for filers with no ticker yet (an IPO in registration, e.g. 2130357 Anthropic)
+        return int(ticker)
     if not _TICKERS:
         for row in json.loads(sec_get("https://www.sec.gov/files/company_tickers.json")).values():
             _TICKERS[row["ticker"].upper()] = row["cik_str"]

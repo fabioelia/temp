@@ -45,6 +45,9 @@ class Research(unittest.TestCase):
         self.assertIn("2.02 results of operations (earnings)", rows[0]["items"])
         self.assertTrue(rows[1]["raw_xml"].endswith("/000104581026000099/wk-form4_1.xml"))
 
+    def test_numeric_cik_skips_the_ticker_list(self):  # an IPO filer has no ticker yet
+        self.assertEqual(research.cik_for("2130357"), 2130357)
+
     def test_html_to_text_drops_scripts_and_keeps_paragraphs(self):
         raw = ("<html><title>Fed holds</title><script>var x=1</script><nav>menu</nav>"
                "<p>The Federal Reserve held rates steady on Wednesday, citing persistent inflation.</p>"
