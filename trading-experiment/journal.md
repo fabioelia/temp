@@ -388,3 +388,19 @@ Microsoft >= $44.9B, Broadcom lease rent ~$161.2B. The catalyst agent caught it;
 **Lesson:** name the day's driver before reading the tape (the 14:43 run called the S-1 rally "broad risk-on"). Run A now runs a "stock market today" news check
 first (`DAILY_ROUTINE.md`). Also fixed two stale playbook lines (resting take-profit "not used until approved"; the dropped MSFT reserve).
 **Dashboard:** five files refreshed (summary e7338764, equity bc532d0d, positions ba473c16, orders 850feede, trades 386f8492); the old files were deleted.
+
+## 2026-10-27 (Tue) Pre-close (14:44 ET)
+**Driver:** a chip/AI rally led by Broadcom and Nvidia lifts the S&P toward its record (BNN Bloomberg, Benzinga, Barron's); Oracle rose on expanded OpenAI and Google
+deals; Boeing fell 10%. Live (Yahoo, single source): SPY 769.23 (+0.5%), QQQ 720.53 (+1.2%), IWM 279.93 (+1.1%), AMZN +2.1%, GOOGL +1.6%, MSFT -0.3%; ^VIX 17.77,
+^TNX 4.993; CLZ26 99.94, BZZ26 114.02, BZF27 109.51 (-1.1 to -1.8%), USO 163.52. Feed: Yahoo live only; Cboe delayed chain for options.
+**Orders: none pending, none added.** The plan holds: no shot before Wednesday's Fed (all four personas, 10/26). Account flat; no tickets, no resting orders.
+**Idea watch:**
+* **Fired, not taken (research/2026-10-27/ideas-fired.csv):** the macro 10/18 TLT 11/20 82C (0.82/0.85). Its untyped "Brent < 110" is met on Yahoo's BZ=F (now
+  BZF27, 109.51) but not on BZZ26 (114.02), and ^TNX is 4.993. Options-vol marked it NO SHOT on 10/25 (EV/$ 0.84-0.93, IV above realized).
+* **Not fired:**
+  - USO deal-dip: the 180C is 3.50/3.80, but IV is 55% (cap 48%) and delta 0.27 (band 0.30-0.40). Every 11/20 strike from 162 to 173 is at IV 52-53%.
+  - Momentum's 10/25 IWM 285C: IWM is +1.06%, short of +1.25%.
+  - Momentum's XLE 70C: XLE 68.265 is below the 68.78 floor.
+  - Flows' SPY 785C: no reclaim, SPY 769 < 773.
+  - QQQ 760C: day 2 of the rally attempt, so no follow-through day yet.
+* IWM is +1.1% to 279.93 today. Thursday's trigger needs +1.5% on Thursday or Friday itself.
