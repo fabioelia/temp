@@ -404,3 +404,24 @@ deals; Boeing fell 10%. Live (Yahoo, single source): SPY 769.23 (+0.5%), QQQ 720
   - Flows' SPY 785C: no reclaim, SPY 769 < 773.
   - QQQ 760C: day 2 of the rally attempt, so no follow-through day yet.
 * IWM is +1.1% to 279.93 today. Thursday's trigger needs +1.5% on Thursday or Friday itself.
+
+## 2026-10-27 (Tue) Run B: post-close
+**Market:** chips and AI led again (Broadcom, Nvidia) and the S&P neared its record: SPY 769.66 (+0.6%), QQQ 721.25 (+1.3%), IWM 280.18 (+1.2%), AMZN +1.6%,
+GOOGL +1.2%. Oil fell: CL=F 100.20, BZZ26 114.22, USO 163.88, XLE -2.1%. VIX 17.52.
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders); paper $1,919.92 (-4.0%). SPY buy-and-hold: $2,007.29 (+0.4%), so we trail by 4.4 points.
+$2,200 needs +14.7%, with 16 sessions left. **Fills:** none.
+**Agents (research/2026-10-27/, brief.md):**
+* **macro:** no trade Wednesday. IWM stays conf 4 with an added gate, core PCE < 0.40%. After a +1.5% day the 287-290 calls price at 2.71-4.13. USO deal-dip retired
+  (IV 52% vs 29% realized). TLT is shadow only.
+* **momentum:** day 2 for the S&P and Nasdaq, so Thursday is still the earliest follow-through day. The strike moves to 292-293C (293C 1.10/1.13 tonight, modeled
+  about 2.02 at the trigger), EV 1.05 (n 75). Chips broadened, the market narrowed (245 up, 257 down).
+* **catalyst:** IWM comes first on Thursday; a GOOGL +/-5% reaction trade is the fallback (conf 2; calls match consensus; GOOGL-only EV 1.04). INTC on Friday
+  holds (EV 1.34). No new 8-Ks; AMZN's insider sale was a 10b5-1. AVGO 370C and MSFT retired.
+* **options-vol:** INTC Friday ranked first (EV/$ 1.13, n 26). IWM 292C has EV 1.00 and "no edge" (conf 2). No Fed-day trade: the premium is 1.2-2.5x the median
+  FOMC move.
+**Proposals for Wed 10/28: none** (all four; no drafts, so no red-team; Wednesday's Run B red-teams the Thursday draft). The playbook's revision moves the IWM band to
+288-296, ranks INTC first on Friday, and caps combined premium at $800 if both fire.
+**Lesson:** a fixed strike list goes stale when the underlying runs before the trigger day. IWM's +1.2% today pushed the old 287-290 band past the 2.20 cap, and the
+edge thinned from about 1.07-1.11 to 1.00-1.05. Specify contracts by delta band and maximum ask, never by a strike list alone, and accept that waiting has a price:
+the shadow book will show what this wait cost (IWM 288C: 1.80 ask on Monday, 2.34/2.38 tonight).
+**Dashboard:** five files refreshed (summary 60be0d11, equity e215a699, positions b46026df, orders 9744a0e4, trades 12ffd903); the old files were deleted.

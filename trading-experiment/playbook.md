@@ -88,6 +88,25 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - XLE: the spread was 24% at the close.
   - USO deal-dip stays, but no 11/20 strike has IV <= 48% (53-59%). On a dip, re-strike to delta ~0.35, not the 180C.
   - Anthropic S-1: no persona proposes an AI trade on it. Momentum read the pop as narrow and on low volume; catalyst found the commitments mostly in existing backlog.
+* **Revision, Tue 10/27 Run B (research/2026-10-27/).** IWM ran +1.2% to 280.18 without us. Wed 10/28: no shot (all four; options-vol prices the Fed-day
+  premium at 1.2-2.5x the median FOMC move).
+  - **IWM, Thu 10/29 (Fri only if INTC does not fire):** same trigger, +1.5% on the day, >= 279.00, volume >= 75% of the prior session's, 269.88 intact. Gates as
+    before, plus core PCE m/m < 0.40% (Thu 08:30, macro).
+    **Strike band moved:** after a +1.5% day the 287-290 calls price at 2.71-4.13 (macro), so buy 2 x the lowest 11/20 IWM call from 288 to 296 with
+    ask <= 2.20 and delta >= 0.26. Tonight that is about the 292C (1.29/1.33) or 293C (1.10/1.13).
+    **The edge is thin now:** EV/$ 1.05 (momentum, n 75) and 1.00 (options-vol, "no edge"), confidence 2-4. Wednesday's Run B red-team decides whether it stays a
+    shot or goes to the shadow book.
+    Thesis stop: IWM < 276.00 (momentum; options-vol wants 279).
+  - **Fri 10/30: INTC post-print continuation, now ranked first** (options-vol EV/$ 1.13, n 26; catalyst 1.34). Rule unchanged; 105C at 2.92/3.05 and 85P at
+    2.72/2.79 tonight. There are no new 8-Ks.
+  - **Sizing if both fire:** the combined open premium stays <= $800, so Friday is 1 INTC lot when IWM is open (the $918 budget is not spent in one week).
+  - **Shadow only:**
+    - GOOGL +/-5% reaction calls/puts on Thursday (catalyst conf 2). They are Anthropic-linked, the calls match the consensus trade, and GOOGL-only EV/$ is 1.04.
+    - AMZN 232.5P: the spread is 5.9%, above the 5% rule.
+  - **Retired:**
+    - USO deal-dip (macro: IV 52% vs 29% realized, the cap stays 48%).
+    - AVGO 370C (catalyst).
+    - The MSFT trades.
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -139,6 +158,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-27 (Run B): IWM strike band moved to 288-296 (the old band cannot fill at <= 2.20 after +1.5%); INTC Friday ranked first;
+  combined premium <= $800 if both fire; USO deal-dip and AVGO 370C retired.
 * 2026-10-26 (Run B): Thursday IWM trigger tightened to +1.5% (larger sample); QQQ 750C and the MSFT tripwires dropped; INTC continuation added for Friday;
   Anthropic S-1 conflict guardrail (owner flagged the filing).
 * 2026-10-26: resting GTC take-profits at the broker (owner's go-ahead): +50% for one contract, half +50% / half +100% for two or more; placed after the close on the buy day.
