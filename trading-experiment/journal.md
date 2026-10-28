@@ -425,3 +425,19 @@ $2,200 needs +14.7%, with 16 sessions left. **Fills:** none.
 edge thinned from about 1.07-1.11 to 1.00-1.05. Specify contracts by delta band and maximum ask, never by a strike list alone, and accept that waiting has a price:
 the shadow book will show what this wait cost (IWM 288C: 1.80 ask on Monday, 2.34/2.38 tonight).
 **Dashboard:** five files refreshed (summary 60be0d11, equity e215a699, positions b46026df, orders 9744a0e4, trades 12ffd903); the old files were deleted.
+
+## 2026-10-28 (Wed) Pre-close (14:44 ET, during the press conference)
+**Driver:** the FOMC held at 3.75-4.00% (federalreserve.gov statement, read in full). The vote was 10-2: Cook and Hammack dissented for a 25 bp hike, and the statement
+says "inflation remains elevated". That is hawkish at the margin, but it is not a hike, so Thursday's "no hike" gate holds. Megacap losses offset chip gains before
+the decision (Micron up); MSFT and GOOGL report after the close.
+* Live (Yahoo, single source): SPY 772.31 (+0.3%), QQQ 724.97 (+0.5%), IWM 280.66 (+0.2%), GOOGL +1.3%, MSFT -0.4%, INTC 95.35 (+1.7%).
+* Rates and oil: ^VIX 17.23, ^TNX 5.03 (still under the 5.10 gate), CLZ26 102.63 (+2.7%), BZZ26 115.15, BZF27 111.59, USO 167.86 (+2.4%) on Houthi strikes and
+  US threats to Iran.
+**Orders: none pending, none added.** The plan was no shot today, and no idea can fire on the press conference.
+**Idea watch:** none fired.
+* Flows' SPY 785C reclaim: SPY 772.31 against its 773 line (VIX 17.23 met). Close; watch it Thursday.
+* The macro TLT 81P shadow needed a hike, and none came.
+* The TLT 82C already fired 10/27 (BZF27 is back above 110).
+* Momentum's IWM 285C excludes Wednesday.
+* The 10/25 MSFT tripwires were retired by their personas on 10/26 (event sigma and spread failed) and were not re-run.
+* The USO deal-dip was retired 10/27.
