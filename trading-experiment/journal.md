@@ -441,3 +441,29 @@ the decision (Micron up); MSFT and GOOGL report after the close.
 * Momentum's IWM 285C excludes Wednesday.
 * The 10/25 MSFT tripwires were retired by their personas on 10/26 (event sigma and spread failed) and were not re-run.
 * The USO deal-dip was retired 10/27.
+
+## 2026-10-28 (Wed) Run B: post-close
+**Market:** the Fed held at 3.75-4.00% (10-2; Cook and Hammack wanted a hike). SPY 772.31 (+0.3%), QQQ 725.61 (+0.6%), IWM 281.29 (+0.4%; three up days),
+GOOGL 324.89 (+1.3%), NVDA -1.2%. ^TNX 5.04, ^VIX 16.91, CL=F 101.94 (+2.0%).
+* After hours (Robinhood 17:16 ET, not closes): MSFT 551.00 (+3.8%; Azure +48%); GOOGL 290.87 (-10.5%; revenue miss, deep negative cash flow);
+  QQQ 719.20 (-0.9%).
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders); paper $1,919.92 (-4.0%). SPY buy-and-hold: $2,014.21 (+0.7%), so we trail by 4.7 points.
+$2,200 needs +14.7%, with 15 sessions left. **Fills:** none.
+**Agents (research/2026-10-28/, brief.md):**
+* **macro:** a December hike is now the base case (Polymarket ~81%). IWM yes if it fires (conf 4, thin edge). It would tighten the gates (core PCE <= 0.3%, ^TNX
+  <= 5.04, CL=F <= 104). Q3 GDP consensus is 3.0%.
+* **momentum:** no trade Thursday. After a +2.01% three-day run the follow-through EV is 0.81 (n 23) vs 1.27 after pullbacks (n 36). The odds of a Nasdaq
+  follow-through day Thursday are about 2-6%. For Friday it backs the INTC 110C only above the 50-day.
+* **catalyst:** the GOOGL miss is real, not a misread. GOOGL put continuation (280P) if IWM is idle (conf 2; EV/$ 1.07-1.13, n 93; not consensus; Anthropic not the
+  thesis). INTC 105C/90P Friday (EV 1.34). It ran one read-only `git status` against the brief's no-git rule; it changed nothing. Briefs keep the rule.
+* **options-vol:** IWM shadow only (0.92-1.05, not robust). GOOGL put shadow unless every filter passes (EV 1.08-1.18). For Friday it prefers the INTC 87.5P
+  (EV 0.94-1.19); the 105C is below 1.
+**Red-team (MODIFY):** add "below its 10/29 open" to the GOOGL trigger and use the standing gates. -50% is the real stop (the 308.65 level never binds), five
+flat days cost 20-30%, one lot only. A -50% exit at a 4.45 ask would trip the $1,700 pause line. IWM to shadow: APPROVE. Biggest risk: a buy-the-dip reversal,
+or AMZN's print gapping through the stop.
+**Proposal for Thu 10/29: O008, 1 x GOOGL 11/20 280P (or the qualifying strike), max price 4.00, conditional on every filter at 14:43** (thesis in the order).
+I capped the ask at 4.00, below the red-team's 4.45, so a -50% loss stays above $1,700. The Anthropic link is disclosed: GOOGL is an Anthropic investor and cloud
+partner, but the thesis rests on its own 8-K figures and a mega-cap continuation base rate.
+**Lesson:** the IWM shot was built on Monday's base; by Thursday the move had already happened, and the sample that conditions on a prior run-up says it no longer
+pays (0.81). A trigger should carry its own "if the move already happened, stand down" clause, so the run doesn't argue itself into chasing.
+**Dashboard:** five files refreshed (summary ae4f94be, equity ce05ca3f, positions 690570fc, orders 169f565e, trades 04eff9ed); the old files were deleted.

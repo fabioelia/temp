@@ -107,6 +107,22 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - USO deal-dip (macro: IV 52% vs 29% realized, the cap stays 48%).
     - AVGO 370C (catalyst).
     - The MSFT trades.
+* **Revision, Wed 10/28 Run B (research/2026-10-28/, red-team MODIFY).** The Fed held 10-2 (two hike dissents); MSFT is +3.8% and GOOGL -10.5% after hours (a real revenue miss).
+  - **IWM moved to shadow-only (red-team approved).** After a three-day run-up the follow-through EV is 0.81 (momentum, n 23; 1.27 after pullbacks, n 36), and
+    options-vol puts it at 0.92-1.05. Macro alone said yes. The idea watch still logs it if it fires (IWM >= 285.51).
+  - **Thu 10/29: proposal O008, 1 x GOOGL 11/20 put, conditional** (conf 2; catalyst + options-vol; pooled continuation EV/$ 1.07-1.18, n 93). The consensus view is
+    "buy the dip", so this goes against it.
+    Trigger at 14:43:
+    - GOOGL at or below 308.65 and below its 10/29 open;
+    - the standing gates hold.
+    Contract: delta 0.30-0.45, ask at most 4.00, spread at most 5%, OI at least 1000.
+    Exits: +50% GTC; stop on GOOGL back above its 10/29 open; -50% backstop (the real stop); out 11/5.
+    It is Anthropic-linked: the thesis rests on GOOGL's own 8-K and a mega-cap base rate, and the link is disclosed in the order's thesis.
+  - **Fri 10/30: INTC is split by persona.**
+    - catalyst: 105C/90P, EV 1.34;
+    - momentum: 110C only, above the 50-day 101.65;
+    - options-vol: 87.5P, EV 0.94-1.19; 105C below 1.
+    Thursday night's Run B drafts it after the print. Cap: $355 if O008 fills.
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -158,6 +174,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-28 (Run B): IWM to shadow (EV 0.81 after a run-up); conditional GOOGL put O008 for Thursday (red-team modified: below the open, ask <= 4.00).
 * 2026-10-27 (Run B): IWM strike band moved to 288-296 (the old band cannot fill at <= 2.20 after +1.5%); INTC Friday ranked first;
   combined premium <= $800 if both fire; USO deal-dip and AVGO 370C retired.
 * 2026-10-26 (Run B): Thursday IWM trigger tightened to +1.5% (larger sample); QQQ 750C and the MSFT tripwires dropped; INTC continuation added for Friday;
