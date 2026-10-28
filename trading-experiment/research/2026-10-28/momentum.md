@@ -26,7 +26,7 @@
 | Net +2% or more (tonight +2.01%) | 23 | 0.81 | 0.09 |
 | Net below 0 | 36 | 1.27 | 0.99 |
 
-The split holds before 2010 (0.88 vs 1.18) and after (0.78 vs 1.34).
+Net +1% or more vs below 0 holds before 2010 (0.88 vs 1.18) and since (0.78 vs 1.34).
 
 ## 4. Ranked
 1. **Thursday: no trade.** IWM 294C x2 goes to shadow (1.04/1.08).
