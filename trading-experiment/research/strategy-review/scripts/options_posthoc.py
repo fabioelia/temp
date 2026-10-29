@@ -5,6 +5,7 @@ labelled claim='post_hoc'. None of these changes a registered test or verdict; t
   P2  D2 mechanism: VIX / realized vol on low-IV-rank days versus other days.
   P3  Regime VRP: next-21-session realized vol relative to VIX (SPY) or RVX (IWM) in today's regime.
   P4  Skew: re-price with IV = m x VIX. (a) uniform m; (b) m by delta bucket from today's real Cboe chain (options_skewcheck.py).
+  P5  D4: every exit rule re-run at today's SPY 0.40-delta call skew.
 """
 import sys
 from datetime import date
@@ -134,3 +135,26 @@ def run(g, s, add, ROWS, ctx):
                         'regime (2011-2026)', st, 1.0, note=f'post_hoc; {tag}', extra={'iv_multiplier': mm})
                     out.append(f'{lab} EV {st["ev"]:.3f} (t {st["t"]:.1f}, hit {st["hit"]:.2f})')
                 print(f'   {und} {dl:.2f} {tag:26s} n {reg.sum()}  ' + '  '.join(out))
+    d4_at_skew(s, paths, apply_rule, RULES, add, ratios[('SPY', 'C', 0.40)])
+
+
+def d4_at_skew(s, paths, apply_rule, RULES, add, mult):
+    """P5: every D4 rule re-run with IV = mult x VIX (today's SPY 0.40-delta call ratio), paired differences vs R0."""
+    v9 = {d: v[0] for d, v in L.load('VIX9D').items()}
+    v3 = {d: v[0] for d, v in L.load('VIX3M').items()}
+    ix, dts, B = paths(s, 0.40, ivmult=mult)
+    res = {rn: apply_rule(B, **kw)[0] for rn, kw in RULES.items()}
+    reg = regime_mask(dts, s['vix'][ix], v9, v3)
+    print(f'P5  D4 rules at today\'s skew (IV = {mult:.3f} x VIX)')
+    for name, mk in (('2010-2026', L.period_mask(dts, date(2010, 1, 1), date(2100, 1, 1))),
+                     ('1993-2009', L.period_mask(dts, date(1900, 1, 1), date(2010, 1, 1))),
+                     ('regime (2011-2026)', reg)):
+        print(f'  -- {name} n {mk.sum()}')
+        for rn in RULES:
+            st = L.summary(res[rn][mk], 1.0, 30)
+            d = res[rn][mk] - res[R0][mk]
+            td = L.nw_t(d, 0.0, 30) if rn != R0 else float('nan')
+            add('post_hoc', "D4 rules at today's SPY skew (IV = m x VIX)", rn, '15', name, st, 1.0,
+                note=f'post_hoc; m = {mult:.3f}', extra={'diff_vs_hold': float(d.mean()), 't_vs_hold': td, 'iv_multiplier': mult})
+            print(f'    {rn:62s} EV {st["ev"]:.3f} med {st["median"]:.3f} hit {st["hit"]:.3f} p10 {st["p10"]:.3f} p90 {st["p90"]:.3f}'
+                  f' | vs hold {d.mean():+.4f} t {td:.1f}')
