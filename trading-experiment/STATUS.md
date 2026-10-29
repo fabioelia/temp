@@ -1,11 +1,11 @@
-# Paper-trading scoreboard (as of 2026-10-28)
+# Paper-trading scoreboard (as of 2026-10-29)
 
 > SIMULATION. No real money. Prices come from public web sources; fills are modeled at the close with slippage and fees (see RULES.md).
 
 **Equity $1,919.92** | P/L -$80.08 (-4.00%) | goal $2,200.00 by 2026-11-18 | -40.0% of the way
 - Cash $1,919.92 | realized -$80.08 | fees paid $0.08 | slippage cost $25.00
-- SPY buy-and-hold with same $: $2,014.21
-- Trading days left: 15 | needed per day to hit goal: +0.91%
+- SPY buy-and-hold with same $: $2,006.51
+- Trading days left: 14 | needed per day to hit goal: +0.98%
 - Est. after-tax equity if liquidated (memo, 24% on gains): $1,919.92
 
 ## Positions
@@ -14,7 +14,7 @@ _All cash._
 
 ## Pending orders (fill at next close)
 
-- O008 buy GOOGL261120P00280000 qty=1.0 stop=50.0% target=50.0% :: CONDITIONAL, conf 2 (catalyst + options-vol, red-team MODIFY applied). GOOGL post-earnings continuation after a real revenue miss (10/28 8-K; ~-10.5% after hours to 290.87). Confirm at the 10/29 14:43 check ONLY if all hold on live quotes: GOOGL <= 308.65 (-5% vs the 324.89 close) AND below its 10/29 open; standing gates ^TNX <= 5.10, core PCE m/m < 0.40%, ^VIX <= 22, HY OAS < 3.46%. Contract: the 11/20 put at delta 0.30-0.45 with live ask <= 4.00 (keeps a -50% loss above the $1,700 pause line), spread <= 5%, OI >= 1000; this 280P is the reference, and Run A cancels it and re-adds the qualifying strike if another one fits. 1 lot only; no widening of any filter. Exits fixed at entry: a GTC sell at +50% placed that evening; stop: GOOGL back above its 10/29 open at a 14:43 check, the -50% premium backstop; out 11/5 14:43. Edge: pooled continuation EV/$ 1.07-1.18 (n 93). Not the consensus view (buy the dip). Anthropic link disclosed: GOOGL is an Anthropic investor and cloud partner, but the thesis rests on GOOGL's own 8-K figures and a mega-cap base rate, not on Anthropic. If it fills, Friday's INTC shot is capped at $355 (combined <= $800).
+_None._
 
 ## Stats
 
