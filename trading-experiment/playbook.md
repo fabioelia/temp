@@ -54,6 +54,10 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** half at +50%, the rest at +100%. **One contract:** all at +50%, not 2x
   (W43: a single contract held for 2x gave back +47%). These targets now rest at the broker as GTC limits from the evening of the buy (owner, 2026-10-26), so an
   intraday spike is banked. Once a 14:43 check shows +40% or more, the stop moves to cost.
+* **Exception, C1 down-gap puts (2026-10-29):** they use the exit the strategy review confirmed: hold to session 5 (time exit at that day's 14:43 check),
+  with the -50% backstop and no take-profit, and no resting GTC is placed. Two model checks found that a +50% target cuts this setup's EV below 1:
+  the strategy review's D4 (holding beat the target set by about 0.14 at the real skew) and the 10/29 red-team (1.14 to 0.97, scripts/risk_exit_paths.py).
+  The owner can override this.
 * Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
   at 14:43, so a gap can fill well past either.
 * Honest note from the W43 red-team: replayed on shot 1, the +50% one-contract rule would not have fired (the best 14:43 check was +46.7%) and a stop at cost would still
@@ -142,6 +146,15 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - **GOOGL:** proposal O010 (replaces O008) adds put IV at most 30%; GOOGL's RV20 was 21%. Valid 10/29 only.
   - **Fri 10/30:** INTC and AMZN qualify only on a down gap of 8% or more. The IV gate is about 66% for INTC (RV20 51%) and 1.3x RV20 for AMZN. The INTC call leg
     is dropped.
+* **Revision, Thu 10/29 Run B (research/2026-10-29/, red-team MODIFY).**
+  - GOOGL O010 was cancelled at 14:44: put IV was 32%, above the 30% cap.
+  - **Fri 10/30: proposal O011, 1 x INTC 11/20 put (C1 rule).**
+    Trigger: INTC at or below 84.70, put IV at most 70.6% (1.3x RV20 54.3%), delta 0.30-0.45, ask at most 3.00 (the weekend gap), spread at most 5%,
+    OI at least 1000, gates as before.
+    Exits: no take-profit; time exit 11/6 14:43; stop INTC at or above 1.04x its 10/30 close; -50% backstop.
+    INTC was -19% after hours on a Q4 guide miss.
+  - **AMZN put fallback: rejected** (shadow only; conf 1, and likely no in-band put at 3.00 or less).
+  - **IWM:** +1.0% today on 0.95x volume, so no follow-through day. It stays shadow-only.
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -193,6 +206,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-29 (Run B): C1 down-gap puts exit as tested (hold 5 sessions, -50% backstop, no take-profit); INTC put O011 for Friday; AMZN fallback rejected.
 * 2026-10-29 (strategy review, owner's ask): evidence rules (edges need a script or a study; retired arguments listed); earnings continuation
   is now a down-gap-only put rule with an IV gate; INTC call leg dropped; GOOGL O010 with IV <= 30%; puts need an edge beyond the premium.
 * 2026-10-28 (Run B): IWM to shadow (EV 0.81 after a run-up); conditional GOOGL put O008 for Thursday (red-team modified: below the open, ask <= 4.00).

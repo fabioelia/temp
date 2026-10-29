@@ -72,6 +72,8 @@ the app for one-tap approval instead, and the runs simply place it for approval 
 Selling to close is the same with `side` sell, `position_effect` close, limit at the bid side (high_fill_rate_sell_price rounded up to the tick).
 
 ## Resting take-profit (GTC), owner's choice 2026-10-26: "Yes you decide on best option for the Robin Hood take profit tool"
+* **Exception (2026-10-29):** C1 down-gap puts get no resting take-profit. They hold to session 5 with the -50% backstop, the exit the strategy review
+  confirmed (`playbook.md`, Exits).
 A resting good-till-cancelled sell-to-close limit on contracts we hold, so an intraday spike is banked without waiting for the 14:43 check. It only reduces risk.
 * **Levels:** one contract: all at +50% of the average cost; two or more: half at +50%, the rest at +100%; each rounded to the contract's tick. The gate refuses any
   resting limit below 1.4x the average cost (`strategy.take_profit_resting.min_multiple`).

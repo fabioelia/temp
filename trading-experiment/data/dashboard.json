@@ -68,7 +68,36 @@
     }
   ],
   "positions": [],
-  "pending_orders": [],
+  "pending_orders": [
+    {
+      "id": "O011",
+      "created": "2026-10-29",
+      "ticker": "INTC261120P00072500",
+      "side": "buy",
+      "size_type": "qty",
+      "size_value": "1.0",
+      "tier": "O",
+      "max_price": "3.0",
+      "min_price": "",
+      "stop": "",
+      "target": "",
+      "stop_pct": "50.0",
+      "target_pct": "",
+      "priority": "1",
+      "gtd": "2026-10-30",
+      "status": "pending",
+      "filled_date": "",
+      "reason": "",
+      "thesis": "CONDITIONAL, C1 down-gap put (strategy review: mega-cap down gaps >= 8% continue 5 sessions, n 216, 62%, +0.90% beyond SPY, t 2.5; put EV 1.00 at an IV of 1.3x RV20). All four personas back it; red-team MODIFY applied. INTC closed 92.07 on 10/29 and was ~74.62 after hours (-19%) on a Q4 guide miss ($15.0-16.0B vs $17.07B LSEG); the 10/14 blast is minor; INTC's own record is 11/14 lower after 5 sessions. Confirm at the 10/30 14:43 check ONLY if ALL hold on live quotes: (1) INTC <= 84.70 (-8% vs 92.07); (2) the chosen 11/20 put's quoted IV <= 70.6% (1.3x the pre-print RV20 of 54.3%, research/2026-10-29/scripts/options_vol_gate.py); (3) delta 0.30-0.45, live ask <= 3.00 (1 lot, so a -72% weekend gap keeps equity above $1,700), spread <= 5%, OI >= 1000; (4) standing gates ^TNX <= 5.10, ^VIX <= 22, HY OAS < 3.46% (3.14 on 10/28). The 72.5P is the reference; Run A re-adds the qualifying strike if another one fits; no widening. Exits as the C1 rule was confirmed (playbook Exits exception): NO take-profit and no resting GTC; time exit at the 11/6 14:43 check (session 5); thesis stop INTC >= 1.04x its 10/30 close at a 14:43 check; the -50% backstop. Edge: C1 EV 1.00 at the gate, 1.14 at the expected entry IV of 54% (options-vol model, no skew). The CL=F and below-the-open conditions were dropped (no script; post-hoc EV 0.99 vs 1.04). AMZN fallback rejected (shadow only). No Anthropic link.",
+      "auto": "",
+      "confirmed_on": "",
+      "confirmed_at": "",
+      "q_bid": "",
+      "q_ask": "",
+      "q_time": "",
+      "q_source": ""
+    }
+  ],
   "recent_orders": [
     {
       "id": "O001",

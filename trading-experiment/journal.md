@@ -515,3 +515,30 @@ new cracks" (Bloomberg). Live (Yahoo, single source):
 * The GOOGL 280P is logged at 7.55, so the shadow book marks it from today's ask, not the pre-print 1.18.
 * IWM +0.6%: the shadow follow-through trigger (+1.5%) did not fire.
 **Next:** AMZN and INTC report after the close. On Friday either qualifies only on a down gap of 8% or more with put IV at most 1.3x its pre-print RV20.
+
+## 2026-10-29 (Thu) Run B: post-close
+**Market:** GOOGL -12.6% (283.82, its biggest market-value drop ever); QQQ -1.4% (715.34); SPY -0.4% (769.36); IWM +1.0% (284.01, but on 0.95x its 50-day
+volume); AMZN -4.2% (243.79) and INTC 92.07 before their prints; META +2.0%, AAPL +1.5%. ^VIX 17.20, ^TNX 4.99, CL=F 102.86.
+* After hours (Robinhood 17:15 ET, not closes): INTC 74.62 (-19.0%; Q4 guide $15.0-16.0B vs $17.07B, PC weakness, the Israel blast);
+  AMZN 229.16 (-6.0%; a miss and a cautious holiday guide); QQQ 705.43.
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders); paper $1,919.92 (-4.0%). SPY buy-and-hold: $2,006.51 (+0.3%), so we trail by 4.3 points.
+$2,200 needs +14.7%, with 14 sessions left. **Fills:** none (O010 cancelled at the pre-close: GOOGL put IV 32% > 30%).
+**Agents (research/2026-10-29/, brief with the new evidence rules):**
+* **macro:** every gate passes. HY OAS was 3.14 on 10/28 (FRED), and credit ignored the AI selloff. INTC put conf 4 at ask <= 3.00, 1 lot for the weekend gap.
+* **momentum:** one new distribution day on ETF volume, but the 10/23 lows held, so the rally attempt has not failed. INTC put conf 4 (70P), stop above 81.88.
+* **catalyst:** INTC is a real guide miss, and the blast is about $0.3B of a $1.57B gap, so the base rate applies. INTC 72.5P conf 3. AMZN is an operating beat
+  that may reverse (conf 1).
+* **options-vol:** pre-print RV20 is 54.3% for INTC (gate 70.6%) and 36.3% for AMZN (gate 47.2%), from a saved script. The expected entry IV passes both gates.
+  Model EV 1.14 (INTC) and 1.27 (AMZN), with no skew.
+**Red-team:**
+* **INTC (MODIFY):** the 3.00 cap is enough; INTC's own record is 11 of 14 lower after 5 sessions. Stop at 1.04x the 10/30 close. Drop the CL=F and
+  below-the-open conditions.
+* **AMZN:** REJECT, shadow only.
+* **Biggest risk: the +50% GTC itself**, which cuts EV from 1.14 to 0.97 (post-hoc, scripts/risk_exit_paths.py).
+**Decision:** C1 puts now exit as the strategy review tested them: hold to session 5, the -50% backstop, no take-profit and no resting GTC. This exception is
+written into the playbook, the routine and LIVE_MODE. Two model checks agree (the strategy review's D4 and tonight's red-team). The take-profit design was
+delegated to me on 10/26, and the owner can override it.
+**Proposal for Fri 10/30: O011, 1 x INTC 11/20 72.5P (or the qualifying strike), max 3.00, conditional** (INTC <= 84.70; put IV <= 70.6%; delta 0.30-0.45;
+spread <= 5%; OI >= 1000; gates). Exits: time exit 11/6 14:43; stop INTC >= 1.04x the 10/30 close; -50% backstop. No Anthropic link.
+**Lesson:** a confirmed edge is a whole package. Bolting our generic +50% target onto the tested 5-day hold turned an EV-1.0+ setup into an EV-0.97 one.
+**Dashboard:** five files refreshed (summary b360bf04, equity f4adc339, positions 03629ac6, orders c8dec764, trades 6f490994); the old files were deleted.
