@@ -15,7 +15,7 @@ Sources: Cboe chains via quotes.py feed, 21:17 UTC (16:00 pre-print quotes; IV o
 - **Calibration:** GOOGL's in-band 11/20 puts closed at 1.03x its ex-event IV; MSFT 1.04x.
 - **Expected IV:** INTC 54% (stress 62%), AMZN 30% (35%). **Both pass the gate, even stressed.**
 - **INTC** (74.62 Robinhood, 76.51 Cboe after hours): 72.5P (OI 3,856), mid 2.76, Δ-0.38, ask about 2.83 (3.40 stressed): 1 lot.
-  - 75P (OI 13,281) at 76.5-78.7; 70P (12,678) at 71.3-73.5.
+  - 75P (OI 13,281) at 76-78.7; 70P (12,678) at 71.3-73.5.
   - 11/27 adds nothing: only its 75P has OI 1,000+.
 - **AMZN:** -6.0% after hours fails the 8% gap (needs 224.29 or lower). Then the 215P fits at ~220-223 and the 210P at ~215-218; elsewhere the in-band ask is above 4.00.
 - **Spreads:** GOOGL's reaction-day close ran 4-8%, so the 5% test is live.
