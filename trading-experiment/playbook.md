@@ -23,6 +23,15 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   translated into the option's own payoff odds with EV > 1. Last week's crowd (AI mega-caps) lost; this week's may be the rotation trade (oil, small caps): screen it the same way. The contrarian's best idea is always priced and ranked. Stated confidence is checked weekly against the shadow book;
   in W43 it ran inverse to outcome.
 
+* **Evidence rules (strategy review 2026-10-29, `research/strategy-review/README.md`).** An edge figure counts only if it comes from a committed script
+  (`research/.../scripts/`) or a cited published study. Three persona statistics failed to reproduce: momentum's run-up split, IWM's 1.05, catalyst's 34/48 and
+  n 93. These arguments are retired and may not be cited as support:
+  - the midterm-window rally (REJECTED) and the Halloween effect (WEAK since 2010);
+  - the turn of the month and RSI(2) dips (WEAK, below random through options);
+  - a follow-through day as an edge figure (WEAK, 10-day t 0.9; IWM 0.95);
+  - "IV is low" as a reason to buy (REJECTED);
+  - the pre-earnings run-up through calls (tie-break only).
+
 ## What to buy
 * **Underlyings:** liquid names and ETFs with large, dated catalysts: NVDA, MSFT, META, AMZN, GOOGL, TSLA, SMH, QQQ, SPY, IWM. TLT calls are the rates/credit hedge (they pay
   in a de-escalation and in an AI-credit crack). XLE options fail the spread filter (11-150%); use USO or COP for oil views.
@@ -32,6 +41,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **Expiry:** two to five weeks out, covering the catalyst plus a few days. Never a weekly that expires before the event. The code refuses any entry less than 3 calendar
   days before expiry, so a print-day buy needs the expiry after the next one (META 10/21 cannot use 10/23; MSFT 10/28 uses 11/20 because 11/06 is illiquid).
 * **Direction from the regime switches below:** flip bullish means calls on semis and AI leaders; press bearish means QQQ or SMH puts; an oil spike means XLE calls.
+* **The options headwind (D1/D3 CONFIRMED, model):** implied vol beat realized on 86% of days since 1990, and the premium sits mostly in puts. OTM index calls trade near
+  fair at the real skew. So a put needs a measured edge that beats that premium; never buy below delta 0.25 (delta 0.10 returns about 0.49 per $).
 * **Volatility:** implied volatility is high just before earnings and collapses after. Prefer buying the run-up and selling before the print, or buying after the print when the
   reaction confirms a trend. Hold through a print only when the expected move clearly exceeds the implied move, and say why in the journal.
 * **Event vol rule (options-vol, 2026-10-18):** buy event premium only at the 14:43 decision on the print day, only where the implied event move is at most 0.9x the
@@ -123,6 +134,14 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - momentum: 110C only, above the 50-day 101.65;
     - options-vol: 87.5P, EV 0.94-1.19; 105C below 1.
     Thursday night's Run B drafts it after the print. Cap: $355 if O008 fills.
+* **Revision, Thu 10/29 pre-open (strategy review C1, CONFIRMED by a hair).** Post-earnings continuation applies only after a mega-cap DOWN gap of 8% or more.
+  - Enter at the reaction day's 14:43 check, buying a put at delta 0.30-0.45, only if its quoted IV is at most 1.3x the pre-print 20-day realized vol. Hold
+    at most 5 sessions; the effect is gone by session 10.
+  - Evidence: n 216, 62% continue, +0.90% beyond SPY (t 2.5; since 2015 t 2.4). Even so, the put is break-even (EV 1.00), so the IV gate is the edge.
+  - Up-gap call continuation rules are removed (50% continuation since 2010).
+  - **GOOGL:** proposal O010 (replaces O008) adds put IV at most 30%; GOOGL's RV20 was 21%. Valid 10/29 only.
+  - **Fri 10/30:** INTC and AMZN qualify only on a down gap of 8% or more. The IV gate is about 66% for INTC (RV20 51%) and 1.3x RV20 for AMZN. The INTC call leg
+    is dropped.
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -136,7 +155,7 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   Anthropic, so (1) no idea whose thesis is Anthropic or ANT itself; (2) an AMZN/GOOGL/MSFT/AVGO/NVDA idea may use only facts quoted from public filings and news,
   must pass the consensus check (the "IPO halo" is the consensus trade), and the red-team must say whether the Anthropic link is the thesis; (3) the journal
   discloses the link on any such trade.
-* **11/9-11/17: the NVDA run-up.** NVDA reports **after the close on Tue 11/17** (company-verified per Robinhood `get_earnings_results`, checked 2026-10-18; it was wrongly assumed to be
+* **11/9-11/17: the NVDA run-up** (strategy review C2: NVDA's own run-up since 2015 is -0.08%, and calls add nothing over a random call; tie-break only). NVDA reports **after the close on Tue 11/17** (company-verified per Robinhood `get_earnings_results`, checked 2026-10-18; it was wrongly assumed to be
   11/18). A run-up position must be **sold by the 11/17 close**; holding it overnight is a one-day bet on the print scored at the 11/18 close, and needs an explicit journal reason.
 
 ## Read of the tape (update 2026-10-18, Sunday)
@@ -157,7 +176,7 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 ## Regime switches (act on these, not on feelings)
 **Flip bullish** (calls on semis/AI leaders): any two of: S&P closes above 7,745 with the semis index up >2% on the day; Brent closes below $100 two days running; Oracle 5y CDS
 below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that the stock rewards; a Nasdaq follow-through day.
-**Press bearish** (QQQ/SMH puts): S&P closes below 7,428; VIX closes above 28; 10y above 5.25%; HY OAS above 346bp; an Oracle junk cut; a surprise hike on 10/28.
+**Press bearish** (QQQ/SMH puts; puts carry most of the volatility premium, so they also need a measured edge): S&P closes below 7,428; VIX closes above 28; 10y above 5.25%; HY OAS above 346bp; an Oracle junk cut; a surprise hike on 10/28.
 **Oil** (XLE calls or puts): Hormuz escalation versus a deal; WTI settling above $105 or below $94.
 
 ## SEC filings as an input (evidence grades as in the historian memo)
@@ -174,6 +193,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-29 (strategy review, owner's ask): evidence rules (edges need a script or a study; retired arguments listed); earnings continuation
+  is now a down-gap-only put rule with an IV gate; INTC call leg dropped; GOOGL O010 with IV <= 30%; puts need an edge beyond the premium.
 * 2026-10-28 (Run B): IWM to shadow (EV 0.81 after a run-up); conditional GOOGL put O008 for Thursday (red-team modified: below the open, ask <= 4.00).
 * 2026-10-27 (Run B): IWM strike band moved to 288-296 (the old band cannot fill at <= 2.20 after +1.5%); INTC Friday ranked first;
   combined premium <= $800 if both fire; USO deal-dip and AVGO 370C retired.

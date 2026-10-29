@@ -124,7 +124,8 @@ happens: nothing new fills.
    today, place its resting GTC take-profit now** (`LIVE_MODE.md`, "Resting take-profit"); this is the one real order Run B may place, and it only reduces risk.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
    market recap, the next five trading days' calendar, and the persona). **The brief's market numbers come from `python3 trading-experiment/review.py snapshot --date D`, pasted
-   fresh each night, never carried over from an earlier brief; oil and rate triggers name one of its series (W43 review).** Each writes `research/D/<name>.md` (max about 350 words,
+   fresh each night, never carried over from an earlier brief; oil and rate triggers name one of its series (W43 review).** Every brief also points to `research/strategy-review/README.md`: an edge figure needs a committed script or a cited study, and the
+   retired arguments listed in `playbook.md` may not be used (strategy review, 2026-10-29). Each writes `research/D/<name>.md` (max about 350 words,
    sources cited, never invent prices), logs every proposal to `research/D/ideas-<name>.csv` (columns `date,persona,contract,ref_ask,ref_source,trigger,confidence`; the weekly
    review marks them), and replies in at most 100 words with ranked ideas (contract, reference bid/ask + source, entry trigger in named series checkable at 14:43, exit plan,
    confidence 1-10, **whether it matches the consensus AI view, and its measured edge**):

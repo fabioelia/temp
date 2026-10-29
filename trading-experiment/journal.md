@@ -467,3 +467,25 @@ partner, but the thesis rests on its own 8-K figures and a mega-cap continuation
 **Lesson:** the IWM shot was built on Monday's base; by Thursday the move had already happened, and the sample that conditions on a prior run-up says it no longer
 pays (0.81). A trigger should carry its own "if the move already happened, stand down" clause, so the run doesn't argue itself into chasing.
 **Dashboard:** five files refreshed (summary ae4f94be, equity ce05ca3f, positions 690570fc, orders 169f565e, trades 04eff9ed); the old files were deleted.
+
+## 2026-10-29 (Thu, pre-open) Strategy review: the owner's ask
+**Owner: "Do some research search online blogs and articles to see other investment strategies and then confirm if they work before taking any learnings
+from them."** Web search found the popular claims. The 12 claims and their exact tests were committed before testing (ac5e715), and four test agents ran
+them with costs, splits before and after 2010, a random baseline and an options model. Summary: `research/strategy-review/README.md`.
+**Verdicts:**
+* **Calendar:** the midterm rally in our window, REJECTED (election to April WEAK, decayed); the Halloween effect and the turn of the month, WEAK (gone since 2010).
+* **Patterns:** RSI(2) dips, WEAK, below random through calls; the follow-through day, WEAK (t 0.9), and the momentum persona's run-up split is noise.
+* **Earnings:** down gaps of 8% or more continue for 5 sessions, CONFIRMED by a hair (n 216, t 2.5), but the put breaks even unless its IV is at most 1.3x RV20.
+  Up gaps do not continue (REJECTED/WEAK). The pre-earnings run-up is real for stocks but not through calls.
+* **Options:** the volatility premium is CONFIRMED and sits in puts; far-OTM options lose most; "IV is low" is REJECTED. Our exits are WEAK: the -50% stop does
+  all the in-model work, and at the real skew holding beats them (post-hoc).
+**Applied (CONFIRMED only):**
+* Earnings continuation is now a down-gap put rule with an IV gate.
+* GOOGL: O008 cancelled and re-issued as O010 (put IV at most 30%, 10/29 only). O009 is a cancelled duplicate whose default gtd would have allowed Friday.
+* The INTC call leg is dropped; Friday's INTC/AMZN qualify only on a down gap of 8% or more inside the IV gate.
+* Evidence rules: edges need a script or a study; the retired arguments are listed in the playbook; briefs point to the review.
+**Not applied (WEAK), for the owner and Sunday:** at the real skew, holding a call 15 days beat our +50% take-profit set by about 0.14 per $ (post-hoc). The
+resting take-profit is the owner's 10/26 choice, so this is raised, not changed.
+**Process note:** three test agents (and the 10/28 catalyst agent) ran read-only `git status`/`git log` against the briefs' no-git rule; nothing was changed.
+**Lesson:** our own personas' "measured edges" were the least reliable numbers in the system: all three that were checked failed to reproduce. A number with
+no script behind it is an opinion.
