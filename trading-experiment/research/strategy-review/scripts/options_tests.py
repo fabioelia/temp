@@ -91,6 +91,59 @@ def report_periods(claim, test, inst, hz, tr, lag, base=1.0, note='', min_date=N
     return out
 
 
+H = 15
+
+def paths(m, delta, ivmult=1.0):
+    d_, S_, iv_, r_, q_ = m['dates'], m['S'], m['iv'] * ivmult, m['r'], m['q']
+    ex_ = L.expiry_index(d_)
+    idx = np.array([i for i in range(len(d_)) if ex_[i] > 0 and i + H < ex_[i]])
+    e = ex_[idx]
+    T0 = np.array([(d_[j] - d_[i]).days / 365.0 for i, j in zip(idx, e)])
+    K = L.strike_for_delta(S_[idx], T0, iv_[idx], r_[idx], q_[idx], delta, 'C')
+    cost = L.bs(S_[idx], K, T0, iv_[idx], r_[idx], q_[idx], 'C') * (1 + L.HALF_SPREAD)
+    B = np.zeros((len(idx), H))
+    for k in range(1, H + 1):
+        x = idx + k
+        Tk = np.array([(d_[j] - d_[xx]).days / 365.0 for xx, j in zip(x, e)])
+        B[:, k - 1] = L.bs(S_[x], K, Tk, iv_[x], r_[x], q_[x], 'C') * (1 - L.HALF_SPREAD) / cost
+    return idx, [d_[i] for i in idx], B
+
+RULES = {'R0 hold to day 15': dict(),
+         'R1 +50% all': dict(t1=1.5),
+         'R2 half +50%/half +100%': dict(split=True),
+         'R3 -50% stop': dict(stop=0.5),
+         'R4a +50% all, -50% stop': dict(t1=1.5, stop=0.5),
+         'R4b split, -50% stop': dict(split=True, stop=0.5),
+         'R5a +50% all, -50% stop, cost stop after +40% (1 contract)': dict(t1=1.5, stop=0.5, be=True),
+         'R5b split, -50% stop, cost stop after +40% (2+ contracts)': dict(split=True, stop=0.5, be=True)}
+
+def apply_rule(B, t1=None, split=False, stop=None, be=False):
+    out = np.zeros(len(B))
+    days = np.zeros(len(B))
+    for i, row in enumerate(B):
+        frac, proc, half, armed = 1.0, 0.0, False, False
+        for k, b in enumerate(row):
+            last = k == H - 1
+            if armed and b <= 1.0:
+                proc += frac * b; frac = 0; break
+            if stop is not None and b <= stop:
+                proc += frac * b; frac = 0; break
+            if split:
+                if not half and b >= 1.5:
+                    proc += 0.5 * b; frac = 0.5; half = True
+                if half and b >= 2.0:
+                    proc += frac * b; frac = 0; break
+            elif t1 is not None and b >= t1:
+                proc += frac * b; frac = 0; break
+            if be and b >= 1.4:
+                armed = True
+            if last:
+                proc += frac * b; frac = 0
+        out[i] = proc
+        days[i] = k + 1
+    return out, days
+
+
 def verdict_loss(full, recent):
     """Claim: EV/$ < 1 (buyer loses)."""
     if full['t'] <= -2 and (recent['ev'] - 1) < 0 and abs(recent['ev'] - 1) >= 0.5 * abs(full['ev'] - 1):
@@ -215,63 +268,11 @@ def main():
     sd, sS, siv, sr, sq = s['dates'], s['S'], s['iv'], s['r'], s['q']
     sn = len(sd)
     sex = L.expiry_index(sd)
-    H = 15
-
-    def paths(m, delta, ivmult=1.0):
-        d_, S_, iv_, r_, q_ = m['dates'], m['S'], m['iv'] * ivmult, m['r'], m['q']
-        ex_ = L.expiry_index(d_)
-        idx = np.array([i for i in range(len(d_)) if ex_[i] > 0 and i + H < ex_[i]])
-        e = ex_[idx]
-        T0 = np.array([(d_[j] - d_[i]).days / 365.0 for i, j in zip(idx, e)])
-        K = L.strike_for_delta(S_[idx], T0, iv_[idx], r_[idx], q_[idx], delta, 'C')
-        cost = L.bs(S_[idx], K, T0, iv_[idx], r_[idx], q_[idx], 'C') * (1 + L.HALF_SPREAD)
-        B = np.zeros((len(idx), H))
-        for k in range(1, H + 1):
-            x = idx + k
-            Tk = np.array([(d_[j] - d_[xx]).days / 365.0 for xx, j in zip(x, e)])
-            B[:, k - 1] = L.bs(S_[x], K, Tk, iv_[x], r_[x], q_[x], 'C') * (1 - L.HALF_SPREAD) / cost
-        return idx, [d_[i] for i in idx], B
-
-    RULES = {'R0 hold to day 15': dict(),
-             'R1 +50% all': dict(t1=1.5),
-             'R2 half +50%/half +100%': dict(split=True),
-             'R3 -50% stop': dict(stop=0.5),
-             'R4a +50% all, -50% stop': dict(t1=1.5, stop=0.5),
-             'R4b split, -50% stop': dict(split=True, stop=0.5),
-             'R5a +50% all, -50% stop, cost stop after +40% (1 contract)': dict(t1=1.5, stop=0.5, be=True),
-             'R5b split, -50% stop, cost stop after +40% (2+ contracts)': dict(split=True, stop=0.5, be=True)}
-
-    def apply(B, t1=None, split=False, stop=None, be=False):
-        out = np.zeros(len(B))
-        days = np.zeros(len(B))
-        for i, row in enumerate(B):
-            frac, proc, half, armed = 1.0, 0.0, False, False
-            for k, b in enumerate(row):
-                last = k == H - 1
-                if armed and b <= 1.0:
-                    proc += frac * b; frac = 0; break
-                if stop is not None and b <= stop:
-                    proc += frac * b; frac = 0; break
-                if split:
-                    if not half and b >= 1.5:
-                        proc += 0.5 * b; frac = 0.5; half = True
-                    if half and b >= 2.0:
-                        proc += frac * b; frac = 0; break
-                elif t1 is not None and b >= t1:
-                    proc += frac * b; frac = 0; break
-                if be and b >= 1.4:
-                    armed = True
-                if last:
-                    proc += frac * b; frac = 0
-            out[i] = proc
-            days[i] = k + 1
-        return out, days
-
     idx4, dates4, B4 = paths(s, 0.40)
     print('\nD4  SPY', sd[0], sd[-1], 'entries', len(idx4), 'q', s['q'][-1].round(4))
     res4 = {}
     for rn, kw in RULES.items():
-        res4[rn] = apply(B4, **kw)
+        res4[rn] = apply_rule(B4, **kw)
     base = res4['R0 hold to day 15'][0]
     for name, lo, hi in [('2010-2026 (registered)', date(2010, 1, 1), date(2100, 1, 1)),
                          ('1993-2009', date(1900, 1, 1), date(2010, 1, 1)),
@@ -343,8 +344,8 @@ def main():
         vixa = m['vix']
         for dl in (0.35, 0.40):
             ix, dts, B = paths(m, dl)
-            r0, _ = apply(B)
-            r5, _ = apply(B, **RULES['R5b split, -50% stop, cost stop after +40% (2+ contracts)'])
+            r0, _ = apply_rule(B)
+            r5, _ = apply_rule(B, **RULES['R5b split, -50% stop, cost stop after +40% (2+ contracts)'])
             tr10 = option_trades(m, 'C', dl, 10)
             trx = option_trades(m, 'C', dl, 'exp')
             for lab, vals, ixs, dd, lag in (('hold 15 (R0)', r0, ix, dts, 30), ('R5b our 2-contract rules', r5, ix, dts, 30),
@@ -359,29 +360,10 @@ def main():
                         note=('IV = RVX (VIX x1.25 before 2009-09-16)' if und == 'IWM' else 'IV = VIX'))
                     print(f'  {und} d{dl:.2f} {lab:26s} {nm:20s} n {st["n"]:5d} EV {st["ev"]:.3f} med {st["median"]:.3f} hit {st["hit"]:.3f} t {st["t"]:.1f}')
 
-    # ---------------- post-hoc: skew sensitivity (IV = multiplier x VIX at entry and exit)
-    print('\nPost-hoc skew sensitivity: EV/$ if the contract trades at m x VIX (full sample)')
-    for mult in (1.0, 0.9, 0.85, 0.8):
-        for label, und, dl in (('^GSPC 0.35-delta call', g, 0.35), ('^GSPC 0.10-delta call', g, 0.10), ('^GSPC 0.10-delta put', g, 0.10)):
-            kind = 'P' if 'put' in label else 'C'
-            for hz in (10, 'exp'):
-                if kind == 'P':
-                    mm = {1.0: 1.0, 0.9: 1.1, 0.85: 1.2, 0.8: 1.3}[mult]  # puts: IV above VIX
-                else:
-                    mm = mult
-                tr = option_trades(und, kind, dl, hz, ivmult=mm)
-                st = L.summary(tr['net'], 1.0, 20 if hz == 10 else 42)
-                add('post_hoc', 'skew sensitivity: IV = m x VIX at entry and exit', label, str(hz), 'full', st, 1.0,
-                    note=f'post_hoc; m = {mm}', extra={'iv_multiplier': mm})
-                print(f'  m {mm:.2f} {label:24s} {str(hz):4s} EV {st["ev"]:.3f} med {st["median"]:.3f} hit {st["hit"]:.3f}')
-        ix, dts, B = paths(s, 0.40, ivmult=mult)
-        for rn in ('R0 hold to day 15', 'R5b split, -50% stop, cost stop after +40% (2+ contracts)'):
-            v, _ = apply(B, **RULES[rn])
-            mk = L.period_mask(dts, date(2010, 1, 1), date(2100, 1, 1))
-            st = L.summary(v[mk], 1.0, 30)
-            add('post_hoc', 'skew sensitivity: IV = m x VIX at entry and exit', f'SPY 0.40-delta call {rn}', '15', '2010-2026', st, 1.0,
-                note=f'post_hoc; m = {mult}', extra={'iv_multiplier': mult})
-            print(f'  m {mult:.2f} SPY 0.40 {rn[:20]:20s} 2010-26 EV {st["ev"]:.3f} med {st["median"]:.3f}')
+    # ---------------- post-hoc checks (decided after seeing the results above; every row labelled post_hoc)
+    import options_posthoc
+    options_posthoc.run(g, s, add, ROWS, {'res4': res4, 'dates4': dates4, 'base': base, 'ivr': ivr, 'rv': rv, 'd1': d1,
+                                            'option_trades': option_trades, 'paths': paths, 'apply_rule': apply_rule, 'RULES': RULES})
 
     keys = []
     for r in ROWS:

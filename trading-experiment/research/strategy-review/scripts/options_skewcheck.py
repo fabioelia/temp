@@ -36,7 +36,9 @@ def occ(sym):
     return root, date(2000 + y, m, d), s[-9], int(s[-8:]) / 1000.0
 
 
-def main():
+def ratios(verbose=False):
+    """Median IV / index vol by (underlying, type, |delta| bucket) for 21-35 DTE contracts with an IV. Uses Cboe's iv field
+    (pre-market the bids are zero, so the iv of the prior close is used; no bid filter)."""
     vix = json.load(open(os.path.join(CACHE, 'chain__VIX.json')))['data']
     qp = os.path.join(CACHE, 'quote__RVX.json')
     if os.path.exists(qp):
@@ -44,11 +46,14 @@ def main():
     else:  # last close in the Cboe RVX history file
         rv = float(open(os.path.join(CACHE, 'RVX_cboe.csv')).read().strip().splitlines()[-1].split(',')[4])
     idx_vol = {'SPY': float(vix['current_price']), 'IWM': rv}
-    print('VIX', idx_vol['SPY'], 'RVX', idx_vol['IWM'], 'quote time', vix.get('last_trade_time'))
+    out = {}
+    if verbose:
+        print('VIX', idx_vol['SPY'], 'RVX', idx_vol['IWM'])
     for u in ('SPY', 'IWM'):
-        data = json.load(open(os.path.join(CACHE, f'chain_{u}.json')))['data']
-        today = date.fromisoformat(str(data.get('last_trade_time', '2026-10-29'))[:10])
-        spot = float(data['current_price'])
+        data = json.load(open(os.path.join(CACHE, f'chain_{u}.json')))
+        stamp = data.get('timestamp', '')
+        data = data['data']
+        today = date.fromisoformat(stamp[:10]) if stamp else date(2026, 10, 29)
         buckets = {}
         for o in data['options']:
             root, exp, typ, k = occ(o['option'])
@@ -56,14 +61,23 @@ def main():
             if not 21 <= dte <= 35 or not o.get('iv') or not o.get('delta'):
                 continue
             dl = abs(float(o['delta']))
-            for lo, hi, lab in ((0.08, 0.12, '0.10'), (0.18, 0.22, '0.20'), (0.28, 0.32, '0.30'), (0.33, 0.37, '0.35'),
-                                (0.38, 0.42, '0.40'), (0.48, 0.52, '0.50')):
-                if lo <= dl <= hi and (o.get('bid') or 0) > 0:
+            for lo, hi, lab in ((0.08, 0.12, 0.10), (0.18, 0.22, 0.20), (0.28, 0.32, 0.30), (0.33, 0.37, 0.35),
+                                (0.38, 0.42, 0.40), (0.48, 0.52, 0.50)):
+                if lo <= dl <= hi:
                     buckets.setdefault((typ, lab), []).append(float(o['iv']) * 100 / idx_vol[u])
-        print(f'{u} spot {spot}  IV / {"VIX" if u == "SPY" else "RVX"} by |delta| (21-35 DTE, quoted contracts)')
+        if verbose:
+            print(f'{u} chain {stamp}, spot {data["current_price"]}, Cboe iv30 {data.get("iv30")} '
+                  f'= {float(data.get("iv30") or 0) / idx_vol[u]:.3f} x {"VIX" if u == "SPY" else "RVX"}')
         for key in sorted(buckets):
             v = sorted(buckets[key])
-            print(f'   {key[0]} {key[1]}  n {len(v):3d}  median ratio {v[len(v) // 2]:.3f}  range {v[0]:.3f}-{v[-1]:.3f}')
+            out[(u, key[0], key[1])] = v[len(v) // 2]
+            if verbose:
+                print(f'   {key[0]} {key[1]:.2f}  n {len(v):3d}  median IV/index-vol {v[len(v) // 2]:.3f}  range {v[0]:.3f}-{v[-1]:.3f}')
+    return out
+
+
+def main():
+    ratios(verbose=True)
 
 
 if __name__ == '__main__':

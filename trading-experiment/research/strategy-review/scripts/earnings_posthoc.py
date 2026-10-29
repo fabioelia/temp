@@ -89,6 +89,34 @@ def main():
             if ramp == 1.25:
                 row['ev_ci_lo'], row['ev_ci_hi'] = boot_ci(list(rat), [r['month'] for r in s])
         out.append(row)
+    # 4. C2 with an event-variance IV model: a 30-DTE call bought at t-7 already prices the print, so
+    #    IV^2 = (1.2 RV20)^2 + E/T, E = mean squared gap of the ticker's previous 4 non-interim events (known ex ante).
+    #    The ramp then comes only from T shrinking (30 -> ~22 calendar days). Pooled and NVDA-only.
+    by_tk = {}
+    for r in sorted(ev, key=lambda r: r['react_date']):
+        by_tk.setdefault(r['ticker'], []).append(r)
+    for rs in by_tk.values():
+        hist = []
+        for r in rs:
+            r['E'] = float(np.mean(np.square(hist[-4:]))) if len(hist) >= 2 else np.nan
+            if r['interim'] == 'False' and not np.isnan(r['gap']):
+                hist.append(r['gap'])
+    for name, fn in (('pooled', lambda r: True), ('NVDA', lambda r: r['ticker'] == 'NVDA')):
+        for period, lo in (('full', '2005'), ('2010-2026', '2010'), ('2015-2026', '2015')):
+            s = [r for r in ev if fn(r) and r['react_date'] >= lo and not np.isnan(r['c2_ret'])
+                 and not np.isnan(r['c2_rv']) and not np.isnan(r['E'])]
+            ret = np.array([r['c2_ret'] for r in s])
+            cal = np.array([r['c2_cal'] for r in s])
+            base = 1.2 * np.array([r['c2_rv'] for r in s])
+            E = np.array([r['E'] for r in s])
+            iv0 = np.sqrt(base ** 2 + E / (30 / 365))
+            iv1 = np.sqrt(base ** 2 + E / ((30 - cal) / 365))
+            rat = option_ratio(ret, cal, 30, 0.40, iv0, iv1, np.ones(len(s), bool))
+            lo_ci, hi_ci = boot_ci(list(rat), [r['month'] for r in s])
+            out.append({'claim': 'C2', 'test': f'post-hoc event-variance IV model: {name}', 'label': 'post-hoc',
+                        'horizon': 6, 'period': period, 'n': len(s), 'opt_ev': float(rat.mean()),
+                        'ev_ci_lo': lo_ci, 'ev_ci_hi': hi_ci, 'mean_iv_entry_over_rv': float(np.mean(iv0 / base * 1.2)),
+                        'mean_ramp': float(np.mean(iv1 / iv0))})
     # latest RV20 for the names in today's decisions
     for tk in ('GOOGL', 'INTC', 'NVDA'):
         p = load_prices(cache, tk)
