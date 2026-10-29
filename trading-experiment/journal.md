@@ -489,3 +489,10 @@ resting take-profit is the owner's 10/26 choice, so this is raised, not changed.
 **Process note:** three test agents (and the 10/28 catalyst agent) ran read-only `git status`/`git log` against the briefs' no-git rule; nothing was changed.
 **Lesson:** our own personas' "measured edges" were the least reliable numbers in the system: all three that were checked failed to reproduce. A number with
 no script behind it is an opinion.
+
+## 2026-10-29 (Thu) Pre-open (09:31 ET)
+**Data:** Q3 GDP 3.4% beat the 3.0% consensus. September PCE was 3.6% y/y and core 3.1% y/y; headlines say "meets targets" and "cools slightly", but the core
+m/m gate (< 0.40%) is not yet verified from bea.gov, so Run A checks it. December-hike odds are above 80% in news reports.
+**Premarket (Yahoo, unverified):** GOOGL 284.90 (-12.3%), so the proposal O010's 308.65 line is likely met; its binding test is the put's IV at most 30% at 14:43.
+NQ -1.0% and ES -0.3% on GOOGL and software (MRVL -10%, ServiceNow), while RTY is +0.3%. CL=F 100.32 (-2.4%) on a Vance letter proposing Iran talks; ^TNX 5.00.
+No new Anthropic filing. **Orders:** O010 unchanged (never confirmed in this run).
