@@ -164,8 +164,7 @@ def load_events(path):
 def ev(ea, evs, k, dte=25, delta=0.35, half_spread=0.015, exit_mult=1.0):
     ea.HALF_SPREAD = half_spread
     ret = np.array([e['ret5'] for e in evs])
-    # calendar days held = 5 sessions; the review uses the session calendar; rebuilt here from react dates is not possible
-    # without SPY's calendar, so the per-event cal5 is taken from the events file when present (see main)
+    # cal5 = calendar days spanned by the 5 sessions held, from SPY's session calendar (load_events_with_cal)
     cal = np.array([e['cal5'] for e in evs])
     iv = k * np.array([e['rv'] for e in evs])
     rat = ea.option_ratio(ret, cal, dte, delta, iv, exit_mult * iv, np.zeros(len(evs), bool))
@@ -332,9 +331,9 @@ def main():
 
 
 def load_events_with_cal(path):
-    """Events with the 5-session calendar-day span; cal5 is rebuilt from each ticker's next react rows is not needed:
-    the review's events file has no cal5 column, so it is recomputed from SPY's session calendar in the review's Yahoo
-    cache next to the events file (<cache>/yahoo/SPY.json)."""
+    """Events plus cal5. The review's events file has no cal5 column, so it is recomputed exactly as earnings_analysis.py
+    does (sessions[t + 5] - sessions[t]) from SPY's session calendar in the review's Yahoo cache, which sits next to the
+    events file (<cache>/yahoo/SPY.json)."""
     evs = load_events(path)
     spy = Path(path).parent / 'yahoo' / 'SPY.json'
     d = json.loads(spy.read_text())['chart']['result'][0]
