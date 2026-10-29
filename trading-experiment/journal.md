@@ -496,3 +496,22 @@ m/m gate (< 0.40%) is not yet verified from bea.gov, so Run A checks it. Decembe
 **Premarket (Yahoo, unverified):** GOOGL 284.90 (-12.3%), so the proposal O010's 308.65 line is likely met; its binding test is the put's IV at most 30% at 14:43.
 NQ -1.0% and ES -0.3% on GOOGL and software (MRVL -10%, ServiceNow), while RTY is +0.3%. CL=F 100.32 (-2.4%) on a Vance letter proposing Iran talks; ^TNX 5.00.
 No new Anthropic filing. **Orders:** O010 unchanged (never confirmed in this run).
+
+## 2026-10-29 (Thu) Pre-close (14:44 ET)
+**Driver:** GOOGL fell 13.1% to 282.25, on course for its largest market-value drop ever (Yahoo Finance), and the Nasdaq 100 fell about 1.5% as "the AI trade shows
+new cracks" (Bloomberg). Live (Yahoo, single source):
+* QQQ 712.30 (-1.8%), SPY 766.98 (-0.7%), IWM 282.94 (+0.6%; rotation, but not a follow-through day).
+* MSFT 526.93: it gave back its after-hours +3.8%, the W43 lesson again.
+* AMZN 244.78 (-3.9%) and INTC 91.04 (-4.7%) before tonight's prints. ^VIX 16.90, ^TNX 4.989.
+* Core PCE m/m 0.3% (bea.gov, verified); the HY OAS fetch from FRED timed out.
+**O010 (GOOGL 11/20 put) cancelled; its filters failed:**
+* The price conditions held: GOOGL was below 308.65 and below its 286.77 open.
+* Every 11/20 put quoted IV 32%, above the 30% cap from the strategy review.
+* The delta 0.30-0.45 puts cost 5.45 (275P, 6% spread) and 7.55 (280P), above the 4.00 cap.
+* The thesis said no widening, so nothing was added.
+**Orders: none confirmed, none added.**
+**Idea watch (research/2026-10-29/ideas-fired.csv):**
+* The contrarian QQQ 750C fired (2.57 ask, IV 18.65%, delta 0.15), not taken.
+* The GOOGL 280P is logged at 7.55, so the shadow book marks it from today's ask, not the pre-print 1.18.
+* IWM +0.6%: the shadow follow-through trigger (+1.5%) did not fire.
+**Next:** AMZN and INTC report after the close. On Friday either qualifies only on a down gap of 8% or more with put IV at most 1.3x its pre-print RV20.
