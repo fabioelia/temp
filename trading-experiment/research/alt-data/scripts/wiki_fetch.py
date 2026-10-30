@@ -43,7 +43,8 @@ def wiki_get(title):
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.status, json.loads(r.read().decode('utf-8'))
     except urllib.error.HTTPError as e:
-        return e.code, {'error': e.read().decode('utf-8', 'replace')[:300]}
+        ra = e.headers.get('Retry-After') if e.headers else None
+        return e.code, {'error': e.read().decode('utf-8', 'replace')[:300], 'retry_after': ra}
 
 
 def fetch_wiki(wdir, title):
@@ -51,15 +52,19 @@ def fetch_wiki(wdir, title):
     if out.exists():
         d = json.loads(out.read_text())
         return 'cached', len(d.get('items', []))
-    for attempt in range(3):
+    for attempt in range(6):
         status, d = wiki_get(title)
-        time.sleep(1.1)
-        if status == 429:
-            time.sleep(10 * (attempt + 1))
+        time.sleep(1.5)
+        if status == 429:  # back off: Retry-After if given, else 30, 60, 120 ... s
+            ra = d.get('retry_after')
+            wait = int(ra) if ra and str(ra).isdigit() else 30 * 2 ** attempt
+            print('  429, waiting', wait, 's', flush=True)
+            time.sleep(wait)
             continue
         break
     if status == 200:
         out.write_text(json.dumps(d))
+        (wdir / (fname(title) + '.missing')).unlink(missing_ok=True)
         return 200, len(d.get('items', []))
     (wdir / (fname(title) + '.missing')).write_text(json.dumps({'status': status, **d}))
     return status, 0
@@ -67,7 +72,7 @@ def fetch_wiki(wdir, title):
 
 def main():
     cache = Path(sys.argv[1])
-    wdir, ydir = cache / 'wiki', cache / 'yahoo'
+    wdir, ydir = cache / 'wiki', cache / 'wiki_yahoo'  # own folder: other claims share this cache
     wdir.mkdir(parents=True, exist_ok=True)
     ydir.mkdir(parents=True, exist_ok=True)
     if '--titles' in sys.argv:

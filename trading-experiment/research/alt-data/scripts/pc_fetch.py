@@ -16,6 +16,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 
+sys.dont_write_bytecode = True
 sys.path.insert(0, "/home/user/temp/trading-experiment")
 import quotes  # noqa: E402
 
