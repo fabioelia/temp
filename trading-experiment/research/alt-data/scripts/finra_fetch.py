@@ -1,7 +1,7 @@
 """Fetch data for claims E1/E1b (FINRA daily short-sale volume), per ../claims.md.
 
 Run:  python3 -I finra_fetch.py <scratch_dir>
-      scratch_dir gets  yahoo/<SYM>.json        raw Yahoo daily chart JSON (adjclose + split-adjusted close)
+      scratch_dir gets  finra_yahoo/<SYM>.json  raw Yahoo daily chart JSON (adjclose + split-adjusted close)
                         finra_filtered.csv       FINRA CNMS rows for our symbols only (the full files are never stored)
                         finra_done.txt           dates fetched (resumable), finra_missing.txt dates that failed twice
 
@@ -47,10 +47,10 @@ def throttle():
 
 
 def fetch_yahoo(out):
-    os.makedirs(os.path.join(out, 'yahoo'), exist_ok=True)
+    os.makedirs(os.path.join(out, 'finra_yahoo'), exist_ok=True)
     p2 = int(time.time()) + 86400
     for s in SYMS:
-        path = os.path.join(out, 'yahoo', f'{s}.json')
+        path = os.path.join(out, 'finra_yahoo', f'{s}.json')
         url = (f'https://query1.finance.yahoo.com/v8/finance/chart/{s}?interval=1d&period1={P1}&period2={p2}'
                '&includeAdjustedClose=true&events=div%2Csplit')
         for attempt in (1, 2):
@@ -70,7 +70,7 @@ def fetch_yahoo(out):
 
 
 def spy_sessions(out):
-    d = json.load(open(os.path.join(out, 'yahoo', 'SPY.json')))['chart']['result'][0]
+    d = json.load(open(os.path.join(out, 'finra_yahoo', 'SPY.json')))['chart']['result'][0]
     days = sorted({datetime.fromtimestamp(t, tz=timezone.utc).astimezone(ET).date() for t in d['timestamp']})
     return [x for x in days if x.isoformat() >= '2018-10-01']
 
@@ -98,7 +98,7 @@ def get_one(day):
 def main():
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
-    if not os.path.exists(os.path.join(out, 'yahoo', 'SPY.json')) or '--refresh-yahoo' in sys.argv:
+    if not os.path.exists(os.path.join(out, 'finra_yahoo', 'SPY.json')) or '--refresh-yahoo' in sys.argv:
         fetch_yahoo(out)
     days = spy_sessions(out)
     done_p = os.path.join(out, 'finra_done.txt')
