@@ -550,3 +550,17 @@ spread <= 5%; OI >= 1000; gates). Exits: time exit 11/6 14:43; stop INTC >= 1.04
 **O011 unchanged** (not confirmed in this run). At INTC near 68, the 72.5P reference would be in the money, so the 14:43 run must pick the 11/20 strike that
 sits at delta 0.30-0.45 (roughly the 62-65 strikes) and apply the IV cap of 70.6% and ask cap of 3.00 to that strike. Gaps of 15% or more continued less often in the review (19 of 34)
 than the 8%+ pool; the rule still applies as written.
+
+## 2026-10-30 (Fri) Pre-close (14:44 ET)
+**Driver:** a broad AI and tech selloff after the AMZN and INTC prints ("AI spending worries"). Live (Yahoo, single source unless noted):
+* INTC 63.61 (-30.9%), QQQ 685.36 (-4.2%), SPY 753.58 (-2.1%), IWM 277.21 (-2.4%), AMZN 238.29 (-2.3%, recovering from 232.53), GOOGL 277.82 (-2.1%).
+* ^VIX 22.58 live (Robinhood 14:44), ^TNX 4.933, CL=F 104.70.
+**O011 (INTC put) cancelled: the ^VIX <= 22 gate failed (22.58).**
+* Everything else passed: INTC far below 84.70; the qualifying 11/20 60P had delta -0.32, IV 68% (cap 70.6%), ask 2.42 (cap 3.00), a 3% spread and OI 5195.
+* The thesis said no widening, so nothing was added.
+**For the Sunday review:**
+* The ^VIX gate came from the IWM-call era. For a down-gap put, rising VIX is part of the setup, and the put's own IV gate already prices volatility.
+* Decide in advance, with the C1 script (does continuation differ when VIX is above 22?), whether C1 puts keep a VIX gate. Do not change it on the day.
+**Orders: none confirmed, none added.** Account flat. A cash day: SPY -2.1% narrows our gap to SPY.
+**Idea watch (research/2026-10-30/ideas-fired.csv):** every persona's INTC put is logged at today's ask (72.5P 10.10, 70P 8.00, 60P 2.42), so the shadow book marks
+from real entry prices, not the pre-print 0.34-0.49 quotes.
