@@ -564,3 +564,26 @@ than the 8%+ pool; the rule still applies as written.
 **Orders: none confirmed, none added.** Account flat. A cash day: SPY -2.1% narrows our gap to SPY.
 **Idea watch (research/2026-10-30/ideas-fired.csv):** every persona's INTC put is logged at today's ask (72.5P 10.10, 70P 8.00, 60P 2.42), so the shadow book marks
 from real entry prices, not the pre-print 0.34-0.49 quotes.
+
+## 2026-10-30 (Fri) Run B: post-close
+**Market:** an AI and tech derating after AMZN and INTC. QQQ 690.49 (-3.5%; it undercut the 10/23 low of 701.16; -9.1% from its high), NVDA -4.2%, SPY 755.72 (-1.8%),
+IWM 279.33 (-1.6%), INTC 65.76 (-28.6%), AMZN 240.35 (-1.4%, recovering from 232.5). XLE +1.9% and TLT +0.4% held up. ^VIX closed 19.42 (22.58 at 14:44),
+^TNX 4.93, BZZ26 117.70 (it expires today).
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders); paper $1,919.92 (-4.0%). SPY buy-and-hold: $1,970.94 (-1.5%), so the gap narrowed to
+2.6 points (from 4.3) because cash beat a falling market. $2,200 needs +14.7%, with 13 sessions left. **Fills:** none (O011 cancelled on the VIX gate).
+**Agents (research/2026-10-30/):**
+* **macro:** no trade Mon-Wed (conf 7). This is an AI derating, not risk-off (RSP -0.8%, HY OAS 3.26 on 10/29). Every ETF chain has IV >= RV20. The swing
+  factor is Iran and oil (CL=F <= 97.80 / >= 108.10). TLT is shadow only.
+* **momentum:** the Nasdaq broke its rally-attempt low. Distribution days: QQQ 9, SPY 8. A correction, not a break, unless QQQ closes below its 200-day (679.52).
+  The rotation has no edge (XLE call 0.88 vs a random 0.87). An AAPL C1 put on Tue is conditional (conf 2).
+* **catalyst:** no INTC entry on Monday (not the reaction day); no new 8-K or Form 4. A QCOM C1 put on Thu 11/5 is conditional (conf 2). AAPL and AMD are
+  shadow only.
+* **options-vol:** the C1 VIX split (post-hoc): VIX <= 22, n 149, EV 1.02 (t 3.0); VIX > 22, n 67, EV 0.96 (t 0.3). The difference is not significant
+  (p 0.61); since 2010 it is 1.05 vs 1.04. INTC counts as a VIX <= 22 event on its close. The INTC 60P shadow went from 2.42 to 1.695 (-30%), one case.
+  No trade Mon-Wed.
+**Proposals for Mon 11/2: none** (all four; no drafts, so no red-team). Sunday's weekly review re-plans the week and decides the C1 VIX gate in advance.
+**Correction to the personas:** momentum and catalyst still wrote "+50% GTC" exits for C1 puts. The 10/29 exception stands (hold 5 sessions, -50% backstop,
+no take-profit). The brief template will say so.
+**Lesson:** the VIX gate cost nothing today (the put marked down 30%), but that is one case. The evidence (p 0.61) says the gate does not matter on average.
+Decide it on Sunday from the data, not from today's luck.
+**Dashboard:** five files refreshed (summary 97ac9126, equity bf98eb0e, positions 134ecefe, orders 1cb3a7dc, trades 2a0a4c51); the old files were deleted.

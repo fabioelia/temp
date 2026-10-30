@@ -155,6 +155,18 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     INTC was -19% after hours on a Q4 guide miss.
   - **AMZN put fallback: rejected** (shadow only; conf 1, and likely no in-band put at 3.00 or less).
   - **IWM:** +1.0% today on 0.95x volume, so no follow-through day. It stays shadow-only.
+* **Revision, Fri 10/30 Run B (research/2026-10-30/).** O011 (INTC put) was cancelled at 14:44 on the ^VIX gate (22.58 live; VIX closed 19.42). Its 60P went
+  from a 2.42 ask to a 1.695 mid, the first live C1 data point.
+  - **No proposals for Mon 11/2** (all four personas). The Nasdaq broke its 10/23 rally-attempt low (QQQ 690.49; -9.1% from its high; the 200-day is 679.52).
+    Friday was an AI derating, not broad risk-off: equal-weight RSP -0.8%, HY OAS ~3.26-3.34.
+  - **C1 watchlist (reaction days):**
+    - AAPL (prints 11/2, reacts 11/3) and AMD (11/3, reacts 11/4) are shadow only: AAPL's IV gate of about 19% is far below its 34-39% put IV, and AMD's
+      puts cost over the size cap.
+    - QCOM: prints 11/4, so a conditional put on 11/5 (conf 2; IV gate about 66%).
+    - **Personas still wrote "+50% GTC" exits for C1 puts. The exception applies: C1 puts hold 5 sessions with the -50% backstop and no take-profit.**
+  - **For Sunday's review, decided in advance:** whether C1 puts keep a ^VIX gate. Post-hoc split (research/2026-10-30/c1-vix-split.csv): VIX <= 22, n 149,
+    EV 1.02, t 3.0; VIX > 22, n 67, EV 0.96, t 0.3. The difference is not significant (p 0.61), and since 2010 it is 1.05 vs 1.04. Also settle which VIX
+    reading counts (14:43 live vs the close).
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
 ## Catalyst calendar for shots (re-judge every run)
@@ -206,6 +218,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-30 (Run B): no Monday proposals; C1 watchlist (QCOM 11/5); the VIX-gate decision for C1 goes to Sunday with the split data.
 * 2026-10-29 (Run B): C1 down-gap puts exit as tested (hold 5 sessions, -50% backstop, no take-profit); INTC put O011 for Friday; AMZN fallback rejected.
 * 2026-10-29 (strategy review, owner's ask): evidence rules (edges need a script or a study; retired arguments listed); earnings continuation
   is now a down-gap-only put rule with an IV gate; INTC call leg dropped; GOOGL O010 with IV <= 30%; puts need an edge beyond the premium.
