@@ -16,13 +16,13 @@ multi-leg options or exercise (buying calls/puts is the strategy, below); never 
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
 
-## Strategy and universe (owner, 2026-10-17: "Options with the $500 budget"; 2026-10-18: "Update the 500 budget to 1k instead")
+## Strategy and universe (owner, 2026-10-17: "Options with the $500 budget"; 2026-10-18: "Update the 500 budget to 1k instead"; 2026-10-30: "Remove caps on place a buy. You have 2 k to work with")
 * **Options only, buying only.** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
-* **The loss budget is the only money at risk.** Premium may only be paid from cash above a **$1,000 floor** (starting $2,000 minus the $1,000 loss limit). Every open option can
-  expire worthless and the account still ends at or above $1,000. Profits raise the budget (they lift cash above the floor), so winners can be rolled into the next bet.
-* The other $1,000 stays in cash. The $2,200 goal needs about +31% on the remaining budget, so the hard $1,000 loss limit is far more risk than the goal requires:
-  see the playbook's pacing rules (smaller shots, a $1,700 pause line).
+* **The whole $2,000 is the budget (since 2026-10-30, owner).** There is no cash floor and no single-order cap any more: premium may use any cash on hand, up to
+  the $2,000 capital cap. Every open option can still expire worthless, so **the whole $2,000 can be lost**. (Before: premium came only from cash above a $1,000
+  floor; from 10/24 a single order was capped at $450, with a $1,700 pause line. All removed by the owner's instruction.)
+* Sizing is a judgment written into each order's thesis: the evidence for the setup, the size, and what a total loss would leave.
 * Whole contracts only (1 contract = 100 shares). A ticker needs a quote at decision time; options fill at the bid/ask stamped when the order is confirmed (Cboe delayed chain in paper,
   the broker's live quote with a limit order in live mode). Option marks are single-source (Cboe), flagged as such.
 
@@ -76,11 +76,13 @@ Fee numbers come from search extracts of the Robinhood fee page and SEC/FINRA no
 ## Risk guardrails (CIO policy for this experiment)
 The committee's own Monte Carlo says 2x is a 0-5% event and that the aggressive routes carry a 2-14% chance of losing half. The policy is therefore *bounded
 convexity*: take the asymmetric shots, but cap the damage.
-* **Under the options strategy (owner's choice 2026-10-17; clarified 2026-10-18):** the loss budget and its $1,000 floor are the risk cap. An option's worst case is its premium,
-  which is already inside the budget, so the stock-era limits below on risk per position, the regime gate, staging, event exposure, the -15%/-25% drawdown breakers and the
-  ratchet do not apply to option premium (profits raise the budget, as the strategy section says). Still in force: at most 4 positions, a single order at most 22.5% of $2,000
-  ($450 since 2026-10-24, coded in the gate), 4 fills a day, no new buys the session after a -6% equity day, never average down, and the playbook's pacing (one new shot a day). The $1,000
-  loss limit replaces the -25% breaker: hitting it sells everything to cash and halts until the owner and Claude talk.
+* **Under the options strategy (owner's choice 2026-10-17; caps removed 2026-10-30):** an option's worst case is its premium. The stock-era limits below on risk
+  per position, the regime gate, staging, event exposure, the -15%/-25% drawdown breakers and the ratchet do not apply to option premium.
+  - **Removed 2026-10-30 (owner):** the $1,000 floor and loss limit, the 22.5% ($450) single-order cap, and the playbook's buy caps ($250-400 shots, the $1,700
+    pause line, the near-goal house-money rule).
+  - **Still in force:** the $2,000 capital cap, 4 fills a day, no same-day round trips, at most 4 positions, never average down, the evidence rules and gates in
+    `playbook.md`, the kill switch and the gate tickets.
+  - The live loss-limit stop is set to the full $2,000, so it trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH`.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
 * **Concentration:** max 4 positions, no single name above 30% of equity at entry. **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
 * **Risk per position to its closing stop:** <= 2% of equity core, <= 3% satellite (assume the realised loss is 1.5x planned, 2x for 3x ETFs).

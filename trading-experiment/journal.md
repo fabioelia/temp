@@ -587,3 +587,14 @@ no take-profit). The brief template will say so.
 **Lesson:** the VIX gate cost nothing today (the put marked down 30%), but that is one case. The evidence (p 0.61) says the gate does not matter on average.
 Decide it on Sunday from the data, not from today's luck.
 **Dashboard:** five files refreshed (summary 97ac9126, equity bf98eb0e, positions 134ecefe, orders 1cb3a7dc, trades 2a0a4c51); the old files were deleted.
+
+## 2026-10-30 (Fri, evening) Owner: caps removed
+**Owner, 2026-10-30: "Remove caps on place a buy. You have 2 k to work with."** Done in config and code paths (no code change needed; the gate reads config):
+* live loss limit $1,000 -> $2,000, so no cash floor and the stop trips only at a total loss;
+* the single-order cap 22.5% ($450) -> 100%;
+* the paper strategy loss budget $1,000 -> $2,000, so the paper cash floor is $0.
+`live.py status` shows the limit at $2,000; 73 tests pass. RULES, LIVE_MODE, the playbook (sizing, structure, changelog) and DAILY_ROUTINE are updated. The
+playbook's buy caps ($250-400 shots, the $450 maximum, the $1,700 pause line, the house-money rule) are removed.
+**Kept:** the $2,000 capital cap ("2k to work with"); 4 fills a day (the owner's original challenge rule); no same-day round trips (pattern-day-trader safety);
+at most 4 positions; never average down; the evidence rules and gates; the gate tickets and the kill switch. Sizing becomes a written judgment in each order's
+thesis. **Consequence, stated plainly:** the whole $2,000 can now be lost, and the old "halt and talk at -$1,000" stop is gone unless the owner wants it back.

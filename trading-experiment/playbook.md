@@ -6,11 +6,13 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **The arithmetic.** From $1,917.92 (10/23) the $2,200 goal needs about +$282, +31% on the $918 budget: one shot that doubles on ~$300, or two that each make
   +50%. Beating SPY needs about +3.3% more than SPY makes from here. Judgment, not a backtest: perhaps 25-35% to reach $2,200, and better than even to finish ahead of
   a losing SPY; the most likely bad outcome is now a few hundred dollars lost, not the whole budget.
-* **Pacing for the lower target.** Shots of about $250-400 premium (no single shot above $450), at most two open at once, at least 2 contracts when the price allows so
-  one can be banked; bank part at +50-100% and move the stop to cost past +40%. **Pause line:** if real equity closes below $1,700, open no new shot until the Sunday review
-  re-plans. Near the goal, protect it: at or above $2,150, new shots only with house money above $2,000.
+* **Sizing since 2026-10-30 (owner: "Remove caps on place a buy. You have 2 k to work with").** There are no dollar caps on a buy: no shot-size band, no $450
+  maximum, no $1,700 pause line, no house-money rule. The whole $2,000 is available.
+  - Each order's thesis states its size and why: the strength of the measured edge, and what a total loss would leave.
+  - Still in force: at most 4 fills a day, at most 4 positions, never average down, and the evidence rules and gates.
+  - (Before: $250-400 shots, max $450, a $1,700 pause line.)
 * (Before 10/24) $4,000 needed +$2,000 from a $1,000 risk budget, about a 3x on premium; judged 8-20% at best.
-* **The structure (enforced in code).** Premium is paid only from cash above the $1,000 floor. Every open option can go to zero and the account still ends at $1,000 or better.
+* **The structure (enforced in code).** Since 2026-10-30 premium may use any cash up to the $2,000 capital cap, with no floor. Every open option can go to zero, so the whole $2,000 is at risk (it was a $1,000 floor).
 * **Contract arithmetic.** One contract costs premium x 100. Shot 1 of about $500 buys contracts priced up to $5.00; an all-in $1,000 shot up to $10.00. Below those prices the
   choice is between fewer at-the-money contracts and more far out-of-the-money ones; prefer delta 0.30-0.45 when the budget allows.
 * **Few, deliberate shots.** Plan for two or three bets over the month, not twenty trades. Shot 1 is about half the budget (~$500) on the best dated catalyst in the next one to
@@ -218,6 +220,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-30 (owner, 2026-10-30: "Remove caps on place a buy. You have 2 k to work with"): no cash floor, no single-order cap, no pacing caps; the loss limit is the full $2,000. Kept: 4 fills a day, 4 positions, evidence rules, kill switch.
 * 2026-10-30 (Run B): no Monday proposals; C1 watchlist (QCOM 11/5); the VIX-gate decision for C1 goes to Sunday with the split data.
 * 2026-10-29 (Run B): C1 down-gap puts exit as tested (hold 5 sessions, -50% backstop, no take-profit); INTC put O011 for Friday; AMZN fallback rejected.
 * 2026-10-29 (strategy review, owner's ask): evidence rules (edges need a script or a study; retired arguments listed); earnings continuation

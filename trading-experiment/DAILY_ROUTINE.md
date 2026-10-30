@@ -141,7 +141,8 @@ happens: nothing new fills.
    These are non-binding. Tomorrow's Run A will re-judge them with fresh information. Use `--max-price` so a gap cannot make us chase. Every order needs a written thesis.
    Options strategy (current): propose contracts by OCC symbol, sized in premium dollars, with the -50% premium stop, e.g.
    `tracker.py order add --ticker NVDA261120C00225000 --side buy --usd 250 --tier O --stop-pct 50 --max-price 6.60 --thesis "..."`.
-   Premium can only come from cash above the $1,000 floor (the code refuses more). Plan shots per `playbook.md`.
+   Since 2026-10-30 there is no cash floor and no single-order cap (owner); premium may use any cash up to the $2,000 capital cap. Each order's thesis states its size and why.
+   Briefs rewrite their rules section from RULES.md and playbook.md each night; never copy it from an older brief.
 4. **Journal and playbook.** Append to `journal.md`: date, two-line market recap, equity versus SPY, which orders filled and why they had been confirmed, agent opinions in one line each,
    the proposals queued, one lesson. If a lesson changes how we trade, edit `playbook.md` and log it in the changelog.
 5. **Publish.** `python3 trading-experiment/tracker.py report`, refresh the dashboard per `DASHBOARD.md`, then commit and push:
