@@ -35,6 +35,8 @@ Fixed choices (written before the numbers were looked at):
   * ^VIX split (POST-HOC, no verdict): the review's down-gap >= 8% sample (gap <= -0.08, ex5 and base5 present), split at the
     reaction-day ^VIX close <= 22 vs > 22 (the O011 gate; at 14:43 we would see the live value). Per cell: n, continued
     (ex5 < 0), mean abnormal 5d = -(ex5 - base5), and EV per $ from earnings_analysis.option_ratio at IV = 1.3 x rv_pre.
+  * Added after the first run (before any conclusion was written): section D, the same option_ratio over the whole
+    down-gap >= 8% sample at each name's k = expected put IV / flat RV20 (mild and shock), as options-vol did for INTC.
 """
 import csv
 import importlib.util
@@ -61,6 +63,7 @@ PRINTS = {  # ticker: (t-1 = last pre-print session, reaction day, sessions betw
 GATE_X = 1.3
 MILD = 1.04
 N = NormalDist()
+K_BY_NAME = []  # (ticker, k mild, k shock), filled in section B, priced in section D
 
 
 def load(path, name):
@@ -185,20 +188,22 @@ def main():
               + ' '.join(f'{g:+.1%}' for g in gaps[-12:]))
         print(f'   chain-implied P(reaction-day <= -8%) {p8:.1%} (normal, sd {sd_day:.1%})')
         exp_mild, exp_shock = x * MILD, x * shock
+        K_BY_NAME.append((s, exp_mild / rv_flat, exp_shock / rv_flat))
         cap = GATE_X * rv_flat
         print(f'   expected post-gap 11/20 put IV: mild {exp_mild:.1%}, INTC-shock {exp_shock:.1%} vs cap {cap:.1%} '
               f'(flat RV20) -> mild {"passes" if exp_mild <= cap else "FAILS"}, shock {"passes" if exp_shock <= cap else "FAILS"}')
-        S = 0.90 * cl[last]
-        for exp in (nov20, nov27):
-            T = (exp - react).days / 365
-            for q in sorted((q for q in rows if q['exp'] == exp and q['cp'] == 'P' and 0.80 * S <= q['K'] <= S),
-                            key=lambda q: q['K']):
-                pm, dm = ovg.bs_put(S, q['K'], T, exp_mild, r)
-                ps, dsh = ovg.bs_put(S, q['K'], T, exp_shock, r)
-                if not (0.30 <= -dm <= 0.45 and 0.30 <= -dsh <= 0.45) or q['oi'] < 1000:
-                    continue
-                print(f'   {q["sym"]} OI {q["oi"]} tonight {q["bid"]:.2f}/{q["ask"]:.2f} | @S {S:.2f} (-10%), T {(exp - react).days}d:'
-                      f' mild {pm:.2f} d {dm:.2f}; shock {ps:.2f} d {dsh:.2f}')
+        for gap in (0.92, 0.90, 0.88):  # 0.92 and 0.88 added after the first run (strike map for the trigger text)
+            S = gap * cl[last]
+            for exp in (nov20, nov27):
+                T = (exp - react).days / 365
+                for q in sorted((q for q in rows if q['exp'] == exp and q['cp'] == 'P' and 0.80 * S <= q['K'] <= S),
+                                key=lambda q: q['K']):
+                    pm, dm = ovg.bs_put(S, q['K'], T, exp_mild, r)
+                    ps, dsh = ovg.bs_put(S, q['K'], T, exp_shock, r)
+                    if not (0.30 <= -dm <= 0.45 and 0.30 <= -dsh <= 0.45) or q['oi'] < 1000:
+                        continue
+                    print(f'   {q["sym"]} OI {q["oi"]} tonight {q["bid"]:.2f}/{q["ask"]:.2f} | @S {S:.2f} ({gap - 1:+.0%}), '
+                          f'T {(exp - react).days}d: mild {pm:.2f} d {dm:.2f}; shock {ps:.2f} d {dsh:.2f}')
 
     # ---------------------------------------------------------------- C. VIX split (post-hoc)
     print('\n== C. POST-HOC: C1 down-gap >= 8% sample split by reaction-day ^VIX close ==')
@@ -235,6 +240,18 @@ def main():
         _, tcl = ea.cluster_t(ab, [(e['d'].year, e['d'].month) for e in evs])
         print(f'{label}: n {len(evs)}, continued {cont:.0%}, abnormal 5d {ab.mean():+.2%} (t_cl {tcl:.1f}), '
               f'put EV/$ {rat.mean():.2f} (median {np.median(rat):.2f}, wins {np.mean(rat > 1):.0%})')
+
+    # D. EV per $ at each name's expected k = expected put IV / flat RV20 (the review's model, whole sample, no skew)
+    print('\n== D. EV per $ of the C1 put at k = expected IV / RV20 (option_ratio, n 216, 25 DTE, delta 0.35) ==')
+    ret = np.array([e['ret5'] for e in sample])
+    cal = np.array([e['cal5'] for e in sample])
+    rvs = np.array([e['rv'] for e in sample])
+    for s, k_m, k_s in K_BY_NAME:
+        out = []
+        for k in (k_m, k_s):
+            rat = ea.option_ratio(ret, cal, 25, 0.35, k * rvs, k * rvs, np.zeros(len(sample), bool))
+            out.append(f'k {k:.2f}: EV {rat.mean():.2f}')
+        print(f'{s}: mild ' + out[0] + '; shock ' + out[1])
 
     cell(sample, 'all')
     cell([e for e in sample if e['vix'] <= 22], 'VIX <= 22')
