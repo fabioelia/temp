@@ -542,3 +542,11 @@ delegated to me on 10/26, and the owner can override it.
 spread <= 5%; OI >= 1000; gates). Exits: time exit 11/6 14:43; stop INTC >= 1.04x the 10/30 close; -50% backstop. No Anthropic link.
 **Lesson:** a confirmed edge is a whole package. Bolting our generic +50% target onto the tested 5-day hold turned an EV-1.0+ setup into an EV-0.97 one.
 **Dashboard:** five files refreshed (summary b360bf04, equity f4adc339, positions 03629ac6, orders c8dec764, trades 6f490994); the old files were deleted.
+
+## 2026-10-30 (Fri) Pre-open (09:19 ET)
+**Premarket (Yahoo, unverified; Yahoo's "previous close" field is stale, so these are vs the 10/29 closes):** INTC 68.09, about -26% vs 92.07 (24/7 Wall St:
+"Intel plunges 25%"); AMZN 226.15, about -7.2% vs 243.79 (just above the 224.29 line; the AMZN fallback is shadow only anyway). NQ -2.7%, ES -1.1%, RTY -0.6%
+("AI spending worries"); ^VIX 18.6, ^TNX 4.93, CL=F 103.79 (+1.8%; Saudi attacks vs US-Iran diplomacy). No new Anthropic filing.
+**O011 unchanged** (not confirmed in this run). At INTC near 68, the 72.5P reference would be in the money, so the 14:43 run must pick the 11/20 strike that
+sits at delta 0.30-0.45 (roughly the 62-65 strikes) and apply the IV cap of 70.6% and ask cap of 3.00 to that strike. Gaps of 15% or more continued less often in the review (19 of 34)
+than the 8%+ pool; the rule still applies as written.
