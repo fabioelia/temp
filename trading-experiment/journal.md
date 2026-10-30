@@ -598,3 +598,16 @@ playbook's buy caps ($250-400 shots, the $450 maximum, the $1,700 pause line, th
 **Kept:** the $2,000 capital cap ("2k to work with"); 4 fills a day (the owner's original challenge rule); no same-day round trips (pattern-day-trader safety);
 at most 4 positions; never average down; the evidence rules and gates; the gate tickets and the kill switch. Sizing becomes a written judgment in each order's
 thesis. **Consequence, stated plainly:** the whole $2,000 can now be lost, and the old "halt and talk at -$1,000" stop is gone unless the owner wants it back.
+
+## 2026-10-30 (Fri, evening) Alternative data review: the owner's ask
+**Owner: "Research into alternative data sources."** Access check plus pre-registered claims (b0291c9), then three test agents. Summary: `research/alt-data/README.md`.
+* **Reachable for free with history:** FINRA daily short volume (2019+), Wikipedia pageviews (2015+), the Cboe P/C archive.
+* **Live only:** StockTwits, Polymarket, Kalshi, Cboe daily statistics, Robinhood politician trades (about a year).
+* **Blocked:** Google Trends, Reddit, TSA, GitHub, House Stock Watcher.
+**Verdicts:**
+* FINRA heavy shorting predicts weakness: REJECTED (n 3,788, the wrong sign). Light shorting: WEAK.
+* Wikipedia attention spikes: REJECTED (4,491 events; no return or volatility effect).
+* Put/call contrarian: WEAK, and negative 2019-2026.
+* Congress, WallStreetBets, skew and sentiment: untestable here; the literature says the edges faded.
+**Applied:** prediction-market odds become a macro-brief input (`research/alt-data/scripts/predmkt.py`). The rejected and weak signals join the playbook's retired
+arguments. **Process note:** the put/call agent ran one read-only `git status` against the brief.

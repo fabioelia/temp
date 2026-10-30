@@ -33,6 +33,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - a follow-through day as an edge figure (WEAK, 10-day t 0.9; IWM 0.95);
   - "IV is low" as a reason to buy (REJECTED);
   - the pre-earnings run-up through calls (tie-break only).
+  - Alternative data (review 2026-10-30, `research/alt-data/README.md`): FINRA short-volume spikes (REJECTED), Wikipedia attention spikes (REJECTED), the put/call
+    ratio (WEAK, decayed). Prediction-market odds (`research/alt-data/scripts/predmkt.py`) are an input to the macro brief, not a signal.
 
 ## What to buy
 * **Underlyings:** liquid names and ETFs with large, dated catalysts: NVDA, MSFT, META, AMZN, GOOGL, TSLA, SMH, QQQ, SPY, IWM. TLT calls are the rates/credit hedge (they pay
@@ -220,6 +222,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-10-30 (alternative-data review, owner's ask): no free alt-data signal passes; short volume, attention and put/call are retired as arguments; prediction-market odds are adopted as a macro input.
 * 2026-10-30 (owner, 2026-10-30: "Remove caps on place a buy. You have 2 k to work with"): no cash floor, no single-order cap, no pacing caps; the loss limit is the full $2,000. Kept: 4 fills a day, 4 positions, evidence rules, kill switch.
 * 2026-10-30 (Run B): no Monday proposals; C1 watchlist (QCOM 11/5); the VIX-gate decision for C1 goes to Sunday with the split data.
 * 2026-10-29 (Run B): C1 down-gap puts exit as tested (hold 5 sessions, -50% backstop, no take-profit); INTC put O011 for Friday; AMZN fallback rejected.
