@@ -12,7 +12,8 @@ Claimed sign (Da, Engelberg & Gao 2011): attention spikes are followed by HIGHER
 reversal within the year), so the claimed sign is positive at 5 and at 20 sessions (cumulative); the call is the
 claim-direction option.
 
-Implementation choices FIXED BEFORE ANY RESULT WAS COMPUTED (2026-10-30 ~18:40 ET). claims.md leaves these open:
+Implementation choices FIXED BEFORE ANY RESULT WAS COMPUTED (2026-10-30, before the first run at 18:34 ET; the only
+change after it added the descriptive all-days mean RV5/RV20 columns, no test changed). claims.md leaves these open:
   Attention series
     * Wikimedia per-article daily views, en.wikipedia, all-access, agent=user (spiders excluded), UTC days.
     * Renamed articles: views of every title that served as the company's article are summed by day (a title missing on
@@ -59,7 +60,22 @@ Implementation choices FIXED BEFORE ANY RESULT WAS COMPUTED (2026-10-30 ~18:40 E
   Post-hoc rows (labelled 'post-hoc', declared here before any result, never used for a verdict):
     (a) episode onsets only (no spike for that ticker in the 5 calendar days before D);
     (b) real-time threshold: Ratio_D >= the 95th percentile of the stock's Ratio over days before D (>= 365 valid days);
-    (c) the reversal leg: excess return from session +5 to +20 after entry.
+    (c) the reversal leg: excess return from session +5 to +20 after entry;
+    (d) idiosyncratic spikes: drop spike days on which >= 5 of the 25 names spike the same UTC day (added after the
+        continuity check below, still before any outcome: platform-wide traffic shifts such as 2021-07-01).
+  Data construction, from the continuity check of the raw series (done before any outcome was computed):
+    * All 25 current titles return data. Renamed articles, spliced by summing the old and new titles (the sum has no
+      level break): Amazon.com -> Amazon_(company) (2017); Tesla_Motors -> Tesla,_Inc. (2017-02); Salesforce.com ->
+      Salesforce (2020-01); Adobe_Systems -> Adobe_Inc. (2018-10); Cisco_Systems -> Cisco (2022-02);
+      Advanced_Micro_Devices -> AMD (2022-12); Avago_Technologies -> Broadcom_Limited (2016) -> Broadcom_Inc. (2018)
+      -> Broadcom (2023-07) (before 2016 the 'Broadcom' title also carries interest in the acquired Broadcom Corp).
+    * META: Facebook,_Inc. -> Meta_Platforms (2021-10-28) splices cleanly, but Facebook,_Inc. was itself only a
+      redirect (about 60 views a day) until the company article was split out of 'Facebook' (the social network) on
+      2019-11-30. No company article exists before that, so META's series starts 2019-11-30 (SERIES_START).
+    * Alphabet_Inc. starts 2015-08-10 (the article was created when Alphabet was announced).
+    * Level shifts common to several articles (e.g. 2021-07-01: Facebook,_Inc. 6k -> 29k, Amazon 10k -> 35k a day)
+      look like platform-wide traffic, not company news. They are kept in the pre-registered test (data as is) and
+      removed in post-hoc row (d).
 """
 import bisect
 import csv
@@ -95,6 +111,8 @@ CIKS = {"AAPL": [320193], "MSFT": [789019], "GOOGL": [1652044, 1288776], "AMZN":
         "AMD": [2488], "ORCL": [1341439, 777676], "CRM": [1108524], "ADBE": [796343], "QCOM": [804328],
         "CSCO": [858877], "IBM": [51143], "TXN": [97476], "MU": [723125], "JPM": [19617], "BAC": [70858],
         "XOM": [2115436, 34088], "CVX": [93410], "WMT": [104169], "COST": [909832]}
+SERIES_START = {"META": date(2019, 11, 30)}  # see 'Data construction' above
+COMMON_N = 5
 PERIODS = [("full", START, END), ("2015-2020", START, date(2020, 12, 31)), ("2021-2026", date(2021, 1, 1), END),
            ("last10y", date(2016, 10, 30), END)]
 
@@ -237,12 +255,14 @@ def main():
     def q_of(d):  # calendar quarter label
         return f'{d.year}Q{(d.month - 1) // 3 + 1}'
 
-    allday, events, notes = [], [], []
+    allday, events, notes, att = [], [], [], {}
+    # pass 1: attention ratios and spikes for every name (needed for the cross-name count of post-hoc (d))
     for tk, titles in TITLES.items():
         views, used, missing = load_views(cache, titles)
-        notes.append((tk, used, missing))
         v = np.array([views.get(d, 0) for d in days], float)
         v[v <= 0] = np.nan
+        if tk in SERIES_START:
+            v[np.array([d < SERIES_START[tk] for d in days])] = np.nan
         ratio = np.full(len(days), np.nan)
         for i in range(60, len(days)):
             w = v[i - 60:i]
@@ -267,7 +287,14 @@ def main():
                 bisect.insort(vals_sorted, ratio[i])
         # post-hoc (a): onset = no spike in the 5 calendar days before
         onset = np.array([spike[i] and not spike[max(0, i - 5):i].any() for i in range(len(days))])
+        att[tk] = (valid, ratio, spike, rt, onset, thr)
+        notes.append((tk, used, missing, thr, int(spike.sum()), int(valid.sum()),
+                      min((d for d, ok in zip(days, valid) if ok), default=None)))
+    common = np.sum([att[tk][2] for tk in TITLES], axis=0)  # names spiking on each UTC day
 
+    # pass 2: events and all-days outcomes
+    for tk in TITLES:
+        valid, ratio, spike, rt, onset, thr = att[tk]
         pm = load_prices(cache, tk)
         P = np.array([pm.get(d, np.nan) for d in sessions])
         earn = np.array(earnings_sessions(ecache, tk, sess_ord))
@@ -309,9 +336,10 @@ def main():
             if t >= nS:
                 continue
             e = ev_by_t.setdefault(t, {'spike': False, 'rt': False, 'onset': False, 'near': False, 'ratio': 0.0,
-                                       'spike_days': []})
+                                       'spike_days': [], 'common': False})
             if spike[i]:
                 e['spike'] = True
+                e['common'] |= bool(common[i] >= COMMON_N)
                 e['onset'] |= bool(onset[i])
                 e['near'] |= near_earn(spike_sess(d))
                 e['ratio'] = max(e['ratio'], float(ratio[i]))
@@ -333,7 +361,6 @@ def main():
                 e.update(ev_by_t[t])
                 e['threshold'] = thr
                 events.append(e)
-        notes[-1] = notes[-1] + (thr, int(spike.sum()), int(valid.sum()))
 
     # ---------------- ticker-year baselines over all days
     def add_base(key, vals_fn):
@@ -426,6 +453,7 @@ def main():
                             'share_rv5_gt_1.1rv20': float((rv5 > IV_MULT * rv20).mean()),
                             'var_ratio_vs_1.1rv20': float(np.mean(rv5 ** 2 / (IV_MULT * rv20) ** 2)),
                             'base_n': len(ba), 'base_mean': float(np.mean(np.log(b5 / b20))),
+                            'base_rv5_mean': float(b5.mean()), 'base_rv20_mean': float(b20.mean()),
                             'base_ratio_median': float(np.median(b5 / b20)),
                             'base_share_rv5_gt_1.1rv20': float((b5 > IV_MULT * b20).mean()),
                             'base_var_ratio_vs_1.1rv20': float(np.mean(b5 ** 2 / (IV_MULT * b20) ** 2))})
@@ -464,11 +492,15 @@ def main():
     run_test('post-hoc (b): real-time expanding 95th pct threshold', 'post-hoc', lambda e: e['rt'])
     run_test('post-hoc (b): real-time threshold, away from earnings', 'post-hoc',
              lambda e: e['rt'] and not e.get('near_rt', False))
+    run_test(f'post-hoc (d): idiosyncratic spikes (< {COMMON_N} of 25 names spiking that day)', 'post-hoc',
+             lambda e: e['spike'] and not e['common'])
+    run_test(f'post-hoc (d): idiosyncratic spikes, away from earnings', 'post-hoc',
+             lambda e: e['spike'] and not e['common'] and not e['near'])
 
     cols = ['claim', 'test', 'label', 'metric', 'horizon', 'period', 'n', 'n_tickers', 'clusters', 'cluster', 'mean',
             'median', 'hit_rate', 'base_n', 'base_mean', 'base_median', 'base_hit_rate', 'mean_abn', 'median_abn',
             't_iid', 't_cl', 'ci_lo', 'ci_hi', 'worst', 'worst_abn', 'mean_abn_net_cost', 'p_win', 'base_p_win', 'rv5_mean',
-            'rv20_mean', 'ratio_median', 'base_ratio_median', 'share_rv5_gt_1.1rv20', 'base_share_rv5_gt_1.1rv20',
+            'base_rv5_mean', 'rv20_mean', 'base_rv20_mean', 'ratio_median', 'base_ratio_median', 'share_rv5_gt_1.1rv20', 'base_share_rv5_gt_1.1rv20',
             'var_ratio_vs_1.1rv20', 'base_var_ratio_vs_1.1rv20', 'verdict']
     with out_csv.open('w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction='ignore')
@@ -477,7 +509,7 @@ def main():
             w.writerow({k: (f'{v:.5f}' if isinstance(v, (float, np.floating)) else v) for k, v in r.items()
                         if k in cols})
     if ev_csv:
-        keys = ['ticker', 'entry', 'spike_days', 'ratio', 'threshold', 'spike', 'onset', 'near', 'rt', 'ex5', 'ex20',
+        keys = ['ticker', 'entry', 'spike_days', 'ratio', 'threshold', 'spike', 'onset', 'near', 'common', 'rt', 'ex5', 'ex20',
                 'rv20', 'rv5', 'call', 'put']
         with ev_csv.open('w', newline='') as fh:
             w = csv.DictWriter(fh, fieldnames=keys, extrasaction='ignore')
@@ -485,8 +517,10 @@ def main():
             for e in events:
                 w.writerow({k: (';'.join(str(x) for x in e[k]) if k == 'spike_days' else
                                 (f'{e[k]:.5f}' if isinstance(e.get(k), float) else e.get(k))) for k in keys})
-    for tk, used, missing, thr, nsp, nval in notes:
-        print(f'{tk:5s} titles={used} missing={missing} p95={thr:.2f} spike_days={nsp} valid_days={nval}')
+    for tk, used, missing, thr, nsp, nval, first in notes:
+        print(f'{tk:5s} titles={used} missing={missing} p95={thr:.2f} spike_days={nsp} valid_days={nval} '
+              f'first_valid={first}')
+    print('spike days by cross-name count:', {int(k): int((common == k).sum()) for k in np.unique(common) if k > 0})
     print('events:', sum(e['spike'] for e in events), 'away:', sum(e['spike'] and not e['near'] for e in events),
           'all days:', len(allday))
 
