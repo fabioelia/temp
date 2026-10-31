@@ -1,0 +1,2 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-25,catalyst,MSFT261120P00480000,5.10,Robinhood=Cboe 10/23 15:59:59 ET (pulled 10/25 18:40 ET),10/28 ~15:30 after presser: MSFT 500-550; event sigma (10/30 straddle strip) <=6.2%; highest 11/20 put <=0.925x spot with ask<=4.50 spread<=5% OI>=1000 (walk 485->470); buy 1; sell 10/29 14:43,3

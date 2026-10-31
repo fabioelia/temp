@@ -1,0 +1,58 @@
+[
+ {
+  "id": "O008",
+  "created": "2026-10-28",
+  "side": "buy",
+  "ticker": "GOOGL261120P00280000",
+  "size": "1 sh",
+  "stop": "-50% of fill",
+  "target": "+50% of fill",
+  "max_price": 4.0,
+  "status": "cancelled",
+  "state": "Proposal, not yet confirmed",
+  "reason": "Superseded by O009: the strategy review (research/strategy-review/earnings.md, C1) reproduced down-gap continuation (>=8%, n 216, 5-session excess +0.90%, t 2.5; 2015-26 t 2.4) but put EV/$ 1.00 (CI 0.91-1.11) = break-even unless the put's IV <= ~1.3x pre-print RV20 (GOOGL ~28-31%). O009 adds that IV gate; the persona figures cited in O008 (EV 1.07-1.18, n 93) did not reproduce.",
+  "thesis": "CONDITIONAL, conf 2 (catalyst + options-vol, red-team MODIFY applied). GOOGL post-earnings continuation after a real revenue miss (10/28 8-K; ~-10.5% after hours to 290.87). Confirm at the 10/29 14:43 check ONLY if all hold on live quotes: GOOGL <= 308.65 (-5% vs the 324.89 close) AND below its 10/29 open; standing gates ^TNX <= 5.10, core PCE m/m < 0.40%, ^VIX <= 22, HY OAS < 3.46%. Contract: the 11/20 put at delta 0.30-0.45 with live ask <= 4.00 (keeps a -50% loss above the $1,700 pause line), spread <= 5%, OI >= 1000; this 280P is the reference, and Run A cancels it and re-adds the qualifying strike if another one fits. 1 lot only; no widening of any filter. Exits fixed at entry: a GTC sell at +50% placed that evening; stop: GOOGL back above its 10/29 open at a 14:43 check, the -50% premium backstop; out 11/5 14:43. Edge: pooled continuation EV/$ 1.07-1.18 (n 93). Not the consensus view (buy the dip). Anthropic link disclosed: GOOGL is an Anthropic investor and cloud partner, but the thesis rests on GOOGL's own 8-K figures and a mega-cap base rate, not on Anthropic. If it fills, Friday's INTC shot is capped at $355 (combined <= $800)."
+ },
+ {
+  "id": "O009",
+  "created": "2026-10-29",
+  "side": "buy",
+  "ticker": "GOOGL261120P00280000",
+  "size": "1 sh",
+  "stop": "-50% of fill",
+  "target": "+50% of fill",
+  "max_price": 4.0,
+  "status": "cancelled",
+  "state": "Proposal, not yet confirmed",
+  "reason": "Re-added as O010 with gtd 2026-10-29: the default gtd let it fill on Friday 10/30, but the thesis is a 10/29-only entry.",
+  "thesis": "CONDITIONAL, conf 2; replaces O008 after the strategy review (research/strategy-review/earnings.md). Evidence (reproducible script): mega-cap down gaps >= 8% continued 5 sessions (n 216, +0.90% beyond SPY, t 2.5, 2015-26 t 2.4) and fade by day 10; the model put EV/$ is 1.00 = break-even, positive only when the put's own IV <= ~1.3x pre-print RV20. Confirm at the 10/29 14:43 check ONLY if ALL hold on live quotes: (1) GOOGL <= 308.65 (-5% vs the 324.89 close) AND below its 10/29 open; (2) the chosen put's quoted IV <= 30% (GOOGL RV20 to 10/23 was 21%; no exceptions; it does not fire above 30%); (3) standing gates ^TNX <= 5.10, core PCE m/m < 0.40%, ^VIX <= 22, HY OAS < 3.46%. Contract: the 11/20 put at delta 0.30-0.45 with live ask <= 4.00 (a -50% loss stays above the $1,700 pause line), spread <= 5%, OI >= 1000; this 280P is the reference, and Run A re-adds the qualifying strike if another one fits. 1 lot; no widening. Exits fixed at entry: a GTC sell at +50% placed that evening; stop: GOOGL back above its 10/29 open at a 14:43 check, the -50% backstop; out 11/5 14:43 (the effect is gone by session 10). Not the consensus view (buy the dip). Anthropic link disclosed: GOOGL is an Anthropic investor and cloud partner; the thesis is GOOGL's own 8-K figures and a pooled mega-cap base rate, not Anthropic."
+ },
+ {
+  "id": "O010",
+  "created": "2026-10-29",
+  "side": "buy",
+  "ticker": "GOOGL261120P00280000",
+  "size": "1 sh",
+  "stop": "-50% of fill",
+  "target": "+50% of fill",
+  "max_price": 4.0,
+  "status": "cancelled",
+  "state": "Proposal, not yet confirmed",
+  "reason": "Filters failed at the 14:44 check (Cboe chain): GOOGL 282.25 (-13.1%) was below 308.65 and below its 286.77 open, and core PCE m/m was 0.3% (BEA), ^TNX 4.989, ^VIX 16.90; but every 11/20 put quoted IV 32% (> the 30% cap from the strategy review), and the delta 0.30-0.45 strikes cost 5.45 (275P, 6% spread) and 7.55 (280P), above the 4.00 cap. No widening, per the thesis.",
+  "thesis": "CONDITIONAL, conf 2; replaces O008 after the strategy review (research/strategy-review/earnings.md). Evidence (reproducible script): mega-cap down gaps >= 8% continued 5 sessions (n 216, +0.90% beyond SPY, t 2.5, 2015-26 t 2.4) and fade by day 10; the model put EV/$ is 1.00 = break-even, positive only when the put's own IV <= ~1.3x pre-print RV20. Confirm at the 10/29 14:43 check ONLY if ALL hold on live quotes: (1) GOOGL <= 308.65 (-5% vs the 324.89 close) AND below its 10/29 open; (2) the chosen put's quoted IV <= 30% (GOOGL RV20 to 10/23 was 21%; no exceptions; it does not fire above 30%); (3) standing gates ^TNX <= 5.10, core PCE m/m < 0.40%, ^VIX <= 22, HY OAS < 3.46%. Contract: the 11/20 put at delta 0.30-0.45 with live ask <= 4.00 (a -50% loss stays above the $1,700 pause line), spread <= 5%, OI >= 1000; this 280P is the reference, and Run A re-adds the qualifying strike if another one fits. 1 lot; no widening. Exits fixed at entry: a GTC sell at +50% placed that evening; stop: GOOGL back above its 10/29 open at a 14:43 check, the -50% backstop; out 11/5 14:43 (the effect is gone by session 10). Not the consensus view (buy the dip). Anthropic link disclosed: GOOGL is an Anthropic investor and cloud partner; the thesis is GOOGL's own 8-K figures and a pooled mega-cap base rate, not Anthropic."
+ },
+ {
+  "id": "O011",
+  "created": "2026-10-29",
+  "side": "buy",
+  "ticker": "INTC261120P00072500",
+  "size": "1 sh",
+  "stop": "-50% of fill",
+  "target": "",
+  "max_price": 3.0,
+  "status": "cancelled",
+  "state": "Proposal, not yet confirmed",
+  "reason": "Gate failed at the 14:44 check: live ^VIX 22.58 (Robinhood index quote 14:44:01 ET; Yahoo 22.92 at 14:19) > the 22 standing gate in the thesis. Everything else passed: INTC 63.61 (-30.9%) <= 84.70; the 11/20 60P had delta -0.32, IV 68% <= 70.6%, ask 2.42 <= 3.00, spread 3%, OI 5195; ^TNX 4.933. No widening, per the thesis.",
+  "thesis": "CONDITIONAL, C1 down-gap put (strategy review: mega-cap down gaps >= 8% continue 5 sessions, n 216, 62%, +0.90% beyond SPY, t 2.5; put EV 1.00 at an IV of 1.3x RV20). All four personas back it; red-team MODIFY applied. INTC closed 92.07 on 10/29 and was ~74.62 after hours (-19%) on a Q4 guide miss ($15.0-16.0B vs $17.07B LSEG); the 10/14 blast is minor; INTC's own record is 11/14 lower after 5 sessions. Confirm at the 10/30 14:43 check ONLY if ALL hold on live quotes: (1) INTC <= 84.70 (-8% vs 92.07); (2) the chosen 11/20 put's quoted IV <= 70.6% (1.3x the pre-print RV20 of 54.3%, research/2026-10-29/scripts/options_vol_gate.py); (3) delta 0.30-0.45, live ask <= 3.00 (1 lot, so a -72% weekend gap keeps equity above $1,700), spread <= 5%, OI >= 1000; (4) standing gates ^TNX <= 5.10, ^VIX <= 22, HY OAS < 3.46% (3.14 on 10/28). The 72.5P is the reference; Run A re-adds the qualifying strike if another one fits; no widening. Exits as the C1 rule was confirmed (playbook Exits exception): NO take-profit and no resting GTC; time exit at the 11/6 14:43 check (session 5); thesis stop INTC >= 1.04x its 10/30 close at a 14:43 check; the -50% backstop. Edge: C1 EV 1.00 at the gate, 1.14 at the expected entry IV of 54% (options-vol model, no skew). The CL=F and below-the-open conditions were dropped (no script; post-hoc EV 0.99 vs 1.04). AMZN fallback rejected (shadow only). No Anthropic link."
+ }
+]

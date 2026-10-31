@@ -1,0 +1,6 @@
+date,persona,contract,ask_at_trigger,source
+2026-10-30,options-vol,INTC261120P00072500,10.10,Cboe delayed chain 14:43 ET (bid 9.65; IV 66%; delta -0.77; INTC 63.61); price condition met but the delta band and the 3.00/4.00 caps failed; logged so the shadow book marks from today's ask, not the pre-print 0.49; not taken
+2026-10-30,catalyst,INTC261120P00072500,10.10,Cboe delayed chain 14:43 ET (bid 9.65); same contract as options-vol; price condition met, ask cap failed; not taken
+2026-10-30,momentum,INTC261120P00070000,8.00,Cboe delayed chain 14:43 ET (bid 7.80; IV 65%; delta -0.69); price condition met, delta band and ask cap failed; not taken
+2026-10-30,macro,INTC261120P00070000,8.00,Cboe delayed chain 14:43 ET (bid 7.80); same contract as momentum; price condition met, ask cap failed; not taken
+2026-10-30,chair,INTC261120P00060000,2.42,Cboe delayed chain 14:43 ET (bid 2.35; IV 68%; delta -0.32; OI 5195); the O011 qualifying strike; every contract filter passed but the ^VIX <= 22 gate failed (22.58 live); not taken
