@@ -1,0 +1,5 @@
+{
+  "name": "trading-guard",
+  "version": "0.1.0",
+  "description": "Enforces the AI trading experiment's live-mode rules at the harness: Robinhood orders only with a live.py gate ticket, kill switch, account and tool limits, append-only ledgers"
+}

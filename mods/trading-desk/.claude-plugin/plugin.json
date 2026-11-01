@@ -1,0 +1,6 @@
+{
+  "name": "trading-desk",
+  "version": "0.1.0",
+  "description": "A pane beside the chat for the AI trading experiment: equity vs SPY, goal pace, positions, pending orders, New York market clock and order cutoff, kill-switch state, and an owner's /kill-switch",
+  "types": "./types/index.d.ts"
+}
