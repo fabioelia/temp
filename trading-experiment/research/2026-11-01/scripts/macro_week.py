@@ -190,7 +190,7 @@ z5e = np.array([r['z5'] for r in el])
 bs = [rng.choice(z5e, len(z5e)).mean() / zi5 for _ in range(20000)]
 print(f'    election-week 5-session ratio 90% bootstrap CI {np.percentile(bs, 5):.2f}-{np.percentile(bs, 95):.2f}')
 # Expected moves in % for this week from the two bases
-print(f'  Expected |move| to Fri 11/6 at VIX {VIX0}: election-week z {e5:.3f} -> {e5 * VIX0 / 100 * SQ(5 / 252):.2%}; '
+print(f'  Expected |move| to Fri 11/6 at VIX {VIX0:.2f}: election-week z {e5:.3f} -> {e5 * VIX0 / 100 * SQ(5 / 252):.2%}; '
       f'VIX 16-24 base {np.nanmean(z5a[reg]) * VIX0 / 100 * SQ(5 / 252):.2%}; market straddle {straddle[5]:.2%}')
 
 # ------------------------------------------------------------------ 3. tradeable SPY contracts (model)

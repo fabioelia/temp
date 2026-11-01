@@ -158,25 +158,42 @@ def block_boot_p0(r, rng, nb=300, blk=21):
 
 
 def pick_contracts(data, u, xv):
+    """Per expiry (11/27, 11/30, 12/04) and type: the contract passing every filter (21-35 DTE, |delta| 0.30-0.45, OI >= 1,000,
+    spread <= 5% of the mid) nearest |delta| 0.375; plus, as references that may fail the OI filter, the contracts nearest 0.35 and
+    0.40 on 11/27 and 12/04 calls (D1's band)."""
     ch = jload(data, f'chain_{u}.json')
     stamp = ch['timestamp']
-    out = []
-    for exp in (date(2026, 11, 27), date(2026, 12, 4)):
+    allrows = []
+    for o in ch['data']['options']:
+        sy = o['option']
+        e = date(2000 + int(sy[-15:-13]), int(sy[-13:-11]), int(sy[-11:-9]))
+        if not o.get('iv') or not o.get('bid') or not o.get('ask'):
+            continue
+        midp = (o['bid'] + o['ask']) / 2
+        dte = (e - ENTRY).days
+        ok = 21 <= dte <= 35 and 0.30 <= abs(o['delta']) <= 0.45 and int(o.get('open_interest') or 0) >= 1000 and \
+            (o['ask'] - o['bid']) / midp <= 0.05
+        allrows.append((e, sy[-9], ok, o))
+
+    def rec(o, e, kind, tgt, ok):
+        midp = (o['bid'] + o['ask']) / 2
+        return {'underlying': u, 'contract': o['option'], 'kind': kind, 'expiry': e, 'dte': (e - ENTRY).days, 'target_delta': tgt,
+                'delta': o['delta'], 'iv': o['iv'], 'mult': o['iv'] * 100 / xv, 'bid': o['bid'], 'ask': o['ask'],
+                'spread': (o['ask'] - o['bid']) / midp, 'oi': int(o.get('open_interest') or 0), 'stamp': stamp,
+                'strike': int(o['option'][-8:]) / 1000, 'passes': ok}
+    out, seen = [], set()
+    for exp in (date(2026, 11, 27), date(2026, 11, 30), date(2026, 12, 4)):
         for kind in ('C', 'P'):
-            rows = []
-            for o in ch['data']['options']:
-                s = o['option']
-                e = date(2000 + int(s[-15:-13]), int(s[-13:-11]), int(s[-11:-9]))
-                if e != exp or s[-9] != kind or not o.get('iv') or not o.get('bid') or not o.get('ask'):
-                    continue
-                rows.append(o)
-            for tgt in (0.35, 0.40):
-                o = min(rows, key=lambda o: abs(abs(o['delta']) - tgt))
-                midp = (o['bid'] + o['ask']) / 2
-                out.append({'underlying': u, 'contract': o['option'], 'kind': kind, 'expiry': exp, 'dte': (exp - ENTRY).days,
-                            'target_delta': tgt, 'delta': o['delta'], 'iv': o['iv'], 'mult': o['iv'] * 100 / xv, 'bid': o['bid'],
-                            'ask': o['ask'], 'spread': (o['ask'] - o['bid']) / midp, 'oi': int(o.get('open_interest') or 0),
-                            'stamp': stamp, 'strike': int(o['option'][-8:]) / 1000})
+            good = [o for e, k, ok, o in allrows if e == exp and k == kind and ok]
+            if good:
+                o = min(good, key=lambda o: abs(abs(o['delta']) - 0.375))
+                out.append(rec(o, exp, kind, 0.375, True)); seen.add(o['option'])
+    for exp in (date(2026, 11, 27), date(2026, 12, 4)):
+        rows = [(ok, o) for e, k, ok, o in allrows if e == exp and k == 'C']
+        for tgt in (0.35, 0.40):
+            ok, o = min(rows, key=lambda r: abs(abs(r[1]['delta']) - tgt))
+            if o['option'] not in seen:
+                out.append(rec(o, exp, 'C', tgt, ok)); seen.add(o['option'])
     return out
 
 
@@ -222,9 +239,12 @@ def main():
                          'regime_mean': round(float(np.nanmean(ratio[reg])), 4), 'regime_n': int(reg.sum())})
     sm = mk['SPY']
     spy12 = sm['S'][H:] / sm['S'][:-H]
-    for pname, lo in (('full', date(1993, 1, 1)), ('2010-2026', date(2010, 1, 1))):
-        ok = np.array([d >= lo for d in sm['dates'][:-H]])
-        print(f'  SPY 12-session return below -2.69% (cash beats SPY): {np.mean(spy12[ok] < EQ / SPYBH):.1%} ({pname})')
+    regs = (sm['vix'][:-H] >= 17) & (sm['vix'][:-H] <= 22) & (sm['v9'][:-H] < sm['v3'][:-H])
+    for pname, lo in (('full', date(1993, 1, 1)), ('2010-2026', date(2010, 1, 1)), ('regime (post-hoc)', None)):
+        ok = regs if lo is None else np.array([d >= lo for d in sm['dates'][:-H]])
+        print(f'  SPY 12-session return below -2.69% (cash beats SPY): {np.mean(spy12[ok] < EQ / SPYBH):.1%} ({pname}, n {ok.sum()})')
+        rows.append({'section': 'cash_beats_spy', 'underlying': 'SPY', 'period': pname, 'n': int(ok.sum()),
+                     'mean': round(float(np.mean(spy12[ok] < EQ / SPYBH)), 4)})
 
     # ---- contracts
     print('\nContracts at tonight\'s skew (Cboe chain), payoffs per $ (net of half the quoted spread each way)')
@@ -258,7 +278,8 @@ def main():
                 zd[pname] = (rule(simz['B'], False)[0], rule(simz['B'], True)[0], mu)
             cost1 = c['ask'] * 100
             tag = (f"{c['contract']} ({c['kind']} d {c['delta']:+.2f}, IV {c['iv']:.1%} = {c['mult']:.2f}x {IDXQ[u][1:]}, "
-                   f"{c['bid']:.2f}/{c['ask']:.2f}, spr {c['spread']:.1%}, OI {c['oi']}, {c['dte']} DTE)")
+                   f"{c['bid']:.2f}/{c['ask']:.2f}, spr {c['spread']:.1%}, OI {c['oi']}, {c['dte']} DTE, "
+                   f"{'passes filters' if c['passes'] else 'FAILS a filter (reference only)'})")
             print(f'-- {tag}')
             spy_r = np.array([m['spy'][i + H] / m['spy'][i] if m['spy'][i] == m['spy'][i] else np.nan for i in idx])
             for pname, mask in masks.items():
@@ -292,7 +313,7 @@ def main():
                                                        for b, g in goal.items() if g[0]))
                 rows.append({'section': 'contract', 'underlying': u, 'contract': c['contract'], 'kind': c['kind'], 'delta': c['delta'],
                              'dte': c['dte'], 'iv': c['iv'], 'iv_over_index': round(c['mult'], 3), 'bid': c['bid'], 'ask': c['ask'],
-                             'spread': round(c['spread'], 4), 'oi': c['oi'], 'period': pname, 'n': s10['n'],
+                             'spread': round(c['spread'], 4), 'oi': c['oi'], 'passes_filters': c['passes'], 'period': pname, 'n': s10['n'],
                              'hold10': round(s10['ev'], 4), 't_hold10': round(s10['t'], 2), 'hedged10': round(sh['ev'], 4),
                              't_hedged10': round(sh['t'], 2), 'hold12': round(s12['ev'], 4), 'rule1': round(s1['ev'], 4),
                              't_rule1': round(s1['t'], 2), 'rule1_median': round(s1['median'], 4), 'p_plus50': round(float(h50[mask].mean()), 4),
