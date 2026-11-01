@@ -15,7 +15,7 @@ Inputs: Yahoo closes and Cboe chains with 10/30 closing quotes, fetched 11/01 22
 | Band put at -10% | $415-518 | $1,463-1,801 | $422-515 |
 | Fits; P(≤-8%) | no; 5% | no; 21% | mild only; 23% |
 
-- **Expiry conflict:** the brief's 21-35 days excludes 11/20 (15-17 DTE), but 11/27 and 12/4 band strikes all have OI under 1,000. The playbook's "two to five weeks" admits 11/20. The chair should rule.
+- **Expiry conflict:** the brief's 21-35 days excludes 11/20 (15-17 DTE), but the AMD and QCOM band strikes on 11/27 and 12/4 all have OI under 1,000. The playbook's "two to five weeks" admits 11/20. The chair should rule.
 - **Gates:** the QCOM and AMD gates are wide only because 10/30 (-11.8%, -11.5%) is in the window. Rerun RV20 nightly.
 - **Other names:** PLTR, ANET, ARM and APP are outside the sample. EDGAR (14 days): no 8-Ks, only 10b5-1 sales.
 
