@@ -22,6 +22,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     | 1.30x and above | 0 | $0 | $0 |
 
     The caps are gone, but the evidence still says C1 is a small bet.
+  - **Red-team (W44):** these figures are fragile. At 1.25x, f* is 0 in 38% of bootstrap resamples. **Rule: buy one contract only when full Kelly covers its
+    cost; otherwise no trade.** The method guards the bankroll; it does not raise the odds of $2,200. Any bet above Kelly would be a deliberate gamble, and
+    only the owner can choose one, as a named budget.
   - Still in force: at most 4 fills a day, at most 4 positions, never average down, and the evidence rules and gates.
   - (Before: $250-400 shots, max $450, a $1,700 pause line.)
 * (Before 10/24) $4,000 needed +$2,000 from a $1,000 risk budget, about a 3x on premium; judged 8-20% at best.
@@ -73,8 +76,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   intraday spike is banked. Once a 14:43 check shows +40% or more, the stop moves to cost.
 * **C1 rule, final (W44 review, 2026-11-01):** a mega-cap down gap of 8% or more on the reaction day; a put at delta 0.30-0.45 bought at that day's 14:43
   check, only if its quoted IV is at most 1.3x the pre-print RV20; spread at most 5%; OI at least 1000; sized with sizing.py.
-  - **No market gates** (^VIX, ^TNX, HY OAS): they were built for long calls. The C1 data shows no VIX dependence (p 0.61; since 2010 it is 1.05 vs
-    1.04), and stress helps a put.
+  - **No market gates** (^VIX, ^TNX, HY OAS), **provisional**: the tested sample had none, so this matches the test. But the VIX split is underpowered
+    (p 0.61), and the stock edge sits at VIX <= 22 (t 3.0 vs 0.3). ^TNX and HY OAS were never tested. Revisit with more data.
   - Exit as below.
 * **Exception, C1 down-gap puts (2026-10-29):** they use the exit the strategy review confirmed: hold to session 5 (time exit at that day's 14:43 check),
   with the -50% backstop and no take-profit, and no resting GTC is placed. Two model checks found that a +50% target cuts this setup's EV below 1:

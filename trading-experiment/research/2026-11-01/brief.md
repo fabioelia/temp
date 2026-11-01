@@ -15,6 +15,8 @@ propose. Never place orders, never edit files other than your own outputs, and *
   - Each proposal states its size and why, using the Kelly method: `research/strategy-review/scripts/sizing.py` on the setup's tested per-$ payoffs; quote
     full, half and quarter Kelly; plan at half-Kelly.
   - For C1 puts at IV/RV20 of 1.00x, 1.15x and 1.25x, half-Kelly is about $163, $86 and $34; at 1.3x or above it is $0.
+  - Red-team (W44): the Kelly figure is fragile. At 1.25x it is 0 in 38% of bootstrap resamples, and half-Kelly is usually less than one contract.
+    **Rule:** one contract only when full Kelly covers its cost; otherwise no trade. Under these rules P($2,200) is about 0 and P(beat SPY) about 25%.
 * **Still binding:** the $2,000 capital cap, at most 4 fills a day, no same-day round trips, at most 4 positions, never average down.
 * **Contract:** 21-35 days to expiry (never under 3), delta 0.30-0.45, OI at least 1,000, spread at most 5% of the mid (10% for USO-type ETFs).
 * **Evidence rules:** an edge figure counts only from a committed script or a cited published study. Retired arguments, which may not be cited as support:
