@@ -148,6 +148,8 @@ def ideas(start, end):
     lo = (date.fromisoformat(start) - timedelta(days=2)).isoformat()
     out = []
     for f in sorted((T.ROOT / "research").glob("*/ideas-*.csv")):
+        if f.name == "ideas-fired.csv":
+            continue  # the trigger log, read by fired(); it is not a list of ideas
         out += [r for r in T.read_csv(f) if lo <= r["date"] <= end]
     return sorted(out, key=lambda r: (r["date"], r["persona"]))
 
@@ -183,22 +185,29 @@ def ideas_section(start, end, live_rows):
         return L + ["- No ideas logged (research/<date>/ideas-<persona>.csv)."]
     L += ["| Date | Persona | Contract | Trigger fired | Entry ref | Mark now | Change | Taken | Confidence |",
           "|---|---|---|---|---|---|---|---|---|"]
-    seen = set()
+    seen, changes, counted = set(), [], set()
     for r in rows:
         h = hits.get((r["persona"], r["contract"]))
         if h:
             ref, fired_on = float(h["ask_at_trigger"]), h["date"]
         else:
-            ref, fired_on = (float(r["ref_ask"]) if r.get("ref_ask") else None), "no (marked from the quoted ask)"
+            ref, fired_on = (float(r["ref_ask"]) if r.get("ref_ask") else None), "no"
         m, src = mark_now(r["contract"])
-        chg = pct(m / ref - 1) if (m and ref) else "n/a"
+        # an unfired idea was never entered: marking it from a quote taken before its event (an earnings gap) produced fake +500% rows in W44
+        chg = (pct(m / ref - 1) if (m and ref) else "n/a") if h else "not entered"
+        if h and m and ref and (r["persona"], r["contract"]) not in counted:
+            counted.add((r["persona"], r["contract"]))
+            changes.append(m / ref - 1)
         dup = " (same contract as an earlier row)" if r["contract"] in seen else ""
         seen.add(r["contract"])
         L.append(f"| {r['date']} | {r['persona']} | {r['contract']}{dup} | {fired_on} | {num(ref) if ref else 'n/a'} | "
                  f"{m if m is not None else 'n/a'} | {chg} | {'yes' if r['contract'] in taken else 'no'} | {r.get('confidence', '')} |")
     L.append("")
-    L.append("Marks are taken when the review runs; a Sunday run sees Friday's close. Untriggered ideas are not results: only fired triggers, entered at the live ask"
-             " and run with their own exits, count as evidence (W43 red-team). Reweight personas only after 30+ fired ideas.")
+    if changes:
+        L.append(f"Fired ideas: {len(changes)} (duplicate rows count once per persona), mean change {pct(sum(changes) / len(changes))}, "
+                 f"median {pct(sorted(changes)[len(changes) // 2])}.")
+    L.append("Marks are taken when the review runs; a Sunday run sees Friday's close. Unfired ideas show 'not entered': they are not results. Only fired triggers,"
+             " entered at the live ask and run with their own exits, count as evidence (W43 red-team). Reweight personas only after 30+ fired ideas.")
     return L
 
 

@@ -9,6 +9,19 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **Sizing since 2026-10-30 (owner: "Remove caps on place a buy. You have 2 k to work with").** There are no dollar caps on a buy: no shot-size band, no $450
   maximum, no $1,700 pause line, no house-money rule. The whole $2,000 is available.
   - Each order's thesis states its size and why: the strength of the measured edge, and what a total loss would leave.
+  - **Sizing method (W44 review, 2026-11-01; a method, not a cap):** run `research/strategy-review/scripts/sizing.py` on the setup's tested per-$ payoff
+    distribution, quote the Kelly fraction and the dollars at full, half and quarter Kelly in the thesis, and plan at half-Kelly (the estimate is noisy).
+    Above half-Kelly the thesis says why.
+  - For C1 puts (n 216) at the put's IV divided by the pre-print RV20, with $1,918 of equity:
+
+    | IV/RV20 | Kelly | Full | Half |
+    |---|---|---|---|
+    | 1.00x | 0.170 | $326 | $163 |
+    | 1.15x | 0.090 | $173 | $86 |
+    | 1.25x | 0.035 | $67 | $34 |
+    | 1.30x and above | 0 | $0 | $0 |
+
+    The caps are gone, but the evidence still says C1 is a small bet.
   - Still in force: at most 4 fills a day, at most 4 positions, never average down, and the evidence rules and gates.
   - (Before: $250-400 shots, max $450, a $1,700 pause line.)
 * (Before 10/24) $4,000 needed +$2,000 from a $1,000 risk budget, about a 3x on premium; judged 8-20% at best.
@@ -58,6 +71,11 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * Every buy carries its exit plan in the thesis before it is confirmed. **Two or more contracts:** half at +50%, the rest at +100%. **One contract:** all at +50%, not 2x
   (W43: a single contract held for 2x gave back +47%). These targets now rest at the broker as GTC limits from the evening of the buy (owner, 2026-10-26), so an
   intraday spike is banked. Once a 14:43 check shows +40% or more, the stop moves to cost.
+* **C1 rule, final (W44 review, 2026-11-01):** a mega-cap down gap of 8% or more on the reaction day; a put at delta 0.30-0.45 bought at that day's 14:43
+  check, only if its quoted IV is at most 1.3x the pre-print RV20; spread at most 5%; OI at least 1000; sized with sizing.py.
+  - **No market gates** (^VIX, ^TNX, HY OAS): they were built for long calls. The C1 data shows no VIX dependence (p 0.61; since 2010 it is 1.05 vs
+    1.04), and stress helps a put.
+  - Exit as below.
 * **Exception, C1 down-gap puts (2026-10-29):** they use the exit the strategy review confirmed: hold to session 5 (time exit at that day's 14:43 check),
   with the -50% backstop and no take-profit, and no resting GTC is placed. Two model checks found that a +50% target cuts this setup's EV below 1:
   the strategy review's D4 (holding beat the target set by about 0.14 at the real skew) and the 10/29 red-team (1.14 to 0.97, scripts/risk_exit_paths.py).
@@ -222,6 +240,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-01 (W44 review): C1 rule final (no market gates; the VIX split shows no effect); a Kelly sizing method (sizing.py, plan at half-Kelly); the shadow book no longer marks unfired ideas.
 * 2026-10-30 (alternative-data review, owner's ask): no free alt-data signal passes; short volume, attention and put/call are retired as arguments; prediction-market odds are adopted as a macro input.
 * 2026-10-30 (owner, 2026-10-30: "Remove caps on place a buy. You have 2 k to work with"): no cash floor, no single-order cap, no pacing caps; the loss limit is the full $2,000. Kept: 4 fills a day, 4 positions, evidence rules, kill switch.
 * 2026-10-30 (Run B): no Monday proposals; C1 watchlist (QCOM 11/5); the VIX-gate decision for C1 goes to Sunday with the split data.

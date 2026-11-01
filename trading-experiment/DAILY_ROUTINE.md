@@ -143,6 +143,8 @@ happens: nothing new fills.
    `tracker.py order add --ticker NVDA261120C00225000 --side buy --usd 250 --tier O --stop-pct 50 --max-price 6.60 --thesis "..."`.
    Since 2026-10-30 there is no cash floor and no single-order cap (owner); premium may use any cash up to the $2,000 capital cap. Each order's thesis states its size and why.
    Briefs rewrite their rules section from RULES.md and playbook.md each night; never copy it from an older brief.
+   The rules section always states the final C1 rule and its exit (hold 5 sessions, -50% backstop, no take-profit, no market gates) and the sizing method
+   (`sizing.py`, half-Kelly), so personas stop writing "+50% GTC" exits or VIX gates on C1 puts (W44 review).
 4. **Journal and playbook.** Append to `journal.md`: date, two-line market recap, equity versus SPY, which orders filled and why they had been confirmed, agent opinions in one line each,
    the proposals queued, one lesson. If a lesson changes how we trade, edit `playbook.md` and log it in the changelog.
 5. **Publish.** `python3 trading-experiment/tracker.py report`, refresh the dashboard per `DASHBOARD.md`, then commit and push:

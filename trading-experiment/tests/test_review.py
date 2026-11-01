@@ -62,8 +62,8 @@ class Review(unittest.TestCase):
             rows = R.ideas("2026-10-19", "2026-10-23")
             self.assertEqual([r["persona"] for r in rows], ["contrarian"])
             text = "\n".join(R.ideas_section("2026-10-19", "2026-10-23", [{"ticker": C, "side": "buy"}]))
-            self.assertIn("+50.0%", text)
-            self.assertIn("| yes |", text)
+            self.assertIn("| not entered | yes |", text)            # an unfired idea is shown but never marked as a result (W44 review)
+            self.assertNotIn("+50.0%", text)
         finally:
             R.T.ROOT, R.mark_now = old_root, old_mark
 
@@ -80,7 +80,8 @@ class Review(unittest.TestCase):
         try:
             text = "\n".join(R.ideas_section("2026-10-19", "2026-10-23", []))
             self.assertIn("| 2026-10-22 | 2.50 | 3.0 | +20.0% |", text)              # fired: marked from the trigger ask
-            self.assertIn("no (marked from the quoted ask) | 2.00 | 3.0 | +50.0% |", text)
+            self.assertIn("| no | 2.00 | 3.0 | not entered |", text)
+            self.assertIn("Fired ideas: 1", text)
             self.assertIn("(same contract as an earlier row)", text)
         finally:
             R.T.ROOT, R.mark_now = old_root, old_mark
