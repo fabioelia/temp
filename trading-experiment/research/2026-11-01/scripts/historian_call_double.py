@@ -2,8 +2,8 @@
 """Historian 2026-11-01: how often a 21-35 DTE delta-0.40 SPY or QQQ call doubles by 11/18, its EV per $ at today's IV, and the
 owner's two paths (cash finish vs a goal budget in these calls): P(finish ahead of SPY) and P(reach $2,200).
 
-Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/call_double.py
-Needs base_rates.py's paths13.csv and chain_snapshot.py's Cboe quotes (cited below). Writes <CACHE>/payoffs_<contract>.csv for sizing.py.
+Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/historian_call_double.py
+Needs historian_base_rates.py's paths13.csv and historian_chain_snapshot.py's Cboe quotes (cited below). Writes <CACHE>/payoffs_<contract>.csv for sizing.py.
 
 Model (fixed before results):
   * Contracts and quotes: Cboe delayed chain, timestamp 2026-11-01 22:21 (10/30 closing quotes), 11/30 expiry (28 DTE from Mon 11/2):

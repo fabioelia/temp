@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Historian 2026-11-01: 13-session base rates for QQQ and SPY after a Nasdaq-100 drop of about 9% from its high.
 
-Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/base_rates.py
-Needs hist_fetch.py's cache. Writes <CACHE>/paths13.csv (every entry day's 13-session NDX/GSPC/VIX/VXN paths) for call_double.py.
+Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/historian_base_rates.py
+Needs historian_hist_fetch.py's cache. Writes <CACHE>/paths13.csv (every entry day's 13-session NDX/GSPC/VIX/VXN paths) for historian_call_double.py.
 
 Specification (written before the results were looked at):
   * Series: ^NDX for QQQ (QQQ itself only from 1999-03) and ^GSPC for SPY (SPY only from 1993-01); price closes (unadjusted), because the

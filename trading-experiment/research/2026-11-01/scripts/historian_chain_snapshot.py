@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Historian 2026-11-01: today's IV and quotes from the Cboe delayed chain (single source), for SPY and QQQ.
 
-Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/chain_snapshot.py
+Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/historian_chain_snapshot.py
 * Saves each raw chain to <CACHE>/cboe_<SYM>.json (untrusted data) and prints Cboe's own timestamp.
 * Prints the calls nearest delta 0.40 for the 21-35 DTE expiries (from Mon 11/2: 11/27, 11/30, 12/04) with bid, ask, spread % of mid, IV,
   delta and OI, and flags the contract-rule checks (delta 0.30-0.45, OI >= 1,000, spread <= 5% of mid).

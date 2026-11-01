@@ -3,8 +3,8 @@
 W44 rule "one contract only when full Kelly covers its cost"?
 
 Run (from /home/user/temp):
-  python3 -I trading-experiment/research/2026-11-01/scripts/c1_cost_check.py <earnings_cache>
-Needs hist_fetch.py's cache (Yahoo daily closes through 10/30) and the strategy review's earnings cache (for sizing.py's C1 payoffs).
+  python3 -I trading-experiment/research/2026-11-01/scripts/historian_c1_cost_check.py <earnings_cache>
+Needs historian_hist_fetch.py's cache (Yahoo daily closes through 10/30) and the strategy review's earnings cache (for sizing.py's C1 payoffs).
 
 Method (the review's own C1 model, so the cost and the Kelly figure are on the same footing):
   * RV20 = annualised stdev of the last 20 daily log returns. The rule uses the 20 ending the session before the reaction day; this

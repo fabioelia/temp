@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Historian 2026-11-01: fetch Yahoo daily bars (unadjusted close, adjusted close) into the scratchpad cache.
 
-Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/hist_fetch.py
+Run (from /home/user/temp):  python3 -I trading-experiment/research/2026-11-01/scripts/historian_hist_fetch.py
 Writes <CACHE>/<name>.csv with date,close,adjclose and prints the last bar of each series with the fetch time (ET),
 so every number downstream can cite "Yahoo daily, fetched <time>". Fetches in 10-year chunks so Yahoo returns daily bars.
 """
