@@ -124,6 +124,15 @@ def main():
     block('A: NDX 7-11% below high', condA)
     block('A, 1986-2009', condA & ~post)
     block('A, 2010-2026', condA & post)
+    # excess of A over all days, with the episode-bootstrap standard error of A's mean
+    for nm, x in (('QQQ(NDX)', rN), ('SPY(GSPC)', rG)):
+        for lab, m in (('A', condA), ('A 2010-2026', condA & post), ('B', condB), ('C', condC)):
+            ep = episodes(valid[m])
+            groups_ = [np.where(ep == k)[0] for k in np.unique(ep)]
+            xm = x[m]
+            boots = [xm[np.concatenate([groups_[k] for k in RNG.integers(0, len(groups_), len(groups_))])].mean() for _ in range(2000)]
+            base = x[post].mean() if '2010' in lab else x.mean()
+            print(f"  excess {nm} 13d, {lab} minus all days: {xm.mean() - base:+.2%} (t {(xm.mean() - base) / np.std(boots):.2f}, episode bootstrap)")
     block('B: A and GSPC within 5% of its high', condB)
     block('C: A and the NDX high within 30 sessions', condC)
 

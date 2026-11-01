@@ -352,4 +352,28 @@ for lab in ures:
         w.writerow(['date', 'hold12', 'set1'])
         for t in ures[lab]:
             w.writerow([t[0], f'{t[1]:.5f}', f'{t[2]:.5f}'])
+# ------------------------------------------------------------------ 5. goal odds (owner's choice)
+print('\n== 5. Goal odds: cash vs one SPY call held under the 1-contract exits (model, VIX 16-24 entries)')
+tr = res['call']
+for lab, lo, hi in (('2010-2026', date(2010, 1, 1), date(2027, 1, 1)), ('2010-2017', date(2010, 1, 1), date(2018, 1, 1)),
+                    ('2018-2026', date(2018, 1, 1), date(2027, 1, 1)), ('2022 only', date(2022, 1, 1), date(2023, 1, 1))):
+    s = [t for t in tr if lo <= t[0] < hi]
+    a = np.array([t[2] for t in s])
+    win = a >= 1.5 - 1e-9
+    print(f'  {lab}: n {len(s)}; +50% exit reached {win.mean():.0%}; otherwise mean payoff {a[~win].mean():.2f} '
+          f'(stopped at -50% {np.mean(a <= 0.5 + 1e-9):.0%}); EV {a.mean():.3f}')
+# Cash beats SPY buy-and-hold at the 11/18 close only if SPY falls below 755.72 x (1917.92 / 1970.94)
+thr = 1917.92 / 1970.94 - 1
+r13 = np.array([S[i + 13] / S[i] - 1 for i in range(len(sd) - 13) if sd[i] >= date(1993, 2, 1)])
+v13 = np.array([V[i] for i in range(len(sd) - 13) if sd[i] >= date(1993, 2, 1)])
+d13 = [sd[i] for i in range(len(sd) - 13) if sd[i] >= date(1993, 2, 1)]
+m10 = np.array([d >= date(2010, 1, 1) for d in d13])
+reg13 = (v13 >= 0.16) & (v13 <= 0.24)
+print(f'  Cash beats SPY by 11/18 (13 sessions from the 10/30 close) if SPY <= {755.72 * (1 + thr):.2f} ({thr:+.2%}). '
+      f'Historical P(13-session SPY return <= {thr:.2%}): 1993-2026 {np.mean(r13 <= thr):.0%}; VIX 16-24 {np.mean(r13[reg13] <= thr):.0%} '
+      f'(n {reg13.sum()}); 2010-2026 VIX 16-24 {np.mean(r13[reg13 & m10] <= thr):.0%}')
+el_m = [r for r in rows if r['mid']]
+print(f'  Midterm weeks only: 5-session straddle payoff {np.mean([r["z5"] for r in el_m]) / zi5:.2f}, '
+      f'3-session {np.mean([r["z3"] for r in el_m]) / zi3:.2f} (n {len(el_m)}); reaction-day mean return '
+      f'{np.mean([r["r1"] for r in el_m]):+.2%}, up {sum(r["r1"] > 0 for r in el_m)}/{len(el_m)}')
 print('\nwritten:', ', '.join(sorted(os.listdir(OUT))))

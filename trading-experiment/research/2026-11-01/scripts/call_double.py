@@ -17,6 +17,8 @@ Model (fixed before results):
   * Path scaling: "raw" applies each historical path as it happened; "vol" (primary) rescales its log returns, net of the unconditional
     mean daily log return (the drift is kept, not scaled), by today's vol index over the one on its entry day (^VIX 19.42 for SPY; ^VXN 28.50 for QQQ, or ^VIX x 1.21 before ^VXN starts in 2001), so paths from VIX-40
     episodes do not inflate the value of options priced at today's IV.
+  * Sensitivity "volrf": as "vol", but each path's drift is replaced by the T-bill rate (no equity premium), to show how much of any
+    EV above 1 is the 1990-2026 bull-market drift rather than an edge.
   * Uncertainty: 95% CIs from an episode bootstrap (runs of entry days with gaps over 13 sessions; 63-day blocks for the all-days rows).
   * IV path: primary = the contract's IV x (vol index on day k / on day 0) from the same historical episode (^VIX for SPY; ^VXN for QQQ
     from 2001, ^VIX before), which carries the usual vol crush in rallies. Variant = constant IV (sticky strike).
@@ -84,6 +86,9 @@ def scaled(P, mode):
     k = np.arange(1, H + 1)[None, :]
     lg, ln_ = np.log(P['g']), np.log(P['n'])
     mg, mn = np.nanmean(lg[:, 0]), np.nanmean(ln_[:, 0])   # unconditional mean daily log return, kept as is (only the deviation is rescaled)
+    if mode == 'volrf':   # sensitivity: no equity premium, the drift is the T-bill rate (each path keeps its own shape around it)
+        rf = math.log(1 + R) / 252
+        return np.exp(rf * k + sg * (lg - mg * k)), np.exp(rf * k + sn * (ln_ - mn * k))
     return np.exp(mg * k + sg * (lg - mg * k)), np.exp(mn * k + sn * (ln_ - mn * k))
 
 
@@ -236,9 +241,38 @@ def main():
                 cis = ''
                 if mode == 'vol' and label.startswith(('ALL 1990', 'A (')):
                     cis = f" CI {ci(lambda r: hit[r].mean(), P['idx'][c])}"
+                if n_ct == 1:   # the brief's standard 1-contract exit instead of the goal lock: +50% resting GTC, -50% backstop, else 11/18
+                    _, _, sx = exits(m[c])
+                    fin_s = EQUITY_REAL - cost + cost * sx
+                    print(f"  [{mode}] STD-EXIT 1 x {sym} [{label}]: P($2,200) {np.mean(fin_s >= GOAL):.1%}; P(ahead of SPY) "
+                          f"{np.mean(fin_s > spy_bh):.1%}; mean final ${fin_s.mean():,.0f}")
                 print(f"  [{mode}] GOAL {n_ct} x {sym} (${cost:,.0f}, needs {(GOAL - EQUITY_REAL) / cost:+.1%}) [{label}]: "
                       f"P($2,200) {hit.mean():.1%}{cis}; P(ahead of SPY) {ahead.mean():.1%}; mean final ${final.mean():,.0f}; "
                       f"median ${np.median(final):,.0f}; P(final < $1,600) {np.mean(final < 1600):.1%}")
+
+    # ---- sensitivity: no equity premium (drift = T-bill rate), all days and condition A
+    print("\n=== Sensitivity: vol-scaled paths with the drift set to the T-bill rate (no equity premium), index-IV ===")
+    for sym, und, S0, K, bid, ask, iv0 in CONTRACTS:
+        m, _ = values(P, und, S0, K, bid, ask, iv0, 'index', mode='volrf')
+        ok = ~np.isnan(m).any(1)
+        hold, dbl, sx = exits(m)
+        for label, c in conds[:3]:
+            c = c & ok
+            print(f"  {sym} [{label}]: P(2x by 11/18) {(m[c] >= 2).any(1).mean():.1%}; EV/$ H {hold[c].mean():.3f} D {dbl[c].mean():.3f} S {sx[c].mean():.3f}")
+        if sym in ('SPY261130C00770000', 'QQQ261130C00710000'):
+            g, _ = scaled(P, 'volrf')
+            for n_ct in ((1, 2) if und == 'SPY' else (1,)):
+                cost = n_ct * ask * 100
+                for label, c in conds[:3]:
+                    c = c & ok
+                    eq = EQUITY_REAL - cost + cost * m[c]
+                    hit = (eq >= GOAL).any(1)
+                    final = np.where(hit, eq[np.arange(len(eq)), np.argmax(eq >= GOAL, axis=1)], eq[:, -1])
+                    print(f"    GOAL {n_ct} x {sym} [{label}]: P($2,200) {hit.mean():.1%}; P(ahead of SPY) {np.mean(final > SPY_BH * g[c][:, -1]):.1%}; "
+                          f"mean final ${final.mean():,.0f}; P(final < $1,600) {np.mean(final < 1600):.1%}")
+    g, _ = scaled(P, 'volrf')
+    for label, c in conds[:3]:
+        print(f"  CASH [{label}]: P(ahead of SPY) {np.mean(EQUITY_REAL > SPY_BH * g[c][:, -1]):.1%}")
 
 
 if __name__ == '__main__':

@@ -43,8 +43,6 @@ def main():
     fk = {m: kelly(c1_payoffs(cache, m)) * EQUITY for m in mults}
     print('Full Kelly ($) by IV multiple: ' + ', '.join(f'{m:.2f}x ${fk[m]:,.0f}' for m in mults))
     T = 25 / 365
-    K = float(strike_for_delta(0.35, T, 1.0, False))  # placeholder to show the call works; strikes are per-IV below
-    del K
     for sym, day in NAMES:
         last, c = closes(sym)
         lr = np.diff(np.log(c[-21:]))
