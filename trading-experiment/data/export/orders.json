@@ -54,5 +54,19 @@
   "state": "Proposal, not yet confirmed",
   "reason": "Gate failed at the 14:44 check: live ^VIX 22.58 (Robinhood index quote 14:44:01 ET; Yahoo 22.92 at 14:19) > the 22 standing gate in the thesis. Everything else passed: INTC 63.61 (-30.9%) <= 84.70; the 11/20 60P had delta -0.32, IV 68% <= 70.6%, ask 2.42 <= 3.00, spread 3%, OI 5195; ^TNX 4.933. No widening, per the thesis.",
   "thesis": "CONDITIONAL, C1 down-gap put (strategy review: mega-cap down gaps >= 8% continue 5 sessions, n 216, 62%, +0.90% beyond SPY, t 2.5; put EV 1.00 at an IV of 1.3x RV20). All four personas back it; red-team MODIFY applied. INTC closed 92.07 on 10/29 and was ~74.62 after hours (-19%) on a Q4 guide miss ($15.0-16.0B vs $17.07B LSEG); the 10/14 blast is minor; INTC's own record is 11/14 lower after 5 sessions. Confirm at the 10/30 14:43 check ONLY if ALL hold on live quotes: (1) INTC <= 84.70 (-8% vs 92.07); (2) the chosen 11/20 put's quoted IV <= 70.6% (1.3x the pre-print RV20 of 54.3%, research/2026-10-29/scripts/options_vol_gate.py); (3) delta 0.30-0.45, live ask <= 3.00 (1 lot, so a -72% weekend gap keeps equity above $1,700), spread <= 5%, OI >= 1000; (4) standing gates ^TNX <= 5.10, ^VIX <= 22, HY OAS < 3.46% (3.14 on 10/28). The 72.5P is the reference; Run A re-adds the qualifying strike if another one fits; no widening. Exits as the C1 rule was confirmed (playbook Exits exception): NO take-profit and no resting GTC; time exit at the 11/6 14:43 check (session 5); thesis stop INTC >= 1.04x its 10/30 close at a 14:43 check; the -50% backstop. Edge: C1 EV 1.00 at the gate, 1.14 at the expected entry IV of 54% (options-vol model, no skew). The CL=F and below-the-open conditions were dropped (no script; post-hoc EV 0.99 vs 1.04). AMZN fallback rejected (shadow only). No Anthropic link."
+ },
+ {
+  "id": "O012",
+  "created": "2026-11-01",
+  "side": "buy",
+  "ticker": "SPY261130C00770000",
+  "size": "1 sh",
+  "stop": "",
+  "target": "",
+  "max_price": 7.85,
+  "status": "pending",
+  "state": "Proposal, not yet confirmed",
+  "reason": "",
+  "thesis": "OWNER-ONLY GOAL BUDGET; it does NOT exist unless the owner approves it in writing in the conversation before the Mon 11/2 14:43 check, naming the stop choice. Kelly is $0 (EV per $ 0.94-1.04): this is a deliberate beta and variance bet for the $2,200 goal, not an edge, and it is far above the playbook's sizing method. Contract: 1 x SPY 11/30 770C (Cboe 10/30 7.37/7.47); buy at the 11/2 14:43 check only at a live ask <= 7.85 (about $785 at risk, about 40% of equity); if SPY has rallied past that, no fill. Exits: sell at the first 14:43 check where equity would be >= $2,200 (call bid about 10.30-10.67); otherwise sell at the 11/18 14:43 check. Stop per the owner's choice: none (the historian's simulation) or -50% (red-team: about 4 points lower odds on both goals, and the chance of losing 75% or more falls from about 1 in 4 to 3%). No resting GTC (the goal bid is below the gate's 1.4x minimum). Odds if it fills (historian, options-vol, red-team): P($2,200) about 44-56%, P(beat SPY) about 50-58%, P(finish below $1,600) about 1 in 3, worst case about $1,171 without a stop. Cash path: P(beat SPY) about 13-18%, P($2,200) 0. Scripts: research/2026-11-01/scripts/historian_*.py, ov_backtest.py; red-team check scratchpad/risk1101/goal_check.py."
  }
 ]

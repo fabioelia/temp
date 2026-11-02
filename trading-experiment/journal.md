@@ -611,3 +611,20 @@ thesis. **Consequence, stated plainly:** the whole $2,000 can now be lost, and t
 * Congress, WallStreetBets, skew and sentiment: untestable here; the literature says the edges faded.
 **Applied:** prediction-market odds become a macro-brief input (`research/alt-data/scripts/predmkt.py`). The rejected and weak signals join the playbook's retired
 arguments. **Process note:** the put/call agent ran one read-only `git status` against the brief.
+
+## 2026-11-01 (Sun) Run C: W44 review and the week-45 plan
+**Review (reviews/2026-W44.md, red-teamed):**
+1. No trades. The rules blocked the GOOGL put (IV cap) and the INTC put (a VIX gate, now dropped; lucky, since it marked -30%).
+2. Research left one narrow confirmed setup (C1), break-even at its gate.
+3. Changes: the shadow book no longer marks unfired ideas (the fake +500% rows are gone); the C1 rule is final (no market gates, provisional); a Kelly sizing method
+   (sizing.py), which shows C1 is worth zero to one contract.
+4. Red-team corrections accepted: P($2,200) is about 0 under the rules, P(beat SPY) about 15% (historian), outcome-biased grades cut.
+5. For the owner: an evidence-only cash finish, or a named goal budget.
+**Re-plan (research/2026-11-01/, six personas plus the risk red-team):**
+* No trade passes the rules this week: index calls are about fair (beta), the midterm and jobs premium fair to rich, oil rich, and the dip, 200-day and contrarian
+  setups all fail. Every Kelly figure is $0 or below one contract.
+* C1 watch: QCOM Thu 11/5 (IV at most 48%, spread at most 5%), AAPL and AMD unlikely.
+* **O012**, the goal budget (1 x SPY 11/30 770C, ask at most 7.85): queued **only for the owner's written approval** with a stop choice. It is not an edge.
+  If it fills: P($2,200) about 50%, P(beat SPY) about 55%, about 1 in 3 below $1,600. Without approval the 11/2 pre-close cancels it.
+**Lesson:** honest numbers changed the question. It is no longer "which trade" but "how much variance does the owner want to buy for the goal". That is the owner's call.
+**Dashboard (11/01):** five files refreshed (summary 77399dff, equity b8996539, positions d669e520, orders ad9ae1f7, trades 1c31a50f); the old files were deleted.

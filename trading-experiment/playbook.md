@@ -79,6 +79,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - **No market gates** (^VIX, ^TNX, HY OAS), **provisional**: the tested sample had none, so this matches the test. But the VIX split is underpowered
     (p 0.61), and the stock edge sits at VIX <= 22 (t 3.0 vs 0.3). ^TNX and HY OAS were never tested. Revisit with more data.
   - Exit as below.
+  - **C1 expiry (chair's ruling, 2026-11-01):** at least 14 calendar days at entry (the 5-session hold leaves a week of buffer), so an 11/20 put
+    qualifies for an 11/5 entry.
 * **Exception, C1 down-gap puts (2026-10-29):** they use the exit the strategy review confirmed: hold to session 5 (time exit at that day's 14:43 check),
   with the -50% backstop and no take-profit, and no resting GTC is placed. Two model checks found that a +50% target cuts this setup's EV below 1:
   the strategy review's D4 (holding beat the target set by about 0.14 at the real skew) and the 10/29 red-team (1.14 to 0.97, scripts/risk_exit_paths.py).
@@ -194,6 +196,19 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     reading counts (14:43 live vs the close).
 * **Exit design after shot 1 (options-vol post-mortem, cost $257 vs the 5.50 peak):** see Exits (decided at entry).
 
+* **Week of 11/2 plan (Sunday 11/1 review and re-plan; research/2026-11-01/, reviews/2026-W44.md):** all six personas say no trade passes the rules this week.
+  Every script-backed Kelly figure is $0 or below one contract: index calls are priced about fair (beta, not edge), the midterm and jobs premium is fair to
+  rich, oil options are rich, and the QQQ dip, 200-day and contrarian setups fail.
+  - **C1 watch (conditional, decided at each reaction day's 14:43 check):**
+    - AAPL (prints Mon 11/2, reacts 11/3) fails its IV gate unless the put is about 1.03x RV20.
+    - AMD (11/3, reacts 11/4) costs too much for Kelly.
+    - **QCOM (11/4, reacts Thu 11/5):** 11/20 put. Binding gate: IV at most 48% (where full Kelly covers one contract). Spread at most 5%, kept hard (live 11/20
+      spreads were 10-14%). OI at least 1000; QCOM at or below 0.92x its 11/4 close.
+  - **Owner-only goal budget: O012** (1 x SPY 11/30 770C, ask at most 7.85 at the 11/2 14:43 check). It is confirmed **only** with the owner's written approval
+    and stop choice before 14:43. It is not an edge (Kelly $0).
+    - If it fills: P($2,200) about 44-56%; P(beat SPY) about 50-58%; P(below $1,600) about 1 in 3; a 75%+ loss about 1 in 4 with no stop, or 3% with a -50% stop.
+    - Cash path: P(beat SPY) about 13-18%.
+
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
   No event trade on META (no edge on an expiry that clears the 3-day rule); trade the reaction (decide 10/22) rather than holding through. Thu 10/22: earliest follow-through day.
@@ -243,6 +258,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-01 (Sunday re-plan): no rule-passing trade this week; the C1 watch (QCOM); the owner-only goal budget O012 framed with full odds; C1 expiry at least 14 days.
 * 2026-11-01 (W44 review): C1 rule final (no market gates; the VIX split shows no effect); a Kelly sizing method (sizing.py, plan at half-Kelly); the shadow book no longer marks unfired ideas.
 * 2026-10-30 (alternative-data review, owner's ask): no free alt-data signal passes; short volume, attention and put/call are retired as arguments; prediction-market odds are adopted as a macro input.
 * 2026-10-30 (owner, 2026-10-30: "Remove caps on place a buy. You have 2 k to work with"): no cash floor, no single-order cap, no pacing caps; the loss limit is the full $2,000. Kept: 4 fills a day, 4 positions, evidence rules, kill switch.

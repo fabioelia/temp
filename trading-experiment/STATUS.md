@@ -14,7 +14,7 @@ _All cash._
 
 ## Pending orders (fill at next close)
 
-_None._
+- O012 buy SPY261130C00770000 qty=1.0 stop= target= :: OWNER-ONLY GOAL BUDGET; it does NOT exist unless the owner approves it in writing in the conversation before the Mon 11/2 14:43 check, naming the stop choice. Kelly is $0 (EV per $ 0.94-1.04): this is a deliberate beta and variance bet for the $2,200 goal, not an edge, and it is far above the playbook's sizing method. Contract: 1 x SPY 11/30 770C (Cboe 10/30 7.37/7.47); buy at the 11/2 14:43 check only at a live ask <= 7.85 (about $785 at risk, about 40% of equity); if SPY has rallied past that, no fill. Exits: sell at the first 14:43 check where equity would be >= $2,200 (call bid about 10.30-10.67); otherwise sell at the 11/18 14:43 check. Stop per the owner's choice: none (the historian's simulation) or -50% (red-team: about 4 points lower odds on both goals, and the chance of losing 75% or more falls from about 1 in 4 to 3%). No resting GTC (the goal bid is below the gate's 1.4x minimum). Odds if it fills (historian, options-vol, red-team): P($2,200) about 44-56%, P(beat SPY) about 50-58%, P(finish below $1,600) about 1 in 3, worst case about $1,171 without a stop. Cash path: P(beat SPY) about 13-18%, P($2,200) 0. Scripts: research/2026-11-01/scripts/historian_*.py, ov_backtest.py; red-team check scratchpad/risk1101/goal_check.py.
 
 ## Stats
 
