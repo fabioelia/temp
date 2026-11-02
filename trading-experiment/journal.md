@@ -646,3 +646,20 @@ for the shadow book, so the review can judge what the goal bet would have done.
 **Idea watch (research/2026-11-02/ideas-fired.csv):** contrarian QQQ 11/30 710C (9.33) and momentum QQQ 12/04 715C (8.98) fired, as shadows sized below one
 contract; the goal-budget calls and the put are logged with the owner condition unmet. Next: the AAPL C1 check at Tuesday's 14:43 (it needs a down gap of 8%
 or more and a cheap put).
+
+## 2026-11-02 (Mon) Run B: post-close
+**Market:** SPY 752.10 (-0.5%), QQQ 681.09 (-1.4%, just above its 200-day of about 679.8), IWM 279.14, MSFT -2.8%, AMZN +2.2%. Oil collapsed on the Iran negotiation
+reports: CL=F 96.26 (-7.5%), Brent Jan 104.23 (-8.1%), USO -7.1%, XLE -4.0%. VIX 21.15, with VIX9D 22.46 (inverted into the vote).
+* After hours: AAPL flat (338.68) on a beat; AMD closed 466.74 (-7.5%) before its print.
+**Equity:** real $1,917.92 (Robinhood $1,917.91, flat, no orders); paper $1,919.92 (-4.0%). SPY buy-and-hold: $1,961.50 (-1.9%), so we trail by 2.1 points.
+$2,200 needs +14.7%, with 12 sessions left. **Fills:** none (O012 cancelled without owner approval).
+**Agents (research/2026-11-02/):**
+* **macro:** no trade. Oil after a 6%+ drop has no edge (n 74; calls 0.67-0.75, puts 0.82-0.87). The midterm premium is fair to rich. Senate to the Democrats is now 74.5-76.5%.
+* **momentum:** no trade. The re-run shows the 200-day break put at 0.89 and the bounce at t 1.83. Shadow QQQ 680P below 680.11. Distribution days: QQQ 8, SPY 7.
+* **catalyst:** no AAPL (a beat) and no AMD (a put costs $1,095+ vs full Kelly $312-432; the drop has no filing and is chips plus the Intel PC read).
+  QCOM 11/5 is conditional (spreads 5.8-8.7% tonight).
+* **options-vol:** no trade. Midterm straddles return 0.52-0.90; calls are fair. Cash beats SPY 15-17% of the time (it needs SPY -2.2%).
+**Proposals for Tue 11/3: none** (all four; no drafts, so no red-team).
+**Lesson:** the evidence rules and Kelly sizing now produce "no trade" almost every day. That is consistent, but it is the owner's goal-budget question that decides
+whether the account takes any risk before 11/18.
+**Dashboard (11/02):** five files refreshed (summary 2dc0f7e8, equity 2a8a1c1e, positions 33861fc5, orders 68f2c36c, trades 59f13571); the old files were deleted.

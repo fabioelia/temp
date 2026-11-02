@@ -208,6 +208,13 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     and stop choice before 14:43. It is not an edge (Kelly $0).
     - If it fills: P($2,200) about 44-56%; P(beat SPY) about 50-58%; P(below $1,600) about 1 in 3; a 75%+ loss about 1 in 4 with no stop, or 3% with a -50% stop.
     - Cash path: P(beat SPY) about 13-18%.
+  - **Update, Mon 11/2 Run B (research/2026-11-02/):**
+    - O012 was cancelled (no owner approval).
+    - AAPL beat and was flat after hours: no C1.
+    - AMD's C1 is blocked (a band put costs $1,095-1,361 against full Kelly of $312-595).
+    - QCOM Thu 11/5 stays conditional at IV of about 44-48.5% and a hard 5% spread. Tonight's spreads are 5.8-8.7%, so it is likely to fail.
+    - Oil after a 6%+ drop has no edge (74 cases since 2006; calls 0.67-0.75 per $). The midterm premium is fair to rich.
+    - All four personas: no trade for Tuesday.
 
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
@@ -258,6 +265,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-02 (Run B): no proposals for 11/3; QCOM C1 conditional for 11/5; O012 cancelled without owner approval.
 * 2026-11-01 (Sunday re-plan): no rule-passing trade this week; the C1 watch (QCOM); the owner-only goal budget O012 framed with full odds; C1 expiry at least 14 days.
 * 2026-11-01 (W44 review): C1 rule final (no market gates; the VIX split shows no effect); a Kelly sizing method (sizing.py, plan at half-Kelly); the shadow book no longer marks unfired ideas.
 * 2026-10-30 (alternative-data review, owner's ask): no free alt-data signal passes; short volume, attention and put/call are retired as arguments; prediction-market odds are adopted as a macro input.
