@@ -263,6 +263,7 @@
           <div class="btns">
             <button id="labCaptioned" title="An audio or video file plus its .vtt or .srt captions (e.g. from the Dub Studio Capture extension). Lines are split by caption, and by speaker when the captions name them.">Add audio + captions…</button>
             <input type="file" id="labCaptionInput" accept="audio/*,video/*,.webm,.vtt,.srt" multiple hidden>
+            <input type="text" id="labCapOffset" placeholder="offset: auto" title="Caption offset in seconds. Leave empty to align captions to the speech automatically." style="width:110px">
           </div>
           <label class="row"><span>Scan</span>
             <select id="labScanMin"><option value="3">first 3 minutes</option><option value="5" selected>first 5 minutes</option><option value="10">first 10 minutes</option><option value="20">first 20 minutes</option></select></label>
@@ -2622,8 +2623,50 @@ function captionUtterances(cues, pcm) {
   return out.filter((u) => u.end - u.start >= 1).map((u) => ({ text: u.text, pcm: pcm.slice(Math.max(0, Math.floor((u.start - 0.05) * SR)), Math.min(pcm.length, Math.ceil((u.end + 0.1) * SR))) }))
     .filter((u) => u.pcm.length > SR * 0.8);
 }
+// Find the constant shift between captions and the audio: Silero VAD (speech vs music/noise) gives a
+// speech-probability track every 32 ms; it is correlated with the caption on/off track within ±15 s
+// (streamed captions are typically off by a constant, e.g. HLS's 10 s timestamp base). Applied only
+// when clearly better than no shift; otherwise left to the manual offset.
+const VAD_URL = 'https://huggingface.co/onnx-community/silero-vad/resolve/main/onnx/model.onnx';
+let vadSess = null, vadOrt = null;
+async function speechTrack(pcm, seconds) {
+  if (!vadSess) {
+    vadOrt = await import(ORT_URL);
+    vadOrt.env.wasm.wasmPaths = ORT_WASM;
+    let bytes;
+    try { const c = await caches.open('dub-studio-models'); const hit = await c.match(VAD_URL); if (hit) bytes = new Uint8Array(await hit.arrayBuffer()); } catch (e) {}
+    if (!bytes) { const r = await fetch(VAD_URL); if (!r.ok) throw new Error('Could not download the voice-activity model.'); bytes = new Uint8Array(await r.arrayBuffer()); try { const c = await caches.open('dub-studio-models'); await c.put(VAD_URL, new Response(bytes)); } catch (e) {} }
+    vadSess = await vadOrt.InferenceSession.create(bytes, { executionProviders: ['wasm'] });
+  }
+  const W = 512, C = 64, n = Math.floor(Math.min(pcm.length, seconds * SR) / W), out = new Float32Array(n);
+  let state = new vadOrt.Tensor('float32', new Float32Array(2 * 128), [2, 1, 128]), ctx = new Float32Array(C);
+  const sr = new vadOrt.Tensor('int64', BigInt64Array.from([16000n]), []), buf = new Float32Array(C + W);
+  for (let k = 0; k < n; k++) {
+    buf.set(ctx, 0); buf.set(pcm.subarray(k * W, (k + 1) * W), C);
+    const o = await vadSess.run({ input: new vadOrt.Tensor('float32', buf.slice(), [1, C + W]), state, sr });
+    out[k] = o.output.data[0]; state = o.stateN; ctx = pcm.slice((k + 1) * W - C, (k + 1) * W);
+    if (k % 500 === 0) setProgress(k / n, 'Finding speech for caption alignment');
+  }
+  return out; // one value per 32 ms
+}
+async function alignCaptions(cues, pcm) {
+  setStage('Aligning captions to the speech'); setProgress(0);
+  const hop = 512 / SR, sp = await speechTrack(pcm, 240), n = sp.length, cu = new Float32Array(n);
+  for (const c of cues) for (let t = Math.max(0, Math.floor(c.start / hop)); t < Math.min(n, Math.ceil(c.end / hop)); t++) cu[t] = 1;
+  const ms = sp.reduce((a, b) => a + b, 0) / n, mc = cu.reduce((a, b) => a + b, 0) / n;
+  if (!mc) return { offset: 0, how: 'no caption lines fall in the first minutes; use the offset box if needed' };
+  const score = (d) => { let s2 = 0; for (let t = Math.max(0, d); t < Math.min(n, n + d); t++) s2 += (sp[t] - ms) * (cu[t - d] - mc); return s2; };
+  const D = Math.round(15 / hop);
+  let best = 0, bestScore = score(0); const s0 = bestScore;
+  for (let d = -D; d <= D; d++) { const v = score(d); if (v > bestScore) { bestScore = v; best = d; } }
+  const shift = best * hop;
+  if (Math.abs(shift) < 0.1) return { offset: 0, how: 'they already match the speech' };
+  if (s0 <= 0 || bestScore / s0 > 1.2) return { offset: shift, how: 'matched to the speech' };
+  return { offset: 0, how: 'the speech match was not clear-cut; use ▶ and the offset box if needed' };
+}
 async function importCaptioned(files) {
   showError('');
+  lab.lastCaptionFiles = files;
   const cap = files.find((f) => /\.(vtt|srt)$/i.test(f.name)), media = files.find((f) => f !== cap && !/\.(json)$/i.test(f.name));
   if (!cap || !media) { showError('Choose the audio (or video) file and its .vtt or .srt captions together.'); return; }
   try {
@@ -2631,10 +2674,18 @@ async function importCaptioned(files) {
     const cues = parseCaptions(await cap.text());
     if (!cues.length) throw new Error(`No caption lines found in ${cap.name}.`);
     const pcm = await decodeTo16k(media);
+    const manual = els.labCapOffset.value.trim();
+    let offset, note;
+    if (manual !== '' && Number.isFinite(Number(manual))) { offset = Number(manual); note = `Captions shifted by ${offset >= 0 ? '+' : ''}${offset.toFixed(2)} s (manual).`; }
+    else {
+      const a = await alignCaptions(cues, pcm); offset = a.offset;
+      note = offset ? `Captions shifted by ${offset >= 0 ? '+' : ''}${offset.toFixed(2)} s (${a.how}).` : `No shift applied: ${a.how}.`;
+    }
+    if (offset) for (const c of cues) { c.start += offset; c.end += offset; }
     const groups = new Map();
     for (const c of cues) { const k = c.speaker || 'All lines'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(c); }
     els.labFound.textContent = '';
-    els.labFound.append(el('div', { class: 'hint' }, `${cap.name}: ${cues.length} caption lines${groups.size > 1 ? `, ${groups.size} speakers` : ''}. Pick whose lines to use.`));
+    els.labFound.append(el('div', { class: 'hint' }, `${cap.name}: ${cues.length} caption lines${groups.size > 1 ? `, ${groups.size} speakers` : ''}. ${note} Pick whose lines to use; ▶ to check the timing.`));
     [...groups.entries()].sort((a, b) => b[1].length - a[1].length).forEach(([who, list], i) => {
       const utts = captionUtterances(list, pcm), secs = utts.reduce((n, u) => n + u.pcm.length, 0) / SR;
       els.labFound.append(el('div', { class: 'v' }, [
@@ -2750,6 +2801,7 @@ function initLab() {
   els.labImportInput.addEventListener('change', () => { importLabVoice(els.labImportInput.files[0]); els.labImportInput.value = ''; });
   els.labCaptioned.addEventListener('click', () => els.labCaptionInput.click());
   els.labCaptionInput.addEventListener('change', () => { const f = [...els.labCaptionInput.files]; els.labCaptionInput.value = ''; if (f.length) importCaptioned(f); });
+  els.labCapOffset.addEventListener('change', () => { if (lab.lastCaptionFiles) importCaptioned(lab.lastCaptionFiles); });
   els.labExtractBtn.addEventListener('click', () => els.labVideoInput.click());
   els.labVideoInput.addEventListener('change', () => { const f = els.labVideoInput.files[0]; els.labVideoInput.value = ''; if (f) extractVoices(f); });
   els.labExtractLoaded.addEventListener('click', () => state.file && extractVoices(state.file));
@@ -2827,7 +2879,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); syncButtons(); detectGPU(); initLab();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>
