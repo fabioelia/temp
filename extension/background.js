@@ -71,35 +71,21 @@ async function ensureOffscreen() {
   await chrome.offscreen.createDocument({ url: 'offscreen.html', reasons: ['USER_MEDIA'], justification: 'Record tab audio for Dub Studio' });
 }
 
-// Protected (DRM) video is recorded only when the setting is on AND the site opts in by serving
-// /.well-known/dub-studio-capture.json with {"allow": true}, on the page's or the player frame's origin.
-const OPT_IN_PATH = '/.well-known/dub-studio-capture.json';
-async function siteOptsIn(origins) {
-  for (const o of origins) {
-    try {
-      const r = await fetch(o + OPT_IN_PATH, { cache: 'no-store', credentials: 'omit', redirect: 'error' });
-      if (r.ok && (await r.json())?.allow === true) return o;
-    } catch (e) { /* not reachable or not opted in */ }
-  }
-  return null;
-}
-async function protectedAllowed(tabId, frameUrl) {
+// Protected (DRM) video: never in release builds. In dev builds, only with a sign-off from the person
+// recording (name, rights/approval reference, confirmation), which is saved with the capture.
+function protectedAllowed(signoff) {
   if (!DUB_CAPTURE_CONFIG.devBuild) return { ok: false, why: 'This video is DRM-protected, so Dub Studio Capture does not record it.' };
-  const { allowOptInProtected } = await chrome.storage.local.get('allowOptInProtected');
-  if (!allowOptInProtected) return { ok: false, why: 'This video is DRM-protected. To record protected video on your own sites, turn on "Allow protected video on sites that opt in" and serve ' + OPT_IN_PATH + ' with {"allow": true} on your site.' };
-  const tab = await chrome.tabs.get(tabId);
-  const origins = [...new Set([tab.url, frameUrl].filter((u) => /^https?:/.test(u || '')).map((u) => new URL(u).origin))];
-  const site = await siteOptsIn(origins);
-  return site ? { ok: true, site } : { ok: false, why: `This video is DRM-protected and ${origins.join(' / ') || 'the site'} has not opted in: serve ${OPT_IN_PATH} with {"allow": true} on a site you control.` };
+  if (!(signoff && signoff.confirmed && signoff.name?.trim() && signoff.reference?.trim())) return { ok: false, why: 'Protected video: fill in the sign-off (name, rights reference, confirmation) to record it.' };
+  return { ok: true };
 }
 
-async function start({ tabId, frameId, videoIndex, trackIndex, net }) {
+async function start({ tabId, frameId, videoIndex, trackIndex, net, signoff }) {
   const vids = (await scan(tabId)).videos;
   const v = vids.find((x) => x.frameId === frameId && x.index === videoIndex);
   if (!v) throw new Error('That video is no longer on the page.');
   let allowProtected = false;
   if (v.protected) {
-    const p = await protectedAllowed(tabId, v.frameUrl);
+    const p = protectedAllowed(signoff);
     if (!p.ok) throw new Error(p.why);
     allowProtected = true;
   }
@@ -110,7 +96,8 @@ async function start({ tabId, frameId, videoIndex, trackIndex, net }) {
   const recStart = Date.now();
   const c = await inFrame(tabId, frameId, (vi, ti, ap) => window.__dubCapture.start(vi, ti, ap), [videoIndex, trackIndex ?? null, allowProtected]);
   if (c?.error) { await chrome.runtime.sendMessage({ target: 'offscreen', type: 'stop' }); throw new Error(c.error); }
-  await S.set({ capture: { tabId, frameId, videoIndex, trackIndex, net: net || null, recStart, logStart: Date.now(), protected: allowProtected } });
+  await S.set({ capture: { tabId, frameId, videoIndex, trackIndex, net: net || null, recStart, logStart: Date.now(), protected: allowProtected,
+    signoff: allowProtected ? { name: signoff.name.trim(), reference: signoff.reference.trim(), confirmed: true, at: new Date().toISOString(), url: v.frameUrl || null } : null } });
   return { ok: true };
 }
 
@@ -150,7 +137,7 @@ async function stop() {
   }
   const base = `dub-capture/${(log?.title || 'capture').replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'capture'}-${new Date().toISOString().replace(/[:.]/g, '-')}`;
   const vtt = 'WEBVTT\n\n' + cues.map((c) => `${stamp(c.start)} --> ${stamp(c.end)}\n${c.speaker ? `<v ${c.speaker}>` : ''}${c.text}\n`).join('\n');
-  const meta = { format: 'dub-studio-capture', version: 2, source: log?.url, title: log?.title, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected,
+  const meta = { format: 'dub-studio-capture', version: 2, source: log?.url, title: log?.title, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected, signoff: capture.signoff || null,
     captions: capture.net ? { from: 'network', stream: capture.net.key, note: 'Constant offset may remain; Dub Studio re-aligns captions to the speech on import.' } : { from: 'text track' } };
   await chrome.downloads.download({ url: r.url, filename: `${base}.webm` });
   await chrome.downloads.download({ url: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(vtt), filename: `${base}.vtt` });

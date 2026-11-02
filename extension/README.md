@@ -42,15 +42,17 @@ Audio always comes from tab capture. The extension doesn't download media segmen
 ## Dev and release builds
 
 `config.js` holds the build flag:
-- **Development (`extension/`, `devBuild: true`):** the popup shows *Dev build: allow protected video on sites that opt in*. Even with it on, protected (DRM) video is recorded only on sites that serve `/.well-known/dub-studio-capture.json` with `{"allow": true}`, on the page's or the player frame's origin.
-- **Release (`python3 tools/build_extension.py`):** builds `dist/dub-studio-capture/` and a zip with `devBuild: false`. The DRM check is always enforced, and the setting is neither shown nor read.
+- **Development (`extension/`, `devBuild: true`):** for protected (DRM) video, the popup asks for a sign-off: your name, a rights or approval reference, and a confirmation that you own or are licensed to record the content and the use is approved. Recording unlocks once it's filled in. The sign-off is saved in the capture's `.json` file, together with the page address and time.
+- **Release (`python3 tools/build_extension.py`):** builds `dist/` with `devBuild: false`. Protected video is never recorded, and there is no sign-off option.
+
+Whether Chrome's tab capture delivers audio for a given protected player depends on the player and platform. Check that the saved `.webm` has sound.
 
 ## When it finds no video
 
 The popup says what it found and in how many frames:
 - **Player in another site's frame** (embedded players): the popup names the frame's site and offers **Allow access to …**. Grant it once and the scan includes that frame.
 - **Web-component players** (`<video>` inside a shadow root) are found automatically, as long as the shadow root is open.
-- **Player uses DRM:** the popup says so and won't record. Export audio from your source files instead.
+- **Player uses DRM:** release builds won't record it. Dev builds record it after the sign-off. Export from your source files where you can.
 - **Canvas or audio-only players** aren't supported yet.
 
 ## Limits

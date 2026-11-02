@@ -17,7 +17,13 @@
   <label for="track">Captions</label><select id="track"></select>
   <div class="btns"><button class="primary" id="start">Start recording</button><button id="stop" disabled>Stop &amp; save</button></div>
   <div class="hint" id="status">Play the video while recording; captions are captured as they play. Files are saved to Downloads/dub-capture/.</div>
-  <label id="optinRow" hidden style="gap:6px;align-items:flex-start;margin-top:10px;color:inherit"><input type="checkbox" id="optin" style="width:auto;margin-top:2px"> <span>Dev build: allow protected video on sites that opt in <span class="hint" style="display:block;margin:0">The site must serve /.well-known/dub-studio-capture.json with {"allow": true}. Not available in release builds.</span></span></label>
+  <div id="signoff" hidden style="margin-top:10px;border:1px solid #d7dde6;border-radius:6px;padding:8px">
+    <div style="font-weight:600">Protected video: sign-off (dev build)</div>
+    <label for="soName">Your name</label><input id="soName" type="text" style="width:100%;font:inherit;padding:5px 7px;border:1px solid #d7dde6;border-radius:6px">
+    <label for="soRef">Rights / approval reference</label><input id="soRef" type="text" placeholder="e.g. legal approval ID" style="width:100%;font:inherit;padding:5px 7px;border:1px solid #d7dde6;border-radius:6px">
+    <label style="display:flex;gap:6px;align-items:flex-start;color:inherit"><input type="checkbox" id="soOk" style="width:auto;margin-top:2px"> <span>We own or are licensed to record this content, and this use is approved.</span></label>
+    <div class="hint" style="margin:4px 0 0">Saved with the capture's .json file.</div>
+  </div>
   <div class="hint">Only for video you own or are licensed to use.</div>
   <script src="config.js"></script>
   <script src="popup.js"></script>

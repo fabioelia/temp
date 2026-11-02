@@ -11,10 +11,9 @@ function fillTracks() {
     ...net.map((g, i) => new Option(`Network: ${g.label} (${g.files} file${g.files === 1 ? '' : 's'})`, `n:${i}`)));
   const pick = (v?.tracks || []).find((t) => t.kind === 'subtitles' || t.kind === 'captions');
   if (pick) $('track').value = `t:${pick.index}`; else if (net.length) $('track').value = 'n:0';
-  $('start').disabled = !v || (v.protected && !$('optin').checked) || !!timer;
-  if (v?.protected) status(!DEV ? 'This player uses DRM, so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.' : $('optin').checked
-    ? 'This player uses DRM. It will be recorded only if this site serves /.well-known/dub-studio-capture.json with {"allow": true}.'
-    : 'This player uses DRM, so it is not recorded. If this is your site, turn on the setting below and add the opt-in file; or export the audio from your source files.', 'err');
+  $('signoff').hidden = !(DEV && v?.protected);
+  $('start').disabled = !v || (v.protected && !(DEV && signedOff())) || !!timer;
+  if (v?.protected && !DEV) status('This player uses DRM, so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.', 'err');
 }
 async function init() {
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -33,9 +32,10 @@ async function init() {
       b.onclick = async () => {
         const ok = await chrome.permissions.request({ origins: lastScan.blocked.map((o) => o + '/*') });
         if (ok) { b.remove(); const DEV = !!DUB_CAPTURE_CONFIG.devBuild;
-if (DEV) { $('optinRow').hidden = false; $('optinRow').style.display = 'flex'; }
-chrome.storage.local.get('allowOptInProtected').then(({ allowOptInProtected }) => { $('optin').checked = DEV && !!allowOptInProtected; fillTracks(); });
-$('optin').addEventListener('change', () => { chrome.storage.local.set({ allowOptInProtected: $('optin').checked }); fillTracks(); });
+const signoff = () => ({ name: $('soName').value, reference: $('soRef').value, confirmed: $('soOk').checked });
+const signedOff = () => { const s = signoff(); return s.confirmed && s.name.trim() && s.reference.trim(); };
+chrome.storage.local.get('soName').then(({ soName }) => { if (soName) $('soName').value = soName; });
+for (const id of ['soName', 'soRef', 'soOk']) $(id).addEventListener(id === 'soOk' ? 'change' : 'input', () => { chrome.storage.local.set({ soName: $('soName').value }); fillTracks(); });
 init(); } else status('Access was not granted.', 'err');
       };
       $('status').after(b);
@@ -55,7 +55,7 @@ $('start').addEventListener('click', async () => {
   const v = videos[Number($('video').value)];
   try {
     const sel = $('track').value, g = sel.startsWith('n:') ? net[Number(sel.slice(2))] : null;
-    await send({ type: 'start', tabId: tab.id, frameId: v.frameId, videoIndex: v.index, trackIndex: sel.startsWith('t:') ? Number(sel.slice(2)) : null, net: g ? { frameId: g.frameId, key: g.key } : null });
+    await send({ type: 'start', tabId: tab.id, frameId: v.frameId, videoIndex: v.index, trackIndex: sel.startsWith('t:') ? Number(sel.slice(2)) : null, net: g ? { frameId: g.frameId, key: g.key } : null, signoff: v.protected ? signoff() : null });
     recording(Date.now());
   } catch (e) { status(e.message, 'err'); }
 });
@@ -66,7 +66,8 @@ $('stop').addEventListener('click', async () => {
   fillTracks();
 });
 const DEV = !!DUB_CAPTURE_CONFIG.devBuild;
-if (DEV) { $('optinRow').hidden = false; $('optinRow').style.display = 'flex'; }
-chrome.storage.local.get('allowOptInProtected').then(({ allowOptInProtected }) => { $('optin').checked = DEV && !!allowOptInProtected; fillTracks(); });
-$('optin').addEventListener('change', () => { chrome.storage.local.set({ allowOptInProtected: $('optin').checked }); fillTracks(); });
+const signoff = () => ({ name: $('soName').value, reference: $('soRef').value, confirmed: $('soOk').checked });
+const signedOff = () => { const s = signoff(); return s.confirmed && s.name.trim() && s.reference.trim(); };
+chrome.storage.local.get('soName').then(({ soName }) => { if (soName) $('soName').value = soName; });
+for (const id of ['soName', 'soRef', 'soOk']) $(id).addEventListener(id === 'soOk' ? 'change' : 'input', () => { chrome.storage.local.set({ soName: $('soName').value }); fillTracks(); });
 init();
