@@ -28,6 +28,8 @@ Many players never expose captions as a `<track>`. They fetch `.vtt` files or HL
 - **Files already loaded:** caption files the page fetched earlier are found in its resource timeline and fetched again inside the page, with the page's own credentials.
 - **Files loaded while recording:** the page's `fetch` and XHR are watched for new `.vtt`, `.srt` and `.m3u8` subtitle responses. HLS subtitle playlists have their segments fetched too, up to 600.
 - **One choice per stream:** segment files are grouped per stream (e.g. `…/eng/seg_#.vtt`) and listed as **Network: …** in the Captions menu.
+- **DASH manifests:** `.mpd` manifests the page loads are read for text tracks (`text/vtt`, TTML and `stpp` IMSC), using `BaseURL` files or `SegmentTemplate` segments (`$Number$` and `SegmentTimeline`). Each track is labelled with its language, `Label` and `Role`.
+- **Player configs:** many players get their subtitle list as JSON from an API. The extension watches the JSON the page parses (read-only) and picks out objects that look like subtitle tracks, with a URL in `url`, `src`, `file`, `uri` or `href`, plus a subtitle type, kind or extension. Relative URLs are resolved against the page. Nothing in the page's requests or data is changed. The idea comes from the greasyfork "subtitle downloader" userscript; its site-specific keys and request rewriting are not used.
 - **TTML / DFXP / IMSC:** `.ttml` and `.dfxp` files, and responses served as TTML, are converted to WebVTT inside the page, keeping speaker names from `ttm:agent`.
 - **Segment timing:** each segment's `X-TIMESTAMP-MAP` is applied so segments line up with each other. Any constant offset left over is removed by Dub Studio's alignment on import (see below).
 
@@ -35,7 +37,7 @@ Audio always comes from tab capture. The extension doesn't download media segmen
 
 ## How it works
 
-- `content.js` lists `<video>` elements and their `textTracks`, refuses any video with `mediaKeys` set (DRM), and logs playback time every 250 ms while recording.
+- `content.js` lists `<video>` elements and their `textTracks`, flags any video with `mediaKeys` set (DRM), which release builds always refuse (see below), and logs playback time every 250 ms while recording.
 - `background.js` gets a tab-capture stream ID. Cues are mapped from video time to recording time through the playback log, so pauses and seeks are handled; lines that didn't play are dropped.
 - `offscreen.js` records the stream with `MediaRecorder` and plays it back so the tab isn't muted.
 

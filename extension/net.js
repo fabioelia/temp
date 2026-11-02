@@ -61,6 +61,7 @@
     return cues.sort((x, y) => x.start - y.start);
   }
   const items = new Map();            // url -> { url, text, at }
+  const labels = new Map();           // url -> human label (language / name) from manifests
   const isCap = (u) => /\.(web)?vtt(\?|#|$)|\.srt(\?|#|$)|\.(ttml|dfxp)(\?|#|$)|[?&](fmt|format)=(web)?vtt|[?&](fmt|format)=ttml/i.test(u);
   const isTtml = (t) => /^\s*(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*)*<tt[\s>]/.test(t);
   const stamp = (t) => { const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${s.toFixed(3).padStart(6, '0')}`; };
@@ -72,8 +73,56 @@
     if (t.startsWith('WEBVTT') || /^\d+\s*\n\d\d:\d\d/.test(t)) items.set(url, { url, text, at: performance.now() });
     else if (isTtml(t)) { try { items.set(url, { url, text: ttmlToVtt(t), at: performance.now(), from: 'ttml' }); } catch (e) {} }
     else if (t.startsWith('#EXTM3U')) playlist(url, text);
+    else if (isMpd(url, t)) { try { mpd(url, text); } catch (e) {} }
   };
   const seen = new Set();
+  const isMpd = (u, t) => /\.mpd(\?|#|$)/i.test(u) || /^\s*(<\?xml[^>]*>\s*)?<MPD[\s>]/.test(t || '');
+  // DASH: text AdaptationSets (WebVTT/TTML as plain files or $Number$/SegmentTimeline segments).
+  // Text segments wrapped in MP4 (stpp/wvtt) are not plain text and are skipped.
+  function mpd(url, xml) {
+    const doc = new DOMParser().parseFromString(xml, 'application/xml');
+    const base = (el, b) => { const x = [...el.children].find((c) => c.localName === 'BaseURL'); return x ? new URL(x.textContent.trim(), b).href : b; };
+    const root = base(doc.documentElement, url);
+    for (const period of [...doc.getElementsByTagNameNS('*', 'Period')]) {
+      const pb = base(period, root);
+      for (const as of [...period.getElementsByTagNameNS('*', 'AdaptationSet')]) {
+        const reps = [...as.getElementsByTagNameNS('*', 'Representation')];
+        for (const r of reps.length ? reps : [as]) {
+          const mime = r.getAttribute('mimeType') || as.getAttribute('mimeType') || '', ct = as.getAttribute('contentType') || '';
+          if (!(/text\/vtt|ttml/i.test(mime) || (ct === 'text' && !/mp4/i.test(mime)))) continue;
+          const label = [as.getAttribute('lang'), [...as.children].find((c) => c.localName === 'Label')?.textContent, [...as.getElementsByTagNameNS('*', 'Role')].map((x) => x.getAttribute('value')).join(' ')].filter(Boolean).join(' · ');
+          const rb = base(r, base(as, pb));
+          const tpl = [...r.children, ...as.children].find((c) => c.localName === 'SegmentTemplate');
+          if (!tpl) { labels.set(rb, label); grab(rb); continue; }
+          const media = tpl.getAttribute('media'), start = Number(tpl.getAttribute('startNumber') || 1), rid = r.getAttribute('id') || '';
+          const tl = [...tpl.children].find((c) => c.localName === 'SegmentTimeline');
+          let count = 0;
+          if (tl) for (const S of tl.children) count += 1 + Number(S.getAttribute('r') || 0);
+          else { const dur = Number(tpl.getAttribute('duration')), ts = Number(tpl.getAttribute('timescale') || 1), pd = (doc.documentElement.getAttribute('mediaPresentationDuration') || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:([\d.]+)S)?/);
+            const total = pd ? (+pd[1] || 0) * 3600 + (+pd[2] || 0) * 60 + (+pd[3] || 0) : 0; count = dur ? Math.ceil(total / (dur / ts)) : 0; }
+          for (let k = 0; k < Math.min(count, 600); k++) {
+            const u = new URL(media.replace(/\$RepresentationID\$/g, rid).replace(/\$Number(%0(\d+)d)?\$/g, (_, f, w) => String(start + k).padStart(Number(w || 0), '0')), rb).href;
+            labels.set(u, label); grab(u);
+          }
+        }
+      }
+    }
+  }
+  // JSON player configs and manifests: any object with a file address plus a caption type/kind.
+  const urlKeys = ['url', 'src', 'file', 'uri', 'href', 'downloadUrl', 'location'];
+  const kindRe = /subtitle|caption|text\/vtt|webvtt|ttml|dfxp|srt|timedtext/i;
+  function scanJson(obj, budget = { n: 0 }, depth = 0) {
+    if (!obj || typeof obj !== 'object' || depth > 10 || budget.n++ > 20000) return;
+    if (Array.isArray(obj)) { for (const x of obj) scanJson(x, budget, depth + 1); return; }
+    const key = urlKeys.find((k) => typeof obj[k] === 'string' && obj[k].length < 4096 && !/\s/.test(obj[k]) && !/^(data|blob|javascript):/i.test(obj[k]));
+    if (key) {
+      const u = obj[key], typed = ['kind', 'type', 'mimeType', 'mime', 'format', 'role', 'contentType'].some((k) => typeof obj[k] === 'string' && kindRe.test(obj[k]));
+      if (isCap(u) || typed) {
+        try { const abs = new URL(u, location.href).href; labels.set(abs, [obj.label, obj.name, obj.language, obj.lang, obj.srclang].find((x) => typeof x === 'string') || ''); grab(abs); } catch (e) {}
+      }
+    }
+    for (const k in obj) if (obj[k] && typeof obj[k] === 'object') scanJson(obj[k], budget, depth + 1);
+  }
   async function grab(url) {
     if (seen.has(url)) return; seen.add(url);
     try { const r = await origFetch(url, { credentials: 'include' }); if (r.ok) keep(url, await r.text()); } catch (e) {}
@@ -94,7 +143,7 @@
     const res = await origFetch(...args);
     try {
       const url = res.url || String(args[0]?.url || args[0]);
-      if (isCap(url) || isList(url) || /vtt|subrip|ttml/i.test(res.headers.get('content-type') || '')) res.clone().text().then((t) => keep(url, t)).catch(() => {});
+      if (isCap(url) || isList(url) || isMpd(url) || /vtt|subrip|ttml|dash\+xml/i.test(res.headers.get('content-type') || '')) res.clone().text().then((t) => keep(url, t)).catch(() => {});
     } catch (e) {}
     return res;
   };
@@ -103,14 +152,22 @@
     this.addEventListener('load', () => {
       try {
         const url = this.responseURL || String(u);
-        if ((isCap(url) || isList(url)) && (this.responseType === '' || this.responseType === 'text')) keep(url, this.responseText);
+        if ((isCap(url) || isList(url) || isMpd(url)) && (this.responseType === '' || this.responseType === 'text')) keep(url, this.responseText);
       } catch (e) {}
     });
     return open.call(this, m, u, ...rest);
   };
+  // Observe JSON the page parses (player configs, manifests) for subtitle tracks. Read-only: the parsed
+  // value is returned unchanged and nothing the page sends is modified.
+  const origParse = JSON.parse;
+  JSON.parse = function (text, reviver) {
+    const v = origParse.call(this, text, reviver);
+    try { if (typeof text === 'string' && text.length < 5e6 && kindRe.test(text)) scanJson(v); } catch (e) {}
+    return v;
+  };
   // Caption files loaded before the extension was opened: re-fetch them from the resource timeline.
   function sweep() {
-    for (const e of performance.getEntriesByType('resource')) if (isCap(e.name) || isList(e.name)) grab(e.name);
+    for (const e of performance.getEntriesByType('resource')) if (isCap(e.name) || isList(e.name) || isMpd(e.name)) grab(e.name);
   }
   sweep();
   const timer = setInterval(sweep, 1000);
@@ -119,7 +176,10 @@
   function groups() {
     const g = new Map();
     for (const it of items.values()) { const k = key(it.url); if (!g.has(k)) g.set(k, []); g.get(k).push(it); }
-    return [...g.entries()].map(([k, list]) => ({ key: k, files: list.length, label: decodeURIComponent(k.split('/').slice(-2).join('/')).slice(0, 60) }));
+    return [...g.entries()].map(([k, list]) => {
+      const named = list.map((it) => labels.get(it.url)).find(Boolean);
+      return { key: k, files: list.length, label: (named ? named + ' — ' : '') + decodeURIComponent(k.split('/').slice(-2).join('/')).slice(0, 60) };
+    });
   }
   window.__dubNet = {
     groups,
