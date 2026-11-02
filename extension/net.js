@@ -108,20 +108,59 @@
       }
     }
   }
-  // JSON player configs and manifests: any object with a file address plus a caption type/kind.
+  // JSON player configs and manifests. Generic track model: a "track" is an object with a caption type,
+  // or an element of an array whose key names subtitles/captions/text tracks. Under it, every URL-like
+  // string is a candidate; the nearest key names (e.g. "webvtt", "ttml", "dfxp") give its format.
+  // The best format is fetched first and the others are fallbacks (mirrors, other formats).
   const urlKeys = ['url', 'src', 'file', 'uri', 'href', 'downloadUrl', 'location'];
-  const kindRe = /subtitle|caption|text\/vtt|webvtt|ttml|dfxp|srt|timedtext/i;
-  function scanJson(obj, budget = { n: 0 }, depth = 0) {
-    if (!obj || typeof obj !== 'object' || depth > 10 || budget.n++ > 20000) return;
-    if (Array.isArray(obj)) { for (const x of obj) scanJson(x, budget, depth + 1); return; }
-    const key = urlKeys.find((k) => typeof obj[k] === 'string' && obj[k].length < 4096 && !/\s/.test(obj[k]) && !/^(data|blob|javascript):/i.test(obj[k]));
-    if (key) {
-      const u = obj[key], typed = ['kind', 'type', 'mimeType', 'mime', 'format', 'role', 'contentType'].some((k) => typeof obj[k] === 'string' && kindRe.test(obj[k]));
-      if (isCap(u) || typed) {
-        try { const abs = new URL(u, location.href).href; labels.set(abs, [obj.label, obj.name, obj.language, obj.lang, obj.srclang].find((x) => typeof x === 'string') || ''); grab(abs); } catch (e) {}
-      }
+  const kindRe = /subtitle|caption|text\/vtt|webvtt|ttml|dfxp|imsc|srt|timedtext|texttrack/i;
+  const listRe = /subtitle|caption|timedtext|texttrack|text_?tracks?|cc$/i;
+  const typeKeys = ['kind', 'type', 'mimeType', 'mime', 'format', 'role', 'contentType', 'trackType', 'textType', 'codec', 'codecs'];
+  const pick = (o, ks) => { for (const k of ks) if (typeof o[k] === 'string' && o[k].trim()) return o[k].trim(); return ''; };
+  const flag = (o, re) => Object.keys(o).some((k) => re.test(k) && (o[k] === true || o[k] === 'true' || o[k] === 1));
+  const urlLike = (v) => typeof v === 'string' && v.length < 4096 && !/\s/.test(v) && !/^(data|blob|javascript):/i.test(v) && (/^(https?:)?\/\//.test(v) || isCap(v) || /^\/[^/]/.test(v) && /\.\w{2,5}(\?|$)/.test(v));
+  const rank = (hint, u) => { const h = hint + ' ' + u; return /webvtt|\bvtt\b|\.vtt/i.test(h) ? 0 : /imsc|ttml|dfxp|\.xml/i.test(h) ? 1 : /srt|subrip/i.test(h) ? 2 : 3; };
+  function candidates(obj, hint, out, depth) {
+    if (!obj || typeof obj !== 'object' || depth > 5 || out.length > 40) return;
+    for (const k in obj) {
+      const v = obj[k], h = hint + ' ' + k + ' ' + (Array.isArray(obj) ? '' : pick(obj, typeKeys));
+      if (urlLike(v) && (urlKeys.includes(k) || /^\d+$/.test(k) || /url|uri|href|src|path/i.test(k) || Array.isArray(obj) || isCap(v))) out.push({ url: v, rank: rank(h, v) });
+      else if (v && typeof v === 'object') candidates(v, Array.isArray(obj) ? hint : hint + ' ' + k, out, depth + 1);
     }
-    for (const k in obj) if (obj[k] && typeof obj[k] === 'object') scanJson(obj[k], budget, depth + 1);
+  }
+  const tracks = new Map();           // first candidate url -> { label, urls }
+  function addTrack(obj, typedByList) {
+    const t = pick(obj, typeKeys), typed = typedByList || kindRe.test(t);
+    const own = urlKeys.map((k) => obj[k]).find(urlLike);
+    if (!typed && !(own && isCap(own))) return false;
+    if (/image|bitmap|png|jpe?g/i.test(t) || flag(obj, /^is_?image|image_?based/i)) return true;   // picture subtitles: no text
+    const c = []; candidates(obj, '', c, 0);
+    if (!c.length) return false;
+    const urls = [...new Map(c.map((x) => { try { return [new URL(x.url, location.href).href, x.rank]; } catch (e) { return [null, 9]; } })).entries()]
+      .filter(([u]) => u).sort((x, y) => x[1] - y[1]).map(([u]) => u);
+    if (tracks.size >= 200 || tracks.has(urls[0])) return true;
+    const lang = pick(obj, ['language', 'lang', 'srclang', 'languageCode', 'bcp47', 'locale']);
+    const name = pick(obj, ['label', 'name', 'displayName', 'languageDescription', 'languageName', 'title']);
+    const label = [name || lang, name && lang && !name.includes(lang) ? lang : '', flag(obj, /forced/i) ? 'forced' : '',
+      flag(obj, /sdh|closed_?captions?|hearing|^is_?cc$|^cc$/i) || /caption/i.test(t) ? 'CC' : ''].filter(Boolean).join(' · ');
+    tracks.set(urls[0], { label, urls });
+    for (const u of urls) labels.set(u, label);
+    grabFirst(urls);
+    return true;
+  }
+  function scanJson(obj, budget = { n: 0 }, depth = 0, inList = false) {
+    if (!obj || typeof obj !== 'object' || depth > 12 || budget.n++ > 20000) return;
+    if (Array.isArray(obj)) { for (const x of obj) scanJson(x, budget, depth + 1, inList); return; }
+    if (addTrack(obj, inList)) return;
+    for (const k in obj) if (obj[k] && typeof obj[k] === 'object') {
+      const list = listRe.test(k) && (Array.isArray(obj[k]) || Object.values(obj[k]).every((x) => x && typeof x === 'object'));
+      if (list && !Array.isArray(obj[k])) for (const x of Object.values(obj[k])) scanJson(x, budget, depth + 1, true);
+      else scanJson(obj[k], budget, depth + 1, list);
+    }
+  }
+  // Try a track's URLs in order (best format first, then mirrors/other formats) until one gives captions.
+  async function grabFirst(urls) {
+    for (const u of urls.slice(0, 6)) { if (items.has(u)) return; await grab(u); if (items.has(u) || [...items.keys()].some((k) => k.startsWith(u.split('#')[0]))) return; }
   }
   async function grab(url) {
     if (seen.has(url)) return; seen.add(url);
@@ -183,6 +222,7 @@
   }
   window.__dubNet = {
     groups,
+    dumpAll: () => groups().map((g) => ({ key: g.key, label: g.label, files: [...items.values()].filter((it) => key(it.url) === g.key).sort((a, b) => a.at - b.at).map(({ url, text }) => ({ url, text })) })),
     dump: (k) => [...items.values()].filter((it) => key(it.url) === k).sort((a, b) => a.at - b.at).map(({ url, text }) => ({ url, text })),
     stop: () => clearInterval(timer),
   };

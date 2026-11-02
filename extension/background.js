@@ -145,9 +145,37 @@ async function stop() {
   return { ok: true, seconds: r.seconds, cues: cues.length, file: base };
 }
 
+// Save every caption track found on the page (all languages), on the video's own timeline. No recording.
+// Same rule as recording for protected pages: release builds refuse, dev builds need the sign-off.
+async function saveAll({ tabId, signoff }) {
+  const sc = await scan(tabId);
+  if (sc.videos.some((v) => v.protected)) { const p = protectedAllowed(signoff); if (!p.ok) throw new Error(p.why); }
+  const [tab] = [await chrome.tabs.get(tabId)];
+  const folder = `dub-capture/${(tab.title || 'captions').replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'captions'}-${new Date().toISOString().replace(/[:.]/g, '-')}-captions`;
+  const index = []; let total = 0; const used = new Set();
+  for (const fid of [...new Set(sc.net.map((g) => g.frameId))]) {
+    const [r] = await chrome.scripting.executeScript({ target: { tabId, frameIds: [fid] }, world: 'MAIN', func: () => window.__dubNet?.dumpAll() || [] });
+    for (const g of r?.result || []) {
+      const cues = parseCaptionFiles(g.files);
+      if (!cues.length) continue;
+      let name = (g.label.split(' — ')[0] || g.key.split('/').pop()).replace(/[^\w\- ·]+/g, '').replace(/ · /g, '.').trim().slice(0, 50) || 'track';
+      for (let n = 2; used.has(name); n++) name = name.replace(/-\d+$/, '') + '-' + n;
+      used.add(name); total += cues.length;
+      const vtt = 'WEBVTT\n\n' + cues.map((c) => `${stamp(c.start)} --> ${stamp(c.end)}\n${c.speaker ? `<v ${c.speaker}>` : ''}${c.text}\n`).join('\n');
+      await chrome.downloads.download({ url: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(vtt), filename: `${folder}/${name}.vtt` });
+      index.push({ file: `${name}.vtt`, label: g.label, stream: g.key, files: g.files.length, cues: cues.length });
+    }
+  }
+  if (!index.length) throw new Error('No caption text found yet. Play the video for a few seconds with captions on, then try again.');
+  const meta = { format: 'dub-studio-captions', version: 1, source: tab.url, title: tab.title, savedAt: new Date().toISOString(), timeline: 'video', tracks: index,
+    signoff: sc.videos.some((v) => v.protected) ? { name: signoff.name.trim(), reference: signoff.reference.trim(), confirmed: true } : null };
+  await chrome.downloads.download({ url: 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(meta, null, 1)), filename: `${folder}/index.json` });
+  return { tracks: index.length, cues: total, folder };
+}
+
 chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
   if (msg.target !== 'background') return;
-  const run = { scan: () => scan(msg.tabId), start: () => start(msg), stop, status: async () => (await S.get('capture')).capture || null }[msg.type];
+  const run = { scan: () => scan(msg.tabId), start: () => start(msg), saveAll: () => saveAll(msg), stop, status: async () => (await S.get('capture')).capture || null }[msg.type];
   run().then((result) => reply({ result }), (e) => reply({ error: e.message || String(e) }));
   return true;
 });

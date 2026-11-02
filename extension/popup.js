@@ -13,6 +13,10 @@ function fillTracks() {
   if (pick) $('track').value = `t:${pick.index}`; else if (net.length) $('track').value = 'n:0';
   $('signoff').hidden = !(DEV && v?.protected);
   $('start').disabled = !v || (v.protected && !(DEV && signedOff())) || !!timer;
+  const anyProt = videos.some((x) => x.protected);
+  $('saveAll').hidden = !net.length;
+  $('saveAll').disabled = anyProt && !(DEV && signedOff());
+  if (anyProt && DEV) $('signoff').hidden = false;
   if (v?.protected && !DEV) status('This player uses DRM, so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.', 'err');
 }
 async function init() {
@@ -31,12 +35,7 @@ async function init() {
       b.style.marginTop = '8px';
       b.onclick = async () => {
         const ok = await chrome.permissions.request({ origins: lastScan.blocked.map((o) => o + '/*') });
-        if (ok) { b.remove(); const DEV = !!DUB_CAPTURE_CONFIG.devBuild;
-const signoff = () => ({ name: $('soName').value, reference: $('soRef').value, confirmed: $('soOk').checked });
-const signedOff = () => { const s = signoff(); return s.confirmed && s.name.trim() && s.reference.trim(); };
-chrome.storage.local.get('soName').then(({ soName }) => { if (soName) $('soName').value = soName; });
-for (const id of ['soName', 'soRef', 'soOk']) $(id).addEventListener(id === 'soOk' ? 'change' : 'input', () => { chrome.storage.local.set({ soName: $('soName').value }); fillTracks(); });
-init(); } else status('Access was not granted.', 'err');
+        if (ok) { b.remove(); init(); } else status('Access was not granted.', 'err');
       };
       $('status').after(b);
     } else status(`No video found (scanned ${lastScan.frames} frame${lastScan.frames === 1 ? '' : 's'}). If the player draws video on a canvas or plays only audio, it can't be captured yet.`, 'err');
@@ -57,6 +56,12 @@ $('start').addEventListener('click', async () => {
     const sel = $('track').value, g = sel.startsWith('n:') ? net[Number(sel.slice(2))] : null;
     await send({ type: 'start', tabId: tab.id, frameId: v.frameId, videoIndex: v.index, trackIndex: sel.startsWith('t:') ? Number(sel.slice(2)) : null, net: g ? { frameId: g.frameId, key: g.key } : null, signoff: v.protected ? signoff() : null });
     recording(Date.now());
+  } catch (e) { status(e.message, 'err'); }
+});
+$('saveAll').addEventListener('click', async () => {
+  try {
+    const r = await send({ type: 'saveAll', tabId: tab.id, signoff: videos.some((x) => x.protected) ? signoff() : null });
+    status(`Saved ${r.tracks} caption track${r.tracks === 1 ? '' : 's'} (${r.cues} lines) to Downloads/${r.folder}/`, 'ok');
   } catch (e) { status(e.message, 'err'); }
 });
 $('stop').addEventListener('click', async () => {
