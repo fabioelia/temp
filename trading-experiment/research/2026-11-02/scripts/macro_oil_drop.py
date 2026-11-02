@@ -29,7 +29,7 @@ ENTRY: the close of t+1 (the next session's 14:43 check, proxied by its close; t
    XLE: no contract passes the rules on the 11/2 chain (spreads 22-200%); a hypothetical 11/27 0.40-delta call and put at the chain's ATM
    IV with a 10% spread (the rule's maximum) is modelled on raw paths at constant IV, conditional and unconditional.
 POST HOC (added after the first run, so it cannot count as evidence): the 11/27 primary contracts on events since 2025-01-01 and since
-2026-01-01 (the Hormuz-war regime), printed at the end.
+2026-01-01 (the Hormuz-war regime), and the puts without the 2008 and 2020 events (a robustness check of the hold-to-window figure).
 Descriptive and model results, not a claim test: nothing here is pre-registered in research/strategy-review/claims.md.
 """
 import csv
@@ -274,4 +274,9 @@ for s_ in ('USO261127C00163000', 'USO261127P00150000'):
             sub = [t for t in tr if t[0] >= lo]
             print(f"   {s_} {'norm' if norm else 'raw '} entries since {lo}: " + line(sub, '').lstrip(': ')
                   + ' | set1 values ' + ' '.join(f'{t[3]:.2f}' for t in sub))
+print('   Robustness of the put hold-to-window figures: events entered outside 2008 and 2020 only')
+for s_ in [x[3] for x in elig if x[1] == 'P']:
+    for norm in (False, True):
+        sub = [t for t in saved[(s_, norm)] if t[0].year not in (2008, 2020)]
+        print(f"   {s_} {'norm' if norm else 'raw '} excl. 2008 and 2020: " + line(sub, '').lstrip(': '))
 print('\nwritten:', ', '.join(sorted(os.listdir(OUT))))

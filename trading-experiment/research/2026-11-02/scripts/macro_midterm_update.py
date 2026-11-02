@@ -5,8 +5,10 @@ Run (from /home/user/temp):
 Inputs: Yahoo v8 daily bars (research/2026-11-01/scripts/macro_fetch.py, closes through Mon 11/2) and the Cboe SPY chain
 (research/2026-11-01/scripts/macro_chains.py, 11/2 closing quotes).
 
-1. EVENT PRICING. SPY ATM straddle (strike nearest the 752.10 official close, both bids > 0) per expiry 11/3..11/9, as % of 752.10;
-   implied variance per session = differences of (straddle / 0.798)^2. Event premium = the Wed 11/4 (vote reaction) increment and the
+1. EVENT PRICING. SPY ATM-forward straddle per expiry 11/3..11/9: forward F = median of K + C mid - P mid over strikes within $6 of
+   the 752.10 official close; straddle(F) = a quadratic fit of C mid + P mid through the 3 strikes nearest F, evaluated at F; as % of F.
+   (Changed after the first run, which used the strike nearest 752.10: the chain was quoted with SPY near 753.2, and 11/5 and 11/9 have
+   only $5 strikes, so the nearest-strike straddle overstated Thu and Mon.) Implied variance per session = differences of (straddle / 0.798)^2. Event premium = the Wed 11/4 (vote reaction) increment and the
    Fri 11/6 (jobs) increment over the Thu 11/5 increment.
 2. HISTORY (^GSPC 1990-2026, prior ^VIX close). z = |return| / (VIX at the window start / 100 x sqrt(n / 252)). Windows from the Monday
    close before each federal election: to Wed (2 sessions) and to Fri (4 sessions). Baselines: every Monday-start 2- and 4-session window,
@@ -50,18 +52,20 @@ exps = [(date(2026, 11, 3), 1, 'Tue (vote)'), (date(2026, 11, 4), 2, 'Wed (react
         (date(2026, 11, 6), 4, 'Fri (jobs)'), (date(2026, 11, 9), 5, 'Mon 11/9')]
 prev, inc, st = 0.0, {}, {}
 for e, n, lab in exps:
-    best = None
-    for k in np.arange(740, 765, 1.0):
+    ks = []
+    for k in np.arange(740, 766, 1.0):
         c, p = Q.get(occ('SPY', e, 'C', k)), Q.get(occ('SPY', e, 'P', k))
-        if c and p and c['bid'] > 0 and p['bid'] > 0 and (best is None or abs(k - SPOT) < abs(best[0] - SPOT)):
-            best = (k, c, p)
-    k, c, p = best
-    s = (c['bid'] + c['ask']) / 2 + (p['bid'] + p['ask']) / 2
-    pct = s / SPOT
+        if c and p and c['bid'] > 0 and p['bid'] > 0:
+            ks.append((k, (c['bid'] + c['ask']) / 2, (p['bid'] + p['ask']) / 2))
+    F = float(np.median([k + cm - pm for k, cm, pm in ks if abs(k - SPOT) <= 6]))
+    near = sorted(ks, key=lambda x: abs(x[0] - F))[:3]
+    co = np.polyfit([x[0] for x in near], [x[1] + x[2] for x in near], 2)
+    s = float(np.polyval(co, F))
+    pct = s / F
     var = (pct / 0.798) ** 2
     inc[lab] = var - prev
     st[n] = pct
-    print(f"   {e} ({n} sessions, last = {lab:14}): K {k:.0f} C {c['bid']:.2f}/{c['ask']:.2f} P {p['bid']:.2f}/{p['ask']:.2f} straddle "
+    print(f"   {e} ({n} sessions, last = {lab:14}): F {F:.2f}, strikes {[int(x[0]) for x in sorted(near)]}, straddle(F) "
           f"{s:.2f} = {pct:.2%}; session sd {SQ(max(var - prev, 0)) * 100:.2f}%; z_implied {pct / (VIX0 / 100 * SQ(n / 252)):.3f}")
     prev = var
 thu = inc['Thu']
