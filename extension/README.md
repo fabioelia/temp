@@ -39,6 +39,14 @@ Audio always comes from tab capture. The extension doesn't download media segmen
 - `background.js` gets a tab-capture stream ID. Cues are mapped from video time to recording time through the playback log, so pauses and seeks are handled; lines that didn't play are dropped.
 - `offscreen.js` records the stream with `MediaRecorder` and plays it back so the tab isn't muted.
 
+## When it finds no video
+
+The popup says what it found and in how many frames:
+- **Player in another site's frame** (embedded players): the popup names the frame's site and offers **Allow access to …**. Grant it once and the scan includes that frame.
+- **Web-component players** (`<video>` inside a shadow root) are found automatically, as long as the shadow root is open.
+- **Player uses DRM:** the popup says so and won't record. Export audio from your source files instead.
+- **Canvas or audio-only players** aren't supported yet.
+
 ## Limits
 
 - Only captions exposed as `<track>` / `textTracks` are captured. Players that draw captions in their own HTML are not supported yet.

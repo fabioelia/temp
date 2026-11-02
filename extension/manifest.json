@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Dub Studio Capture",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Record a page's video audio together with its caption track, for Dub Studio's Voice Lab. Disabled on DRM-protected video.",
   "action": {
     "default_popup": "popup.html",
@@ -16,7 +16,11 @@
     "tabCapture",
     "offscreen",
     "downloads",
-    "storage"
+    "webNavigation"
   ],
-  "minimum_chrome_version": "116"
+  "minimum_chrome_version": "116",
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ]
 }

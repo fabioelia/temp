@@ -12,15 +12,31 @@ function fillTracks() {
   const pick = (v?.tracks || []).find((t) => t.kind === 'subtitles' || t.kind === 'captions');
   if (pick) $('track').value = `t:${pick.index}`; else if (net.length) $('track').value = 'n:0';
   $('start').disabled = !v || v.protected || !!timer;
-  if (v?.protected) status('This video is DRM-protected, so it will not be recorded.', 'err');
+  if (v?.protected) status('This player uses DRM (protected playback), so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.', 'err');
 }
 async function init() {
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   const cur = await send({ type: 'status' });
   if (cur && cur.tabId === tab.id) { recording(cur.recStart); }
-  try { ({ videos, net } = await send({ type: 'scan', tabId: tab.id })); } catch (e) { status(e.message, 'err'); return; }
+  let lastScan;
+  try { lastScan = await send({ type: 'scan', tabId: tab.id }); ({ videos, net } = lastScan); } catch (e) { status(e.message, 'err'); return; }
+  window.__lastScan = lastScan;
   if (net.length) status(`Found ${net.length} caption stream${net.length === 1 ? '' : 's'} loaded over the network. More segments are picked up while you record.`);
-  if (!videos.length) { status('No video found on this page.', 'err'); $('start').disabled = true; return; }
+  if (!videos.length) {
+    $('start').disabled = true;
+    if (lastScan.blocked.length) {
+      status(`No video in the parts of the page I can read. The player is probably inside a frame from ${lastScan.blocked.join(', ')}.`, 'err');
+      const b = document.createElement('button'); b.textContent = `Allow access to ${lastScan.blocked.length === 1 ? lastScan.blocked[0].replace(/^https?:\/\//, '') : 'these sites'}`;
+      b.style.marginTop = '8px';
+      b.onclick = async () => {
+        const ok = await chrome.permissions.request({ origins: lastScan.blocked.map((o) => o + '/*') });
+        if (ok) { b.remove(); init(); } else status('Access was not granted.', 'err');
+      };
+      $('status').after(b);
+    } else status(`No video found (scanned ${lastScan.frames} frame${lastScan.frames === 1 ? '' : 's'}). If the player draws video on a canvas or plays only audio, it can't be captured yet.`, 'err');
+    return;
+  }
+  status(`Found ${videos.length} video${videos.length === 1 ? '' : 's'}${net.length ? ` and ${net.length} network caption stream${net.length === 1 ? '' : 's'}` : ''} in ${lastScan.frames} frame${lastScan.frames === 1 ? '' : 's'}.`);
   $('video').replaceChildren(...videos.map((v, i) => new Option(`Video ${i + 1}${v.duration ? ' · ' + fmt(v.duration) : ''}${v.width ? ` · ${v.width}×${v.height}` : ''}${v.protected ? ' · protected' : ''}`, String(i))));
   fillTracks();
 }

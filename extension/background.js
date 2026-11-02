@@ -8,16 +8,32 @@ async function inFrame(tabId, frameId, fn, args = []) {
   const [r] = await chrome.scripting.executeScript({ target: { tabId, frameIds: [frameId] }, func: fn, args });
   return r?.result;
 }
+// Scan every frame we can reach. Frames are injected one by one so a single inaccessible frame
+// (another site's player without permission, sandboxed or about: frames) doesn't break the scan.
 async function scan(tabId) {
-  await inject(tabId);
-  await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, world: 'MAIN', files: ['net.js'] }).catch(() => {});
+  const frames = (await chrome.webNavigation.getAllFrames({ tabId }).catch(() => null)) || [{ frameId: 0, url: '' }];
+  const videos = [], net = [], blocked = new Map();
+  for (const f of frames) {
+    const target = { tabId, frameIds: [f.frameId] };
+    try {
+      await chrome.scripting.executeScript({ target, files: ['content.js'] });
+      await chrome.scripting.executeScript({ target, world: 'MAIN', files: ['net.js'] }).catch(() => {});
+    } catch (e) {
+      if (/^https?:/.test(f.url)) { const o = new URL(f.url).origin; blocked.set(o, (blocked.get(o) || 0) + 1); }
+      continue;
+    }
+  }
   await new Promise((r) => setTimeout(r, 600)); // let net.js re-fetch caption files the page already loaded
-  const res = await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, func: () => window.__dubCapture?.scan() || [] });
-  const net = await chrome.scripting.executeScript({ target: { tabId, allFrames: true }, world: 'MAIN', func: () => window.__dubNet?.groups() || [] }).catch(() => []);
-  return {
-    videos: res.flatMap((r) => (r.result || []).map((v) => ({ ...v, frameId: r.frameId }))),
-    net: net.flatMap((r) => (r.result || []).map((g) => ({ ...g, frameId: r.frameId }))),
-  };
+  for (const f of frames) {
+    const target = { tabId, frameIds: [f.frameId] };
+    try {
+      const [r] = await chrome.scripting.executeScript({ target, func: () => window.__dubCapture?.scan() || [] });
+      videos.push(...(r?.result || []).map((v) => ({ ...v, frameId: f.frameId, frameUrl: f.url })));
+      const [n] = await chrome.scripting.executeScript({ target, world: 'MAIN', func: () => window.__dubNet?.groups() || [] });
+      net.push(...(n?.result || []).map((g) => ({ ...g, frameId: f.frameId })));
+    } catch (e) { /* frame not accessible */ }
+  }
+  return { videos, net, frames: frames.length, blocked: [...blocked.keys()] };
 }
 
 // WebVTT/SRT text -> cues on the media timeline. HLS segments carry X-TIMESTAMP-MAP; segments of one

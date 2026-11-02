@@ -3,7 +3,15 @@
 (() => {
   if (window.__dubCapture) return;
   const state = { logging: null };
-  const videos = () => [...document.querySelectorAll('video')];
+  // <video> elements, including ones inside open shadow roots (web-component players such as Mux or media-chrome)
+  const videos = () => {
+    const out = [], walk = (root) => {
+      out.push(...root.querySelectorAll('video'));
+      for (const el of root.querySelectorAll('*')) if (el.shadowRoot) walk(el.shadowRoot);
+    };
+    walk(document);
+    return out;
+  };
   const isProtected = (v) => !!v.mediaKeys; // Encrypted Media Extensions in use -> DRM content
 
   function scan() {
