@@ -177,12 +177,19 @@ def main():
     vx = dict(zip(vixd, vixv))
     inv = {2: [], 4: []}
     allz = {2: [], 4: []}
-    inv_days = []
+    evinv = {2: [], 4: []}  # inverted AND RV20/VIX <= 0.70: an implied-led (event) inversion like tonight's, not a realized-vol spike
+    first = {2: [], 4: []}  # first day of each inverted episode only (no overlap)
+    inv_days, ev_days = [], []
+    last_inv = None
+    inv_ep = {2: [], 4: []}  # episode id of each inverted day (for a cluster bootstrap)
+    episodes_run = 0
     for d in sorted(v9):
         if d not in vx or d not in gpos or d >= MON:
             continue
         i = gpos[d]
         ratio = v9[d] / vx[d]
+        rvr = rv_daily(gc, i) * math.sqrt(252) / (vx[d] / 100)
+        new_ep = ratio >= 1.05 and (last_inv is None or (d - last_inv).days > 14)
         for k in (2, 4):
             if i + k >= len(gd):
                 continue
@@ -191,8 +198,35 @@ def main():
             allz[k].append(z)
             if ratio >= 1.05:
                 inv[k].append(z)
+                inv_ep[k].append(episodes_run + (1 if new_ep else 0))
+                if rvr <= 0.70:
+                    evinv[k].append(z)
+                if new_ep:
+                    first[k].append(z)
         if ratio >= 1.05:
             inv_days.append(d)
+            last_inv = d
+            episodes_run += 1 if new_ep else 0
+            if rvr <= 0.70:
+                ev_days.append(d)
+    rv_now = rv_daily(gc, len(gc) - 1) * math.sqrt(252) / (q['_VIX'] / 100)
+    print(f'  tonight ^GSPC RV20 / VIX = {rv_now:.2f}; implied-led inverted days (RV20/VIX <= 0.70): {len(ev_days)}; '
+          f'first days of episodes: {len(first[2])}')
+    # election eves with VIX9D (2011+): Mon-close -> Wed-close and -> Fri-close, scaled by that Monday's VIX9D
+    eve = {2: [], 4: []}
+    for y in range(2012, 2026, 2):
+        e = election_day(y)
+        if e not in gpos:
+            continue
+        im = gpos[e] - 1
+        dm = gd[im]
+        if dm not in v9:
+            continue
+        for k in (2, 4):
+            r = float(np.log(gc[im + k] / gc[im]))
+            eve[k].append((y, r / (v9[dm] / 100 * math.sqrt(k / 252)), v9[dm] / vx[dm]))
+    for k in (2, 4):
+        print(f'  election eves 2012-2024, {k} sessions: ' + ', '.join(f'{y} |z| {abs(z):.2f} (VIX9D/VIX {rr:.2f})' for y, z, rr in eve[k]))
     episodes = 0
     last = None
     for d in inv_days:
@@ -205,6 +239,16 @@ def main():
         a, b = np.abs(np.array(allz[k])), np.abs(np.array(inv[k]))
         print(f'  {k}-session SPX |move| / VIX9D-implied sd: all days mean {a.mean():.3f} (straddle at VIX9D returns {a.mean() / SQ:.2f} '
               f'per $ at mid, n {len(a)}); inverted days mean {b.mean():.3f} ({b.mean() / SQ:.2f} per $, n {len(b)})')
+        c_, f_ = np.abs(np.array(evinv[k])), np.abs(np.array(first[k]))
+        em = np.abs([z for y, z, _ in eve[k] if y % 4 == 2]); ep = np.abs([z for y, z, _ in eve[k] if y % 4 == 0])
+        print(f'     implied-led inverted days mean {c_.mean():.3f} ({c_.mean() / SQ:.2f} per $, n {len(c_)}); first day of each episode '
+              f'{f_.mean():.3f} ({f_.mean() / SQ:.2f} per $, n {len(f_)}); election eves: midterm {em.mean():.3f} ({em.mean() / SQ:.2f}, n {len(em)}), '
+              f'presidential {ep.mean():.3f} ({ep.mean() / SQ:.2f}, n {len(ep)})')
+        rows.append({'section': 'vix9d_inversion_subsets', 'underlying': 'GSPC', 'window': f'{k} sessions',
+                     'implied_led_n': len(c_), 'implied_led_ev_mid_at_vix9d': round(float(c_.mean() / SQ), 4),
+                     'first_day_n': len(f_), 'first_day_ev_mid_at_vix9d': round(float(f_.mean() / SQ), 4),
+                     'midterm_eve_n': len(em), 'midterm_eve_ev_mid_at_vix9d': round(float(em.mean() / SQ), 4),
+                     'pres_eve_n': len(ep), 'pres_eve_ev_mid_at_vix9d': round(float(ep.mean() / SQ), 4)})
         rows.append({'section': 'vix9d_inversion', 'underlying': 'GSPC', 'window': f'{k} sessions', 'n': len(b), 'episodes': episodes,
                      'mean_abs_z': round(float(b.mean()), 4), 'ev_mid_at_vix9d': round(float(b.mean() / SQ), 4),
                      'all_days_mean_abs_z': round(float(a.mean()), 4), 'all_days_ev_mid_at_vix9d': round(float(a.mean() / SQ), 4),
@@ -296,6 +340,25 @@ def main():
                 z9 = sym(inv[ndays])
                 lines.append((f'VIX9D-inverted days 2011+ x VIX9D {q["_VIX9D"]}', len(inv[ndays]),
                               payoff(S, K, z9 * q['_VIX9D'] / 100 * math.sqrt(ndays / 252))))
+                # episode-cluster bootstrap of the all-inverted-days EV at the ask (resample whole episodes, 2,000 times)
+                zz, ee = np.array(inv[ndays]), np.array(inv_ep[ndays])
+                ids = np.unique(ee)
+                grp = {g: zz[ee == g] for g in ids}
+                bs_ev = []
+                for _ in range(2000):
+                    pick = rng.choice(ids, len(ids))
+                    zb = np.concatenate([grp[g] for g in pick])
+                    bs_ev.append(payoff(S, K, sym(zb) * q['_VIX9D'] / 100 * math.sqrt(ndays / 252)).mean() / x['ask'])
+                lo_, hi_ = np.percentile(bs_ev, [2.5, 97.5])
+                print(f'     inverted-days EV/$ at ask, episode-cluster bootstrap ({len(ids)} episodes): 95% CI {lo_:.2f}-{hi_:.2f}; '
+                      f'P(EV <= 1) {np.mean(np.array(bs_ev) <= 1):.0%}')
+                rows.append({'section': 'ev_ci', 'underlying': u, 'window': f'{exp} straddle K {K:g}', 'method': 'VIX9D-inverted days, episode bootstrap',
+                             'n': len(ids), 'ci_lo': round(float(lo_), 4), 'ci_hi': round(float(hi_), 4),
+                             'p_ev_le_1': round(float(np.mean(np.array(bs_ev) <= 1)), 4)})
+                for lab9, pool9 in (('implied-led inverted days', evinv[ndays]), ('first inverted day per episode', first[ndays]),
+                                    ('all days 2011+', allz[ndays]), ('midterm eves 2014-22', [z for y, z, _ in eve[ndays] if y % 4 == 2])):
+                    lines.append((f'{lab9} x VIX9D {q["_VIX9D"]}', len(pool9),
+                                  payoff(S, K, sym(pool9) * q['_VIX9D'] / 100 * math.sqrt(ndays / 252))))
                 raw = sym([m[wkey]['r'] for m in mids if m['year'] >= 1990])
                 lines.append(('raw midterm moves 1990+ (unscaled)', len(raw) // 2, payoff(S, K, raw)))
             for lab, n, pay in lines:

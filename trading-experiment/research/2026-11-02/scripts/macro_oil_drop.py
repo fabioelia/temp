@@ -28,6 +28,8 @@ ENTRY: the close of t+1 (the next session's 14:43 check, proxied by its close; t
    * Baseline: the same model entered at every USO close with an ^OVX value, 2007-2026 (the unconditional payoff).
    XLE: no contract passes the rules on the 11/2 chain (spreads 22-200%); a hypothetical 11/27 0.40-delta call and put at the chain's ATM
    IV with a 10% spread (the rule's maximum) is modelled on raw paths at constant IV, conditional and unconditional.
+POST HOC (added after the first run, so it cannot count as evidence): the 11/27 primary contracts on events since 2025-01-01 and since
+2026-01-01 (the Hormuz-war regime), printed at the end.
 Descriptive and model results, not a claim test: nothing here is pre-registered in research/strategy-review/claims.md.
 """
 import csv
@@ -81,7 +83,8 @@ for a, b in zip(cld[:-1], cld[1:]):
     clr[b] = (cl[b] / cl[a] - 1, cl[a])
 lu = np.diff(np.log(U))
 r_today = clr[TODAY][0]
-print(f"== Today ({TODAY}): CL=F {cl[TODAY]:.2f} ({r_today:+.2%}), Brent BZ=F {bz[TODAY]:.2f} ({bz[TODAY] / bz[sorted(bz)[-2]] - 1:+.2%}), "
+print(f"== Today ({TODAY}): CL=F {cl[TODAY]:.2f} ({r_today:+.2%}), Brent BZ=F {bz[TODAY]:.2f} (Yahoo's prior BZ=F bar is the expired Dec "
+      f"contract, so no change is computed here; the snapshot's Jan-on-Jan figure is -8.1%), "
       f"USO {U[-1]:.2f} ({U[-1] / U[-2] - 1:+.2%}), XLE {X[-1]:.2f} ({X[-1] / X[-2] - 1:+.2%}), ^OVX {100 * O[-1]:.2f} (Yahoo)")
 rv20 = lu[-20:].std(ddof=1) * SQ(252)
 rv20_pre = lu[-21:-1].std(ddof=1) * SQ(252)
@@ -222,7 +225,8 @@ def line(tr, lab):
     s1 = np.array([t[3] for t in tr])
     t5 = (h5.mean() - 1) / L.nw_se_mean(h5, 5) if len(tr) > 2 else float('nan')
     t1 = (s1.mean() - 1) / L.nw_se_mean(s1, HOLD_END) if len(tr) > 2 else float('nan')
-    return (f"{lab}: n {len(tr):4d}; hold5 {h5.mean():.3f} (t {t5:+.2f}); hold11 {h11.mean():.3f}; set1 {s1.mean():.3f} (t {t1:+.2f}), "
+    t11 = (h11.mean() - 1) / L.nw_se_mean(h11, HOLD_END) if len(tr) > 2 else float('nan')
+    return (f"{lab}: n {len(tr):4d}; hold5 {h5.mean():.3f} (t {t5:+.2f}); hold11 {h11.mean():.3f} (t {t11:+.2f}); set1 {s1.mean():.3f} (t {t1:+.2f}), "
             f"+50% hit {np.mean(s1 >= 1.5 - 1e-9):.0%}, median set1 {np.median(s1):.2f}")
 
 
@@ -243,12 +247,13 @@ for e, k, K, s, b, a, iv, dl, oi in elig:
         print('       ' + line(bl, 'every day   '))
         saved[(s, norm)] = tr
         if e == date(2026, 11, 27):
-            fn = os.path.join(OUT, f"{s}_{'norm' if norm else 'raw'}.csv")
-            with open(fn, 'w', newline='') as f:
-                w = csv.writer(f)
-                w.writerow(['date', 'hold5', 'hold11', 'set1'])
-                for t in tr:
-                    w.writerow([t[0], f'{t[1]:.5f}', f'{t[2]:.5f}', f'{t[3]:.5f}'])
+            for suffix, rows in (('', tr), ('_declust', trd)):
+                fn = os.path.join(OUT, f"{s}_{'norm' if norm else 'raw'}{suffix}.csv")
+                with open(fn, 'w', newline='') as f:
+                    w = csv.writer(f)
+                    w.writerow(['date', 'hold5', 'hold11', 'set1'])
+                    for t in rows:
+                        w.writerow([t[0], f'{t[1]:.5f}', f'{t[2]:.5f}', f'{t[3]:.5f}'])
 
 # XLE hypothetical
 jX, QX = chain('XLE')
@@ -261,4 +266,12 @@ for kind, iv in (('C', civ), ('P', piv)):
     tr, cost = sim(X, lambda i, k: 1.0, ev_entries, S0_XLE, K, date(2026, 11, 27), iv, kind, 0.10, False, O)
     bl, _ = sim(X, lambda i, k: 1.0, base_entries, S0_XLE, K, date(2026, 11, 27), iv, kind, 0.10, False, O)
     print(f"     XLE {kind} K {K:.2f} iv {iv:.3f}: " + line(tr, 'events') + ' || ' + line(bl, 'every day'))
+print('\n== POST HOC (added after the first run; not evidence): the 11/27 primary contracts, events in the war regime')
+for s_ in ('USO261127C00163000', 'USO261127P00150000'):
+    for norm in (False, True):
+        tr = saved[(s_, norm)]
+        for lo in (date(2025, 1, 1), date(2026, 1, 1)):
+            sub = [t for t in tr if t[0] >= lo]
+            print(f"   {s_} {'norm' if norm else 'raw '} entries since {lo}: " + line(sub, '').lstrip(': ')
+                  + ' | set1 values ' + ' '.join(f'{t[3]:.2f}' for t in sub))
 print('\nwritten:', ', '.join(sorted(os.listdir(OUT))))
