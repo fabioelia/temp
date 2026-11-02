@@ -42,3 +42,13 @@ Stock and preset voices are generic synthetic voices. Use the app with video you
 ## test-media/
 
 Small, openly licensed clips for testing both tools: a *Tears of Steel* excerpt with subtitles in eight languages, Japanese read speech from FLEURS, and LibriSpeech readers for measuring Voice Lab training. Sources and licenses are in [`test-media/SOURCES.md`](test-media/SOURCES.md).
+
+## audio8-lab.html
+
+A test page for [Audio8 TTS Preview 0.6B](https://huggingface.co/Edge0/Audio8-TTS-Preview-0.6b) (Apache-2.0) running in the browser with ONNX Runtime Web. It does multilingual speech (11 languages) and zero-shot voice cloning from a 5–15 s reference recording plus its transcript. Cloning asks for the talent's release details, as in the Voice Lab.
+
+- Model files: the official INT4 ONNX build streams from Hugging Face (`Edge0/Audio8-TTS-Preview-0.6B-ONNX-INT4`): about 600 MB for speech, plus 415 MB once for registering a reference voice.
+- `models/audio8/`: the slow and fast graphs patched for the browser. ONNX Runtime Web has no CPU kernel for `GatherBlockQuantized`, so those 12 embedding lookups are removed and done in JavaScript from the same 4-bit weights (`patch_gbq.py`). The lookups are bit-identical to the original op.
+- Run `python3 tools/serve.py`, then open http://localhost:8000/audio8-lab.html. The server sends cross-origin isolation headers so the CPU path can use multiple threads.
+
+Status: verified on the CPU path in headless Chromium. English came out word-perfect according to Whisper, and voice registration works. CPU generation is slow (several seconds per 46 ms frame on one thread), so WebGPU is the intended path on Apple Silicon; it is not yet verified.
