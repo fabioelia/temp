@@ -628,3 +628,10 @@ arguments. **Process note:** the put/call agent ran one read-only `git status` a
   If it fills: P($2,200) about 50%, P(beat SPY) about 55%, about 1 in 3 below $1,600. Without approval the 11/2 pre-close cancels it.
 **Lesson:** honest numbers changed the question. It is no longer "which trade" but "how much variance does the owner want to buy for the goal". That is the owner's call.
 **Dashboard (11/01):** five files refreshed (summary 77399dff, equity b8996539, positions d669e520, orders ad9ae1f7, trades 1c31a50f); the old files were deleted.
+
+## 2026-11-02 (Mon) Pre-open (run fired 09:49 EST, late; clocks are now EST)
+**News:** oil fell sharply (CL=F 97.29, -6.6%) on reports that Iran's Supreme Leader authorized negotiations and that a draft proposal to end the US-Iran war is
+circulating (OilPrice, GuruFocus; unverified). Marvell is to buy Lumentum for $115B (Yahoo). AAPL reports after the close.
+**Early tape (Yahoo, single source):** SPY 760.11 (+0.6%), QQQ 695.24 (+0.7%), IWM 281.26 (+0.7%), ^VIX 18.97, ^TNX 4.89. No new Anthropic filing.
+**O012 (owner-only goal budget):** still unapproved. With SPY up about 0.6% from Friday, the 770C likely trades above its 7.85 cap, so it may not fill even if the
+owner approves; the 14:43 run checks. Unchanged (never confirmed in this run).
