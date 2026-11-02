@@ -19,7 +19,7 @@ Use it only on video you own or are licensed to use: your own review links, priv
    - `<title>-<time>.webm`: the tab audio (Opus).
    - `<title>-<time>.vtt`: caption lines, re-timed to the recording.
    - `<title>-<time>.json`: source URL, title, length and line count.
-5. In Dub Studio, go to Voice Lab → **Add audio + captions…** and select the `.webm` and `.vtt` together. If the captions name speakers (`<v Name>` tags or `NAME:` prefixes), pick which character's lines to use.
+5. In Dub Studio, go to Voice Lab → **Add audio + captions…** and select the `.webm` and `.vtt` together. (The importer also reads your own `.srt`, `.ttml`, `.dfxp` and IMSC `.xml` deliverables.) If the captions name speakers (`<v Name>` tags or `NAME:` prefixes), pick which character's lines to use.
 6. Dub Studio checks the caption timing against the speech in the audio, using Silero VAD over the first 4 minutes within ±15 s. It shifts the captions if they are clearly off, and tells you how much. Use ▶ to listen, and type a number in the offset box to override.
 
 ## Captions from the network
@@ -28,6 +28,7 @@ Many players never expose captions as a `<track>`. They fetch `.vtt` files or HL
 - **Files already loaded:** caption files the page fetched earlier are found in its resource timeline and fetched again inside the page, with the page's own credentials.
 - **Files loaded while recording:** the page's `fetch` and XHR are watched for new `.vtt`, `.srt` and `.m3u8` subtitle responses. HLS subtitle playlists have their segments fetched too, up to 600.
 - **One choice per stream:** segment files are grouped per stream (e.g. `…/eng/seg_#.vtt`) and listed as **Network: …** in the Captions menu.
+- **TTML / DFXP / IMSC:** `.ttml` and `.dfxp` files, and responses served as TTML, are converted to WebVTT inside the page, keeping speaker names from `ttm:agent`.
 - **Segment timing:** each segment's `X-TIMESTAMP-MAP` is applied so segments line up with each other. Any constant offset left over is removed by Dub Studio's alignment on import (see below).
 
 Audio always comes from tab capture. The extension doesn't download media segments.

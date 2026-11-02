@@ -3,13 +3,74 @@
 // page's own credentials; nothing is sent anywhere else.
 (() => {
   if (window.__dubNet) return;
+  // TTML / DFXP / IMSC -> caption cues [{ start, end, text, speaker }], using DOMParser.
+  // Handles clock times (HH:MM:SS.fff, HH:MM:SS:FF frames), offset times (12.5s, 300ms, 1h, 25f, 12345678t ticks),
+  // begin/end/dur, begin offsets inherited from enclosing <body>/<div>, <br/> line breaks, nested <span>s,
+  // and speaker names from ttm:agent (IMSC) or ttm:role="speaker"-style spans.
+  function ttmlToCues(xml) {
+    const doc = new DOMParser().parseFromString(xml, 'application/xml');
+    const tt = doc.documentElement;
+    if (!tt || tt.localName !== 'tt') return [];
+    const attr = (el, name) => { for (const a of el.attributes) if (a.localName === name) return a.value; return null; };
+    const frameRate = Number(attr(tt, 'frameRate')) || 30;
+    const [mn, md] = (attr(tt, 'frameRateMultiplier') || '1 1').split(/\s+/).map(Number);
+    const fps = frameRate * (mn && md ? mn / md : 1);
+    const subFrameRate = Number(attr(tt, 'subFrameRate')) || 1;
+    const tickRate = Number(attr(tt, 'tickRate')) || (attr(tt, 'frameRate') ? frameRate * subFrameRate : 1);
+    const time = (v) => {
+      if (v == null) return null;
+      v = v.trim();
+      let m = v.match(/^(\d+):(\d\d):(\d\d)(?:\.(\d+))?$/);
+      if (m) return +m[1] * 3600 + +m[2] * 60 + +m[3] + (m[4] ? Number('0.' + m[4]) : 0);
+      m = v.match(/^(\d+):(\d\d):(\d\d):(\d+)(?:\.(\d+))?$/);
+      if (m) return +m[1] * 3600 + +m[2] * 60 + +m[3] + (+m[4] + (m[5] ? +m[5] / subFrameRate : 0)) / fps;
+      m = v.match(/^(\d+(?:\.\d+)?)(h|ms|m|s|f|t)$/);
+      if (m) { const n = +m[1]; return { h: n * 3600, m: n * 60, s: n, ms: n / 1000, f: n / fps, t: n / tickRate }[m[2]]; }
+      return null;
+    };
+    const agents = new Map();
+    for (const a of doc.getElementsByTagNameNS('*', 'agent')) {
+      const id = a.getAttribute('xml:id') || attr(a, 'id');
+      const name = [...a.getElementsByTagNameNS('*', 'name')].map((n) => n.textContent.trim()).find(Boolean);
+      if (id) agents.set(id, name || id);
+    }
+    const speakerOf = (el) => {
+      for (let e = el; e && e.nodeType === 1; e = e.parentNode) {
+        const ag = attr(e, 'agent'); if (ag) return ag.split(/\s+/).map((x) => agents.get(x) || x).join(' & ');
+      }
+      return null;
+    };
+    const textOf = (node) => {
+      let out = '';
+      for (const c of node.childNodes) {
+        if (c.nodeType === 3) out += c.nodeValue;
+        else if (c.nodeType === 1) out += c.localName === 'br' ? '\n' : textOf(c);
+      }
+      return out;
+    };
+    const cues = [];
+    for (const p of doc.getElementsByTagNameNS('*', 'p')) {
+      let base = 0;                                   // time containment: begins on ancestors add up
+      for (let e = p.parentNode; e && e.nodeType === 1 && e !== tt; e = e.parentNode) base += time(attr(e, 'begin')) || 0;
+      const b = time(attr(p, 'begin')), e = time(attr(p, 'end')), d = time(attr(p, 'dur'));
+      if (b == null) continue;
+      const start = base + b, end = e != null ? base + e : d != null ? start + d : null;
+      const text = textOf(p).split('\n').map((l) => l.replace(/\s+/g, ' ').trim()).filter(Boolean).join('\n');
+      if (end != null && end > start && text) cues.push({ start, end, text, speaker: speakerOf(p) || [...p.getElementsByTagNameNS('*', 'span')].map(speakerOf).find(Boolean) || null });
+    }
+    return cues.sort((x, y) => x.start - y.start);
+  }
   const items = new Map();            // url -> { url, text, at }
-  const isCap = (u) => /\.(web)?vtt(\?|#|$)|\.srt(\?|#|$)|[?&](fmt|format)=(web)?vtt/i.test(u);
+  const isCap = (u) => /\.(web)?vtt(\?|#|$)|\.srt(\?|#|$)|\.(ttml|dfxp)(\?|#|$)|[?&](fmt|format)=(web)?vtt|[?&](fmt|format)=ttml/i.test(u);
+  const isTtml = (t) => /^\s*(<\?xml[^>]*>\s*)?(<!--[\s\S]*?-->\s*)*<tt[\s>]/.test(t);
+  const stamp = (t) => { const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60; return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${s.toFixed(3).padStart(6, '0')}`; };
+  const ttmlToVtt = (xml) => 'WEBVTT\n\n' + ttmlToCues(xml).map((c) => `${stamp(c.start)} --> ${stamp(c.end)}\n${c.speaker ? `<v ${c.speaker}>` : ''}${c.text}\n`).join('\n');
   const isList = (u) => /\.m3u8(\?|#|$)/i.test(u);
   const keep = (url, text) => {
     if (!text || items.has(url)) return;
     const t = text.trimStart();
     if (t.startsWith('WEBVTT') || /^\d+\s*\n\d\d:\d\d/.test(t)) items.set(url, { url, text, at: performance.now() });
+    else if (isTtml(t)) { try { items.set(url, { url, text: ttmlToVtt(t), at: performance.now(), from: 'ttml' }); } catch (e) {} }
     else if (t.startsWith('#EXTM3U')) playlist(url, text);
   };
   const seen = new Set();
@@ -33,7 +94,7 @@
     const res = await origFetch(...args);
     try {
       const url = res.url || String(args[0]?.url || args[0]);
-      if (isCap(url) || isList(url) || /vtt|subrip/i.test(res.headers.get('content-type') || '')) res.clone().text().then((t) => keep(url, t)).catch(() => {});
+      if (isCap(url) || isList(url) || /vtt|subrip|ttml/i.test(res.headers.get('content-type') || '')) res.clone().text().then((t) => keep(url, t)).catch(() => {});
     } catch (e) {}
     return res;
   };

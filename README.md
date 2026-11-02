@@ -55,4 +55,4 @@ Status: verified on the CPU path in headless Chromium. English came out word-per
 
 ## extension/: Dub Studio Capture
 
-A Chrome extension that records a page video's audio together with its caption track, for the Voice Lab's **Add audio + captions…** import. Caption lines become training sentences (no Whisper pass), split by speaker when the captions name them. It refuses DRM-protected video. Install and usage: [`extension/README.md`](extension/README.md).
+A Chrome extension that records a page video's audio together with its caption track, for the Voice Lab's **Add audio + captions…** import. Caption lines become training sentences (no Whisper pass), split by speaker when the captions name them. Captions can be WebVTT, SRT or TTML/DFXP/IMSC. For TTML that means tick, frame and clock times, nested `begin` offsets, and `ttm:agent` speakers; the format cases follow [netflix-to-srt](https://github.com/isaacbernat/netflix-to-srt) (MIT). The extension refuses DRM-protected video. Install and usage: [`extension/README.md`](extension/README.md).
