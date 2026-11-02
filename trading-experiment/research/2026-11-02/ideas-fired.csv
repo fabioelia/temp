@@ -1,0 +1,8 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-02,contrarian,QQQ261130C00710000,9.33,Cboe delayed chain 14:44 ET (bid 9.22; IV 23.5%; delta 0.33; QQQ 684.17 Yahoo); every condition met; not taken (shadow: full Kelly below one contract)
+2026-11-02,momentum,QQQ261204C00715000,8.98,Cboe delayed chain 14:44 ET (bid 8.89; IV 23.3%; delta 0.31; QQQ 684.17 within 679.81-700.31); not taken (shadow: t 1.82; Kelly below one contract)
+2026-11-02,historian,SPY261130C00770000,6.93,Cboe delayed chain 14:44 ET (bid 6.88; IV 14.3%; delta 0.35; SPY 754.02); price condition met (ask <= 7.85) but the owner-approval condition was not; logged so the goal-budget shadow can be judged; not taken (O012 cancelled)
+2026-11-02,macro,SPY261130C00770000,6.93,same quote as historian; owner condition unmet; not taken
+2026-11-02,options-vol,SPY261130C00770000,6.93,same quote as historian (ask <= 8.20 met); owner condition unmet; not taken
+2026-11-02,historian,QQQ261130C00710000,9.33,same quote as contrarian (ask <= 11.80 met); owner goal-budget condition unmet; not taken
+2026-11-02,options-vol,SPY261130P00750000,10.75,Cboe delayed chain 14:44 ET (bid 10.67; IV 17.0%; delta -0.41, just outside 0.35-0.40); bearish goal-budget alternative; owner condition unmet; not taken

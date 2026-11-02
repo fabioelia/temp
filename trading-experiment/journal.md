@@ -635,3 +635,14 @@ circulating (OilPrice, GuruFocus; unverified). Marvell is to buy Lumentum for $1
 **Early tape (Yahoo, single source):** SPY 760.11 (+0.6%), QQQ 695.24 (+0.7%), IWM 281.26 (+0.7%), ^VIX 18.97, ^TNX 4.89. No new Anthropic filing.
 **O012 (owner-only goal budget):** still unapproved. With SPY up about 0.6% from Friday, the 770C likely trades above its 7.85 cap, so it may not fill even if the
 owner approves; the 14:43 run checks. Unchanged (never confirmed in this run).
+
+## 2026-11-02 (Mon) Pre-close (14:44 EST)
+**Driver:** an early rally faded. Marvell fell on its $115B Lumentum deal (Motley Fool), and oil collapsed on the Iran negotiation reports.
+* Live (Yahoo, single source): SPY 754.02 (-0.2%), QQQ 684.17 (-0.9%; the 200-day is about 679.8), IWM 279.62 (+0.1%).
+* USO 158.40 (-6.2%), CL=F 96.60 (-7.2%); ^VIX 21.11, ^TNX 4.89. AAPL 337.16 (-2.2%) before tonight's print.
+**O012 (the owner-only SPY 770C goal budget) cancelled: no owner approval before 14:43.** Its price condition would have passed (ask 6.93, cap 7.85). It is logged
+for the shadow book, so the review can judge what the goal bet would have done.
+**Orders: none confirmed, none added.** No rule-passing trade (as the Sunday plan said). The account stays flat.
+**Idea watch (research/2026-11-02/ideas-fired.csv):** contrarian QQQ 11/30 710C (9.33) and momentum QQQ 12/04 715C (8.98) fired, as shadows sized below one
+contract; the goal-budget calls and the put are logged with the owner condition unmet. Next: the AAPL C1 check at Tuesday's 14:43 (it needs a down gap of 8%
+or more and a cheap put).
