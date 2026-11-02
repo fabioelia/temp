@@ -28,10 +28,10 @@
     return track && track.cues ? [...track.cues].map((c) => ({ start: c.startTime, end: c.endTime, text: (c.text || '').replace(/<[^>]+>/g, '').trim() })) : [];
   }
 
-  function start(videoIndex, trackIndex) {
+  function start(videoIndex, trackIndex, allowProtected) {
     const v = videos()[videoIndex];
     if (!v) return { error: 'Video not found.' };
-    if (isProtected(v)) return { error: 'This video is DRM-protected; capture is disabled.' };
+    if (isProtected(v) && !allowProtected) return { error: 'This video is DRM-protected; capture is disabled.' };
     const track = trackIndex != null ? v.textTracks[trackIndex] : null;
     if (track && track.mode === 'disabled') track.mode = 'hidden'; // loads cues without showing them
     const log = { t0: performance.now(), samples: [], cues: new Map(), v, track };
@@ -40,7 +40,8 @@
     log.handlers = { timeupdate: sample, seeked: sample, pause: sample, play: sample, ratechange: sample };
     for (const [e, h] of Object.entries(log.handlers)) v.addEventListener(e, h);
     if (track) { log.onCue = grab; track.addEventListener('cuechange', grab); }
-    log.timer = setInterval(() => { sample(); grab(); if (isProtected(v)) stop(); }, 250);
+    log.allowProtected = !!allowProtected;
+    log.timer = setInterval(() => { sample(); grab(); if (isProtected(v) && !log.allowProtected) stop(); }, 250);
     sample(); grab();
     state.logging = log;
     return { ok: true, protected: false };
@@ -53,7 +54,7 @@
     for (const [e, h] of Object.entries(log.handlers)) log.v.removeEventListener(e, h);
     if (log.track && log.onCue) log.track.removeEventListener('cuechange', log.onCue);
     log.samples.push([performance.now() - log.t0, log.v.currentTime, log.v.paused ? 1 : 0]);
-    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v), title: document.title, url: location.href };
+    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v) && !log.allowProtected, title: document.title, url: location.href };
   }
 
   window.__dubCapture = { scan, start, stop };

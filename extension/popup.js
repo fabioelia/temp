@@ -11,8 +11,10 @@ function fillTracks() {
     ...net.map((g, i) => new Option(`Network: ${g.label} (${g.files} file${g.files === 1 ? '' : 's'})`, `n:${i}`)));
   const pick = (v?.tracks || []).find((t) => t.kind === 'subtitles' || t.kind === 'captions');
   if (pick) $('track').value = `t:${pick.index}`; else if (net.length) $('track').value = 'n:0';
-  $('start').disabled = !v || v.protected || !!timer;
-  if (v?.protected) status('This player uses DRM (protected playback), so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.', 'err');
+  $('start').disabled = !v || (v.protected && !$('optin').checked) || !!timer;
+  if (v?.protected) status(!DEV ? 'This player uses DRM, so it is not recorded. Export the audio from your source files instead; the Voice Lab imports them with your captions.' : $('optin').checked
+    ? 'This player uses DRM. It will be recorded only if this site serves /.well-known/dub-studio-capture.json with {"allow": true}.'
+    : 'This player uses DRM, so it is not recorded. If this is your site, turn on the setting below and add the opt-in file; or export the audio from your source files.', 'err');
 }
 async function init() {
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -30,7 +32,11 @@ async function init() {
       b.style.marginTop = '8px';
       b.onclick = async () => {
         const ok = await chrome.permissions.request({ origins: lastScan.blocked.map((o) => o + '/*') });
-        if (ok) { b.remove(); init(); } else status('Access was not granted.', 'err');
+        if (ok) { b.remove(); const DEV = !!DUB_CAPTURE_CONFIG.devBuild;
+if (DEV) { $('optinRow').hidden = false; $('optinRow').style.display = 'flex'; }
+chrome.storage.local.get('allowOptInProtected').then(({ allowOptInProtected }) => { $('optin').checked = DEV && !!allowOptInProtected; fillTracks(); });
+$('optin').addEventListener('change', () => { chrome.storage.local.set({ allowOptInProtected: $('optin').checked }); fillTracks(); });
+init(); } else status('Access was not granted.', 'err');
       };
       $('status').after(b);
     } else status(`No video found (scanned ${lastScan.frames} frame${lastScan.frames === 1 ? '' : 's'}). If the player draws video on a canvas or plays only audio, it can't be captured yet.`, 'err');
@@ -59,4 +65,8 @@ $('stop').addEventListener('click', async () => {
   catch (e) { status(e.message, 'err'); }
   fillTracks();
 });
+const DEV = !!DUB_CAPTURE_CONFIG.devBuild;
+if (DEV) { $('optinRow').hidden = false; $('optinRow').style.display = 'flex'; }
+chrome.storage.local.get('allowOptInProtected').then(({ allowOptInProtected }) => { $('optin').checked = DEV && !!allowOptInProtected; fillTracks(); });
+$('optin').addEventListener('change', () => { chrome.storage.local.set({ allowOptInProtected: $('optin').checked }); fillTracks(); });
 init();

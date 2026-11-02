@@ -4,6 +4,7 @@
   body { font: 13px/1.45 system-ui, -apple-system, sans-serif; width: 340px; margin: 0; padding: 12px; color: #1b2330; background: #fff; }
   @media (prefers-color-scheme: dark) { body { color: #e6e9ee; background: #171b21; } select, button { color: #e6e9ee; background: #1e242c; border-color: #2a323d; } }
   h1 { font-size: 15px; margin: 0 0 8px; }
+  [hidden] { display: none !important; }
   label { display: block; margin: 8px 0 4px; color: #5d6879; }
   select, button { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid #d7dde6; border-radius: 6px; }
   .btns { display: flex; gap: 8px; margin-top: 10px; } .btns button { flex: 1; }
@@ -16,6 +17,8 @@
   <label for="track">Captions</label><select id="track"></select>
   <div class="btns"><button class="primary" id="start">Start recording</button><button id="stop" disabled>Stop &amp; save</button></div>
   <div class="hint" id="status">Play the video while recording; captions are captured as they play. Files are saved to Downloads/dub-capture/.</div>
-  <div class="hint">Only for video you own or are licensed to use. DRM-protected video is not recorded.</div>
+  <label id="optinRow" hidden style="gap:6px;align-items:flex-start;margin-top:10px;color:inherit"><input type="checkbox" id="optin" style="width:auto;margin-top:2px"> <span>Dev build: allow protected video on sites that opt in <span class="hint" style="display:block;margin:0">The site must serve /.well-known/dub-studio-capture.json with {"allow": true}. Not available in release builds.</span></span></label>
+  <div class="hint">Only for video you own or are licensed to use.</div>
+  <script src="config.js"></script>
   <script src="popup.js"></script>
 </body></html>

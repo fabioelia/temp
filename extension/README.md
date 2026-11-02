@@ -39,6 +39,12 @@ Audio always comes from tab capture. The extension doesn't download media segmen
 - `background.js` gets a tab-capture stream ID. Cues are mapped from video time to recording time through the playback log, so pauses and seeks are handled; lines that didn't play are dropped.
 - `offscreen.js` records the stream with `MediaRecorder` and plays it back so the tab isn't muted.
 
+## Dev and release builds
+
+`config.js` holds the build flag:
+- **Development (`extension/`, `devBuild: true`):** the popup shows *Dev build: allow protected video on sites that opt in*. Even with it on, protected (DRM) video is recorded only on sites that serve `/.well-known/dub-studio-capture.json` with `{"allow": true}`, on the page's or the player frame's origin.
+- **Release (`python3 tools/build_extension.py`):** builds `dist/dub-studio-capture/` and a zip with `devBuild: false`. The DRM check is always enforced, and the setting is neither shown nor read.
+
 ## When it finds no video
 
 The popup says what it found and in how many frames:
