@@ -260,6 +260,10 @@
             <input type="file" id="labVideoInput" accept="video/*,audio/*,.mkv" hidden>
             <button id="labExtractLoaded" disabled title="Use the video loaded in the Video section">Use loaded video</button>
           </div>
+          <div class="btns">
+            <button id="labCaptioned" title="An audio or video file plus its .vtt or .srt captions (e.g. from the Dub Studio Capture extension). Lines are split by caption, and by speaker when the captions name them.">Add audio + captions…</button>
+            <input type="file" id="labCaptionInput" accept="audio/*,video/*,.webm,.vtt,.srt" multiple hidden>
+          </div>
           <label class="row"><span>Scan</span>
             <select id="labScanMin"><option value="3">first 3 minutes</option><option value="5" selected>first 5 minutes</option><option value="10">first 10 minutes</option><option value="20">first 20 minutes</option></select></label>
           <label class="check"><input type="checkbox" id="labIsolate" checked> <span>Separate voices from music and effects <span class="hint">(Open-Unmix UMX-L, ≈110 MB; its weights are licensed for non-commercial use, so swap in a licensed separator for production)</span></span></label>
@@ -2285,6 +2289,7 @@ async function trainNeural() {
     await nvWorker.call('reset');
     const utts = [];
     for (let i = 0; i < lab.clips.length && !t.stop; i++) {
+      if (lab.clips[i].utts) { utts.push(...lab.clips[i].utts); continue; } // captioned: text and timing already known
       setStage(`Transcribing recording ${i + 1} of ${lab.clips.length}`); setProgress(0);
       const items = await asrWorker.call('transcribeFile', { audio: lab.clips[i].pcm.slice(), opts: { language: 'en', task: 'transcribe', multilingual: true } });
       utts.push(...utterancesFrom(items, lab.clips[i].pcm));
@@ -2589,6 +2594,64 @@ function renderFound() {
   });
 }
 
+// --- audio + captions (from your own files or the Dub Studio Capture extension) ---
+function parseCaptions(text) {
+  const t = (s) => { const m = s.trim().replace(',', '.').match(/(?:(\d+):)?(\d+):(\d+(?:\.\d+)?)/); return m ? (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3])) : NaN; };
+  const cues = [];
+  for (const block of text.replace(/\r/g, '').split(/\n\s*\n/)) {
+    const lines = block.split('\n').filter((l) => l.trim());
+    const i = lines.findIndex((l) => l.includes('-->')); if (i < 0) continue;
+    const [a, b] = lines[i].split('-->'); const start = t(a), end = t(b.split(/\s+/).filter(Boolean)[0] || '');
+    let raw = lines.slice(i + 1).join(' ');
+    let speaker = (raw.match(/<v(?:\.[^ >]*)?\s+([^>]+)>/) || [])[1] || null;
+    raw = raw.replace(/<[^>]+>/g, '').replace(/\{[^}]*\}/g, '').trim();
+    const pre = raw.match(/^([A-Z][A-Z0-9 .'-]{1,30}|\[[^\]]{1,30}\]):\s*(.+)$/);
+    if (!speaker && pre) { speaker = pre[1].replace(/[[\]]/g, '').trim(); raw = pre[2]; }
+    raw = raw.replace(/^[-–]\s*/, '').replace(/\[[^\]]*\]|\([^)]*\)|♪/g, '').replace(/\s+/g, ' ').trim();
+    if (Number.isFinite(start) && Number.isFinite(end) && end > start && raw) cues.push({ start, end, text: raw, speaker });
+  }
+  return cues.sort((x, y) => x.start - y.start);
+}
+// Cues -> sentences of up to 12 s (consecutive lines of the same speaker less than 0.6 s apart are joined).
+function captionUtterances(cues, pcm) {
+  const out = []; let cur = null;
+  for (const c of cues) {
+    if (cur && c.start - cur.end < 0.6 && c.end - cur.start <= 12) { cur.end = c.end; cur.text += ' ' + c.text; }
+    else { cur = { start: c.start, end: c.end, text: c.text }; out.push(cur); }
+  }
+  return out.filter((u) => u.end - u.start >= 1).map((u) => ({ text: u.text, pcm: pcm.slice(Math.max(0, Math.floor((u.start - 0.05) * SR)), Math.min(pcm.length, Math.ceil((u.end + 0.1) * SR))) }))
+    .filter((u) => u.pcm.length > SR * 0.8);
+}
+async function importCaptioned(files) {
+  showError('');
+  const cap = files.find((f) => /\.(vtt|srt)$/i.test(f.name)), media = files.find((f) => f !== cap && !/\.(json)$/i.test(f.name));
+  if (!cap || !media) { showError('Choose the audio (or video) file and its .vtt or .srt captions together.'); return; }
+  try {
+    setStage(`Reading ${media.name}`); setProgress(null);
+    const cues = parseCaptions(await cap.text());
+    if (!cues.length) throw new Error(`No caption lines found in ${cap.name}.`);
+    const pcm = await decodeTo16k(media);
+    const groups = new Map();
+    for (const c of cues) { const k = c.speaker || 'All lines'; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(c); }
+    els.labFound.textContent = '';
+    els.labFound.append(el('div', { class: 'hint' }, `${cap.name}: ${cues.length} caption lines${groups.size > 1 ? `, ${groups.size} speakers` : ''}. Pick whose lines to use.`));
+    [...groups.entries()].sort((a, b) => b[1].length - a[1].length).forEach(([who, list], i) => {
+      const utts = captionUtterances(list, pcm), secs = utts.reduce((n, u) => n + u.pcm.length, 0) / SR;
+      els.labFound.append(el('div', { class: 'v' }, [
+        el('span', { class: 'name', style: `color:${PALETTE[i % PALETTE.length]}` }, who),
+        el('span', { class: 'hint' }, `${utts.length} lines · ${Math.round(secs)} s`),
+        el('button', { title: 'Hear the first lines', onclick: () => { audio.resume(); const a = new Float32Array(utts.slice(0, 2).reduce((n, u) => n + u.pcm.length, 0)); let o = 0; for (const u of utts.slice(0, 2)) { a.set(u.pcm, o); o += u.pcm.length; } playBuffer({ audio: a, sr: SR, rate: 1 }, audio.ctx.currentTime + 0.05, 0); } }, '▶'),
+        el('button', { disabled: !utts.length, onclick: () => {
+          const all = new Float32Array(utts.reduce((n, u) => n + u.pcm.length, 0)); let o = 0; for (const u of utts) { all.set(u.pcm, o); o += u.pcm.length; }
+          lab.clips.push({ name: `${media.name} · ${who}`, pcm: all, utts }); labClipsChanged();
+          logLine(`Added ${utts.length} captioned lines (${Math.round(secs)} s) for ${who}.`);
+        } }, 'Use for training'),
+      ]));
+    });
+    setStage(`Loaded ${cues.length} caption lines from ${cap.name}`); setProgress(0);
+  } catch (e) { showError(friendlyError(e)); setStage('Import failed'); setProgress(0); }
+}
+
 // --- Speak panel ---
 const speak = { stop: false, last: null, nodes: [] };
 function renderSpeakVoices() {
@@ -2660,7 +2723,7 @@ function syncLab() {
   const secs = lab.clips.reduce((n, c) => n + c.pcm.length, 0) / SR, busy = !!lab.training || state.running;
   els.labRecordClip.disabled = busy;
   els.labAddClips.disabled = busy;
-  els.labExtractBtn.disabled = busy || !!lab.extracting; els.labExtractLoaded.disabled = busy || !!lab.extracting || !state.file;
+  els.labExtractBtn.disabled = busy || !!lab.extracting; els.labCaptioned.disabled = busy; els.labExtractLoaded.disabled = busy || !!lab.extracting || !state.file;
   const relOk = release().ok;
   els.labTrainBtn.disabled = busy || !relOk || secs < 20;
   els.labTrainBtn.title = !relOk ? 'Add the talent\'s release details first' : secs < 20 ? 'Add at least 20 seconds of recordings' : '';
@@ -2685,6 +2748,8 @@ function initLab() {
   els.labSaveBtn.addEventListener('click', saveLabVoice);
   els.labImportBtn.addEventListener('click', () => els.labImportInput.click());
   els.labImportInput.addEventListener('change', () => { importLabVoice(els.labImportInput.files[0]); els.labImportInput.value = ''; });
+  els.labCaptioned.addEventListener('click', () => els.labCaptionInput.click());
+  els.labCaptionInput.addEventListener('change', () => { const f = [...els.labCaptionInput.files]; els.labCaptionInput.value = ''; if (f.length) importCaptioned(f); });
   els.labExtractBtn.addEventListener('click', () => els.labVideoInput.click());
   els.labVideoInput.addEventListener('change', () => { const f = els.labVideoInput.files[0]; els.labVideoInput.value = ''; if (f) extractVoices(f); });
   els.labExtractLoaded.addEventListener('click', () => state.file && extractVoices(state.file));
@@ -2762,7 +2827,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); syncButtons(); detectGPU(); initLab();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
+  window.__dub = { state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>

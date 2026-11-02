@@ -52,3 +52,7 @@ A test page for [Audio8 TTS Preview 0.6B](https://huggingface.co/Edge0/Audio8-TT
 - Run `python3 tools/serve.py`, then open http://localhost:8000/audio8-lab.html. The server sends cross-origin isolation headers so the CPU path can use multiple threads.
 
 Status: verified on the CPU path in headless Chromium. English came out word-perfect according to Whisper, and voice registration works. CPU generation is slow (several seconds per 46 ms frame on one thread), so WebGPU is the intended path on Apple Silicon; it is not yet verified.
+
+## extension/: Dub Studio Capture
+
+A Chrome extension that records a page video's audio together with its caption track, for the Voice Lab's **Add audio + captions…** import. Caption lines become training sentences (no Whisper pass), split by speaker when the captions name them. It refuses DRM-protected video. Install and usage: [`extension/README.md`](extension/README.md).
