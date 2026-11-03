@@ -2855,6 +2855,9 @@ async function alignCaptions(cues, pcm) {
   for (const c of cues) for (let t = Math.max(0, Math.floor(c.start / hop)); t < Math.min(n, Math.ceil(c.end / hop)); t++) cu[t] = 1;
   const ms = sp.reduce((a, b) => a + b, 0) / n, mc = cu.reduce((a, b) => a + b, 0) / n;
   if (!mc) return { offset: 0, how: 'no caption lines fall in the first minutes; use the offset box if needed' };
+  // With few lines the correlation has false peaks (a handful of cues can line up with the wrong speech).
+  const inWindow = cues.filter((c) => c.start < n * hop).length;
+  if (inWindow < 12) return { offset: 0, how: `only ${inWindow} caption lines to compare with, too few to align automatically; use ▶ and the offset box if needed` };
   const score = (d) => { let s2 = 0; for (let t = Math.max(0, d); t < Math.min(n, n + d); t++) s2 += (sp[t] - ms) * (cu[t - d] - mc); return s2; };
   const D = Math.round(15 / hop);
   let best = 0, bestScore = score(0); const s0 = bestScore;
@@ -3016,7 +3019,9 @@ function initLab() {
 // characters the captions named in this video; the rest are grouped by voice for the user to name.
 // Saving adds each named character's voice print and lines (audio + text) to the library, where the
 // lines become training data for that character's voice and the print recognises them in later videos.
-const CHAR_MATCH = 0.5, CHAR_MARGIN = 0.04, CLUSTER_AT = 0.45, CHAR_MAX_SEC = 20 * 60;
+// WeSpeaker on 1-3.5 s lines: a line scores about 0.45-0.7 against its own speaker's mean print and 0.05-0.35
+// against another speaker's (measured on Tears of Steel), so a match needs 0.35 and a clear lead over the runner-up.
+const CHAR_MATCH = 0.35, CHAR_MARGIN = 0.08, CHAR_SURE = 0.45, CLUSTER_AT = 0.35, CHAR_MAX_SEC = 20 * 60;
 const chars = { lib: [], ep: null, sel: null, mark: null, playUntil: null, busy: false };
 const tsec = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padStart(4, '0')}`;
 const isAutoName = (n) => /^Voice [A-Z]{1,2}$/.test(n);
@@ -3046,11 +3051,12 @@ async function loadCaptionsFor(file) {
   } catch (e) { showError(e.message); }
 }
 
-// Caption cues -> lines: consecutive cues of the same speaker < 0.5 s apart join, up to 8 s.
+// Caption cues -> lines: consecutive cues of the same named speaker < 0.5 s apart join, up to 8 s.
+// Unnamed cues stay separate (a new cue is often a new speaker).
 function cueLines(cues) {
   const out = []; let cur = null;
   for (const c of cues) {
-    if (cur && c.speaker === cur.cap && c.start - cur.end < 0.5 && c.end - cur.start <= 8) { cur.end = c.end; cur.text += ' ' + c.text; }
+    if (cur && c.speaker && c.speaker === cur.cap && c.start - cur.end < 0.5 && c.end - cur.start <= 8) { cur.end = c.end; cur.text += ' ' + c.text; }
     else { cur = { start: c.start, end: c.end, text: c.text, cap: c.speaker || null }; out.push(cur); }
   }
   return out;
@@ -3152,7 +3158,7 @@ function attribute(ep) {
   }
   const rest = ep.lines.filter((l) => !l.char && l.emb);
   if (rest.length) {
-    const groups = clusterWindows(rest.map((l) => ({ emb: l.emb, start: l.start, end: l.end, line: l })), CLUSTER_AT, 0.55);
+    const groups = clusterWindows(rest.map((l) => ({ emb: l.emb, start: l.start, end: l.end, line: l })), CLUSTER_AT, 0.5);
     for (const g of groups) {
       const key = castKey(ep, nextVoiceName(ep));
       for (const w of g.windows) { w.line.char = key; w.line.how = 'cluster'; w.line.sim = w.sim; }
@@ -3210,7 +3216,7 @@ function renderEpisode() {
     const lane = el('div', { class: 'lane', title: 'Click to jump there' });
     lane.addEventListener('click', (e) => { if (e.target !== lane || !video) return; const r = lane.getBoundingClientRect(); video.currentTime = (e.clientX - r.left) / r.width * ep.duration; });
     for (const l of lines) {
-      const low = (l.how === 'voice' && l.sim < 0.6) || (l.how === 'cluster' && l.sim < 0.55) || l.how === 'guess';
+      const low = ((l.how === 'voice' || l.how === 'cluster') && l.sim < CHAR_SURE) || l.how === 'guess';
       const b = el('div', { class: `blk${low ? ' low' : ''}${l === chars.sel ? ' sel' : ''}`, title: `${tsec(l.start)} · ${l.text}`, 'data-i': ep.lines.indexOf(l),
         style: `left:${l.start / ep.duration * 100}%;width:${Math.max(0.12, (l.end - l.start) / ep.duration * 100)}%;background:${c ? c.color : '#888'}` });
       b.addEventListener('click', (e) => { e.stopPropagation(); selectLine(l); playLine(l); });
@@ -3230,7 +3236,7 @@ function charLineRow(l, i) {
     let v = e.target.value;
     if (v === '__new') { const name = (prompt('Name of the character') || '').trim(); if (!name) { e.target.value = l.char || ''; return; } v = castKey(ep, name); }
     l.char = v || null; l.how = 'manual'; l.sim = 1; chars.sel = l; renderEpisode();
-  } }, [el('option', { value: '' }, '— unassigned —'), ...ep.cast.map((c) => el('option', { value: c.key, selected: c.key === l.char }, (l.how === 'voice' || l.how === 'cluster') && l.sim < 0.6 && c.key === l.char ? c.name + ' ?' : c.name)), el('option', { value: '__new' }, '+ New character…')]);
+  } }, [el('option', { value: '' }, '— unassigned —'), ...ep.cast.map((c) => el('option', { value: c.key, selected: c.key === l.char }, (l.how === 'voice' || l.how === 'cluster') && l.sim < CHAR_SURE && c.key === l.char ? c.name + ' ?' : c.name)), el('option', { value: '__new' }, '+ New character…')]);
   const nudge = (k, d, label) => el('button', { title: `Move the ${k} ${d > 0 ? 'later' : 'earlier'} by 0.1 s`, onclick: () => {
     l[k] = Math.max(0, Math.round((l[k] + d) * 100) / 100);
     if (l.end - l.start < 0.2) l[k] -= d;
@@ -3317,7 +3323,7 @@ async function saveEpisodeCast() {
       let rec = (c.libId && chars.lib.find((x) => x.id === c.libId)) || chars.lib.find((x) => x.name.toLowerCase() === c.name.toLowerCase());
       if (!rec) rec = { id: 'char:' + crypto.randomUUID(), name: c.name, color: c.color, print: null, printN: 0, voice: null, talent: '', createdAt: new Date().toISOString(), sources: [], clips: 0, seconds: 0 };
       // Voice print from lines that are surely this character.
-      const sure = ls.filter((l) => l.emb && (l.how === 'caption' || l.how === 'manual' || l.sim >= 0.6)).map((l) => l.emb);
+      const sure = ls.filter((l) => l.emb && (l.how === 'caption' || l.how === 'manual' || l.sim >= CHAR_SURE)).map((l) => l.emb);
       if (sure.length) {
         const sum = new Float32Array(sure[0].length);
         if (rec.print) for (let i = 0; i < sum.length; i++) sum[i] = rec.print[i] * rec.printN;
@@ -3329,7 +3335,7 @@ async function saveEpisodeCast() {
       const clips = [];
       for (const l of ls) {
         const d = l.end - l.start;
-        if (!l.text.trim() || d < 1 || d > 15 || (l.how !== 'caption' && l.how !== 'manual' && l.sim < 0.55)) continue;
+        if (!l.text.trim() || d < 1 || d > 15 || (l.how !== 'caption' && l.how !== 'manual' && l.sim < CHAR_SURE)) continue;
         if (used + d > room) break;
         clips.push({ id: `${rec.id}|${ep.file.name}|${l.start.toFixed(2)}`, charId: rec.id, text: l.text.trim(), pcm: lineAudio(ep.voice16, l), source: ep.file.name, start: l.start, end: l.end, isolated: ep.isolated, how: l.how, at: new Date().toISOString() });
         used += d;
