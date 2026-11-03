@@ -348,6 +348,11 @@ def main():
 
     # references by the 11/01 rule, and the goal-budget reference
     M.REF = {k: pick("QQQ", k, lambda e: 21 <= (e - ENTRY).days <= 35, 0.30, 0.45, 30, 0.40, 0.05) for k in ("P", "C")}
+    for k in ("P", "C"):   # added after the first run: tonight's evening QQQ quotes are 12-33% wide, so no contract passes the 5% rule
+        if M.REF[k] is None:
+            M.REF[k] = pick("QQQ", k, lambda e: 21 <= (e - ENTRY).days <= 35, 0.30, 0.45, 30, 0.40, 9.99)
+            print(f"  NOTE: no QQQ {k} passes spread < 5% tonight; fallback without the spread rule: {M.REF[k]} "
+                  f"(M3 then pays a wide evening ask and is not a fair translation)")
     gref = pick("SPY", "C", lambda e: e in (date(2026, 11, 30), date(2026, 12, 4)), 0.35, 0.40, 26, 0.375, 0.05)
     print(f"M3 references (11/01 rule, from 11/4): {M.REF}; goal-budget reference (brief rule): {gref}")
 
