@@ -216,6 +216,25 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - Oil after a 6%+ drop has no edge (74 cases since 2006; calls 0.67-0.75 per $). The midterm premium is fair to rich.
     - All four personas: no trade for Tuesday.
 
+* **Goal-budget bet, decided by Claude under the owner's autonomy grant (2026-11-02: "You dont need my approval to do anything work autonomously").**
+  The owner's goals are $2,200 and beating SPY; they removed the buy caps and gave the whole $2,000. With no evidence-backed edge available, a cash finish beats SPY
+  only about 15% of the time and reaches $2,200 never.
+  One SPY call raises those to about 45-55%, at a flat expected value (0.94-1.04 per $, so a choice of variance, not an edge). Claude takes it, with the -50%
+  stop: the red-team found the stop costs about 4 points of goal odds and cuts the chance of a 75%+ loss from about 1 in 4 to 3%.
+  **Pre-registered entry rule (written 11/02 evening, before Wednesday's prices):**
+  - **When:** Wed 11/4 at the 14:43 check only. That is after the midterm vote: the event premium was rich (midterm straddles returned 0.52-0.90 per $), and the
+    morning-after IV crush lowers the entry cost.
+  - **Contract:** 1 SPY call, 11/30 or 12/04 expiry, delta 0.35-0.40, OI at least 1000, spread at most 5%, premium at most $850.
+  - **Confirm only if all hold:**
+    - `research/2026-11-02/scripts/goal_odds.py` (the parameterized historian model) at the live quote, with the -50% stop, gives P($2,200) of at least 35%
+      and a model EV of at least 0.93 per $;
+    - no market-closing halt or circuit-breaker day;
+    - a fresh risk red-team does not reject it (the buy is 20% or more of equity).
+  - **Exits:** sell at the first 14:43 check where equity is at least $2,200, with a resting GTC at that call price if it is at least 1.4x cost, else checked at
+    14:43; the -50% stop at a 14:43 check; otherwise sell at the 11/18 14:43 check.
+  - **Other decisions under the autonomy grant:** the take-profit question for other trades stays as is (D4 is WEAK evidence, not enough to change). There is no
+    separate "stop and talk" loss point; the owner gave the whole $2,000 and autonomy, and the kill switch remains theirs.
+
 ## Catalyst calendar for shots (re-judge every run)
 * **Week of 10/19:** NFLX 10/20 (event vol very rich, no trade). META and TSLA report 10/21 after the close; LRCX, TXN and IBM the same evening. This is the AI-capex test.
   No event trade on META (no edge on an expiry that clears the 3-day rule); trade the reaction (decide 10/22) rather than holding through. Thu 10/22: earliest follow-through day.
@@ -265,6 +284,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-02 (evening, owner's autonomy grant): Claude decides the goal budget, which is one SPY call with a -50% stop, entered Wed 11/4 under a pre-registered rule.
 * 2026-11-02 (Run B): no proposals for 11/3; QCOM C1 conditional for 11/5; O012 cancelled without owner approval.
 * 2026-11-01 (Sunday re-plan): no rule-passing trade this week; the C1 watch (QCOM); the owner-only goal budget O012 framed with full odds; C1 expiry at least 14 days.
 * 2026-11-01 (W44 review): C1 rule final (no market gates; the VIX split shows no effect); a Kelly sizing method (sizing.py, plan at half-Kelly); the shadow book no longer marks unfired ideas.

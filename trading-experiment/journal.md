@@ -663,3 +663,15 @@ $2,200 needs +14.7%, with 12 sessions left. **Fills:** none (O012 cancelled with
 **Lesson:** the evidence rules and Kelly sizing now produce "no trade" almost every day. That is consistent, but it is the owner's goal-budget question that decides
 whether the account takes any risk before 11/18.
 **Dashboard (11/02):** five files refreshed (summary 2dc0f7e8, equity 2a8a1c1e, positions 33861fc5, orders 68f2c36c, trades 59f13571); the old files were deleted.
+
+## 2026-11-02 (Mon, evening) Owner: "You dont need my approval to do anything work autonomously"
+**Authorization recorded** (config `live.authorization`). Decisions inside the experiment are now Claude's. The hard limits are unchanged: the agent account only,
+the $2,000 cap, buying options only, the gate tickets and the kill switch.
+**Decisions taken now (they were owner questions):**
+1. **Goal budget: YES, with a -50% stop.** With no tested edge, cash beats SPY about 15% of the time and never reaches $2,200. One SPY call takes both goals to
+   about 45-55% at a flat expected value. The owner's revealed preferences (caps removed, "2k to work with", beating a doubting friend) favor the variance.
+   The stop trades about 4 points of odds for removing most of the tail (75%+ losses fall from about 1 in 4 to 3%).
+2. **Timing: Wed 11/4 at 14:43, not election day.** The event premium is rich, and the morning-after IV crush cheapens the call. The entry rule is
+   pre-registered in the playbook (P($2,200) >= 35% and EV >= 0.93 from the parameterized model; a red-team).
+3. **The take-profit for other trades** stays (D4 WEAK). **No "stop and talk" line.**
+**Build:** a parameterized `goal_odds.py` (from the historian's 11/01 model, which had the 10/30 quotes hard-coded), so Wednesday's check uses live quotes.
