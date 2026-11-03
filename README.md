@@ -23,10 +23,15 @@ A single self-contained HTML page that **dubs video into another language in the
      - The bed *is* the M&E, so none of the original dialogue remains.
      - Mix minus M&E gives the exact dialogue track for voice prints and training clips.
      - Measured: the bed matched the M&E at correlation 1.00000, with dialogue at −75 dB (rounding only). Whisper recovered no more Japanese from it than from a track with no speech (3.5%). The dialogue track matched the true voice at 0.9997.
-  2. **5.1 sources:** only the centre (dialogue) channel is separated.
-     - The other channels' music and effects pass through untouched, and the bed is folded to stereo as a browser plays 5.1.
-     - Measured: where the centre has no speech the bed is identical to the original fold-down (−66 dB difference). Under speech, Whisper recovered no more than from the speech-free track.
+  2. **5.1 sources** are separated as their stereo fold-down.
+     - Separating only the centre channel was tried and measured worse on the film's real 5.1 mix: dialogue there is not only in the centre (with the centre muted, Whisper still heard 60% of the subtitle words).
+     - Centre-only separation left 57% of the words recognizable; fold-down separation left 20%.
   3. **Stereo mixes with no stem:** a neural model separates the dialogue (details below). Quiet dialogue is removed well, but some can remain under loud action.
+- **On the real film** (*Tears of Steel*, its official stereo mix, M&E and Dolby 5.1 mix; soundtrack (C) Joram Letwory, CC BY-ND 3.0, used for testing only), Whisper heard this share of the subtitle words:
+  - **With the production M&E track** (all 76 subtitled lines): 77% in the original, **2.3% in the bed, exactly chance level (2.3%)**. No recognizable original dialogue remains.
+    - The stem started 32 ms off the video's audio and was lined up automatically.
+    - It was mixed separately from the stereo mix (they correlate 0.55), so the app keeps the M&E as the bed and takes voice prints from the mix.
+  - **Without a stem, model separation:** 15.6% over the whole film. In the 3:00–6:45 action stretch, 21% from the stereo mix and 20% from the 5.1 mix.
 - **Dialogue replacement (model):** a neural model ([TIGER-DnR](https://huggingface.co/audiojs/tiger-dnr), Apache-2.0, 7 MB) removes the original dialogue and keeps the music and effects. The dubbed voices play over that bed in sync with the picture, and the bed and the finished mix export as WAV. Live dubbing, which has no bed, ducks the original and cancels its centre channel instead.
 - **Characters:** see *Characters* below. The app finds who speaks when in a video, matches voices to your character library, and dubs each character with their own voice.
 - **Live modes:** dub the loaded video, another browser tab (via screen-share audio) or the microphone in real time (about 1–3 s behind with WebGPU). The voice for each live line is chosen by how high or low the speaker sounds.

@@ -2643,17 +2643,15 @@ function alignOffset(mL, mR, eL, eR) {
 async function separateDialogue(file, maxSec = Infinity) {
   if (sepCache && sepCache.file === file && sepCache.maxSec >= maxSec) return sepCache;
   setStage(`Decoding ${file.name}`); setProgress(null);
-  const dec = await decodeRange(file, 0, maxSec, SEP_SR, 'native');
-  // Surround (5.1 and up): dialogue lives in the centre channel, so only the centre is separated; the
-  // other channels' music and effects pass through untouched and the bed is folded to stereo with the
-  // same coefficients a browser uses to play 5.1 on stereo (L + 0.707 C + 0.707 SL). Stereo / mono: the
-  // dialogue is taken from the mid channel and removed from both sides.
-  const surround = dec.chans.length >= 6;
-  const c = dec.chans, n = c[0].length;
-  const L = surround ? c[2] : c[0], R = surround ? c[2] : (c[1] || c[0]);      // what the model sees: centre, or L/R
-  const outL = surround ? (i, v) => c[0][i] + 0.7071 * (c[2][i] - v) + 0.7071 * c[4][i] : (i, v) => L[i] - v;
-  const outR = surround ? (i, v) => c[1][i] + 0.7071 * (c[2][i] - v) + 0.7071 * c[5][i] : (i, v) => R[i] - v;
-  if (surround) logLine(`${dec.layout}-channel audio: separating the centre (dialogue) channel only; the other channels are kept as they are.`);
+  // Surround sources are separated as their stereo fold-down, the input the model was trained on.
+  // Separating only the centre channel was measured worse on a real 5.1 film mix (Tears of Steel, 3:00-6:45):
+  // its dialogue is not only in the centre (with the centre muted, 60% of subtitle words were still heard),
+  // and the model removes far less from an isolated centre channel. Centre only: 57% of words still heard;
+  // fold-down: 20%.
+  const dec = await decodeRange(file, 0, maxSec, SEP_SR, 2);
+  const [L, R] = dec.chans, n = L.length, surround = dec.layout >= 6;
+  const outL = (i, v) => L[i] - v, outR = (i, v) => R[i] - v;
+  if (surround) logLine(`${dec.layout}-channel audio: separating its stereo fold-down.`);
   const sepDevice = await ensureSeparator();
   setStage('Separating dialogue from music and effects'); setProgress(0);
   const bedL = new Int16Array(n), bedR = new Int16Array(n), dlg16 = new Float32Array(Math.floor(n * SR / SEP_SR));
@@ -2676,7 +2674,7 @@ async function separateDialogue(file, maxSec = Infinity) {
     const o = Math.floor(s * SR / SEP_SR), d16 = resample(d.subarray(s - a, e - a), SEP_SR, SR);
     dlg16.set(d16.subarray(0, Math.max(0, Math.min(d16.length, dlg16.length - o))), o);
   }
-  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label + (surround ? ', centre channel' : ''), seconds: (performance.now() - t0) / 1000, device: sepDevice, hop };
+  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label + (surround ? `, ${dec.layout}-channel source folded down` : ''), seconds: (performance.now() - t0) / 1000, device: sepDevice, hop };
   logLine(`Separated ${fmtTime(n / SEP_SR)} of audio in ${fmtTime(sepCache.seconds)} on ${sepDevice} (${(n / SEP_SR / sepCache.seconds).toFixed(2)}× real time, ${els.sepHop.selectedOptions[0]?.textContent.split(' ')[0] || hop} setting).`);
   syncSep(); audio.applyVocalCut(); bedPlayer.start();
   return sepCache;
