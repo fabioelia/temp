@@ -86,6 +86,16 @@ The flow for re-using your actors' characters across shows:
   - Combined with TIGER (the larger of the two estimates per frequency bin, plus self-calibration) it reached 7.3%, against TIGER's 9.0%. That's two models' compute and 63 M more parameters for a small gain, with slightly worse music and effects.
 - **Where it stands:** TIGER plus self-calibration is the best trade-off among the open models tested (TIGER-DnR, MRX, BandIt v2 multilingual). On the waveform measure all of them leave a residual around −8 to −9 dB on non-English speech; as measured above, that residual is no longer intelligible.
 
+*Full-length film:* the whole of *Tears of Steel* (12:14, CC BY) was separated in the browser with no crash.
+- **Time:** 130 minutes on CPU only (0.09× real time, *Fast* setting). The page's memory peaked at 492 MB.
+- **Playback and export:** the bed played in sync with the original track muted, and it exported.
+- **What's still recognizable:** the subtitles have 256 checkable words. Whisper hears 77% of them in the original soundtrack and **15.6% in the bed after removal**, against 0.8% at chance.
+  - The leftover is spread thin: 1–4 words on 21 of the 76 lines. On a few short lines shouted over explosions and gunfire, the model removed nothing.
+  - MRX misses the same shouted lines.
+  - Dipping the speech band of the bed under every line only brought it to 12.1% (9 dB dip) or 11.3% (15 dB), so the app doesn't dip.
+  - Whisper is far more sensitive than a listener hearing the bed under a full-level dub, but the dialogue is not removed completely.
+  - Removing more needs a separator fine-tuned on your own material: shouted lines, radio-processed voices, your productions' languages. That's a training project, not a setting.
+
 *Speed:* separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 11–12 minutes on *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
 
 Voice prints need the separated dialogue: on a full mix with music underneath they are close to chance. Very short lines (under about 1.5 s) are the least reliable. Separation runs in 12 s segments; set the speed/quality trade-off under *Advanced → Separation*. It is fast on WebGPU and slow on CPU-only machines.
