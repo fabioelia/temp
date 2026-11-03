@@ -2602,7 +2602,7 @@ async function separateDialogue(file, maxSec = Infinity) {
   setStage(`Decoding ${file.name}`); setProgress(null);
   const { chans } = await decodeRange(file, 0, maxSec, SEP_SR, 2);
   const [L, R] = chans, n = L.length;
-  await ensureSeparator();
+  const sepDevice = await ensureSeparator();
   setStage('Separating dialogue from music and effects'); setProgress(0);
   const bedL = new Int16Array(n), bedR = new Int16Array(n), dlg16 = new Float32Array(Math.floor(n * SR / SEP_SR));
   const BLOCK = 60 * SEP_SR, PAD = 6 * SEP_SR, hop = Number(els.sepHop.value) || 6, t0 = performance.now();
@@ -2624,8 +2624,8 @@ async function separateDialogue(file, maxSec = Infinity) {
     const o = Math.floor(s * SR / SEP_SR), d16 = resample(d.subarray(s - a, e - a), SEP_SR, SR);
     dlg16.set(d16.subarray(0, Math.max(0, Math.min(d16.length, dlg16.length - o))), o);
   }
-  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label, seconds: (performance.now() - t0) / 1000 };
-  logLine(`Separated ${fmtTime(n / SEP_SR)} of dialogue in ${Math.round(sepCache.seconds)} s.`);
+  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label, seconds: (performance.now() - t0) / 1000, device: sepDevice, hop };
+  logLine(`Separated ${fmtTime(n / SEP_SR)} of audio in ${fmtTime(sepCache.seconds)} on ${sepDevice} (${(n / SEP_SR / sepCache.seconds).toFixed(2)}× real time, ${els.sepHop.selectedOptions[0]?.textContent.split(' ')[0] || hop} setting).`);
   syncSep(); audio.applyVocalCut(); bedPlayer.start();
   return sepCache;
 }
@@ -3601,7 +3601,7 @@ async function findCharacters() {
 function syncSep() {
   const has = !!(sepCache && sepCache.file === state.file && sepCache.maxSec === Infinity);
   els.sepBtn.disabled = !state.file || state.running || chars.busy || has;
-  els.sepInfo.textContent = has ? `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}).${els.useBed.checked ? ' The original dialogue is replaced while you watch.' : ''}`
+  els.sepInfo.textContent = has ? `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}, separated in ${fmtTime(sepCache.seconds)} on ${sepCache.device}: ${(sepCache.n / SEP_SR / sepCache.seconds).toFixed(2)}× real time).${els.useBed.checked ? ' The original dialogue is replaced while you watch.' : ''}`
     : state.file ? 'No bed yet: it is built when you find characters or prepare a dub, or press "Separate dialogue now".' : '';
   els.exportBed.disabled = !has || state.running;
   els.exportMix.disabled = !has || state.running || !(state.lines.some((l) => l.text) && useKokoro());
