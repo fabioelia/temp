@@ -80,7 +80,10 @@ The flow for re-using your actors' characters across shows:
   - MRX alone (leaves more dialogue) or combined with TIGER
   - a bed rebuilt from the music and effects stems, or with soft masks
   - dipping the speech band (costs 1–3 dB of real effects)
-- **Next step for non-English sources:** a model trained on multilingual dialogue, such as [BandIt v2](https://github.com/kwatcharasupat/bandit-v2) (multilingual DnR v3). Its weights are CC BY-SA 4.0 and it needs an ONNX export.
+- **[BandIt v2](https://github.com/kwatcharasupat/bandit-v2), the multilingual DnR v3 checkpoint, tested and not adopted.** Its forward pass was rewritten from the paper and repository, and only its weight tensors were loaded, through a reader that runs nothing from the file.
+  - On the same Japanese episode it left *more* dialogue than TIGER: 17.2% coherent alone, 13.0% with self-calibration.
+  - Combined with TIGER (the larger of the two estimates per frequency bin, plus self-calibration) it reached 7.3%, against TIGER's 9.0%. That's two models' compute and 63 M more parameters for a small gain, with slightly worse music and effects.
+- **Where it stands:** TIGER plus self-calibration is the best trade-off among the open models tested (TIGER-DnR, MRX, BandIt v2 multilingual). All of them land around −8 to −9 dB on non-English speech. Removing more would take a separator fine-tuned on dialogue in your production's languages.
 
 *Speed:* separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 11–12 minutes on *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
 
