@@ -2608,21 +2608,37 @@ async function useMeTrack(me) {
   try {
     setStage(`Reading ${me.name}`); setProgress(null);
     const [mix, bed] = [await decodeRange(state.file, 0, Infinity, SEP_SR, 2), await decodeRange(me, 0, Infinity, SEP_SR, 2)];
-    const n = Math.min(mix.chans[0].length, bed.chans[0].length);
-    if (Math.abs(mix.duration - bed.duration) > 1) logLine(`Note: ${me.name} is ${fmtTime(bed.duration)} long and the video ${fmtTime(mix.duration)}; they must start together.`);
+    const [mL, mR] = mix.chans, [eL, eR] = bed.chans, n = mL.length;
+    // Line the stem up with the video's audio (deliverables are often a few ms to seconds apart): envelope
+    // cross-correlation at 10 ms over ±3 s on the first two minutes, refined at 1 ms.
+    setStage('Lining the M&E track up with the video');
+    const off = alignOffset(mL, mR, eL, eR);
+    const at = (x, i) => { const j = i - off; return j >= 0 && j < x.length ? x[j] : 0; };
+    if (Math.abs(mix.duration - bed.duration) > 1) logLine(`Note: ${me.name} is ${fmtTime(bed.duration)} long and the video ${fmtTime(mix.duration)}.`);
     const bedL = new Int16Array(n), bedR = new Int16Array(n), dlg = new Float32Array(n);
-    const [mL, mR] = mix.chans, [eL, eR] = bed.chans;
     let dd = 0, mm = 0;
-    for (let i = 0; i < n; i++) { bedL[i] = q16(eL[i]); bedR[i] = q16(eR[i]); dlg[i] = (mL[i] + mR[i] - eL[i] - eR[i]) / 2; dd += dlg[i] * dlg[i]; mm += (mL[i] + mR[i]) ** 2 / 4; }
-    // A mismatched or offset stem leaves most of the mix in "dialogue": warn rather than silently mis-dub.
-    const share = Math.sqrt(dd / (mm || 1));
-    if (share > 0.8) logLine(`Warning: mix minus M&E is ${Math.round(share * 100)}% of the mix level. Check that ${me.name} is this video's M&E and starts at the same time.`);
-    sepCache = { file: state.file, maxSec: Infinity, n, bedL, bedR, dlg16: resample(dlg, SEP_SR, SR), model: `M&E track ${me.name}`, exact: true, seconds: 0, device: 'file', hop: 0 };
-    if (chars.ep?.file === state.file) { chars.ep.voice16 = sepCache.dlg16; chars.ep.isolated = true; }
+    for (let i = 0; i < n; i++) { const l = at(eL, i), r = at(eR, i); bedL[i] = q16(l); bedR[i] = q16(r); dlg[i] = (mL[i] + mR[i] - l - r) / 2; dd += dlg[i] * dlg[i]; mm += (mL[i] + mR[i]) ** 2 / 4; }
+    // Mix minus M&E is the dialogue only when the M&E is the same mix pass as the full mix. Separately
+    // mixed stems (common; the Tears of Steel DVD M&E correlates 0.55 with its stereo mix) leave most of
+    // the mix in the difference: then the M&E is still the bed, but voice prints come from the mix.
+    const share = Math.sqrt(dd / (mm || 1)), clean = share < 0.6;
+    const mono = new Float32Array(n); for (let i = 0; i < n; i++) mono[i] = (mL[i] + mR[i]) / 2;
+    sepCache = { file: state.file, maxSec: Infinity, n, bedL, bedR, dlg16: resample(clean ? dlg : mono, SEP_SR, SR), model: `M&E track ${me.name}`, exact: true, dlgExact: clean, offset: off / SEP_SR, seconds: 0, device: 'file', hop: 0 };
+    if (chars.ep?.file === state.file && clean) { chars.ep.voice16 = sepCache.dlg16; chars.ep.isolated = true; }
     syncSep(); audio.applyVocalCut(); bedPlayer.start();
     setStage('Using the production M&E track as the bed'); setProgress(1, '');
-    logLine(`M&E track loaded: the original dialogue is replaced exactly (dialogue = mix − M&E, ${Math.round(share * 100)}% of the mix level).`);
+    logLine(`M&E track: the original dialogue is replaced by the production's dialogue-free track (shifted ${(off / SEP_SR * 1000).toFixed(0)} ms to line up). ` +
+      (clean ? `Mix − M&E is the exact dialogue (${Math.round(share * 100)}% of the mix level) and is used for voice prints.` : `It was mixed separately from this video's mix (mix − M&E is ${Math.round(share * 100)}% of the mix level), so voice prints use the mix.`));
   } catch (e) { showError(friendlyError(e)); setStage('Could not use the M&E track'); }
+}
+function alignOffset(mL, mR, eL, eR) {
+  const env = (a, b, hop, len) => { const n = Math.floor(Math.min(a.length, len) / hop), o = new Float32Array(n); for (let k = 0; k < n; k++) { let s = 0; for (let i = k * hop; i < (k + 1) * hop; i++) s += Math.abs(a[i] + b[i]); o[k] = s / hop; } let m = 0; for (const x of o) m += x / n; for (let k = 0; k < n; k++) o[k] -= m; return o; };
+  const best = (A, B, from, to) => { let bk = 0, bv = -Infinity; for (let k = from; k <= to; k++) { let v = 0; for (let i = Math.max(0, k); i < Math.min(A.length, B.length + k); i++) v += A[i] * B[i - k]; if (v > bv) { bv = v; bk = k; } } return bk; };
+  // Whole-sample hops (SEP_SR / 1000 = 44.1 would index between samples and make every score NaN).
+  const H1 = Math.round(SEP_SR / 100), H2 = Math.round(SEP_SR / 1000), len = 120 * SEP_SR;
+  const k1 = best(env(mL, mR, H1, len), env(eL, eR, H1, len), -300, 300), c = Math.round(k1 * H1 / H2);
+  const k2 = best(env(mL, mR, H2, len), env(eL, eR, H2, len), c - 15, c + 15);
+  return k2 * H2;                                // samples: positive = the stem starts later in the video
 }
 async function separateDialogue(file, maxSec = Infinity) {
   if (sepCache && sepCache.file === file && sepCache.maxSec >= maxSec) return sepCache;
@@ -3643,7 +3659,7 @@ function syncSep() {
   const has = !!(sepCache && sepCache.file === state.file && sepCache.maxSec === Infinity);
   els.sepBtn.disabled = !state.file || state.running || chars.busy || has;
   els.meBtn.disabled = !state.file || state.running || chars.busy;
-  els.sepInfo.textContent = has ? (sepCache.exact ? `Music + effects from the production ${sepCache.model} (${fmtTime(sepCache.n / SEP_SR)}): exact, no original dialogue remains.` : `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}, separated in ${fmtTime(sepCache.seconds)} on ${sepCache.device}: ${(sepCache.n / SEP_SR / sepCache.seconds).toFixed(2)}× real time). Some original dialogue can remain under loud effects; with the production's M&E track it is exact.`) + (els.useBed.checked ? ' The original dialogue is replaced while you watch.' : '')
+  els.sepInfo.textContent = has ? (sepCache.exact ? `Music + effects from the production ${sepCache.model} (${fmtTime(sepCache.n / SEP_SR)}, lined up ${Math.round(sepCache.offset * 1000)} ms): the production's own dialogue-free track, so no original dialogue remains.` : `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}, separated in ${fmtTime(sepCache.seconds)} on ${sepCache.device}: ${(sepCache.n / SEP_SR / sepCache.seconds).toFixed(2)}× real time). Some original dialogue can remain under loud effects; with the production's M&E track it is exact.`) + (els.useBed.checked ? ' The original dialogue is replaced while you watch.' : '')
     : state.file ? 'No bed yet: it is built when you find characters or prepare a dub, or press "Separate dialogue now".' : '';
   els.exportBed.disabled = !has || state.running;
   els.exportMix.disabled = !has || state.running || !(state.lines.some((l) => l.text) && useKokoro());
