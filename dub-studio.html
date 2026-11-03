@@ -203,7 +203,9 @@
       <label class="row"><span>Original level</span><input type="range" id="duck" min="0" max="1" step="0.05" value="0.25"></label>
       <div class="hint">How loud the original track stays while a dubbed line plays. Music and effects are kept.</div>
       <label class="check"><input type="checkbox" id="useBed" checked> <span>Replace the original dialogue with the music + effects bed <span class="hint">(a neural model removes the dialogue and keeps music and effects; built when you prepare a dub)</span></span></label>
-      <div class="btns"><button id="sepBtn" disabled title="Separate the loaded video's dialogue from its music and effects now">Separate dialogue now</button></div>
+      <div class="btns"><button id="sepBtn" disabled title="Separate the loaded video's dialogue from its music and effects now">Separate dialogue now</button>
+        <button id="meBtn" disabled title="The production's own M&E (music and effects) stem for this video. Exact: no original dialogue remains, and the dialogue track becomes mix minus M&E.">Use M&amp;E track…</button>
+        <input type="file" id="meInput" accept="audio/*,video/*,.wav,.flac,.aif,.aiff" hidden></div>
       <div class="hint" id="sepInfo"></div>
       <label class="check"><input type="checkbox" id="vocalCut" checked> <span>Without a bed: suppress original dialogue <span class="hint">(cancels the centre channel of stereo audio; used for live dubbing)</span></span></label>
       <label class="row"><span>Dub level</span><input type="range" id="dubVol" min="0" max="1.5" step="0.05" value="1"></label>
@@ -2597,11 +2599,45 @@ function dialogueGain(L, R, d, a, b, s, e) {
   for (let i = s, k = 0; i < e; i++) { while (k + 1 < cs.length && cs[k + 1] <= i) k++; const c0 = cs[k], c1 = cs[k + 1] ?? c0, t = c1 > c0 ? (i - c0) / (c1 - c0) : 0; g[i - s] = vs[k] + ((vs[k + 1] ?? vs[k]) - vs[k]) * Math.max(0, Math.min(1, t)); }
   return g;
 }
+// The production's own M&E (music and effects) stem, when you have it: exact, nothing of the original
+// dialogue remains. It must start where the video starts. The dialogue for voice prints and training
+// clips is then exactly the full mix minus the M&E.
+async function useMeTrack(me) {
+  if (!state.file || !me) return;
+  showError('');
+  try {
+    setStage(`Reading ${me.name}`); setProgress(null);
+    const [mix, bed] = [await decodeRange(state.file, 0, Infinity, SEP_SR, 2), await decodeRange(me, 0, Infinity, SEP_SR, 2)];
+    const n = Math.min(mix.chans[0].length, bed.chans[0].length);
+    if (Math.abs(mix.duration - bed.duration) > 1) logLine(`Note: ${me.name} is ${fmtTime(bed.duration)} long and the video ${fmtTime(mix.duration)}; they must start together.`);
+    const bedL = new Int16Array(n), bedR = new Int16Array(n), dlg = new Float32Array(n);
+    const [mL, mR] = mix.chans, [eL, eR] = bed.chans;
+    let dd = 0, mm = 0;
+    for (let i = 0; i < n; i++) { bedL[i] = q16(eL[i]); bedR[i] = q16(eR[i]); dlg[i] = (mL[i] + mR[i] - eL[i] - eR[i]) / 2; dd += dlg[i] * dlg[i]; mm += (mL[i] + mR[i]) ** 2 / 4; }
+    // A mismatched or offset stem leaves most of the mix in "dialogue": warn rather than silently mis-dub.
+    const share = Math.sqrt(dd / (mm || 1));
+    if (share > 0.8) logLine(`Warning: mix minus M&E is ${Math.round(share * 100)}% of the mix level. Check that ${me.name} is this video's M&E and starts at the same time.`);
+    sepCache = { file: state.file, maxSec: Infinity, n, bedL, bedR, dlg16: resample(dlg, SEP_SR, SR), model: `M&E track ${me.name}`, exact: true, seconds: 0, device: 'file', hop: 0 };
+    if (chars.ep?.file === state.file) { chars.ep.voice16 = sepCache.dlg16; chars.ep.isolated = true; }
+    syncSep(); audio.applyVocalCut(); bedPlayer.start();
+    setStage('Using the production M&E track as the bed'); setProgress(1, '');
+    logLine(`M&E track loaded: the original dialogue is replaced exactly (dialogue = mix − M&E, ${Math.round(share * 100)}% of the mix level).`);
+  } catch (e) { showError(friendlyError(e)); setStage('Could not use the M&E track'); }
+}
 async function separateDialogue(file, maxSec = Infinity) {
   if (sepCache && sepCache.file === file && sepCache.maxSec >= maxSec) return sepCache;
   setStage(`Decoding ${file.name}`); setProgress(null);
-  const { chans } = await decodeRange(file, 0, maxSec, SEP_SR, 2);
-  const [L, R] = chans, n = L.length;
+  const dec = await decodeRange(file, 0, maxSec, SEP_SR, 'native');
+  // Surround (5.1 and up): dialogue lives in the centre channel, so only the centre is separated; the
+  // other channels' music and effects pass through untouched and the bed is folded to stereo with the
+  // same coefficients a browser uses to play 5.1 on stereo (L + 0.707 C + 0.707 SL). Stereo / mono: the
+  // dialogue is taken from the mid channel and removed from both sides.
+  const surround = dec.chans.length >= 6;
+  const c = dec.chans, n = c[0].length;
+  const L = surround ? c[2] : c[0], R = surround ? c[2] : (c[1] || c[0]);      // what the model sees: centre, or L/R
+  const outL = surround ? (i, v) => c[0][i] + 0.7071 * (c[2][i] - v) + 0.7071 * c[4][i] : (i, v) => L[i] - v;
+  const outR = surround ? (i, v) => c[1][i] + 0.7071 * (c[2][i] - v) + 0.7071 * c[5][i] : (i, v) => R[i] - v;
+  if (surround) logLine(`${dec.layout}-channel audio: separating the centre (dialogue) channel only; the other channels are kept as they are.`);
   const sepDevice = await ensureSeparator();
   setStage('Separating dialogue from music and effects'); setProgress(0);
   const bedL = new Int16Array(n), bedR = new Int16Array(n), dlg16 = new Float32Array(Math.floor(n * SR / SEP_SR));
@@ -2620,24 +2656,29 @@ async function separateDialogue(file, maxSec = Infinity) {
     // 1 s window the factor that leaves the bed uncorrelated with the estimate is used, clamped to 1-1.4.
     // Measured: Japanese left in the bed 15.6% -> 9.0% with music and effects unchanged; English unchanged (1.00).
     const g = dialogueGain(L, R, d, a, b, s, e);
-    for (let i = s; i < e; i++) { const v = d[i - a] * g[i - s]; d[i - a] = v; bedL[i] = q16(L[i] - v); bedR[i] = q16(R[i] - v); }
+    for (let i = s; i < e; i++) { const v = d[i - a] * g[i - s]; d[i - a] = v; bedL[i] = q16(outL(i, v)); bedR[i] = q16(outR(i, v)); }
     const o = Math.floor(s * SR / SEP_SR), d16 = resample(d.subarray(s - a, e - a), SEP_SR, SR);
     dlg16.set(d16.subarray(0, Math.max(0, Math.min(d16.length, dlg16.length - o))), o);
   }
-  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label, seconds: (performance.now() - t0) / 1000, device: sepDevice, hop };
+  sepCache = { file, maxSec: n < SEP_SR * maxSec ? Infinity : maxSec, n, bedL, bedR, dlg16, model: SEPARATOR.label + (surround ? ', centre channel' : ''), seconds: (performance.now() - t0) / 1000, device: sepDevice, hop };
   logLine(`Separated ${fmtTime(n / SEP_SR)} of audio in ${fmtTime(sepCache.seconds)} on ${sepDevice} (${(n / SEP_SR / sepCache.seconds).toFixed(2)}× real time, ${els.sepHop.selectedOptions[0]?.textContent.split(' ')[0] || hop} setting).`);
   syncSep(); audio.applyVocalCut(); bedPlayer.start();
   return sepCache;
 }
+// channels = 'native' keeps the file's own layout (e.g. 6 for 5.1: L, R, C, LFE, SL, SR) without downmixing.
 async function decodeRange(file, startSec, durSec, rate, channels) {
   const ctx = new AudioContext();
   try {
     const d = await ctx.decodeAudioData(await file.arrayBuffer());
+    const n = channels === 'native' ? Math.min(8, d.numberOfChannels) : channels;
     const len = Math.max(1, Math.floor(Math.min(durSec, d.duration - startSec) * rate));
-    const off = new OfflineAudioContext(channels, len, rate);
-    const src = off.createBufferSource(); src.buffer = d; src.connect(off.destination); src.start(0, startSec, len / rate);
+    const off = new OfflineAudioContext(n, len, rate);
+    if (channels === 'native') { off.destination.channelCount = n; off.destination.channelInterpretation = 'discrete'; }
+    const src = off.createBufferSource(); src.buffer = d;
+    if (channels === 'native') { src.channelCount = n; src.channelCountMode = 'explicit'; src.channelInterpretation = 'discrete'; }
+    src.connect(off.destination); src.start(0, startSec, len / rate);
     const r = await off.startRendering();
-    return { chans: Array.from({ length: channels }, (_, c) => r.getChannelData(Math.min(c, r.numberOfChannels - 1))), duration: d.duration };
+    return { chans: Array.from({ length: n }, (_, c) => r.getChannelData(Math.min(c, r.numberOfChannels - 1))), duration: d.duration, layout: d.numberOfChannels };
   } finally { ctx.close(); }
 }
 // Speech regions from frame energy (works well on separated vocals; on a full mix loud music also counts).
@@ -3601,7 +3642,8 @@ async function findCharacters() {
 function syncSep() {
   const has = !!(sepCache && sepCache.file === state.file && sepCache.maxSec === Infinity);
   els.sepBtn.disabled = !state.file || state.running || chars.busy || has;
-  els.sepInfo.textContent = has ? `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}, separated in ${fmtTime(sepCache.seconds)} on ${sepCache.device}: ${(sepCache.n / SEP_SR / sepCache.seconds).toFixed(2)}× real time).${els.useBed.checked ? ' The original dialogue is replaced while you watch.' : ''}`
+  els.meBtn.disabled = !state.file || state.running || chars.busy;
+  els.sepInfo.textContent = has ? (sepCache.exact ? `Music + effects from the production ${sepCache.model} (${fmtTime(sepCache.n / SEP_SR)}): exact, no original dialogue remains.` : `Music + effects bed ready (${sepCache.model}, ${fmtTime(sepCache.n / SEP_SR)}, separated in ${fmtTime(sepCache.seconds)} on ${sepCache.device}: ${(sepCache.n / SEP_SR / sepCache.seconds).toFixed(2)}× real time). Some original dialogue can remain under loud effects; with the production's M&E track it is exact.`) + (els.useBed.checked ? ' The original dialogue is replaced while you watch.' : '')
     : state.file ? 'No bed yet: it is built when you find characters or prepare a dub, or press "Separate dialogue now".' : '';
   els.exportBed.disabled = !has || state.running;
   els.exportMix.disabled = !has || state.running || !(state.lines.some((l) => l.text) && useKokoro());
@@ -3665,6 +3707,8 @@ function initChars() {
   els.charSave.addEventListener('click', saveEpisodeCast);
   els.charToScript.addEventListener('click', () => { if (chars.ep) episodeToScript(chars.ep); els.script.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
   els.sepBtn.addEventListener('click', separateNow);
+  els.meBtn.addEventListener('click', () => els.meInput.click());
+  els.meInput.addEventListener('change', () => { const f = els.meInput.files[0]; els.meInput.value = ''; if (f) useMeTrack(f); });
   els.useBed.addEventListener('change', () => { audio.applyVocalCut(); bedPlayer.start(); syncSep(); saveSettings(); });
   els.sepHop.addEventListener('change', saveSettings);
   els.exportBed.addEventListener('click', exportBed);
@@ -3748,7 +3792,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); detectGPU(); initLab(); initChars(); syncButtons();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { linePrint, scorePrints, episodePrints, episodeCenter, identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
+  window.__dub = { useMeTrack, linePrint, scorePrints, episodePrints, episodeCenter, identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>

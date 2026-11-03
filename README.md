@@ -18,7 +18,16 @@ A single self-contained HTML page that **dubs video into another language in the
 - **Listen:** Whisper (Transformers.js) transcribes the dialogue, or translates it straight to English, on WebGPU or WebAssembly.
 - **Translate:** on device (Whisper → English, then Opus-MT into Spanish, French, German, Portuguese, Italian, Russian, Chinese, Hindi and more), or with Claude via your own Anthropic API key. Claude translates whole scenes at once, keeping character voice, consistent names and line lengths that fit the time on screen.
 - **Voice cast:** each character gets their own synthetic voice. Pick a style preset (young hero, proud rival, old mentor, villain…), choose a voice, and adjust pitch and pace. Voices come from [Kokoro-82M](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX) (natural, English, on device) or the browser's built-in voices (any language, lowest latency). Lines are sped up automatically when they would overrun the time the character has.
-- **Dialogue replacement:** a neural model ([TIGER-DnR](https://huggingface.co/audiojs/tiger-dnr), Apache-2.0, 7 MB) removes the original dialogue and keeps the music and effects. The dubbed voices play over that bed in sync with the picture, and the bed and the finished mix export as WAV. Live dubbing, which has no bed, ducks the original and cancels its centre channel instead.
+- **Dialogue replacement, three ways, best first:**
+  1. **Your production's M&E stem** (**Use M&E track…**): exact.
+     - The bed *is* the M&E, so none of the original dialogue remains.
+     - Mix minus M&E gives the exact dialogue track for voice prints and training clips.
+     - Measured: the bed matched the M&E at correlation 1.00000, with dialogue at −75 dB (rounding only). Whisper recovered no more Japanese from it than from a track with no speech (3.5%). The dialogue track matched the true voice at 0.9997.
+  2. **5.1 sources:** only the centre (dialogue) channel is separated.
+     - The other channels' music and effects pass through untouched, and the bed is folded to stereo as a browser plays 5.1.
+     - Measured: where the centre has no speech the bed is identical to the original fold-down (−66 dB difference). Under speech, Whisper recovered no more than from the speech-free track.
+  3. **Stereo mixes with no stem:** a neural model separates the dialogue (details below). Quiet dialogue is removed well, but some can remain under loud action.
+- **Dialogue replacement (model):** a neural model ([TIGER-DnR](https://huggingface.co/audiojs/tiger-dnr), Apache-2.0, 7 MB) removes the original dialogue and keeps the music and effects. The dubbed voices play over that bed in sync with the picture, and the bed and the finished mix export as WAV. Live dubbing, which has no bed, ducks the original and cancels its centre channel instead.
 - **Characters:** see *Characters* below. The app finds who speaks when in a video, matches voices to your character library, and dubs each character with their own voice.
 - **Live modes:** dub the loaded video, another browser tab (via screen-share audio) or the microphone in real time (about 1–3 s behind with WebGPU). The voice for each live line is chosen by how high or low the speaker sounds.
 - **Characters from Speaker Transcriber:** import a JSON export from `speaker-transcriber.html` and its named speakers become the cast, each with their own voice.
