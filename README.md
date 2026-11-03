@@ -71,6 +71,7 @@ The flow for re-using your actors' characters across shows:
   - Offline, these raised the right speaker to first place for 6–7 of 8 lines, up from 4–5.
 
 *Dialogue removal*, measured on the 8-speaker Japanese episode against the true stems:
+- **The original dialogue is no longer intelligible.** Whisper (Japanese) on each line's time span recovered 51% of the script's characters from the original mix, and 6.0% from the bed after removal. On the true music-and-effects track, which has no speech at all, it recovered 3.5% (random matches). What remains is a low, garbled leftover under the dub, not understandable speech.
 - Music and effects are kept: correlation with the true bed 0.997 away from dialogue, 0.91 under it, same level.
 - **The model under-removes non-English speech.** TIGER-DnR (trained on English) estimated the Japanese dialogue at 0.84× its real level. The app now scales its subtraction per second to leave the bed uncorrelated with the dialogue, measured from the audio itself.
   - In the full in-app run, that cut the Japanese left in the bed from 12.5% to 6.0%, with music and effects unchanged.
@@ -83,7 +84,7 @@ The flow for re-using your actors' characters across shows:
 - **[BandIt v2](https://github.com/kwatcharasupat/bandit-v2), the multilingual DnR v3 checkpoint, tested and not adopted.** Its forward pass was rewritten from the paper and repository, and only its weight tensors were loaded, through a reader that runs nothing from the file.
   - On the same Japanese episode it left *more* dialogue than TIGER: 17.2% coherent alone, 13.0% with self-calibration.
   - Combined with TIGER (the larger of the two estimates per frequency bin, plus self-calibration) it reached 7.3%, against TIGER's 9.0%. That's two models' compute and 63 M more parameters for a small gain, with slightly worse music and effects.
-- **Where it stands:** TIGER plus self-calibration is the best trade-off among the open models tested (TIGER-DnR, MRX, BandIt v2 multilingual). All of them land around −8 to −9 dB on non-English speech. Removing more would take a separator fine-tuned on dialogue in your production's languages.
+- **Where it stands:** TIGER plus self-calibration is the best trade-off among the open models tested (TIGER-DnR, MRX, BandIt v2 multilingual). On the waveform measure all of them leave a residual around −8 to −9 dB on non-English speech; as measured above, that residual is no longer intelligible.
 
 *Speed:* separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 11–12 minutes on *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
 
