@@ -675,3 +675,16 @@ the $2,000 cap, buying options only, the gate tickets and the kill switch.
    pre-registered in the playbook (P($2,200) >= 35% and EV >= 0.93 from the parameterized model; a red-team).
 3. **The take-profit for other trades** stays (D4 WEAK). **No "stop and talk" line.**
 **Build:** a parameterized `goal_odds.py` (from the historian's 11/01 model, which had the 10/30 quotes hard-coded), so Wednesday's check uses live quotes.
+**goal_odds.py built** (research/2026-11-02/scripts/; it reproduces the historian's numbers bit-for-bit; 9 tests, 85 total pass). The example on Monday's close
+(SPY 752.10, VIX 21.15, entry 11/4, SPY 11/30 765C at 8.35/8.42, IV 14.95%, delta 0.39, $842):
+
+| | -50% stop | no stop | cash |
+|---|---|---|---|
+| P($2,200) | 50.3% | 54.2% | 0% |
+| P(ahead of SPY) | 51.2% | 56.2% | 18.3% |
+| P(below $1,600) | 45.4% | 35.2% | 0% |
+| mean equity | $1,940 | $1,953 | $1,918 |
+| EV per $ | 1.03 | 1.04 | - |
+
+The stop raises the chance of a medium loss (a -50% stop costs about $420) while removing the deep tail. It stays, as pre-registered (tail protection on
+real money). Wednesday's check reruns it on the live quote.
