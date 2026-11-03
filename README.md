@@ -52,6 +52,18 @@ The flow for re-using your actors' characters across shows:
 - **Timeline:** SDH sound descriptions (`[door slams]`, `(sighs)`, ♪) become *Music* and *Effects* lanes under the character lanes. Events less than 2 s apart join into one segment. These lanes show where the music + effects bed has to keep sound.
 - **Not adopted:** CleanCut's Netflix and Prime Video adapters, which read those services' private player data.
 
+**Measured** on test material built from known parts, so the truth is exact. The soundtrack is the *Tears of Steel* music and effects, with Japanese read speech from 8 FLEURS speakers laid over it. Episode 1 names the speakers in its captions; episode 2 has new lines and unnamed captions.
+- **Recognition in episode 2:** 6 of 8 lines get the right character automatically. The one wrong line is flagged "?", with the right speaker among its suggestions. The one line left unmatched shows the right speaker as its first suggestion.
+  - Each character was learned from a single line, the hardest case. Characters with many lines across episodes get stronger voice prints.
+  - Recordings from one source sound alike to the voice-print model: here different speakers scored 0.6–0.85. So when an episode has at least 8 voice-printed lines, prints are centred on the episode's average before comparing.
+  - Small episodes keep fixed thresholds. In a two-speaker test from the film itself, that gave 4 of 5 correct and no wrong matches.
+- **Dialogue removal (episode 2):** the original dialogue drops by about 9–10 dB, and music and effects are kept (correlation with the true bed 0.997 away from dialogue, 0.92 under it, same level).
+  - On the film's own English dialogue the drop is about 20 dB. TIGER-DnR was trained on English (DnR), so it does less on other languages.
+  - Rebuilding the bed from the model's music and effects stems, or with a soft mask, made no difference (within 1 dB).
+  - Dipping the speech band under dubbed lines removed a little more dialogue but took 1–3 dB of real effects with it, so it isn't used.
+  - The next step for non-English sources is a model trained on multilingual dialogue, such as [BandIt v2](https://github.com/kwatcharasupat/bandit-v2), trained on multilingual DnR v3. Its weights are CC BY-SA 4.0 and it needs an ONNX export.
+- **Speed:** separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 12 minutes with *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
+
 Voice prints need the separated dialogue: on a full mix with music underneath they are close to chance. Very short lines (under about 1.5 s) are the least reliable. Separation runs in 12 s segments; set the speed/quality trade-off under *Advanced → Separation*. It is fast on WebGPU and slow on CPU-only machines.
 
 ### Voice Lab
