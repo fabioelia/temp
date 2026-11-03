@@ -688,3 +688,13 @@ the $2,000 cap, buying options only, the gate tickets and the kill switch.
 
 The stop raises the chance of a medium loss (a -50% stop costs about $420) while removing the deep tail. It stays, as pre-registered (tail protection on
 real money). Wednesday's check reruns it on the live quote.
+
+## 2026-11-03 (Tue, midterm election day) Pre-close (14:44 EST)
+**Driver:** a quiet tape into the vote (no single driver in the headlines). Live (Yahoo, single source):
+* SPY 754.94 (+0.4%), QQQ 685.52 (+0.6%), IWM 280.43 (+0.5%).
+* AAPL 331.51 (-2.0% after its beat), AMD 487.24 (+4.4%) before tonight's print.
+* USO 157.66 (+0.5%); ^VIX 20.64, ^TNX 4.95.
+**Orders: none pending, none added.** As planned, there is no entry on election day (the event premium is rich). The goal-budget SPY call is decided at Wednesday's
+14:43 under the pre-registered rule. No C1: AAPL is -2%, against the -8% the rule needs.
+**Idea watch (research/2026-11-03/ideas-fired.csv):** macro's two USO shadows fired (163C at 7.10, 150P at 5.85), not taken (no edge). The momentum QQQ
+680P did not fire (QQQ 685.52 > 680.11).
