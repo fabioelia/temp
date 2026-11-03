@@ -43,6 +43,15 @@ The flow for re-using your actors' characters across shows:
 5. **Dub a new video.** Load it (with captions if available) and press **Prepare full dub**. Lines are matched to library characters by caption name or by voice, translated, and spoken in each character's voice over the music + effects bed.
    - Check the timeline first, and fix any line whose character is shown with a "?".
 
+**Identifying the content, captions and timeline** (generic parts adapted from the CleanCut scene-filter work):
+- **Which episode:** each video is identified as a series and episode (key `series-slug/s01e03`), or a title and year for films. Dub Studio reads this from file names like `Show.S01E03…`, `1x03` and `Season 1 Episode 3`. A capture's `.json` from the extension, picked together with the captions, gives what the page declared instead. Library sources are grouped by that key, so another encode of the same episode doesn't count twice.
+- **Captions:**
+  - HTML entities are decoded.
+  - A cue holding two speakers ("- Are you coming? / - In a minute.") is split into two lines, with its time shared in proportion to each part's length.
+  - Sung lines (♪ … ♪) aren't treated as dialogue.
+- **Timeline:** SDH sound descriptions (`[door slams]`, `(sighs)`, ♪) become *Music* and *Effects* lanes under the character lanes. Events less than 2 s apart join into one segment. These lanes show where the music + effects bed has to keep sound.
+- **Not adopted:** CleanCut's Netflix and Prime Video adapters, which read those services' private player data.
+
 Voice prints need the separated dialogue: on a full mix with music underneath they are close to chance. Very short lines (under about 1.5 s) are the least reliable. Separation runs in 12 s segments; set the speed/quality trade-off under *Advanced → Separation*. It is fast on WebGPU and slow on CPU-only machines.
 
 ### Voice Lab

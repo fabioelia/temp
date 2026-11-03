@@ -47,6 +47,44 @@
     return { ok: true, protected: false };
   }
 
+  // What is playing, from what the page itself declares: <meta name="dub:series|season|episode|title">,
+  // schema.org JSON-LD (TVEpisode / Movie with partOfSeries, partOfSeason, episodeNumber), og:title,
+  // then an "S1:E3"-style label in the title. key = "series-slug/s01e03" (or "title-slug-year") names the
+  // same episode across sites and encodes.
+  function parseEpisodeLabel(text) {
+    const t = String(text || '');
+    const m = /\bS(?:eason)?\s*(\d{1,2})\s*[:,.]?\s*E(?:p(?:isode)?\.?)?\s*(\d{1,3})\b/i.exec(t) || /\bSeason\s*(\d{1,2})\s*,?\s*Ep(?:isode)?\.?\s*(\d{1,3})\b/i.exec(t) || /\b(\d{1,2})x(\d{2,3})\b/.exec(t);
+    return m ? { season: Number(m[1]), episode: Number(m[2]), before: t.slice(0, m.index), after: t.slice(m.index + m[0].length) } : null;
+  }
+  const slug = (x) => String(x || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+  function identify() {
+    const meta = (n) => document.querySelector(`meta[name="${n}"], meta[property="${n}"]`)?.content?.trim() || '';
+    let ld = {};
+    for (const sc of document.querySelectorAll('script[type="application/ld+json"]')) {
+      try {
+        const j = JSON.parse(sc.textContent);
+        for (const x of [].concat(j?.['@graph'] || j)) {
+          const type = [].concat(x?.['@type'] || []).join(' ');
+          if (/Episode|Movie/.test(type)) { ld = x; break; }
+          if (/VideoObject/.test(type) && !ld.name) ld = x;
+        }
+      } catch (e) { /* not JSON */ }
+    }
+    const first = (...xs) => xs.find((x) => x != null && String(x).trim() !== '');
+    let series = first(meta('dub:series'), ld.partOfSeries?.name, ld.partOfTVSeries?.name, ld.partOfSeason?.partOfSeries?.name);
+    let season = Number(first(meta('dub:season'), ld.partOfSeason?.seasonNumber)) || null;
+    let episode = Number(first(meta('dub:episode'), ld.episodeNumber)) || null;
+    let name = first(meta('dub:title'), ld.name, meta('og:title'), document.title) || '';
+    const year = Number(first(meta('dub:year'), String(ld.datePublished || ld.dateCreated || '').slice(0, 4))) || null;
+    let from = meta('dub:series') || meta('dub:title') ? 'page tags' : ld.name ? 'schema.org' : 'page title';
+    if (!(season && episode)) {
+      const p = parseEpisodeLabel(name) || parseEpisodeLabel(document.title);
+      if (p) { season = p.season; episode = p.episode; if (!series) series = p.before.replace(/[\s|:·–-]+$/, '').trim() || null; const rest = p.after.replace(/^[\s|:·–-]+/, '').replace(/\s+[|–—]\s+[^|–—]+$/, '').trim(); if (rest) name = rest; from += ' (episode label)'; }
+    }
+    const key = series && season && episode ? `${slug(series)}/s${String(season).padStart(2, '0')}e${String(episode).padStart(2, '0')}` : name ? slug(name) + (year ? '-' + year : '') : null;
+    return { series: series || null, season, episode, name: name || null, year, key, from };
+  }
+
   function stop() {
     const log = state.logging; if (!log) return { error: 'Not recording.' };
     state.logging = null;
@@ -54,7 +92,7 @@
     for (const [e, h] of Object.entries(log.handlers)) log.v.removeEventListener(e, h);
     if (log.track && log.onCue) log.track.removeEventListener('cuechange', log.onCue);
     log.samples.push([performance.now() - log.t0, log.v.currentTime, log.v.paused ? 1 : 0]);
-    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v) && !log.allowProtected, title: document.title, url: location.href };
+    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v) && !log.allowProtected, title: document.title, url: location.href, content: identify() };
   }
 
   window.__dubCapture = { scan, start, stop };

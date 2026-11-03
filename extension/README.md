@@ -35,6 +35,14 @@ Many players never expose captions as a `<track>`. They fetch `.vtt` files or HL
 
 **Save all network caption tracks** (popup button) saves every track found, in every language, as separate `.vtt` files plus an `index.json` in `Downloads/dub-capture/<page>-captions/`. Times stay on the video's own timeline, and nothing is recorded. On a page with protected video, the same rule as recording applies: release builds refuse, and dev builds need the sign-off, which is saved in `index.json`.
 
+**What is playing:** the capture's `.json` records the title or episode as the page declares it. Sources, in order:
+- `<meta name="dub:series|dub:season|dub:episode|dub:title">` tags (add these to your own players)
+- schema.org JSON-LD (`TVEpisode` or `Movie`, with `partOfSeries`, `partOfSeason` and `episodeNumber`)
+- `og:title`
+- an "S1:E3"-style label in the page title
+
+It also gets a key such as `series-slug/s01e03`. Pick the `.json` with the captions in Dub Studio's **Captions…** and lines are grouped under that episode.
+
 Audio always comes from tab capture. The extension doesn't download media segments.
 
 ## How it works

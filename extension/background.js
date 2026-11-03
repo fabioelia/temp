@@ -137,7 +137,7 @@ async function stop() {
   }
   const base = `dub-capture/${(log?.title || 'capture').replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'capture'}-${new Date().toISOString().replace(/[:.]/g, '-')}`;
   const vtt = 'WEBVTT\n\n' + cues.map((c) => `${stamp(c.start)} --> ${stamp(c.end)}\n${c.speaker ? `<v ${c.speaker}>` : ''}${c.text}\n`).join('\n');
-  const meta = { format: 'dub-studio-capture', version: 2, source: log?.url, title: log?.title, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected, signoff: capture.signoff || null,
+  const meta = { format: 'dub-studio-capture', version: 3, source: log?.url, title: log?.title, content: log?.content || null, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected, signoff: capture.signoff || null,
     captions: capture.net ? { from: 'network', stream: capture.net.key, note: 'Constant offset may remain; Dub Studio re-aligns captions to the speech on import.' } : { from: 'text track' } };
   await chrome.downloads.download({ url: r.url, filename: `${base}.webm` });
   await chrome.downloads.download({ url: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(vtt), filename: `${base}.vtt` });
