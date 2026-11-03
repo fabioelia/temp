@@ -18,17 +18,38 @@ A single self-contained HTML page that **dubs video into another language in the
 - **Listen:** Whisper (Transformers.js) transcribes the dialogue, or translates it straight to English, on WebGPU or WebAssembly.
 - **Translate:** on device (Whisper → English, then Opus-MT into Spanish, French, German, Portuguese, Italian, Russian, Chinese, Hindi and more), or with Claude via your own Anthropic API key. Claude translates whole scenes at once, keeping character voice, consistent names and line lengths that fit the time on screen.
 - **Voice cast:** each character gets their own synthetic voice. Pick a style preset (young hero, proud rival, old mentor, villain…), choose a voice, and adjust pitch and pace. Voices come from [Kokoro-82M](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX) (natural, English, on device) or the browser's built-in voices (any language, lowest latency). Lines are sped up automatically when they would overrun the time the character has.
-- **Mix:** the original track is ducked under each dubbed line, and stereo centre-channel cancellation suppresses the original dialogue while keeping music and effects.
+- **Dialogue replacement:** a neural model ([TIGER-DnR](https://huggingface.co/audiojs/tiger-dnr), Apache-2.0, 7 MB) removes the original dialogue and keeps the music and effects. The dubbed voices play over that bed in sync with the picture, and the bed and the finished mix export as WAV. Live dubbing, which has no bed, ducks the original and cancels its centre channel instead.
+- **Characters:** see *Characters* below. The app finds who speaks when in a video, matches voices to your character library, and dubs each character with their own voice.
 - **Live modes:** dub the loaded video, another browser tab (via screen-share audio) or the microphone in real time (about 1–3 s behind with WebGPU). The voice for each live line is chosen by how high or low the speaker sounds.
 - **Characters from Speaker Transcriber:** import a JSON export from `speaker-transcriber.html` and its named speakers become the cast, each with their own voice.
-- **Export:** time-aligned dub track (WAV), translated subtitles (SRT), the dub project (JSON), or a real-time recording of the dubbed video (WebM).
+- **Captions in, not just speech recognition:** load a `.vtt`, `.srt` or TTML/DFXP/IMSC file with the video. Its lines are used instead of Whisper and aligned to the speech automatically, and any speaker names in it identify the characters.
+- **Export:** time-aligned dub track (WAV), music + effects bed (WAV), full dubbed mix (WAV), translated subtitles (SRT), the dub project (JSON), or a real-time recording of the dubbed video (WebM).
 - **Voice Lab:** train a custom voice from a voice actor's recordings, on device (WebGPU, including Apple Silicon). See below.
+
+### Characters
+
+The flow for re-using your actors' characters across shows:
+
+1. **Learn the cast from a video they appear in.** Load the video (and its captions if you have them), then press **Find characters**.
+   - The dialogue is separated from the music first.
+   - Each line, from the captions or from Whisper, is voice-printed with WeSpeaker.
+   - Lines are attributed in this order: by the speaker names in the captions, by voice against the character library, then grouped by voice ("Voice A", "Voice B"…).
+2. **Review on the timeline.** Each character gets a lane showing when they speak. Click a block to play that line.
+   - Reassign a line, nudge its start or end by 0.1 s, or fix its text.
+   - Name a voice. Typing an existing character's name merges the two.
+   - While the video plays, press **M** at the start of a line and again at its end to mark it yourself. It is transcribed and voice-printed.
+3. **Save to library.** Each named character keeps a voice print (averaged over every video), plus their lines as training clips: audio from the separated dialogue, with text. The library lives in the browser (IndexedDB).
+4. **Train their voice.** **Train voice…** loads a character's lines into the Voice Lab. When you save the trained voice, the character uses it automatically.
+5. **Dub a new video.** Load it (with captions if available) and press **Prepare full dub**. Lines are matched to library characters by caption name or by voice, translated, and spoken in each character's voice over the music + effects bed.
+   - Check the timeline first, and fix any line whose character is shown with a "?".
+
+Voice prints need the separated dialogue: on a full mix with music underneath they are close to chance. Very short lines (under about 1.5 s) are the least reliable. Separation runs in 12 s segments; set the speed/quality trade-off under *Advanced → Separation*. It is fast on WebGPU and slow on CPU-only machines.
 
 ### Voice Lab
 
 Trains a Kokoro voice that sounds like a specific voice actor from your roster, without leaving the browser.
 
-1. **Recordings:** upload or record 1–5 minutes of the talent's clean solo speech, or **extract it from a video**: the app separates voices from music and effects (Open-Unmix UMX-L in ONNX Runtime Web, with the STFT done in JavaScript), finds speech, voice-prints 2 s windows with WeSpeaker, and groups them into voices. Listen to each voice and pick one to use as training audio. Note that the UMX-L weights are licensed upstream for non-commercial use (CC BY-NC-SA 4.0); for production, point `SEPARATOR_URL` at a separator you have a commercial license for.
+1. **Recordings:** upload or record 1–5 minutes of the talent's clean solo speech, or **extract it from a video**: the app separates the dialogue from music and effects (TIGER-DnR in ONNX Runtime Web, with the STFT done in JavaScript), finds speech, voice-prints 2 s windows with WeSpeaker, and groups them into voices. Listen to each voice and pick one to use as training audio. Characters saved in the character library can be loaded here with one click (**Train voice…**).
 2. **Release on file:** enter the talent's release or contract reference and who approved it, and confirm the release covers a synthetic voice. Training unlocks once this is filled in, and the reference is saved with the voice and its exports.
 3. **Training:** two methods.
    - **Deep training (recommended):** real gradient-based fine-tuning in the browser. The decoder's style layers (37k parameters, AdaSpeech-style) are trained on the talent's own sentences, which Whisper transcribes and which are aligned to the audio with real pitch and energy. A training-step graph exported from PyTorch computes the loss and gradients on WebGPU through ONNX Runtime Web, and Adam runs in JavaScript. In a benchmark on a LibriSpeech reader (90 s of audio, 300 steps), similarity of new sentences to held-out recordings went from 0.08 (closest stock voice) to 0.40. It needs about 190 MB of models in `models/kokoro-train/`, downloaded once, and English training audio. How it works and how to rebuild the models: [`tools/kokoro-train/README.md`](tools/kokoro-train/README.md).
