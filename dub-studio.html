@@ -1689,6 +1689,7 @@ async function prepare() {
         setProgress(i / epLines.length, `Line ${i + 1} of ${epLines.length}`);
         const l = epLines[i];
         l.en = await asrWorker.call('transcribeClip', { audio: lineAudio(pcm, l), opts: { language: p.src, task: 'translate', multilingual: true } });
+        if (JUNK.test(l.en.trim())) { logLine(`Line at ${tsec(l.start)}: no speech heard (Whisper returned "${l.en.trim()}"), left silent.`); l.en = ''; }
         if (!p.mt) { l.text = l.en; l.translated = true; }
       }
     } else if (epLines.length && !p.mt) for (const l of epLines) { l.text = l.orig; l.translated = true; }
@@ -3173,7 +3174,7 @@ async function analyzeEpisode() {
     setStage('Listening for lines'); setProgress(0);
     const a = mix16.slice();
     const items = await asrWorker.call('transcribeFile', { audio: a, opts: { language: p.src, task: 'transcribe', multilingual: true } }, { transfer: [a.buffer] });
-    lines = linesFromItems(items).map((l) => ({ start: l.start, end: l.end, text: l.orig, cap: null })); source = 'speech recognition';
+    lines = linesFromItems(items).filter((l) => !JUNK.test(l.orig.trim())).map((l) => ({ start: l.start, end: l.end, text: l.orig, cap: null })); source = 'speech recognition';
   }
   check();
   await ensureEmb();
@@ -3220,37 +3221,56 @@ function castKey(ep, name, libId = null) {
 function nextVoiceName(ep) {
   for (let i = 0; ; i++) { const n = 'Voice ' + (i < 26 ? String.fromCharCode(65 + i) : String.fromCharCode(65 + Math.floor(i / 26) - 1) + String.fromCharCode(65 + i % 26)); if (!ep.cast.some((c) => c.name === n)) return n; }
 }
+// Episode centring: recordings from one source share a channel (room, microphone, language, mix), which
+// pushes every voice print toward a common direction; on read speech from one corpus different speakers
+// scored 0.6-0.85 raw. Subtracting the episode's mean print removes that shared part (8-speaker test: 5 -> 7
+// of 8 ranked first). It needs enough lines that the mean is not just one speaker, so below CENTER_MIN
+// printed lines the raw prints and the calibrated raw thresholds are used.
+const CENTER_MIN = 8, LEAD_C = 0.1, MIN_C = 0.1, CLUSTER_AT_C = 0.5, SURE_LEAD = 0.15;
+function episodeCenter(lines) { const es = lines.filter((l) => l.emb).map((l) => l.emb); if (es.length < CENTER_MIN) return null; const m = new Float32Array(es[0].length); for (const e of es) for (let i = 0; i < m.length; i++) m[i] += e[i] / es.length; return m; }
+function cv(ep, e) { if (!ep.center) return e; const d = new Float32Array(e.length); let n = 0; for (let i = 0; i < d.length; i++) { d[i] = e[i] - ep.center[i]; n += d[i] * d[i]; } n = Math.sqrt(n) || 1; for (let i = 0; i < d.length; i++) d[i] /= n; return d; }
 // Voice prints to match against: library characters, plus characters the captions named in this video.
+// Centred scoring is used when this episode is centred and every library print has a centred version.
 function episodePrints(ep) {
-  const prints = chars.lib.filter((c) => c.print).map((c) => ({ libId: c.id, name: c.name, v: c.print }));
+  const lib = chars.lib.filter((c) => c.print);
+  const centred = !!ep.center && lib.every((c) => c.printC);
+  const prints = lib.map((c) => ({ libId: c.id, name: c.name, v: centred ? c.printC : c.print }));
   for (const c of ep.cast) {
     if (c.libId && prints.some((p) => p.libId === c.libId)) continue;
-    const es = ep.lines.filter((l) => l.char === c.key && l.emb && l.how !== 'voice').map((l) => l.emb);
+    const es = ep.lines.filter((l) => l.char === c.key && l.emb && l.how !== 'voice').map((l) => centred ? cv(ep, l.emb) : l.emb);
     if (es.length >= 2) prints.push({ key: c.key, name: c.name, v: unitMean(es) });
   }
+  prints.centred = centred;
   return prints;
 }
-function bestPrint(prints, emb) {
-  const sc = prints.map((p) => ({ p, s: cosine(emb, p.v) })).sort((a, b) => b.s - a.s);
-  if (!sc.length || sc[0].s < CHAR_MATCH || (sc.length > 1 && sc[0].s - sc[1].s < CHAR_MARGIN)) return null;
-  return sc[0];
+// Ranked candidates for a line, and the accepted match (null when not clear enough).
+function scorePrints(prints, ep, emb) {
+  const q = prints.centred ? cv(ep, emb) : emb;
+  const sc = prints.map((p) => ({ p, s: cosine(q, p.v) })).sort((a, b) => b.s - a.s);
+  const lead = sc.length > 1 ? sc[0].s - sc[1].s : 1;
+  const ok = sc.length && (prints.centred ? sc[0].s >= MIN_C && lead >= LEAD_C : sc[0].s >= CHAR_MATCH && lead >= CHAR_MARGIN);
+  return { best: ok ? sc[0] : null, lead, cands: sc.slice(0, 3).map((x) => ({ key: x.p.key || null, libId: x.p.libId || null, name: x.p.name, s: Math.round(x.s * 100) / 100 })) };
 }
 function attribute(ep) {
   ep.cast = [];
-  for (const l of ep.lines) { l.char = null; l.how = 'none'; l.sim = 0; }
+  ep.center = episodeCenter(ep.lines);
+  for (const l of ep.lines) { l.char = null; l.how = 'none'; l.sim = 0; l.low = false; l.cands = null; }
   for (const l of ep.lines) if (l.cap) { l.char = castKey(ep, l.cap); l.how = 'caption'; l.sim = 1; }
   const prints = episodePrints(ep);
   for (const l of ep.lines) {
-    if (l.char || !l.emb) continue;
-    const m = bestPrint(prints, l.emb);
-    if (m) { l.char = m.p.key || castKey(ep, m.p.name, m.p.libId); l.how = 'voice'; l.sim = m.s; }
+    if (l.char || !l.emb || !prints.length) continue;
+    const m = scorePrints(prints, ep, l.emb);
+    l.cands = m.cands;
+    if (m.best) { l.char = m.best.p.key || castKey(ep, m.best.p.name, m.best.p.libId); l.how = 'voice'; l.sim = m.best.s; l.low = m.lead < SURE_LEAD; }
   }
+  // Lines no known character clearly matches are grouped by voice (on centred prints when possible). The
+  // threshold is high: splitting one voice in two is fixed by renaming, merging two voices is not.
   const rest = ep.lines.filter((l) => !l.char && l.emb);
   if (rest.length) {
-    const groups = clusterWindows(rest.map((l) => ({ emb: l.emb, start: l.start, end: l.end, line: l })), CLUSTER_AT, 0.5);
+    const groups = clusterWindows(rest.map((l) => ({ emb: cv(ep, l.emb), start: l.start, end: l.end, line: l })), ep.center ? CLUSTER_AT_C : CLUSTER_AT, ep.center ? 0.6 : 0.5);
     for (const g of groups) {
       const key = castKey(ep, nextVoiceName(ep));
-      for (const w of g.windows) { w.line.char = key; w.line.how = 'cluster'; w.line.sim = w.sim; }
+      for (const w of g.windows) { w.line.char = key; w.line.how = 'cluster'; w.line.sim = w.sim; w.line.low = !!w.line.cands || w.sim < (ep.center ? 0.6 : CHAR_SURE); }
     }
   }
   // Short lines with no usable print: the speaker of a line that ends right before (≤ 0.3 s) or starts right after.
@@ -3258,7 +3278,7 @@ function attribute(ep) {
     if (l.char) return;
     const prev = ep.lines[i - 1], next = ep.lines[i + 1];
     const near = prev?.char && l.start - prev.end <= 0.3 ? prev : next?.char && next.start - l.end <= 0.3 ? next : null;
-    if (near) { l.char = near.char; l.how = 'guess'; l.sim = 0.3; }
+    if (near) { l.char = near.char; l.how = 'guess'; l.sim = 0.3; l.low = true; }
   });
 }
 
@@ -3305,7 +3325,7 @@ function renderEpisode() {
     const lane = el('div', { class: 'lane', title: 'Click to jump there' });
     lane.addEventListener('click', (e) => { if (e.target !== lane || !video) return; const r = lane.getBoundingClientRect(); video.currentTime = (e.clientX - r.left) / r.width * ep.duration; });
     for (const l of lines) {
-      const low = ((l.how === 'voice' || l.how === 'cluster') && l.sim < CHAR_SURE) || l.how === 'guess';
+      const low = !!l.low;
       const b = el('div', { class: `blk${low ? ' low' : ''}${l === chars.sel ? ' sel' : ''}`, title: `${tsec(l.start)} · ${l.text}`, 'data-i': ep.lines.indexOf(l),
         style: `left:${l.start / ep.duration * 100}%;width:${Math.max(0.12, (l.end - l.start) / ep.duration * 100)}%;background:${c ? c.color : '#888'}` });
       b.addEventListener('click', (e) => { e.stopPropagation(); selectLine(l); playLine(l); });
@@ -3338,7 +3358,7 @@ function charLineRow(l, i) {
     let v = e.target.value;
     if (v === '__new') { const name = (prompt('Name of the character') || '').trim(); if (!name) { e.target.value = l.char || ''; return; } v = castKey(ep, name); }
     l.char = v || null; l.how = 'manual'; l.sim = 1; chars.sel = l; renderEpisode();
-  } }, [el('option', { value: '' }, '— unassigned —'), ...ep.cast.map((c) => el('option', { value: c.key, selected: c.key === l.char }, (l.how === 'voice' || l.how === 'cluster') && l.sim < CHAR_SURE && c.key === l.char ? c.name + ' ?' : c.name)), el('option', { value: '__new' }, '+ New character…')]);
+  } }, [el('option', { value: '' }, '— unassigned —'), ...ep.cast.map((c) => el('option', { value: c.key, selected: c.key === l.char }, l.low && c.key === l.char ? c.name + ' ?' : c.name)), el('option', { value: '__new' }, '+ New character…')]);
   const nudge = (k, d, label) => el('button', { title: `Move the ${k} ${d > 0 ? 'later' : 'earlier'} by 0.1 s`, onclick: () => {
     l[k] = Math.max(0, Math.round((l[k] + d) * 100) / 100);
     if (l.end - l.start < 0.2) l[k] -= d;
@@ -3348,7 +3368,10 @@ function charLineRow(l, i) {
     el('span', { class: 'hint' }, `${tsec(l.start)}–${tsec(l.end)}`),
     el('button', { title: 'Play this line', onclick: () => { selectLine(l); playLine(l); } }, '▶'),
     sel,
-    el('input', { type: 'text', class: 'txt', value: l.text, placeholder: '(no text yet)', onchange: (e) => { l.text = e.target.value; } }),
+    el('span', { class: 'txt', style: 'display:flex;flex-direction:column;gap:2px;min-width:0' }, [
+      el('input', { type: 'text', value: l.text, placeholder: '(no text yet)', onchange: (e) => { l.text = e.target.value; } }),
+      (l.low || l.how === 'cluster' || l.how === 'none') && l.cands?.length ? el('span', { class: 'badge' }, ['Sounds like: ', ...l.cands.map((c) => el('button', { style: 'padding:0 6px;margin-right:4px;font-size:11px', title: `Voice-print similarity ${c.s}. Click to assign.`, onclick: () => { l.char = c.key || castKey(ep, c.name, c.libId); l.how = 'manual'; l.sim = 1; l.low = false; chars.sel = l; renderEpisode(); } }, `${c.name} ${c.s.toFixed(2)}`))]) : null,
+    ]),
     el('span', { class: 'nudge' }, [nudge('start', -0.1, '[−'), nudge('start', 0.1, '[+'), nudge('end', -0.1, '−]'), nudge('end', 0.1, '+]'),
       el('button', { title: 'Remove this line', onclick: () => { ep.lines = ep.lines.filter((x) => x !== l); if (chars.sel === l) chars.sel = null; renderEpisode(); } }, '✕')]),
   ]);
@@ -3397,11 +3420,13 @@ async function toggleMark() {
     setStage('Transcribing the marked line'); setProgress(null);
     await ensureAsr();
     l.text = await asrWorker.call('transcribeClip', { audio: lineAudio(ep.voice16, l), opts: { language: plan().src, task: 'transcribe', multilingual: true } });
+    if (JUNK.test(l.text.trim())) l.text = '';
     await ensureEmb();
     if (l.end - l.start >= 0.7) l.emb = await embed16k(printAudio(ep.voice16, l));
     if (!l.char && l.emb) {
-      const m = bestPrint(episodePrints(ep), l.emb);
-      if (m) { l.char = m.p.key || castKey(ep, m.p.name, m.p.libId); l.how = 'voice'; l.sim = m.s; }
+      const prints = episodePrints(ep), m = prints.length ? scorePrints(prints, ep, l.emb) : { best: null, cands: [] };
+      l.cands = m.cands;
+      if (m.best) { l.char = m.best.p.key || castKey(ep, m.best.p.name, m.best.p.libId); l.how = 'voice'; l.sim = m.best.s; l.low = m.lead < SURE_LEAD; }
       else { l.char = castKey(ep, nextVoiceName(ep)); l.how = 'manual'; l.sim = 1; }
     }
     setStage(`Marked ${tsec(l.start)}–${tsec(l.end)}`); setProgress(0);
@@ -3425,19 +3450,19 @@ async function saveEpisodeCast() {
       let rec = (c.libId && chars.lib.find((x) => x.id === c.libId)) || chars.lib.find((x) => x.name.toLowerCase() === c.name.toLowerCase());
       if (!rec) rec = { id: 'char:' + crypto.randomUUID(), name: c.name, color: c.color, print: null, printN: 0, voice: null, talent: '', createdAt: new Date().toISOString(), sources: [], clips: 0, seconds: 0 };
       // Voice print from lines that are surely this character.
-      const sure = ls.filter((l) => l.emb && (l.how === 'caption' || l.how === 'manual' || l.sim >= CHAR_SURE)).map((l) => l.emb);
+      const sure = ls.filter((l) => l.emb && (l.how === 'caption' || l.how === 'manual' || !l.low)).map((l) => l.emb);
+      const runMean = (old, n, es) => { const sum = new Float32Array(es[0].length); if (old) for (let i = 0; i < sum.length; i++) sum[i] = old[i] * n; for (const e of es) for (let i = 0; i < sum.length; i++) sum[i] += e[i]; return unitMean([sum]); };
       if (sure.length) {
-        const sum = new Float32Array(sure[0].length);
-        if (rec.print) for (let i = 0; i < sum.length; i++) sum[i] = rec.print[i] * rec.printN;
-        for (const e of sure) for (let i = 0; i < sum.length; i++) sum[i] += e[i];
-        rec.print = unitMean([sum]); rec.printN += sure.length;
+        rec.print = runMean(rec.print, rec.printN, sure); rec.printN += sure.length;
+        // Centred print (relative to each source episode's mean), used when matching in centred episodes.
+        if (ep.center) { rec.printC = runMean(rec.printC, rec.printCN || 0, sure.map((e) => cv(ep, e))); rec.printCN = (rec.printCN || 0) + sure.length; }
       }
       const room = Math.max(0, CHAR_MAX_SEC - (rec.seconds || 0));
       let used = 0;
       const clips = [];
       for (const l of ls) {
         const d = l.end - l.start;
-        if (!l.text.trim() || d < 1 || d > 15 || (l.how !== 'caption' && l.how !== 'manual' && l.sim < CHAR_SURE)) continue;
+        if (!l.text.trim() || d < 1 || d > 15 || (l.how !== 'caption' && l.how !== 'manual' && l.low)) continue;
         if (used + d > room) break;
         clips.push({ id: `${rec.id}|${ep.content?.key || ep.file.name}|${l.start.toFixed(2)}`, charId: rec.id, text: l.text.trim(), pcm: lineAudio(ep.voice16, l), source: ep.file.name, content: ep.content?.key || null, start: l.start, end: l.end, isolated: ep.isolated, how: l.how, at: new Date().toISOString() });
         used += d;
@@ -3695,7 +3720,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); detectGPU(); initLab(); initChars(); syncButtons();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
+  window.__dub = { scorePrints, episodePrints, episodeCenter, identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>
