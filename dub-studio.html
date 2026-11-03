@@ -3046,7 +3046,9 @@ async function loadCaptionsFor(file) {
     state.captions = { name: file.name, cues };
     const speakers = new Set(cues.map((c) => c.speaker).filter(Boolean));
     els.capInfo.textContent = `${file.name}: ${cues.length} lines${speakers.size ? `, ${speakers.size} named speaker${speakers.size === 1 ? '' : 's'} (${[...speakers].slice(0, 6).join(', ')}${speakers.size > 6 ? '…' : ''})` : ', no speaker names'}.`;
-    if (chars.ep && chars.ep.source !== 'captions') logLine('Captions loaded: press "Find characters" again to use them.');
+    // New captions replace the lines: the character analysis and any script built from it start again.
+    if (chars.ep) { chars.ep = null; chars.sel = null; renderEpisode(); logLine('Captions loaded: characters will be found again from them.'); }
+    if (state.lines.some((l) => l.fromEpisode)) { scheduler.stopAll(); state.lines = []; renderScript(); refreshExports(); }
     syncChars();
   } catch (e) { showError(e.message); }
 }
@@ -3556,7 +3558,7 @@ function init() {
   els.drop.addEventListener('dragover', (e) => { e.preventDefault(); els.drop.classList.add('over'); });
   els.drop.addEventListener('dragleave', () => els.drop.classList.remove('over'));
   els.drop.addEventListener('drop', (e) => { e.preventDefault(); els.drop.classList.remove('over'); loadFile(e.dataTransfer.files[0]); });
-  els.fileInput.addEventListener('change', () => loadFile(els.fileInput.files[0]));
+  els.fileInput.addEventListener('change', () => { const f = els.fileInput.files[0]; els.fileInput.value = ''; loadFile(f); });
   els.importBtn.addEventListener('click', () => els.importInput.click());
   els.importInput.addEventListener('change', () => { importTranscript(els.importInput.files[0]); els.importInput.value = ''; });
 
