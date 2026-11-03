@@ -52,21 +52,37 @@ The flow for re-using your actors' characters across shows:
 - **Timeline:** SDH sound descriptions (`[door slams]`, `(sighs)`, ♪) become *Music* and *Effects* lanes under the character lanes. Events less than 2 s apart join into one segment. These lanes show where the music + effects bed has to keep sound.
 - **Not adopted:** CleanCut's Netflix and Prime Video adapters, which read those services' private player data.
 
-**Measured** on test material built from known parts, so the truth is exact. The soundtrack is the *Tears of Steel* music and effects, with Japanese read speech from 8 FLEURS speakers laid over it. Episode 1 names the speakers in its captions; episode 2 has new lines and unnamed captions.
-- **Recognition in episode 2, full in-app run:**
-  - 3 of 8 lines got the right character automatically, and none got a wrong one.
-  - 4 were left as separate unnamed voices for review, never merged.
-  - 1 line, where Whisper heard no speech, stays silent.
-  - Run offline on the same prints, the uncertain lines' first suggestion was the right character for most of them.
-  - Each character was learned from a single line, the hardest case, and one speaker's only line (0.7 s) was too short to voice-print. Characters with many lines across episodes get stronger prints.
-  - Recordings from one source sound alike to the voice-print model: here different speakers scored 0.6–0.85. So when an episode has at least 6 voice-printed lines, prints are centred on the episode's average before comparing. In an offline check this raised the right speaker to first place for 7 of 8 lines, up from 5.
-  - Small episodes keep fixed thresholds. In a two-speaker test from the film itself, that gave 4 of 5 correct and no wrong matches.
-- **Dialogue removal (episode 2):** the original dialogue drops by about 9–10 dB, and music and effects are kept (correlation with the true bed 0.997 away from dialogue, 0.92 under it, same level).
-  - On the film's own English dialogue the drop is about 20 dB. TIGER-DnR was trained on English (DnR), so it does less on other languages.
-  - Rebuilding the bed from the model's music and effects stems, or with a soft mask, made no difference (within 1 dB).
-  - Dipping the speech band under dubbed lines removed a little more dialogue but took 1–3 dB of real effects with it, so it isn't used.
-  - The next step for non-English sources is a model trained on multilingual dialogue, such as [BandIt v2](https://github.com/kwatcharasupat/bandit-v2), trained on multilingual DnR v3. Its weights are CC BY-SA 4.0 and it needs an ONNX export.
-- **Speed:** separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 12 minutes with *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
+**Measured** on test material built from known parts, so the truth is exact.
+
+*Recognition with several lines per character* (the normal case):
+- **Setup:** 8 LibriSpeech speakers (4 women, 4 men) over the *Tears of Steel* music and effects. Episode 1 has 6 captioned lines per speaker, named. Episode 2 has 4 *different* lines per speaker, unnamed.
+- **Result:** 32 of 32 episode-2 lines got the right character.
+- **With fewer learning lines per character:**
+  - 1 line: 29 correct, 1 wrong, 2 left for review.
+  - 2 lines: 29 correct, 1 wrong (flagged "?"), 2 for review.
+  - 3 lines: 30 correct, 0 wrong, 2 for review, both with the right first suggestion.
+
+*The hard case: one short line per character, all recorded alike.* Here 8 FLEURS speakers read Japanese over the same bed.
+- **Full in-app run** (separation, recognition, Whisper translation, Kokoro voices, exports): 3 of 8 lines matched automatically. The rest were left for review or matched with a "?".
+- **Why it's hard:** recordings from one source sound alike to the voice-print model; different speakers scored 0.6–0.85.
+- **Two changes that help:**
+  - Prints are centred on the episode's average when it has at least 6 voice-printed lines.
+  - Each line is voice-printed across its whole length (3 s windows, averaged) rather than its middle.
+  - Offline, these raised the right speaker to first place for 6–7 of 8 lines, up from 4–5.
+
+*Dialogue removal*, measured on the 8-speaker Japanese episode against the true stems:
+- Music and effects are kept: correlation with the true bed 0.997 away from dialogue, 0.91 under it, same level.
+- **The model under-removes non-English speech.** TIGER-DnR (trained on English) estimated the Japanese dialogue at 0.84× its real level. The app now scales its subtraction per second to leave the bed uncorrelated with the dialogue, measured from the audio itself.
+  - In the full in-app run, that cut the Japanese left in the bed from 12.5% to 6.0%, with music and effects unchanged.
+  - On English (*Tears of Steel*) the factor stays at 1.00 and nothing changes; English dialogue drops about 20 dB.
+- **Tried, and not better:**
+  - a second separation pass (it finds no more dialogue)
+  - MRX alone (leaves more dialogue) or combined with TIGER
+  - a bed rebuilt from the music and effects stems, or with soft masks
+  - dipping the speech band (costs 1–3 dB of real effects)
+- **Next step for non-English sources:** a model trained on multilingual dialogue, such as [BandIt v2](https://github.com/kwatcharasupat/bandit-v2) (multilingual DnR v3). Its weights are CC BY-SA 4.0 and it needs an ONNX export.
+
+*Speed:* separation runs 12 s windows through a 7 MB model. On a 4-core CPU without WebGPU, 70 s of audio took about 11–12 minutes on *Fast*. WebGPU on Apple Silicon should be much faster; time one episode before planning a full season.
 
 Voice prints need the separated dialogue: on a full mix with music underneath they are close to chance. Very short lines (under about 1.5 s) are the least reliable. Separation runs in 12 s segments; set the speed/quality trade-off under *Advanced → Separation*. It is fast on WebGPU and slow on CPU-only machines.
 

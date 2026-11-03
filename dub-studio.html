@@ -3748,7 +3748,7 @@ function init() {
   newActor('Character 1', 'hero');
   renderCast(); updateHints(); detectGPU(); initLab(); initChars(); syncButtons();
   if (location.protocol === 'file:') logLine('Opened from a local file: models still download, but the browser may not cache them. Serving the page over http(s) avoids re-downloads.');
-  window.__dub = { scorePrints, episodePrints, episodeCenter, identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
+  window.__dub = { linePrint, scorePrints, episodePrints, episodeCenter, identifyFromName, parseEpisodeLabel, contentKey, clusterSounds, chars, sepWorker, separateDialogue, analyzeEpisode, attribute, episodeToScript, saveEpisodeCast, bedPlayer, get sepCache() { return sepCache; }, loadCaptionsFor, findCharacters, toggleMark, exportMix, exportBed, cueLines, state, els, plan, prepare, linesFromItems, medianPitch, Vad, toSrt, wavBlob, synthKokoro, ensureKokoro, ensureAsr, asrWorker, ttsWorker, useVoiceData, resample, audio, loadFile, lab, trainVoice, extractVoices, parseCaptions, importCaptioned, alignCaptions, voiceAudio, sepWorker, runSpeak, speak, voicePrint, decodeTo16k, embed16k, cosine, ensureEmb };
 }
 init();
 </script>
