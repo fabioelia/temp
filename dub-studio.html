@@ -1689,13 +1689,13 @@ async function prepare() {
         setProgress(i / epLines.length, `Line ${i + 1} of ${epLines.length}`);
         const l = epLines[i];
         l.en = await asrWorker.call('transcribeClip', { audio: lineAudio(pcm, l), opts: { language: p.src, task: 'translate', multilingual: true } });
-        if (JUNK.test(l.en.trim())) { logLine(`Line at ${tsec(l.start)}: no speech heard (Whisper returned "${l.en.trim()}"), left silent.`); l.en = ''; }
+        if (JUNK.test(l.en.trim())) { logLine(`Line at ${tsec(l.start)}: no speech heard (Whisper returned "${l.en.trim()}"), left silent.`); l.en = ''; l.silent = true; l.text = ''; l.translated = true; continue; }
         if (!p.mt) { l.text = l.en; l.translated = true; }
       }
     } else if (epLines.length && !p.mt) for (const l of epLines) { l.text = l.orig; l.translated = true; }
     const todo = state.lines.filter((l) => !l.translated && l.orig.trim());
     if (p.mt && todo.length) await translateLines(todo, p);
-    for (const l of state.lines) { if (!l.text) l.text = l.orig; l.translated = true; }
+    for (const l of state.lines) { if (!l.text && !l.silent) l.text = l.orig; l.translated = true; }
     renderScript();
     check();
     // 3. Music + effects bed (the original dialogue removed), so the dub replaces the voices only.
@@ -3224,9 +3224,9 @@ function nextVoiceName(ep) {
 // Episode centring: recordings from one source share a channel (room, microphone, language, mix), which
 // pushes every voice print toward a common direction; on read speech from one corpus different speakers
 // scored 0.6-0.85 raw. Subtracting the episode's mean print removes that shared part (8-speaker test: 5 -> 7
-// of 8 ranked first). It needs enough lines that the mean is not just one speaker, so below CENTER_MIN
-// printed lines the raw prints and the calibrated raw thresholds are used.
-const CENTER_MIN = 8, LEAD_C = 0.1, MIN_C = 0.1, CLUSTER_AT_C = 0.5, SURE_LEAD = 0.15;
+// of 8 ranked first). Below CENTER_MIN printed lines the raw prints and calibrated raw thresholds are used.
+// The minimum matters: centring a 5-line, 2-speaker episode (mean = mostly one speaker) mismatched a line.
+const CENTER_MIN = 6, LEAD_C = 0.1, MIN_C = 0.1, CLUSTER_AT_C = 0.5, SURE_LEAD = 0.15;
 function episodeCenter(lines) { const es = lines.filter((l) => l.emb).map((l) => l.emb); if (es.length < CENTER_MIN) return null; const m = new Float32Array(es[0].length); for (const e of es) for (let i = 0; i < m.length; i++) m[i] += e[i] / es.length; return m; }
 function cv(ep, e) { if (!ep.center) return e; const d = new Float32Array(e.length); let n = 0; for (let i = 0; i < d.length; i++) { d[i] = e[i] - ep.center[i]; n += d[i] * d[i]; } n = Math.sqrt(n) || 1; for (let i = 0; i < d.length; i++) d[i] /= n; return d; }
 // Voice prints to match against: library characters, plus characters the captions named in this video.
