@@ -53,9 +53,13 @@ The flow for re-using your actors' characters across shows:
 - **Not adopted:** CleanCut's Netflix and Prime Video adapters, which read those services' private player data.
 
 **Measured** on test material built from known parts, so the truth is exact. The soundtrack is the *Tears of Steel* music and effects, with Japanese read speech from 8 FLEURS speakers laid over it. Episode 1 names the speakers in its captions; episode 2 has new lines and unnamed captions.
-- **Recognition in episode 2:** 6 of 8 lines get the right character automatically. The one wrong line is flagged "?", with the right speaker among its suggestions. The one line left unmatched shows the right speaker as its first suggestion.
-  - Each character was learned from a single line, the hardest case. Characters with many lines across episodes get stronger voice prints.
-  - Recordings from one source sound alike to the voice-print model: here different speakers scored 0.6–0.85. So when an episode has at least 8 voice-printed lines, prints are centred on the episode's average before comparing.
+- **Recognition in episode 2, full in-app run:**
+  - 3 of 8 lines got the right character automatically, and none got a wrong one.
+  - 4 were left as separate unnamed voices for review, never merged.
+  - 1 line, where Whisper heard no speech, stays silent.
+  - Run offline on the same prints, the uncertain lines' first suggestion was the right character for most of them.
+  - Each character was learned from a single line, the hardest case, and one speaker's only line (0.7 s) was too short to voice-print. Characters with many lines across episodes get stronger prints.
+  - Recordings from one source sound alike to the voice-print model: here different speakers scored 0.6–0.85. So when an episode has at least 6 voice-printed lines, prints are centred on the episode's average before comparing. In an offline check this raised the right speaker to first place for 7 of 8 lines, up from 5.
   - Small episodes keep fixed thresholds. In a two-speaker test from the film itself, that gave 4 of 5 correct and no wrong matches.
 - **Dialogue removal (episode 2):** the original dialogue drops by about 9–10 dB, and music and effects are kept (correlation with the true bed 0.997 away from dialogue, 0.92 under it, same level).
   - On the film's own English dialogue the drop is about 20 dB. TIGER-DnR was trained on English (DnR), so it does less on other languages.
