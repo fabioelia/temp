@@ -1,6 +1,6 @@
 # Catalyst memo (Wed 2026-11-04)
 
-**Verdict:** QCOM is a conditional C1 for Thu 11/5 14:43 (conf 2). Kelly or the spread rule will probably block it. Figures come from scratchpad `cat1104/` (catalyst_1104.py, fit_1104.py, sizing.py runs).
+**Verdict:** QCOM is a conditional C1 for Thu 11/5 14:43 (conf 2). Kelly or the spread rule will probably block it. Figures come from `scripts/catalyst_1104.py` and `scripts/fit_1104.py` (committed by the orchestrator; the data stays in the scratchpad `cat1104/`) and sizing.py runs.
 
 ## The print (8-K Ex-99.1, EDGAR; consensus via Reuters/Globe and Mail and Quartz)
 - **Q4 beat:** revenue $10.44B vs $10.11B; EPS $2.17 vs $2.16. Handsets missed at $5.14B (-26%) vs $5.25B.
