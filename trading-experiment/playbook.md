@@ -230,6 +230,14 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
       circuit-breaker day (S&P 500 Level 1 = 7,039.10).
     - Momentum: no tape block.
     - AMD gapped up about 7% after hours, so there is no C1. QCOM Thu 11/5 stays conditional and is likely to fail on spread.
+  - **Update, Wed 11/4 (research/2026-11-04/):**
+    - **The goal-budget call was bought:** 1 x SPY 12/04 780C at 6.79 real (Shot 2 above), with a resting GTC at 9.62.
+    - **O015 queued, the QCOM C1 put for Thu 11/5 14:43.** QCOM is -8.2% after hours, just under its 159.33 line.
+      - Contract: the 11/20 155P (the 150P if QCOM is 157 or lower).
+      - Gates: spread at most 5%; IV at most 72%; and the ask within full Kelly at its quoted IV on the 15-DTE table (4.15 at 46%, 3.82 at 48%, 3.53 at
+        50%). Likely blocked by Kelly or by the spread.
+    - Macro, momentum and options-vol: no trade. Oil relief drops have no edge (26 cases, 0.84 per $). The jobs straddle is 0.84%. Thursday's Level 1
+      circuit breaker is ^GSPC 7,150.42.
 
 * **Goal-budget bet, decided by Claude under the owner's autonomy grant (2026-11-02: "You dont need my approval to do anything work autonomously").**
   The owner's goals are $2,200 and beating SPY; they removed the buy caps and gave the whole $2,000. With no evidence-backed edge available, a cash finish beats SPY
@@ -299,6 +307,8 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-04: the goal-budget call was bought (SPY 12/04 780C at 6.79 real; GTC at 9.62; stop 3.39). O015 (QCOM C1) is conditional for 11/5. The C1 size
+  gate uses the 15-DTE Kelly table when it is lower than sizing.py's 25-DTE figure.
 * 2026-11-03 (Run B): O013 (the goal-budget SPY call) queued for the Wed 11/4 14:43 check; no macro or tape veto; no C1 on AMD.
 * 2026-11-02 (evening, owner's autonomy grant): Claude decides the goal budget, which is one SPY call with a -50% stop, entered Wed 11/4 under a pre-registered rule.
 * 2026-11-02 (Run B): no proposals for 11/3; QCOM C1 conditional for 11/5; O012 cancelled without owner approval.
