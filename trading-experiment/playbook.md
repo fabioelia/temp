@@ -215,6 +215,13 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - QCOM Thu 11/5 stays conditional at IV of about 44-48.5% and a hard 5% spread. Tonight's spreads are 5.8-8.7%, so it is likely to fail.
     - Oil after a 6%+ drop has no edge (74 cases since 2006; calls 0.67-0.75 per $). The midterm premium is fair to rich.
     - All four personas: no trade for Tuesday.
+  - **Update, Tue 11/3 Run B (research/2026-11-03/):**
+    - **O013 queued:** the goal-budget call (1 x SPY 11/30 768C reference, ask at most 8.50) for the Wed 11/4 14:43 check only, under the rule below.
+      Tonight's dry run: P($2,200) 46.8%, EV 1.013.
+    - Macro: the midterms went as priced, leaning further Democratic. No rate, credit or VIX gate is needed (`scripts/macro_gate_test.py`); the only block is a
+      circuit-breaker day (S&P 500 Level 1 = 7,039.10).
+    - Momentum: no tape block.
+    - AMD gapped up about 7% after hours, so there is no C1. QCOM Thu 11/5 stays conditional and is likely to fail on spread.
 
 * **Goal-budget bet, decided by Claude under the owner's autonomy grant (2026-11-02: "You dont need my approval to do anything work autonomously").**
   The owner's goals are $2,200 and beating SPY; they removed the buy caps and gave the whole $2,000. With no evidence-backed edge available, a cash finish beats SPY
@@ -284,6 +291,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-03 (Run B): O013 (the goal-budget SPY call) queued for the Wed 11/4 14:43 check; no macro or tape veto; no C1 on AMD.
 * 2026-11-02 (evening, owner's autonomy grant): Claude decides the goal budget, which is one SPY call with a -50% stop, entered Wed 11/4 under a pre-registered rule.
 * 2026-11-02 (Run B): no proposals for 11/3; QCOM C1 conditional for 11/5; O012 cancelled without owner approval.
 * 2026-11-01 (Sunday re-plan): no rule-passing trade this week; the C1 watch (QCOM); the owner-only goal budget O012 framed with full odds; C1 expiry at least 14 days.

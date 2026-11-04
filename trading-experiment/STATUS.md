@@ -14,7 +14,7 @@ _All cash._
 
 ## Pending orders (fill at next close)
 
-_None._
+- O013 buy SPY261130C00768000 qty=1.0 stop=50.0% target= :: Goal-budget bet (playbook, pre-registered 11/02 under the owner's autonomy grant). NOT AN EDGE: a choice of variance toward the owner's goals ($2,200 and beat SPY); model EV is flat. Wed 11/4 14:43 check only. Contract: 1 SPY call, 11/30 or 12/04 expiry, delta 0.35-0.40, OI >= 1000, spread <= 5%, ask <= 8.50 (premium <= $850); 768C is tonight's reference (Cboe 11/3 close 7.24/7.41, delta 0.36, OI 1084, IV 14.7%) and Run A takes the in-band contract that passes every gate at the live quote, nearest delta 0.375. Confirm only if all hold: research/2026-11-02/scripts/goal_odds.py at the live quote with the -50% stop gives P($2,200) >= 35% and EV >= 0.93 per $ (11/3 dry run: 46.8%, 1.013); no market-wide halt or circuit-breaker day (S&P 500 Level 1 = 7,039.10); a fresh risk red-team at 14:43 does not reject it (buy >= 20% of equity). Macro (research/2026-11-03/macro.md): midterms as priced (House D 97-98%, Senate D 86-89% at 00:03 UTC), no rate/credit/VIX gate (scripts/macro_gate_test.py). Exits: sell at the first 14:43 check with equity >= $2,200 (resting GTC at that call price if >= 1.4x cost, placed in Run B after the fill); -50% stop at a 14:43 check; otherwise sell at the 11/18 14:43 check. No widening of any gate.
 
 ## Stats
 

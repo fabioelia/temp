@@ -698,3 +698,22 @@ real money). Wednesday's check reruns it on the live quote.
 14:43 under the pre-registered rule. No C1: AAPL is -2%, against the -8% the rule needs.
 **Idea watch (research/2026-11-03/ideas-fired.csv):** macro's two USO shadows fired (163C at 7.10, 150P at 5.85), not taken (no edge). The momentum QQQ
 680P did not fire (QQQ 685.52 > 680.11).
+
+## 2026-11-03 (Tue, election night) Post-close (Run B, 17:13 EST; agents through 00:05 UTC 11/4)
+**Booked:** no fills. Paper $1,919.92 (-4.00%); real $1,917.92 (Robinhood $1,917.91: flat, no open orders, reconciled). SPY buy-and-hold $1,967.37
+(SPY 754.35), so we trail SPY by $47.45 (2.4 points). `validate` OK; `live.py check` OK.
+**Personas (research/2026-11-03/):**
+* **macro:** the midterms went as priced and leaned further D (House D 97-98%, Senate D 86-89% at 00:03 UTC; nothing called). ES=F flat. A surprise is worth
+  about +0.15-0.6% against a 1.15% priced move (NBER w12751). No rate, credit or VIX state blocks the goal-budget odds (`scripts/macro_gate_test.py`, committed
+  by me from the agent's scratchpad, where it ran uncommitted). The only block is a circuit-breaker day (S&P 500 Level 1 7,039.10).
+* **options-vol:** only SPY 11/30 768C is in band tonight (7.24/7.41, delta 0.365, OI 1084, $741). goal_odds.py with the stop: P($2,200) 46.8%, P(beat SPY)
+  47.7%, P(below $1,600) 47.7%, EV 1.013. The 11/30 766C and 12/04 769C failed on OI.
+* **momentum:** no tape block.
+* **catalyst:** AMD up about 6.8% after hours (517.28), so there is no C1 (puts on down gaps only). QCOM Thu 11/5 stays conditional (11/20 145P 2.63/2.82;
+  spreads 5.4-8.9%, likely fails the 5% gate). ARM shadow only.
+**Proposal for Wed 11/4: O013, the goal-budget call** (1 x SPY 11/30 768C reference, or the in-band contract that passes every gate at the live quote; ask at
+most 8.50; -50% stop; gtd 11/04). Pre-registered on 11/02; it is not an edge. It is confirmed at the 14:43 check only if goal_odds.py at the live quote gives
+P($2,200) >= 35% and EV >= 0.93, there is no halt, and a fresh risk red-team does not reject it. If it fills, Run B places the resting GTC at the $2,200-equity
+call price when that is at least 1.4x cost.
+**Red-team:** none tonight. The rule itself was red-teamed on 11/02, and the binding red-team is Wednesday's, on the live quote.
+**Dashboard (11/03):** five files refreshed (summary 9746102a, equity 1c74d377, positions e6dd60d1, orders 357b731a, trades 08ee6185); the old files were deleted.
