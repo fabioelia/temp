@@ -717,3 +717,12 @@ P($2,200) >= 35% and EV >= 0.93, there is no halt, and a fresh risk red-team doe
 call price when that is at least 1.4x cost.
 **Red-team:** none tonight. The rule itself was red-teamed on 11/02, and the binding red-team is Wednesday's, on the live quote.
 **Dashboard (11/03):** five files refreshed (summary 9746102a, equity 1c74d377, positions e6dd60d1, orders 357b731a, trades 08ee6185); the old files were deleted.
+
+## 2026-11-04 (Wed) Pre-open (09:17 EST)
+**News:** Democrats took both chambers (Reuters, Bloomberg, USA Today, 07:45-08:59 ET; AI data-center names dip, renewables up). Futures rose: ES=F 7,685.25 (+1.2%
+vs 7,596.75), NQ=F +0.3%; ^VIX 18.17 (from 20.83: the post-vote IV crush the plan expected); ^TNX 4.917 (from 4.952); Treasury held refunding sizes. Oil fell: CL=F
+93.49 (-2.7%), BZ=F 100.76, on Iran-talk hopes despite the IRGC's claim of four tankers hit by mines near Hormuz (unverified; thecradle, LBCI). Yahoo, single source.
+No Anthropic filing in the last 2 days (CIK 2130357).
+**O013 unchanged, with one note for Run A:** at a +1.2% open (SPY about 763), the 768C reference would be near delta 0.45, outside the 0.35-0.40 band. Run A takes
+the in-band 11/30 or 12/04 strike at the live quote (about 775-778 at that spot), cancels O013 and adds and confirms the replacement, with every gate (OI, spread,
+ask at most 8.50, goal_odds.py, red-team) checked on that contract. No gate is widened.
