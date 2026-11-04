@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy — CleanCut</title>
+<meta name="robots" content="index">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap"><a class="logo" href="./">✂ CleanCut</a><nav><a href="support.html">Support</a></nav></div></header>
+<main><div class="wrap"><article>
+<h1>Privacy policy</h1>
+<p class="meta">Last updated: [[DATE]]</p>
+
+<p>CleanCut is a browser extension and a small community service. This page explains exactly what data the extension and the service handle. The short version: CleanCut collects the minimum needed to look up scene tags for what you're watching, and nothing else. We don't sell data, show ads, or build profiles.</p>
+
+<h2>What stays on your device</h2>
+<ul>
+  <li><strong>Subtitles.</strong> The extension reads the subtitle file the video player downloads and analyzes it locally. Subtitle text is never sent to us or anyone else.</li>
+  <li><strong>Your settings</strong> (chosen rating, per-category choices, actions). These live in the browser's extension storage. If you're signed in to Chrome with sync turned on, the browser may sync them across your devices as it does for any extension.</li>
+  <li><strong>Your own tags</strong> and the cache of recently looked-up titles are stored locally in the extension.</li>
+</ul>
+
+<h2>What is sent to the CleanCut service</h2>
+<ul>
+  <li><strong>Title lookups.</strong> When you play a video on a supported site, the extension sends the site name and the video's ID (for example <code>netflix</code> and <code>70248288</code>), and, when known, the show name, season and episode, so the service can return the matching scene tags. This is a form of viewing information, and it's used only to answer the lookup.</li>
+  <li><strong>If you create an account:</strong> the display name you choose. We store a hash of your API key, not the key itself.</li>
+  <li><strong>If you share:</strong> the scene tags, votes and skip lists that you choose to publish, along with your display name, so other people can see them.</li>
+</ul>
+<p>Lookups work without an account. We do not receive your Netflix or Amazon account, your viewing history, video content or subtitles, or anything about other sites you visit.</p>
+
+<h2>Server logs</h2>
+<p>The service keeps a temporary record of your IP address in memory to limit abuse (rate limiting). It is not written to the database. Our hosting provider may keep standard access logs for a limited period for security and operations. [[LOG_RETENTION: state your provider's retention, e.g. 14 days]]</p>
+
+<h2>What we do not do</h2>
+<ul>
+  <li>We don't sell or rent data, and we don't share it with advertisers or data brokers.</li>
+  <li>We don't use data for creditworthiness, lending, or any purpose unrelated to CleanCut's single purpose of filtering scenes.</li>
+  <li>We don't load or run remotely hosted code. All extension code ships inside the extension package.</li>
+</ul>
+
+<h2>Permissions the extension asks for</h2>
+<ul>
+  <li><strong>Access to netflix.com and primevideo.com / amazon video pages:</strong> to detect what's playing and to skip, mute or blur it.</li>
+  <li><strong>storage:</strong> to save your settings and tags.</li>
+  <li><strong>activeTab / scripting:</strong> so the popup can show and control the current tab's player.</li>
+  <li><strong>Optional access to other sites:</strong> asked for at the moment you choose to use CleanCut on a site, or to point it at a different community server. You can decline.</li>
+</ul>
+
+<h2>Your choices</h2>
+<ul>
+  <li>Uninstalling the extension removes everything stored on your device.</li>
+  <li>To delete your account and the tags, votes and skip lists linked to it, contact us at the address below and we'll remove them.</li>
+  <li>You can point the extension at a different community server in Options, or turn it off, at any time.</li>
+</ul>
+
+<h2>Children</h2>
+<p>CleanCut is designed to help families. It is operated for adults and doesn't knowingly collect personal information from children under 13. The community features ask only for a display name; please don't use a real name.</p>
+
+<h2>Changes</h2>
+<p>If this policy changes materially, we'll update the date above and note it in the extension's release notes.</p>
+
+<h2>Contact</h2>
+<p>[[SUPPORT_EMAIL]]</p>
+</article></div></main>
+<footer class="site"><div class="wrap">© CleanCut · <a href="./">Home</a> · <a href="support.html">Support</a></div></footer>
+</body>
+</html>

@@ -8,7 +8,7 @@ const host = process.env.HOST || '127.0.0.1';
 const dbFile = process.env.CLEANCUT_DB || new URL('../../data/cleancut.db', import.meta.url).pathname;
 
 const db = openDb(dbFile);
-const server = createServer(createApp(db));
+const server = createServer(createApp(db, { trustProxy: process.env.TRUST_PROXY === '1' }));
 server.listen(port, host, () => {
   console.log(`CleanCut API listening on http://${host}:${port}  (db: ${dbFile})`);
   console.log(`  community hub  http://${host}:${port}/`);

@@ -37,7 +37,7 @@ class HttpError extends Error {
 const now = () => Date.now();
 const hashKey = (key) => createHash('sha256').update(key).digest('hex');
 
-export function createApp(db, { rateLimit = { windowMs: 60_000, max: 120 } } = {}) {
+export function createApp(db, { rateLimit = { windowMs: 60_000, max: 120 }, trustProxy = false } = {}) {
   const q = {
     insertUser: db.prepare('INSERT INTO users (name, key_hash, created_at) VALUES (?, ?, ?)'),
     userByKey: db.prepare('SELECT id, name FROM users WHERE key_hash = ?'),
@@ -326,7 +326,10 @@ export function createApp(db, { rateLimit = { windowMs: 60_000, max: 120 } } = {
   const hits = new Map();
   function limited(req) {
     if (!rateLimit || req.method === 'GET' || req.method === 'OPTIONS') return false;
-    const ip = req.socket.remoteAddress || 'unknown';
+    // Behind a reverse proxy (Caddy, nginx, a PaaS router) the socket address is the proxy's.
+    // With trustProxy, use the client address the proxy appended last to X-Forwarded-For.
+    const fwd = trustProxy ? String(req.headers['x-forwarded-for'] || '').split(',').pop().trim() : '';
+    const ip = fwd || req.socket.remoteAddress || 'unknown';
     const t = now();
     const entry = hits.get(ip);
     if (!entry || t - entry.start > rateLimit.windowMs) {

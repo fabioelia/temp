@@ -123,3 +123,26 @@ test('static files support byte ranges (needed for video seeking)', async () => 
   assert.equal(await suffix.text(), text.slice(-4));
   assert.equal((await fetch(`${base}/demo.vtt`, { headers: { Range: 'bytes=999999-' } })).status, 416);
 });
+
+test('rate limit is per client behind a trusted proxy, shared without one', async () => {
+  const hit = async (app, xff) => {
+    const s = createServer(app);
+    await new Promise((r) => s.listen(0, '127.0.0.1', r));
+    const res = await fetch(`http://127.0.0.1:${s.address().port}/v1/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': xff },
+      body: JSON.stringify({ name: 'x' + Math.random().toString(36).slice(2, 8) }),
+    });
+    s.close();
+    return res.status;
+  };
+  const opts = { rateLimit: { windowMs: 60_000, max: 1 } };
+  const plain = createApp(openDb(':memory:'), opts);
+  assert.equal(await hit(plain, '1.1.1.1'), 201);
+  assert.equal(await hit(plain, '2.2.2.2'), 429); // header ignored: both look like the proxy
+
+  const proxied = createApp(openDb(':memory:'), { ...opts, trustProxy: true });
+  assert.equal(await hit(proxied, '1.1.1.1'), 201);
+  assert.equal(await hit(proxied, '2.2.2.2'), 201); // different clients
+  assert.equal(await hit(proxied, '1.1.1.1'), 429);
+});

@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "node extension/build.mjs",
+    "package": "npm run build && cd extension/dist/chrome && rm -f ../cleancut-chrome.zip && zip -qr ../cleancut-chrome.zip . && echo Wrote extension/dist/cleancut-chrome.zip",
     "watch": "node extension/build.mjs --watch",
     "server": "node --disable-warning=ExperimentalWarning server/src/index.js",
     "scan": "node scanner/src/cli.js",

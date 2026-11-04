@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CleanCut — watch any show at the rating you choose</title>
+<meta name="description" content="CleanCut is a free browser extension that skips, mutes or blurs the scenes above your chosen rating while you watch. Make it PG-13, PG or G.">
+<meta property="og:title" content="CleanCut — watch any show at the rating you choose">
+<meta property="og:description" content="Skip, mute or blur the scenes above your rating. Free browser extension.">
+<meta property="og:image" content="img/overlay.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="logo" href="./">✂ CleanCut</a>
+  <nav><a href="#how">How it works</a><a href="#ratings">Ratings</a><a href="#faq">FAQ</a><a href="support.html">Support</a></nav>
+</div></header>
+
+<main>
+<div class="wrap">
+  <div class="hero">
+    <h1>Watch any show at the rating you choose.</h1>
+    <p class="lede">CleanCut runs on top of the streaming sites you already use and skips, mutes or blurs the scenes above your rating. Take an R-rated series and watch it as PG-13, PG or G.</p>
+    <a id="install" class="btn" href="#">Add to Chrome — free</a><a class="btn ghost" href="#how">How it works</a>
+    <small id="install-note">Works in Chrome and Edge. Currently in beta.</small>
+  </div>
+  <div class="shots">
+    <img class="wide" src="img/overlay.png" alt="A toast reads 'Skipped 0:10 · violence (strong)' with an Undo button, and a coloured strip of cuts runs along the bottom of the player" width="560">
+    <img class="tall" src="img/popup.png" alt="The CleanCut popup: rating buttons Off, R, PG-13, PG, G and Custom, plus the list of cuts in this episode" width="280">
+  </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="grid">
+      <div class="card"><h3>1. Pick a rating</h3><p>Choose R, PG-13, PG or G from the toolbar popup, or tune each category yourself: nudity, sex, violence, gore, language, drugs and frightening scenes.</p></div>
+      <div class="card"><h3>2. It finds the scenes</h3><p>CleanCut combines scene tags from the community with a scan of the episode's own subtitles, run in your browser before the scenes play.</p></div>
+      <div class="card"><h3>3. You just watch</h3><p>Scenes above your rating are skipped, muted or blurred. A small toast says what happened, and <strong>Undo</strong> lets any scene play.</p></div>
+    </div>
+  </section>
+
+  <section id="ratings">
+    <h2>Ratings you can see</h2>
+    <p>Each preset is the highest level allowed to play, from mild to strong. Anything above it is cut. You can switch any category to skip, mute or blur.</p>
+    <table>
+      <tr><th>Preset</th><th>Nudity</th><th>Sex</th><th>Violence</th><th>Gore</th><th>Language</th><th>Drugs</th><th>Frightening</th></tr>
+      <tr><td>R</td><td>moderate</td><td>moderate</td><td>any</td><td>moderate</td><td>any</td><td>any</td><td>any</td></tr>
+      <tr><td>PG-13</td><td>none</td><td>mild</td><td>moderate</td><td>mild</td><td>moderate</td><td>moderate</td><td>any</td></tr>
+      <tr><td>PG</td><td>none</td><td>none</td><td>mild</td><td>none</td><td>mild</td><td>mild</td><td>moderate</td></tr>
+      <tr><td>G</td><td>none</td><td>none</td><td>none</td><td>none</td><td>none</td><td>none</td><td>mild</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Built to stay out of your way</h2>
+    <div class="grid">
+      <div class="card"><h3>Private by design</h3><p>Subtitles are analyzed on your device and never uploaded. The only thing sent out is which title you're watching, so we can look up its tags.</p></div>
+      <div class="card"><h3>Community powered</h3><p>Tag a scene with <code>Alt+[</code> and <code>Alt+]</code> while you watch, vote on others' tags, and share your settings as a skip list.</p></div>
+      <div class="card"><h3>You stay in control</h3><p>CleanCut never copies, edits or redistributes a video. It only skips, mutes or blurs what's playing on your screen, for your own viewing.</p></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>Questions</h2>
+    <details><summary>Which sites does it work on?</summary><p>Netflix and Prime Video, plus any page with a standard video player that publishes the right tags. Streaming sites change their pages often, so if something stops working after a site update, please <a href="support.html">tell us</a>.</p></details>
+    <details><summary>Why does it say "subtitles not scanned yet"?</summary><p>The scan uses the English subtitle file the player downloads. Turn on English captions once, and the scan runs. You can hide the captions again afterwards.</p></details>
+    <details><summary>Does it see the video frames?</summary><p>No. Streaming video is protected, so extensions can't read the picture. CleanCut works from tags and subtitles, so it can miss a scene that has neither. That's why community tags matter, and why machine-detected scenes show as suggestions until you trust them.</p></details>
+    <details><summary>Is it legal?</summary><p>In the US, the Family Movie Act of 2005 allows skipping and muting parts of a film for private home viewing, as long as no altered copy is made. CleanCut works that way. Streaming services' terms and laws in other countries differ. This is not legal advice.</p></details>
+    <details><summary>What does it cost?</summary><p>Nothing. There are no ads and no tracking.</p></details>
+    <details><summary>Is it affiliated with Netflix or Amazon?</summary><p>No. CleanCut is an independent project. Netflix and Prime Video are trademarks of their respective owners.</p></details>
+  </section>
+</div>
+</main>
+
+<footer class="site"><div class="wrap">
+  © CleanCut · <a href="privacy.html">Privacy</a> · <a href="support.html">Support</a><br>
+  CleanCut is not affiliated with, endorsed by or sponsored by Netflix, Inc., Amazon.com, Inc. or Google LLC.
+</div></footer>
+
+<script>
+  // Set this to the Chrome Web Store listing URL once it's published.
+  var STORE_URL = '';
+  var btn = document.getElementById('install');
+  if (STORE_URL) { btn.href = STORE_URL; }
+  else { btn.textContent = 'Coming soon to the Chrome Web Store'; btn.setAttribute('aria-disabled', 'true'); }
+</script>
+</body>
+</html>
