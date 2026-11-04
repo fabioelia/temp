@@ -726,3 +726,30 @@ No Anthropic filing in the last 2 days (CIK 2130357).
 **O013 unchanged, with one note for Run A:** at a +1.2% open (SPY about 763), the 768C reference would be near delta 0.45, outside the 0.35-0.40 band. Run A takes
 the in-band 11/30 or 12/04 strike at the live quote (about 775-778 at that spot), cancels O013 and adds and confirms the replacement, with every gate (OI, spread,
 ask at most 8.50, goal_odds.py, red-team) checked on that contract. No gate is widened.
+
+## 2026-11-04 (Wed) Pre-close (14:44 EST)
+**Driver:** the Democratic sweep of both chambers (NYT, Bloomberg, MarketWatch, 13:00-14:05 ET): stocks and bonds up, the dollar down. SPY 767.84 (+1.8%,
+Robinhood), ^GSPC 7,703.87, ^VIX 16.79 (from 20.83, the post-vote IV crush), ^IRX 4.03. Feed: live quotes single-source (Yahoo) plus Robinhood and the Cboe chain.
+**Goal-budget trigger: fired and taken.**
+* **O013 cancelled:** its 768C reference was at delta 0.54 after the rally, outside the 0.35-0.40 band.
+* **O014 added and confirmed:** 1 x SPY 12/04 780C, the in-band call nearest delta 0.375 (Robinhood 6.70/6.73, delta 0.369, IV 12.3%, OI 2149, spread 0.4%; the
+  11/30 779C had delta 0.36). Every gate passed. goal_odds.py at the Robinhood quote, with the -50% stop: P($2,200) 44.7% (42.6-47.0), EV 1.020 (0.991-1.050),
+  P(ahead of SPY) 46.3% against 4.4% in cash, P(below $1,600) 44.0%, P(stopped) 43.6%. No halt. Premium about $670 (35% of equity). Output in the scratchpad
+  (goal_odds_1104_rh.txt); the first run on the older Cboe quote (6.83) gave 45.3% and 1.022.
+* **Risk red-team (fresh, 100 words): MODIFY.** Buy as specified, but set the take-profit from the actual cash after the fill, ceil((2200 - cash) / 100) per
+  share (about 9.56), not 1.413x the ask (that came from the $683 Cboe run). The Robinhood run gives 1.419x. Buying after +1.8%, the 35% size and the 12/04 expiry
+  were judged not decisive; the stop stays. Adopted.
+**Real order:** gate ticket K004 APPROVED (1 contract, limit 6.69, the high-fill-rate buy price rounded down); review_option_order showed no alerts and fees of $0.04;
+placed 19:47:30 UTC (broker order ...87c).
+**Idea watch:** the goal-budget rows logged in research/2026-11-04/ideas-fired.csv (the 768C reference at 11.74; taken as the 780C at 6.73). Other ideas
+in the last 10 days have no trigger today (QCOM C1 is Thursday; the momentum QQQ shadow exits only).
+* **The fill took three tickets.** K004's 6.69 sat below the bid within 30 s (6.71/6.75), so I cancelled it (nothing filled) and failed the ticket. K005 (6.77) was
+  never sent: the quote moved to 6.78/6.82 at review. K006 at 6.80 (the high-fill-rate buy price rounded down, at the ask) **filled 1 @ 6.79 at 19:48:46 UTC**.
+  Cost $679.04 with fees ($6.80 more than the 6.73 the model ran on; the gates are unaffected, since the 6.83 run gave 45.3% and 1.022).
+  Robinhood reconciled: 1 long 12/04 780C, avg $679; cash $1,238.87; account $1,916.87. Real fills today: 1 of 4.
+* **Exits (playbook, Open shots, Shot 2):**
+  - goal: a bid of at least 9.62 = ceil((2200 - 1238.87) / 100), 1.42x cost, as a resting GTC placed in Run B (the red-team's fix);
+  - stop: a bid at or below 3.39 at a 14:43 check;
+  - time: the 11/18 14:43 check.
+* **Tax memo:** live.py flags a possible wash sale. The 10/22 SPY 11/20 790C loss ($82.08) is followed by this SPY call within 30 days. Calls on different strikes
+  and expiries are usually not treated as substantially identical, but the rule is unsettled. At most it moves $82 of loss into this contract's cost basis.

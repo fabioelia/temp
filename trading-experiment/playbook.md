@@ -95,6 +95,14 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * The tracker auto-sells any option one session before its expiry. Never hold into expiry, never exercise.
 
 ## Open shots (exits checked at every 14:43 pre-close on live quotes)
+* **Shot 2: OPEN, the goal-budget call. 1 x SPY261204C00780000**, real fill 6.79 on 11/4 at 14:48 ET (cost $679.04 with fees; Robinhood avg $679; cash after
+  the buy $1,238.87). It is not an edge (playbook, Goal-budget bet). Exits, checked in this order at every 14:43 check on live Robinhood quotes:
+  a) **goal:** account equity at least $2,200, i.e. a bid of at least 9.62 = ceil((2200 - 1238.87) / 100). A resting GTC sell of 1 at 9.62 (1.42x cost) goes in
+  Run B on 11/4 (`live.py resting`). If cash changes, recompute it.
+  b) **-50% stop:** the bid at or below 3.39 (half of 6.79), at a 14:43 check. A gap can fill lower, and nothing else triggers it.
+  c) **time:** sell at the 11/18 14:43 check.
+  No second contract and no averaging down. The 11/6 jobs report, ~11/10 CPI and NVDA on 11/17 after the close are on the tape. A sale at a) or b) cancels the
+  resting GTC first.
 * **Shot 1: CLOSED 10/22** at 2.93 real (bought 3.75 on 10/19; realized -$82.08 incl. fees; peak bid 5.50 on 10/21). Exits a) and b) fired together at the 10/22
   14:43 decision. The exit set below is kept as the template for the next index shot.
 * **Shot 1 (template): 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
