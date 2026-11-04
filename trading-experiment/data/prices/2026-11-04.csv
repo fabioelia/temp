@@ -1,0 +1,7 @@
+ticker,close,bid,ask,source
+AMD,488.78,,,"yahoo+cboe official close 2026-11-04 (2 sources, spread 0.00%)"
+ARM,191.8,,,"yahoo+cboe official close 2026-11-04 (2 sources, spread 0.00%)"
+QCOM,173.19,,,"yahoo+cboe official close 2026-11-04 (2 sources, spread 0.00%)"
+QQQ,691.95,,,"yahoo+cboe official close 2026-11-04 (2 sources, spread 0.00%)"
+SPY,766.81,,,"yahoo+cboe official close 2026-11-04 (2 sources, spread 0.00%)"
+SPY261204C00780000,6.69,6.66,6.72,"cboe option mid 2026-11-04 (single source, 15-min delayed chain)"

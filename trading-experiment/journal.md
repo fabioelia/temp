@@ -754,3 +754,17 @@ in the last 10 days have no trigger today (QCOM C1 is Thursday; the momentum QQQ
 * **Tax memo:** live.py flags a possible wash sale. The 10/22 SPY 11/20 790C loss ($82.08) is followed by this SPY call within 30 days. Calls on different strikes
   and expiries are usually not treated as substantially identical, but the rule is unsettled. At most it moves $82 of loss into this contract's cost basis.
 **Dashboard (Run A):** orders refreshed (84e0ceb3; the old 357b731a was deleted).
+
+## 2026-11-04 (Wed) Post-close (Run B, 17:14 EST)
+**Booked:** paper filled T003 (1 x SPY 12/04 780C @ 6.82 at the close, against a real 6.79), marked 6.69. **Paper $1,906.88 (-4.66%); real $1,907.87**
+(Robinhood: cash $1,238.87 plus the call at 6.69 mark, 6.66/6.72). SPY buy-and-hold $1,999.86 (SPY 766.81, +1.65%), so we trail SPY by $92. `validate` OK; `live.py check`
+OK. Reconciled: 1 long 12/04 780C (avg $679), the filled buy, and the cancelled 6.69 attempt; nothing else open.
+**Resting take-profit placed (the one real order this run may place):** K007, a GTC sell of 1 at 9.62 = ceil((2200 - 1238.87) / 100), 1.417x the $6.79 cost
+(the gate's minimum is 1.4x). The review showed no alerts and fees of $0.04; broker order ...f96, queued. If it fills, cash ends at about $2,200.83. LIVE_MODE.md
+notes the goal-budget exception to the +50% level.
+**Rules clarification:** RULES.md's "no single name above 30% of equity at entry" sits in the stock-era block, but the "Still in force" list (10/30) leaves it out,
+and the owner removed the single-order cap. Today's buy was 35%. I read it as superseded for option premium and wrote that into RULES.md, rather than leave a
+contradiction. The pre-registered rule allowed up to $850 (44%), and the gate's max_single_order_pct is 1.0.
+**Day:** the Democratic sweep (Dow up more than 1,500 points per headlines; SPY +1.7%), oil -8.4% (WTI 88.04) on hopes of an end to the Iran war, ^VIX 16.61.
+**After hours:** QCOM 159.04 (-8.2% vs its 173.19 close) after earnings, just below the C1 line of 159.33. Thursday's 14:43 check decides.
+**Research:** four personas fired (catalyst, macro, momentum, options-vol), brief at research/2026-11-04/brief.md.

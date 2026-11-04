@@ -84,6 +84,8 @@ A resting good-till-cancelled sell-to-close limit on contracts we hold, so an in
   `tracker.py broker-fill --ticker <OCC> --qty <n> --price <px> --date <execution date> --ticket K..` (the paper mirror), then journal it.
 * **Exiting any other way** (a stop, an exit rule, flattening at the loss limit): `cancel_option_order` on the resting order first, `live.py fail --ticket K.. --reason
   "cancelled to exit"`, then the normal sell. The gate refuses a normal sell while a resting take-profit holds the contracts.
+* **Goal-budget exception (playbook, pre-registered 11/02):** the goal-budget call rests at the $2,200-equity price, ceil((2200 - cash) / 100) per share,
+  instead of +50%, if that is at least 1.4x cost (11/04: 9.62 = 1.417x, ticket K007).
 * No resting stop orders: on options a stop-market can fill far below the stop in a gap; stops stay with the 14:43 decision.
 
 ## Real execution is not the paper model

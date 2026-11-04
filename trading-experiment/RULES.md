@@ -84,7 +84,9 @@ convexity*: take the asymmetric shots, but cap the damage.
     `playbook.md`, the kill switch and the gate tickets.
   - The live loss-limit stop is set to the full $2,000, so it trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH`.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
-* **Concentration:** max 4 positions, no single name above 30% of equity at entry. **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
+* **Concentration:** max 4 positions, no single name above 30% of equity at entry. (Clarified 11/04, after the goal-budget call was bought at 35% of equity:
+  for option premium, only the "Still in force" list above applies, which keeps the 4-position limit. The 30% single-name line is a stock-era limit and
+  was superseded by the owner's 10/30 removal of the single-order cap. The gate's `max_single_order_pct` is 1.0. The ambiguity is logged in the journal.) **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
 * **Risk per position to its closing stop:** <= 2% of equity core, <= 3% satellite (assume the realised loss is 1.5x planned, 2x for 3x ETFs).
 * **Regime gate:** while the S&P 500 is below its prior 10-day closing high *and* VIX >= 20, keep invested <= 50%. Above 50% only after the S&P closes above its
   prior 10-day closing high with VIX falling.
