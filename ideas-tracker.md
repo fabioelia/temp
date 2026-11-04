@@ -96,6 +96,27 @@ Artifact with every pitch: https://claude.ai/artifact/CxyVWLU7B8qQoTPRHskTGT
 4. Party RSVP fake-door; Doorway Dock pre-order last.
 5. Parked pending tests: Scam Second Look concierge, Start Ramp standalone, cancel-kit long-tail pages.
 
+## Rounds 5-6: ideas from Reddit (user feedback: stop over-indexing on my own topics)
+
+**Access finding:** Reddit is blocked for WebSearch and WebFetch, and mirror sites mostly failed. Round 5 (13 agents) therefore produced unverified leads from snippets. Round 6 (9 agents) used the Arctic Shift archive API (https://arctic-shift.photon-reddit.com/api, reachable from Bash; subreddit listing with date windows works, keyword search times out) and read real posts and comments. Samples: roughly 210,000 posts (newest 100 per window per subreddit) and about 15,000 comments. Recurrence counts are the agents' own coding; scores are scrape-time snapshots.
+
+**Recurring patterns from real threads**
+1. Dated "I didn't know I had to" deadlines: estimated-tax payments, loan notice clocks, filing-status fork, benefit renewal proof, card swap checklist, car sale closeout. Same shape as the deposit letter: date math + template + calendar file.
+2. Pre-agreement forms: who pays (9 of 42 threads), who may stay or move in (9), soft commitments with no notice terms (6).
+3. Repair and buying planners: major-repair set-aside, contractor quote normalizer, roof credit.
+4. Employer-paid registers: expiry ledger, truck parts, offboarding checklist, landlord maintenance log.
+5. Hobby one-time-price sheets and printables: brewing, knitting.
+6. Health bureaucracy (records and paperwork only): appeal packet, exportable log, doctor-form templates.
+7. No-bank-link budgeting / CSV categorizer.
+
+**Best-evidenced ideas** (top picks in the pitchbook): Who Pays?, House Terms Card, RepairRunway, Quote Decoder, Expiry Ledger, Brewbook Sheet.
+
+**Weak yield:** wish-list subreddits (builder pitches, joke posts), GriefSupport (venting), rants subreddits (venting, some already-solved), woodworking/aquarium posts.
+
+**Liability notes:** debt-lawsuit triage (heavy UPL risk), unfiled returns (criminal exposure), health logs (no analysis or dosing), translation cards (needs native review).
+
+Full list with evidence notes is in the pitchbook artifact: https://claude.ai/artifact/CxyVWLU7B8qQoTPRHskTGT
+
 ## Next round candidates
 - Deep-dive the two clusters with most convergence: (a) subscription/cancel kits, (b) scene-tag "watch together" stack.
 - Pressure-test strong candidates: who pays, distribution channel, 1-week validation test.
