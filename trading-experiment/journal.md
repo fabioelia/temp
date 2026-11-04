@@ -768,3 +768,25 @@ contradiction. The pre-registered rule allowed up to $850 (44%), and the gate's 
 **Day:** the Democratic sweep (Dow up more than 1,500 points per headlines; SPY +1.7%), oil -8.4% (WTI 88.04) on hopes of an end to the Iran war, ^VIX 16.61.
 **After hours:** QCOM 159.04 (-8.2% vs its 173.19 close) after earnings, just below the C1 line of 159.33. Thursday's 14:43 check decides.
 **Research:** four personas fired (catalyst, macro, momentum, options-vol), brief at research/2026-11-04/brief.md.
+**Personas (research/2026-11-04/):**
+* **catalyst:** QCOM beat but guided EPS a little light ($2.25 midpoint vs $2.27-2.32; 8-K, Reuters): a sell-the-news after the +5.3% run-in. The C1 setup is
+  conditional (confidence 2); Kelly or the spread will likely block it. Pre-print RV20 is 55.4%, so the IV gate is 72.0%. Its 15-DTE Kelly table
+  (scripts/catalyst_1104.py and fit_1104.py, committed by me from its scratchpad) gives lower ceilings than the 25-DTE sizing.py. No other C1 on Thursday.
+* **options-vol:** the same contract and gates. It expects post-print IV of 45-53%. Held 780C: P($2,200) 43.3%, EV 1.011 (goal_odds used as a held-call
+  model). No vol trade.
+* **macro:** no trade. Oil relief drops have no edge (26 cases, 0.84 per $, t -1.7; scripts/macro_1104.py). CBS projects Democratic control of both chambers.
+  The jobs straddle is 0.84% and fails the 3-day rule. Thursday's Level 1 circuit breaker is ^GSPC 7,150.42; there is no market holiday before 11/18.
+* **momentum:** no trade. SPY is 1.6% under its 10/06 record and at its 50-day. Its map for the 780C (Black-Scholes estimate): the goal is about SPY 774 on
+  11/5 and 781 on 11/18; the stop is about 757, then 766. The shadow QQQ 715C stays open.
+**Kelly discrepancy settled:** I reran sizing.py (25 DTE) across IV multiples: 4.48 at 48.2%, 3.77 at 52.6%, which matches options-vol. Catalyst's 15-DTE table
+uses the same committed C1 payoffs at the contract's real 15 days and is lower, so it binds.
+**Proposal for Thu 11/5: O016** (O015 modified by the risk red-team): 1 x QCOM 11/20 155P (the 150P at QCOM 157 or lower), conditional on QCOM <= 159.33 at
+14:43, spread <= 5%, IV <= 72%, and the ask within the 15-DTE full-Kelly row at the next-higher IV (4.40 hard cap). Exits: 11/12 time exit, -50% backstop,
+and both positions sold at any 14:43 check with equity >= $2,200.
+**Red-team (risk, on the draft): MODIFY, adopted.**
+* It is a standalone C1 bet, not a hedge: the put offsets at most about a third of the call's delta.
+* The 9.62 GTC equals $2,200 only with today's cash. Hence the rule that sells both at any 14:43 check at or above $2,200.
+* A 4.40 cap, with no interpolation between IV rows.
+* Worst joint loss at the two stops is about $550. A put of about $420 lowers the call-alone P($2,200) of about 43% slightly. The put has its own edge, and
+  the goal question is noted for Thursday's red-team.
+**Dashboard (11/04):** five files refreshed (summary 92403954, equity 878418c5, positions bd94d279, orders 24b9f795, trades d415bdf4); the old files were deleted.

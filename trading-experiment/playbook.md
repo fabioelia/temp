@@ -103,6 +103,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   c) **time:** sell at the 11/18 14:43 check.
   No second contract and no averaging down. The 11/6 jobs report, ~11/10 CPI and NVDA on 11/17 after the close are on the tape. A sale at a) or b) cancels the
   resting GTC first.
+  **If another position is opened (red-team 11/04):** the 9.62 GTC then equals $2,200 only if the other position holds its value. It stays as the call's
+  take-profit, and a new rule is added: sell everything at any 14:43 check where account equity is at least $2,200.
 * **Shot 1: CLOSED 10/22** at 2.93 real (bought 3.75 on 10/19; realized -$82.08 incl. fees; peak bid 5.50 on 10/21). Exits a) and b) fired together at the 10/22
   14:43 decision. The exit set below is kept as the template for the next index shot.
 * **Shot 1 (template): 1 x SPY261120C00790000**, real fill 3.75 on 10/19 (paper 3.62). Sell the whole contract when any of these holds at the decision:
@@ -232,7 +234,7 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - AMD gapped up about 7% after hours, so there is no C1. QCOM Thu 11/5 stays conditional and is likely to fail on spread.
   - **Update, Wed 11/4 (research/2026-11-04/):**
     - **The goal-budget call was bought:** 1 x SPY 12/04 780C at 6.79 real (Shot 2 above), with a resting GTC at 9.62.
-    - **O015 queued, the QCOM C1 put for Thu 11/5 14:43.** QCOM is -8.2% after hours, just under its 159.33 line.
+    - **O016 queued (O015 as modified by the red-team), the QCOM C1 put for Thu 11/5 14:43.** QCOM is -8.2% after hours, just under its 159.33 line.
       - Contract: the 11/20 155P (the 150P if QCOM is 157 or lower).
       - Gates: spread at most 5%; IV at most 72%; and the ask within full Kelly at its quoted IV on the 15-DTE table (4.15 at 46%, 3.82 at 48%, 3.53 at
         50%). Likely blocked by Kelly or by the spread.
@@ -307,7 +309,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
-* 2026-11-04: the goal-budget call was bought (SPY 12/04 780C at 6.79 real; GTC at 9.62; stop 3.39). O015 (QCOM C1) is conditional for 11/5. The C1 size
+* 2026-11-04: the goal-budget call was bought (SPY 12/04 780C at 6.79 real; GTC at 9.62; stop 3.39). O016 (QCOM C1; a 4.40 cap; equity >= $2,200 closes both) is conditional for 11/5. The C1 size
   gate uses the 15-DTE Kelly table when it is lower than sizing.py's 25-DTE figure.
 * 2026-11-03 (Run B): O013 (the goal-budget SPY call) queued for the Wed 11/4 14:43 check; no macro or tape veto; no C1 on AMD.
 * 2026-11-02 (evening, owner's autonomy grant): Claude decides the goal budget, which is one SPY call with a -50% stop, entered Wed 11/4 under a pre-registered rule.
