@@ -57,6 +57,26 @@ Watch-list: items below that drift toward a dropped idea are marked ⚠.
 - **Consumer mining:** price-drop refund claims, warranty/return clock (⚠ near dropped records), move-in photo log, roommate bill fairness, gift norms + group pot, kids' size forecaster, pet cost + care calendar, food "use it first", unit price + shrinkflation checker.
 - **General sweep:** gift-memory ledger, home maintenance rhythm cards, friendship overdue nudges, leftover fridge-clock, pantry-first meal prompt, chore fairness board, trip cost splitter (crowded), meeting-free-time shield, caregiver shift handoff note, weekly 5-minute digital-clutter triage.
 
+## Round 3: pressure-test verdicts (8 reviewers; 0-4 searches each, thresholds are hypotheses)
+
+**Headline:** most clusters collapse into one thin product each; several ideas die.
+
+| Verdict | Ideas |
+|---|---|
+| BUILD (small) | Security-deposit letter (pilot 1 state; $9 test, 8 paid of 40 letters); Open Board (fold in Nudge Contract, Three Doors, Start Ramp; test with 20 couples); Party RSVP + allergy sheet (layer on Partiful/Evite; 10 of 15 hosts run a real party) |
+| BUILD (cheap experiment) | Doorway Dock ($15 pre-order, 25 per 1,000 visits); Pre-Brief Card first, then text-only Skip Cues for top 50 shows |
+| PIVOT | Scam Second Look → add one-tap named trusted contact, child buys/parent owns; Receipt Book → sell to credit unions/libraries; Open Book Page → retention layer behind Scam Second Look; PlateFor → host-run dietary collector, no safety claims; Junk-fee decoder → one vertical; Ratings Translator → web lookup, no overlay; Paper-flood digest → forwarding + extraction (breaks no-AI rule); Gear timeline → SEO/affiliate content; Grandparent kit + Hangout recipes + Host scripts → one $9 content pack |
+| KILL | Brunch Treaty; Moving checklist; Price-drop claims; Warranty clock; Initiator baton; Weather Report; Delegate Pass and Bill Bounce (as products); Skip-Map; Birthday policy tree and Downgrade dial (as products, keep as content) |
+
+**Disagreements to resolve:**
+- Cancel kits: cancel-kit reviewer says the free SEO site is a trap (pivot to Receipt Book B2B2C); portfolio red team says build cancel kits + deposit letters on one hub site.
+- Watch-together: red team says do not build; watch-together reviewer says Pre-Brief Card first.
+- ADHD: red team keeps Start Ramp as a separate brand; household reviewer says fold it into Open Board.
+
+**Portfolio red-team suggestion:** consumer rules-table hub (deposit letters + cancel kits), plus a separate Start Ramp brand; do not build the watch-together stack.
+
+Artifact with every pitch: https://claude.ai/artifact/CxyVWLU7B8qQoTPRHskTGT
+
 ## Next round candidates
 - Deep-dive the two clusters with most convergence: (a) subscription/cancel kits, (b) scene-tag "watch together" stack.
 - Pressure-test strong candidates: who pays, distribution channel, 1-week validation test.
