@@ -77,6 +77,25 @@ Watch-list: items below that drift toward a dropped idea are marked ⚠.
 
 Artifact with every pitch: https://claude.ai/artifact/CxyVWLU7B8qQoTPRHskTGT
 
+## Round 4: evidence-first research (7 agents, ~9-13 searches each; many figures second-hand)
+
+| Question | Finding | Decision / cheapest test |
+|---|---|---|
+| Cancel kits vs hub | SERPs commoditized (vendor help pages, programmatic directories); federal click-to-cancel vacated Jul 2025, FTC restarted rulemaking Mar 2026; CA AB 2863 shrinks pain; hub economics unproven (one seller-reported site ~$310/mo at ~23.5k pageviews); credit-union channel crowded with free toolkits (league, CFPB) | KILL as framed. Only test: 15-20 long-tail pages, 6-8 weeks, need 1,500 impressions and 3% email conversion; plus 20 cold emails to CU fraud leads (3 replies, 1 call) |
+| Deposit letter pilot | Texas: 30 days after surrender, bad-faith penalty $100 + 3x withheld + fees, presumption of bad faith if day 30 missed; forwarding-address rule is the trap. California: 21 days, up to 2x, subsection lettering unstable. Free competitors = static forms, no date math | Pilot TX, CA second. Verify against official statutes (several 2025 TX bills unconfirmed), attorney review, UPL guardrails (information not advice, no "you are owed $X", no bad-faith assertion). Pass: 300 visitors, 15% complete, 40% of completers generate letter |
+| Open Board architecture | URL-hash no sync; KV eventually consistent; public Yjs relays no persistence; recommend Cloudflare Pages + Worker + Durable Object per household, secret in URL fragment, reminders on-device, no push in v1; ~$5/mo at 1,000 households (unverified) | Test first on shared Google Sheet, 5-10 households: 70% both touch, 60% items claimed by other person, median claim < 48h |
+| Pre-Brief / Skip Cues | Demand real (conflicting parent threads), "what to say" card is the open gap; Kids-In-Mind, DTDD, SceneSkipper, Skipit cover scene lists; text-only timestamp lists appear legally safer post-VidAngel (not legal advice); monetization thin | Pre-Brief test with ~10 cards + email capture; Skip Cues = feature only. Seed: Stranger Things, GoT, House of the Dragon, Squid Game, Wednesday, Last of Us, Bridgerton, Euphoria, The Boys, Bluey (7 of 10 unverified by Trends) |
+| Scam Second Look | Pain large (FBI IC3 2024: 60+ ~147k complaints, ~$4.9B); bank/FINRA trusted contacts fire only when money moves; Carefull closest competitor; NO evidence on forward-vs-call at moment of panic (shame barrier) | 15-family concierge test, $5 commitment, 7 thresholds; kill if <6 forward in week 2; pivot to child-side tool if parents won't forward |
+| Start Ramp | No paid single-purpose timer; Tiimo/Finch/Brili/Focusmate sell full planners at $40-100/yr; body-doubling evidence soft | Fold into Open Board as on-ramp; one-week standalone test (35% start, 60% finish/choose, 15% return in 7 days) |
+| Fake-door kit | Landing copy + surveys + thresholds written for deposit letter ($9), Pre-Brief Cards ($4/mo door), Doorway Dock ($15), Party RSVP ($5) | Run order: Pre-Brief and RSVP first, deposit in parallel, Dock last |
+
+### Recommended build order (after round 4)
+1. Deposit letter, Texas pilot (clearest paying pain, free competitors weak).
+2. Open Board sheet test (zero build), then real build only if thresholds pass.
+3. Pre-Brief Cards fake-door (cheap, fast) - decide subscription vs free lead magnet.
+4. Party RSVP fake-door; Doorway Dock pre-order last.
+5. Parked pending tests: Scam Second Look concierge, Start Ramp standalone, cancel-kit long-tail pages.
+
 ## Next round candidates
 - Deep-dive the two clusters with most convergence: (a) subscription/cancel kits, (b) scene-tag "watch together" stack.
 - Pressure-test strong candidates: who pays, distribution channel, 1-week validation test.
