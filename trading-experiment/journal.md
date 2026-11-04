@@ -753,3 +753,4 @@ in the last 10 days have no trigger today (QCOM C1 is Thursday; the momentum QQQ
   - time: the 11/18 14:43 check.
 * **Tax memo:** live.py flags a possible wash sale. The 10/22 SPY 11/20 790C loss ($82.08) is followed by this SPY call within 30 days. Calls on different strikes
   and expiries are usually not treated as substantially identical, but the rule is unsettled. At most it moves $82 of loss into this contract's cost basis.
+**Dashboard (Run A):** orders refreshed (84e0ceb3; the old 357b731a was deleted).
