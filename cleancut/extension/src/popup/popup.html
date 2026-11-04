@@ -66,19 +66,19 @@
   </section>
 
   <footer>
-    <button id="publish" class="link">Publish my settings as a skip list…</button>
+    <button id="publish" class="link">Share my settings as a skip list…</button>
     <button id="options" class="link">Options</button>
   </footer>
 
   <dialog id="publish-dialog">
     <form method="dialog">
-      <h2>Publish a skip list</h2>
-      <p class="small muted">Shares your rating settings (and which segments you let play) so others can use them.</p>
+      <h2>Share a skip list</h2>
+      <p class="small muted">Opens a GitHub page with your rating settings (and which scenes you let play) ready to submit as a pull request. It's reviewed before others can use it.</p>
       <label>Name <input id="pub-name" required minlength="3" maxlength="80" placeholder="e.g. GoT for teens"></label>
       <label>Description <textarea id="pub-desc" maxlength="1000" rows="3" placeholder="What does this cut keep and remove?"></textarea></label>
       <label class="check"><input type="checkbox" id="pub-title" checked> Only for <span id="pub-title-name">this title</span></label>
       <div class="small warn" id="pub-error"></div>
-      <div class="row end"><button value="cancel" formnovalidate>Cancel</button><button id="pub-go" value="ok" class="primary">Publish</button></div>
+      <div class="row end"><button value="cancel" formnovalidate>Cancel</button><button id="pub-go" value="ok" class="primary">Continue on GitHub</button></div>
     </form>
   </dialog>
   <script src="popup.js"></script>

@@ -1,37 +1,42 @@
-// Background service worker: talks to the CleanCut API, keeps an offline
-// cache and the viewer's own tags, and manages subscribed skip lists.
+// Background service worker: reads the published community dataset (static files on GitHub Pages),
+// keeps an offline cache and the viewer's own tags, and builds contribution links (GitHub pull requests).
 
 import { validateSegment } from '../../shared/validate.js';
 import { titleKey } from '../../shared/identity.js';
 import { defaultProfile } from '../../shared/ratings.js';
+import { CONTRIBUTE_BRANCH, CONTRIBUTE_REPO, DATA_BASE } from './config.js';
+import { listContribution, newFileLink, titleContribution } from '../../shared/contribute.js';
+import { emptyIndex, lookupStatic } from '../../shared/lookup.js';
 
-import { DEFAULT_API } from './config.js';
 const TIMEOUT_MS = 6000;
+const INDEX_TTL_MS = 6 * 60 * 60 * 1000;
 
-async function config() {
-  const [{ settings }, { apiKey }] = await Promise.all([chrome.storage.sync.get('settings'), chrome.storage.local.get('apiKey')]);
-  return { apiBase: (settings?.apiBase || DEFAULT_API).replace(/\/+$/, ''), apiKey: apiKey || null, settings: settings || {} };
-}
-
-async function api(path, { method = 'GET', body, auth = false } = {}) {
-  const { apiBase, apiKey } = await config();
-  if (auth && !apiKey) throw new Error('no account — set one up in CleanCut options');
+async function getJson(url, { allow404 = false } = {}) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {
-    const res = await fetch(apiBase + path, {
-      method,
-      signal: ctrl.signal,
-      headers: { 'Content-Type': 'application/json', ...(auth ? { Authorization: `Bearer ${apiKey}` } : {}) },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    return data;
+    const res = await fetch(url, { signal: ctrl.signal, credentials: 'omit' });
+    if (res.status === 404 && allow404) return null;
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
   } catch (e) {
-    throw new Error(e.name === 'AbortError' ? 'server did not respond' : e.message);
+    throw new Error(e.name === 'AbortError' ? 'community data did not respond' : e.message);
   } finally {
     clearTimeout(timer);
+  }
+}
+
+/** The dataset index: a few KB, cached for hours. A missing index means no community data has been published yet. */
+async function getIndex() {
+  const { dataIndex } = await chrome.storage.local.get('dataIndex');
+  if (dataIndex && Date.now() - dataIndex.at < INDEX_TTL_MS) return dataIndex.data;
+  try {
+    const data = (await getJson(`${DATA_BASE}/index.json`, { allow404: true })) || emptyIndex();
+    await chrome.storage.local.set({ dataIndex: { at: Date.now(), data } });
+    return data;
+  } catch (e) {
+    if (dataIndex) return dataIndex.data; // stale beats nothing
+    throw e;
   }
 }
 
@@ -54,14 +59,13 @@ async function getLocal(key) {
 async function lookup(title) {
   const key = titleKey(title.platform, title.platformId);
   const local = await getLocal(key);
-  const params = new URLSearchParams({ platform: title.platform, id: title.platformId });
-  if (title.canonicalKey) params.set('canonical', title.canonicalKey);
   let data;
   let online = false;
   let error = null;
   const { lookupCache = {} } = await chrome.storage.local.get('lookupCache');
   try {
-    data = await api(`/v1/lookup?${params}`);
+    const index = await getIndex();
+    data = await lookupStatic({ index, title, loadTitle: (f) => getJson(`${DATA_BASE}/titles/${f}`) });
     online = true;
     lookupCache[key] = { at: Date.now(), data };
     // Keep the cache bounded.
@@ -75,12 +79,9 @@ async function lookup(title) {
     error = e.message;
     data = lookupCache[key]?.data || null;
   }
-  // Tags you shared come back from the server too; show each only once.
-  const remote = data?.segments || [];
-  const remoteIds = new Set(remote.map((s) => s.id));
   return {
-    remote,
-    local: local.filter((s) => !s.remoteId || !remoteIds.has(s.remoteId)),
+    remote: data?.segments || [],
+    local,
     profiles: data?.profiles || [],
     borrowedFrom: data?.borrowedFrom || null,
     online,
@@ -89,52 +90,39 @@ async function lookup(title) {
   };
 }
 
-async function saveTag({ title, segment, share }) {
+async function saveTag({ title, segment }) {
   const v = validateSegment({ ...segment, source: 'local' });
   if (!v.ok) return { error: v.error };
   const key = titleKey(title.platform, title.platformId);
   const seg = { ...v.segment, id: `local:${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, createdAt: Date.now() };
-  let shared = false;
-  let shareError = null;
-  if (share) {
-    try {
-      const res = await api('/v1/segments', { method: 'POST', auth: true, body: { title: titleBody(title), segments: [{ ...seg, source: 'community' }] } });
-      seg.remoteId = res.ids[0];
-      shared = true;
-    } catch (e) {
-      shareError = e.message;
-    }
-  }
   const { localTags = {} } = await chrome.storage.local.get('localTags');
   const entry = localTags[key] || { title: titleBody(title), segments: [] };
   entry.title = { ...entry.title, ...titleBody(title) };
   entry.segments.push(seg);
   localTags[key] = entry;
   await chrome.storage.local.set({ localTags });
-  return { segment: seg, shared, shareError };
+  return { segment: seg };
 }
 
-/** Upload local tags that were never shared (e.g. tagged before signing up). */
-async function shareAll() {
+/**
+ * Build the contribution file for one title's local tags and the GitHub link that turns it into a pull request.
+ * The caller (popup/options) opens the link, and copies `content` first when `needsPaste` is set.
+ */
+async function contributeTags({ key }) {
   const { localTags = {} } = await chrome.storage.local.get('localTags');
-  let uploaded = 0;
-  for (const entry of Object.values(localTags)) {
-    const pending = entry.segments.filter((s) => !s.remoteId);
-    if (!pending.length) continue;
-    const res = await api('/v1/segments', { method: 'POST', auth: true, body: { title: entry.title, segments: pending.map((s) => ({ ...s, source: 'community' })) } });
-    pending.forEach((s, i) => (s.remoteId = res.ids[i]));
-    uploaded += pending.length;
-  }
-  await chrome.storage.local.set({ localTags });
-  return { uploaded };
+  const entry = localTags[key];
+  if (!entry?.segments.length) return { error: 'no tags for this title' };
+  const c = titleContribution(entry.title, entry.segments);
+  if (!c.count) return { error: 'none of the tags are valid' };
+  return { ...newFileLink({ repo: CONTRIBUTE_REPO, branch: CONTRIBUTE_BRANCH, path: c.path, json: c.json }), count: c.count };
 }
 
-async function publishProfile({ name, description, title, overrides }) {
-  const { settings } = await config();
+/** Same idea for a skip list: your rating settings become a file in the community repo. */
+async function contributeList({ name, description, title, overrides }) {
+  const { settings = {} } = await chrome.storage.sync.get('settings');
   const profile = { ...defaultProfile(), ...(settings.profile || {}) };
-  const body = { name, description, settings: profile, overrides };
-  if (title) body.title = titleBody(title);
-  return api('/v1/profiles', { method: 'POST', auth: true, body });
+  const c = listContribution({ name, description, settings: profile, title, canonicalKey: title?.canonicalKey, overrides });
+  return newFileLink({ repo: CONTRIBUTE_REPO, branch: CONTRIBUTE_BRANCH, path: c.path, json: c.json });
 }
 
 async function useList({ profile, scopeKey }) {
@@ -148,7 +136,6 @@ async function useList({ profile, scopeKey }) {
     scope: scopeKey === '*' ? 'everything' : 'this title',
   };
   await chrome.storage.local.set({ activeLists });
-  api(`/v1/profiles/${encodeURIComponent(profile.id)}/subscribe`, { method: 'POST' }).catch(() => {});
   return { ok: true };
 }
 
@@ -159,22 +146,13 @@ async function stopList({ scopeKeys }) {
   return { ok: true };
 }
 
-async function register({ name }) {
-  const res = await api('/v1/users', { method: 'POST', body: { name } });
-  await chrome.storage.local.set({ apiKey: res.apiKey, userName: res.name });
-  return { name: res.name };
-}
-
 const handlers = {
   lookup: (m) => lookup(m.title),
   saveTag: (m) => saveTag(m),
-  shareAll: () => shareAll(),
-  publishProfile: (m) => publishProfile(m),
+  contributeTags: (m) => contributeTags(m),
+  contributeList: (m) => contributeList(m),
   useList: (m) => useList(m),
   stopList: (m) => stopList(m),
-  register: (m) => register(m),
-  vote: (m) => api(`/v1/segments/${encodeURIComponent(m.id)}/vote`, { method: 'POST', auth: true, body: { value: m.value } }),
-  searchProfiles: (m) => api(`/v1/profiles?q=${encodeURIComponent(m.q || '')}`),
   status: async (m, sender) => {
     const tabId = sender.tab?.id;
     if (tabId == null) return {};
@@ -199,6 +177,6 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   const { settings } = await chrome.storage.sync.get('settings');
-  if (!settings) await chrome.storage.sync.set({ settings: { enabled: true, apiBase: DEFAULT_API, profile: defaultProfile() } });
+  if (!settings) await chrome.storage.sync.set({ settings: { enabled: true, profile: defaultProfile() } });
   if (reason === 'install') chrome.runtime.openOptionsPage?.();
 });

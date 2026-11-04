@@ -22,8 +22,8 @@ const STREAMING = [
     `https://www.amazon.${tld}/dp/*`,
   ]),
 ];
-// Local development: the demo page and the default community server.
-const DEV = ['http://localhost/*', 'http://127.0.0.1/*'];
+// Local development and the e2e test: the demo page. Left out of store builds (CLEANCUT_STORE=1).
+const DEV = process.env.CLEANCUT_STORE ? [] : ['http://localhost/*', 'http://127.0.0.1/*'];
 
 function manifest(target) {
   const m = {
@@ -37,7 +37,6 @@ function manifest(target) {
     options_ui: { page: 'options.html', open_in_tab: true },
     permissions: ['storage', 'scripting', 'activeTab'],
     host_permissions: [...STREAMING, ...DEV],
-    optional_host_permissions: ['https://*/*', 'http://*/*'],
     content_scripts: [
       { matches: [...STREAMING, ...DEV], js: ['page-hook.js'], run_at: 'document_start', world: 'MAIN' },
       { matches: [...STREAMING, ...DEV], js: ['content.js'], run_at: 'document_idle' },
@@ -147,6 +146,7 @@ for (const target of ['chrome', 'firefox']) {
     target: target === 'chrome' ? ['chrome111'] : ['firefox128'],
     legalComments: 'none',
     logLevel: 'warning',
+    ...(process.env.CLEANCUT_DATA_BASE ? { define: { __DATA_BASE__: JSON.stringify(process.env.CLEANCUT_DATA_BASE) } } : {}),
   };
   if (watch) {
     const ctx = await esbuild.context(options);

@@ -1,23 +1,26 @@
-// End-to-end: loads the built extension into Chromium, runs the community
-// server, plays the demo "episode" and checks that scenes are really skipped,
-// muted and blurred.
+// End-to-end: loads the built extension into Chromium, serves a community dataset
+// as static files (the way GitHub Pages does), plays the demo "episode" and checks
+// that scenes are really skipped, muted and blurred.
 //
 //   npm run test:e2e
 import { createRequire } from 'node:module';
 import { spawn, execFileSync } from 'node:child_process';
-import { existsSync, mkdtempSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync, readFileSync } from 'node:fs';
+import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
+import { buildDataset } from '../../shared/dataset.js';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const ext = join(root, 'extension/dist/chrome');
-const PORT = 8787; // the extension's default API
+const PORT = 8787; // demo page server
 const BASE = `http://localhost:${PORT}`;
+const DATA_PORT = 8788; // static dataset (the extension is built with CLEANCUT_DATA_BASE pointing here)
 const tmp = mkdtempSync(join(tmpdir(), 'cleancut-e2e-'));
 
 if (!existsSync(join(root, 'server/public/demo.webm'))) execFileSync('sh', [join(root, 'scripts/make-demo-video.sh')], { stdio: 'inherit' });
@@ -27,6 +30,7 @@ const server = spawn(process.execPath, ['--disable-warning=ExperimentalWarning',
   stdio: ['ignore', 'pipe', 'inherit'],
 });
 let context;
+let dataServer;
 const results = [];
 
 async function step(name, fn) {
@@ -53,26 +57,36 @@ async function waitFor(fn, { timeout = 10_000, interval = 100, what = 'condition
 }
 
 try {
-  // ---- server + seed ----------------------------------------------------------
-  await waitFor(() => fetch(`${BASE}/health`).then((r) => r.ok, () => false), { what: 'server' });
-  const { apiKey } = await (await fetch(`${BASE}/v1/users`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'e2e' }) })).json();
-  const seeded = await fetch(`${BASE}/v1/segments`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({
-      title: { platform: 'web', platformId: 'demo-episode-1', series: 'CleanCut Demo', season: 1, episode: 1, name: 'Pilot', duration: 90 },
-      segments: [
-        { start: 20, end: 30, category: 'violence', severity: 3, note: 'sword fight' },
-        { start: 70, end: 75, category: 'gore', severity: 3 },
-      ],
-    }),
+  // ---- dataset + servers ------------------------------------------------------------
+  const demo = { platform: 'web', platformId: 'demo-episode-1', series: 'CleanCut Demo', season: 1, episode: 1, name: 'Pilot', duration: 90 };
+  const { files, errors: dataErrors } = buildDataset({
+    titles: [{ path: 'titles/web/e2e.json', json: { title: demo, segments: [
+      { start: 20, end: 30, category: 'violence', severity: 3, note: 'sword fight' },
+      { start: 70, end: 75, category: 'gore', severity: 3 },
+    ] } }],
+    lists: [{ path: 'lists/demo-everything-goes.json', json: { name: 'Demo: everything goes', author: 'e2e', settings: { preset: 'unfiltered' }, title: { platform: 'web', platformId: 'demo-episode-1' } } }],
   });
-  assert.equal(seeded.status, 201);
-  await fetch(`${BASE}/v1/profiles`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-    body: JSON.stringify({ name: 'Demo: everything goes', settings: { preset: 'unfiltered' }, title: { platform: 'web', platformId: 'demo-episode-1' } }),
+  assert.deepEqual(dataErrors, []);
+  const dataDir = join(tmp, 'data');
+  for (const [path, json] of Object.entries(files)) {
+    mkdirSync(dirname(join(dataDir, 'v1', path)), { recursive: true });
+    writeFileSync(join(dataDir, 'v1', path), JSON.stringify(json));
+  }
+  const dataRequests = [];
+  dataServer = createServer((req, res) => {
+    dataRequests.push(req.url);
+    res.setHeader('Access-Control-Allow-Origin', '*'); // GitHub Pages does the same
+    try {
+      const body = readFileSync(join(dataDir, new URL(req.url, 'http://x').pathname));
+      res.setHeader('Content-Type', 'application/json');
+      res.end(body);
+    } catch {
+      res.statusCode = 404;
+      res.end('not found');
+    }
   });
+  await new Promise((r) => dataServer.listen(DATA_PORT, '127.0.0.1', r));
+  await waitFor(() => fetch(`${BASE}/health`).then((r) => r.ok, () => false), { what: 'demo server' });
 
   // ---- browser with the extension ----------------------------------------------
   context = await chromium.launchPersistentContext(join(tmp, 'profile'), {
@@ -175,8 +189,9 @@ try {
   });
 
   await step('a published community skip list can be adopted', async () => {
-    const lookup = await (await fetch(`${BASE}/v1/lookup?platform=web&id=demo-episode-1`)).json();
-    const list = lookup.profiles.find((p) => p.name === 'Demo: everything goes');
+    const index = await (await fetch(`http://127.0.0.1:${DATA_PORT}/v1/index.json`)).json();
+    const list = index.lists.find((p) => p.name === 'Demo: everything goes');
+    assert.ok(list, 'list is published in the index');
     // Store the list exactly as the popup's "Use" button does (background useList).
     await worker.evaluate(async (profile) => {
       const { activeLists = {} } = await chrome.storage.local.get('activeLists');
@@ -231,10 +246,35 @@ try {
     const options = await context.newPage();
     options.on('pageerror', (e) => perrs.push(e.message));
     await options.goto(`chrome-extension://${extensionId}/options.html`);
-    await options.locator('#api-status', { hasText: 'Connected' }).waitFor();
+    await options.locator('#data-status', { hasText: '1 title and 1 skip list available' }).waitFor();
     assert.deepEqual(perrs, []);
     await popup.close();
     await options.close();
+  });
+
+  await step('only fetched the index and the one title file (no per-title requests for unknown titles)', async () => {
+    const paths = [...new Set(dataRequests)];
+    assert.ok(paths.includes('/v1/index.json'));
+    assert.ok(paths.every((p) => p === '/v1/index.json' || /^\/v1\/titles\/web\/[0-9a-f]{16}\.json$/.test(p)), paths.join(', '));
+  });
+
+  await step('"Submit on GitHub" builds a pull-request link from a local tag', async () => {
+    await worker.evaluate(() => chrome.storage.local.set({ localTags: { 'web:demo-episode-1': {
+      title: { platform: 'web', platformId: 'demo-episode-1', series: 'CleanCut Demo', season: 1, episode: 1, name: 'Pilot' },
+      segments: [{ id: 'local:x', start: 4, end: 9, category: 'drugs', severity: 3, source: 'local', note: 'e2e' }],
+    } } }));
+    const opts = await context.newPage();
+    await opts.goto(`chrome-extension://${extensionId}/options.html`);
+    const res = await opts.evaluate(() => chrome.runtime.sendMessage({ type: 'contributeTags', key: 'web:demo-episode-1' }));
+    await opts.locator('#tag-titles button', { hasText: 'Submit on GitHub' }).waitFor();
+    await opts.close();
+    const url = new URL(res.url);
+    assert.equal(url.hostname, 'github.com');
+    assert.match(url.searchParams.get('filename'), /^community\/titles\/web\/\d{8}-[a-z0-9]{6}\.json$/);
+    const file = JSON.parse(url.searchParams.get('value'));
+    assert.equal(file.title.platformId, 'demo-episode-1');
+    assert.equal(file.segments[0].category, 'drugs');
+    assert.equal(file.segments[0].id, undefined);
   });
 
   await step('no page errors', async () => assert.deepEqual(errors, []));
@@ -244,6 +284,7 @@ try {
 } finally {
   await context?.close();
   server.kill();
+  dataServer?.close();
   rmSync(tmp, { recursive: true, force: true });
 }
 

@@ -1,0 +1,54 @@
+# Validates community tags and skip lists on pull requests, and publishes the site + dataset to GitHub Pages
+# when they are merged. One-time setup: repo Settings → Pages → Source: "GitHub Actions".
+name: CleanCut community data
+
+on:
+  pull_request:
+    paths: ['cleancut/community/**', 'cleancut/shared/**', 'cleancut/scripts/**', 'cleancut/site/**']
+  push:
+    branches: [master]
+    paths: ['cleancut/community/**', 'cleancut/shared/**', 'cleancut/scripts/**', 'cleancut/site/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: cleancut
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate community data
+        run: node scripts/build-data.mjs --check
+      - name: Unit tests
+        run: npm test
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: cleancut/_site
+      - id: deploy
+        uses: actions/deploy-pages@v4

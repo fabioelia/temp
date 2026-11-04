@@ -10,8 +10,8 @@ It has three parts:
 
 | Part | What it does | Where |
 | --- | --- | --- |
-| **Browser extension** (Chrome / Edge / Firefox, Manifest V3) | Identifies the title, applies your rating, scans the episode's subtitles ahead of playback, lets you tag scenes while you watch | [`extension/`](extension) |
-| **Community server** (Node + built-in SQLite, zero runtime dependencies) | Stores tags, votes, accounts and published skip lists, and serves a small web hub | [`server/`](server) |
+| **Browser extension** (Chrome / Edge / Firefox, Manifest V3) | Identifies the title, applies your rating, scans the episode's subtitles ahead of playback, lets you tag scenes and submit them | [`extension/`](extension) |
+| **Community data** (JSON files in this repo, published on GitHub Pages) | Reviewed scene tags and shared skip lists. Contributions are pull requests; there is no server to run | [`community/`](community), [`site/`](site) |
 | **Scanner CLI** (`cleancut-scan`) | Runs lightweight vision models over video files offline and publishes machine-detected segments | [`scanner/`](scanner) |
 
 <p>
@@ -36,7 +36,7 @@ presets, the decision engine, subtitle parsing and the subtitle analyzer.
                  │                                          │ skip → seek past   mute → video.muted   blur → CSS filter │
                  └──────────────────────────────────────────┼─────────────────────────────────────────────────────────┘
                                                             ▼
-                                   background worker ──▶ community API (/v1/lookup, /v1/segments, /v1/profiles)
+                                   background worker ──▶ GitHub Pages: data/v1/index.json (+ one title file if listed)
                                                             ▲
                                    cleancut-scan (offline): ffmpeg frames → ONNX classifier → segments ─┘
 ```
@@ -48,7 +48,7 @@ presets, the decision engine, subtitle parsing and the subtitle analyzer.
    *canonical key* (`game-of-thrones/s01e01`), so tags made on one platform
    can be offered on another.
 2. **Gather segments** from three sources:
-   - **Community tags:** humans marked a scene with a category and severity.
+   - **Community tags:** humans marked a scene with a category and severity; each was reviewed in a pull request.
    - **Your own tags:** marked with `Alt+[` / `Alt+]` while watching.
    - **Scan-ahead:** the subtitle track is analyzed the moment the player
      downloads it, before the scenes play (see below).
@@ -113,8 +113,10 @@ cd cleancut
 npm install
 npm run build          # → extension/dist/chrome and extension/dist/firefox
 npm run demo:video     # generates server/public/demo.webm (ffmpeg)
-npm run server         # http://localhost:8787  (hub at /, demo at /demo)
+npm run server         # demo page only: http://localhost:8787/demo
 ```
+
+(`npm run server` is only the local demo page host. Community data comes from static files, see [Community data](#community-data).)
 
 **Load the extension**
 
@@ -124,10 +126,11 @@ npm run server         # http://localhost:8787  (hub at /, demo at /demo)
   Temporary Add-on*, and pick `extension/dist/firefox/manifest.json`. Then
   grant the site permissions from the extension's menu.
 
-**Try it on the demo:** open http://localhost:8787/demo, click **Seed demo
-tags**, reload, and press play. At 0:20 the tagged violent scene is skipped.
-At 0:44 an *untagged* sex scene is skipped because scan-ahead found it in the
-SDH captions. At 1:00 the strong language is muted. Switch ratings from the
+**Try it on the demo:** open http://localhost:8787/demo and press play. The
+demo's own subtitles are scanned: at 0:44 a sex scene is skipped because
+scan-ahead found it in the SDH captions, and at 1:00 the strong language is
+muted. (`npm run test:e2e` additionally serves a tagged dataset and checks the
+tagged skips at 0:20 and 1:10.) Switch ratings from the
 toolbar popup and the cut changes. `/demo?mode=hook` serves captions the way
 Prime does, through a playback JSON, to exercise the subtitle-fetching path.
 
@@ -141,14 +144,27 @@ the scan stays.
 ### Tagging and sharing
 
 - Press `Alt+[` when a scene starts and `Alt+]` when it ends, then pick a
-  category and severity. The tag applies immediately.
-- Create an account in **Options** to share tags. **Share my unshared tags**
-  uploads anything tagged before you signed up.
-- **Publish my settings as a skip list…** in the popup shares your rating
-  settings, for this title or for everything. Scenes you chose to *Let play*
-  become explicit exceptions. Other people see the list in their popup and
-  can **Use** it.
-- Votes hide bad tags: below a score of −3, a tag is no longer served.
+  category and severity. The tag applies immediately, on your device.
+- To share it: **Options → Your tags → Submit on GitHub…**. CleanCut builds the
+  file and opens GitHub's "new file" page with it filled in; **Propose new file**
+  creates the pull request (GitHub forks the repo for you if you can't write to it).
+  CI validates it, a maintainer reviews it, and on merge it's published.
+- **Share my settings as a skip list…** in the popup does the same for your rating
+  settings, for this title or for everything. Scenes you chose to *Let play* become
+  explicit exceptions. Others see the list in their popup and can **Use** it.
+- There are no accounts or votes: the pull request review is the moderation.
+
+### Community data
+
+```
+community/titles/<platform>/*.json   tags for one title (several files per title are merged)
+community/lists/*.json               shared skip lists
+```
+
+`npm run data:check` validates the files (CI runs it on every pull request);
+`npm run site` builds the website plus `data/v1/` for GitHub Pages. File formats and the
+review checklist are in [`community/README.md`](community/README.md); hosting and upkeep in
+[`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 ### Scanner
 
@@ -176,42 +192,36 @@ with `--map violent=violence`.
 
 ---
 
-## API
+## Data endpoints
 
-All JSON. Write calls need `Authorization: Bearer <apiKey>`.
+The extension reads two kinds of static file from `DATA_BASE` (`extension/src/config.js`):
 
-| Method | Path | |
-| --- | --- | --- |
-| POST | `/v1/users` | `{ name }` → `{ apiKey }` |
-| GET | `/v1/lookup?platform=&id=&canonical=` | segments, skip lists, and `borrowedFrom` when timing comes from another platform |
-| POST | `/v1/segments` | `{ title: {platform, platformId, series?, season?, episode?, name?}, segments: [...] }` |
-| POST | `/v1/segments/:id/vote` | `{ value: 1 \| -1 \| 0 }` |
-| DELETE | `/v1/segments/:id` | your own tag |
-| GET | `/v1/titles?q=` | browse |
-| GET / POST | `/v1/profiles` | search / publish skip lists |
-| POST | `/v1/profiles/:id/subscribe` | count a user |
+| Path | Contents |
+| --- | --- |
+| `index.json` | `{ titles: { "<platform>:<id>": { f, canonicalKey, segmentCount, title } }, canonical: { key: [titleKey…] }, lists: [skip lists] }` |
+| `titles/<platform>/<hash>.json` | `{ title, segments: [{ id, start, end, category, severity, action?, note? }] }` |
 
-Segment: `{ start, end, category, severity: 1-3, action?: skip|mute|blur, note?, source?, confidence? }`.
-Categories: `nudity, sex, violence, gore, language, drugs, frightening`.
+Segment categories: `nudity, sex, violence, gore, language, drugs, frightening`.
 
-Configuration is through environment variables: `PORT` (8787), `HOST`
-(127.0.0.1) and `CLEANCUT_DB` (`data/cleancut.db`).
+The `server/` folder (accounts, votes, a JSON API) is **not used by the extension**. It's kept as a
+possible later upgrade; see `docs/OPERATIONS.md`.
 
 ---
 
 ## Tests
 
 ```bash
-npm test            # 26 unit + API + scanner tests (node:test)
-npm run test:e2e    # loads the built extension in headless Chromium against the demo
+npm test            # unit, dataset, API and scanner tests (node:test)
+npm run test:e2e    # loads the built extension in headless Chromium against the demo and a static dataset
 ```
 
 The end-to-end test plays the demo episode and checks:
 
-- the community-tagged skip, the scan-ahead skip, mute and unmute, and gore;
+- the community-tagged skip (from the static dataset), the scan-ahead skip, mute and unmute, and gore;
 - the blur action;
 - R, PG-13 and unfiltered producing different cuts;
 - Undo and adopting a published list;
+- that only the index and the needed title file are downloaded, and that "Submit on GitHub" builds a valid pull-request link;
 - keyboard tagging;
 - the page-hook subtitle path;
 - that the popup and options pages render without errors.
@@ -246,17 +256,17 @@ The end-to-end test plays the demo episode and checks:
   copy is made. CleanCut works that way: it never copies, modifies or
   redistributes the stream. Streaming services' terms of use still apply, and
   rules differ by country. This is not legal advice.
-- **Privacy.** The only thing that leaves your browser is the lookup of what
-  you are watching (platform and id) sent to the server you configure, plus
-  anything you choose to share. Subtitles are analyzed locally and never
-  uploaded.
+- **Privacy.** Nothing is sent to CleanCut. The extension downloads a public index and,
+  only if a title is listed, that title's file from GitHub Pages (GitHub, as host, sees that
+  request). Subtitles are analyzed locally and never uploaded. Anything you submit is a public pull request.
+- **Slower than a live database.** A new tag is visible to everyone after review, merge, deploy and the
+  6-hour index cache. And the dataset starts empty, so early on the subtitle scan does most of the work.
 
 ## Roadmap
 
 - Automatic cross-platform sync: store cue-timing fingerprints per title and
   cross-correlate them.
-- A hosted server with moderation, reputation-weighted votes and duplicate-tag
-  clustering.
+- If review becomes the bottleneck: a hosted server with accounts, votes and instant publishing (`server/` is a start).
 - In-browser frame models (onnxruntime-web) for non-DRM sites.
 - Adapters for Disney+, Max and Hulu.
 - Shareable skip-list links, and following people whose lists you like.
@@ -265,9 +275,12 @@ The end-to-end test plays the demo episode and checks:
 ## Layout
 
 ```
-shared/      ratings, engine, subtitles, analyzer, lexicon, sources, identity, validate
+shared/      ratings, engine, subtitles, analyzer, lexicon, sources, identity, validate, dataset, lookup, contribute
 extension/   build.mjs, src/{background,page-hook,config}.js, src/content/*, src/popup/*, src/options/*
-server/      src/{index,app,db}.js, public/{index,demo}.html + demo captions
+scripts/     build-data.mjs (validate + publish the dataset)
+community/   tags and skip lists (JSON), reviewed via pull requests
+site/        landing, privacy and support pages (GitHub Pages)
+server/      optional JSON API + demo page host (not used by the extension)
 scanner/     src/{cli,frames,classifiers,timeline}.js
 test/        *.test.js, e2e/extension.e2e.mjs, fixtures/
 ```

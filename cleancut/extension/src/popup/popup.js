@@ -150,7 +150,7 @@ function renderPage() {
   $('now-sources').textContent = parts.join(' · ');
 
   const warn = [];
-  if (page.lookupError) warn.push(`Database offline (${page.lookupError}) — using cache and local tags.`);
+  if (page.lookupError) warn.push(`Community data unavailable (${page.lookupError}) — using cache and your own tags.`);
   if (page.borrowedFrom) warn.push(`Timing borrowed from ${page.borrowedFrom.platform}; nudge Sync if cuts land early or late.`);
   if (!page.subtitle && page.platform !== 'web') warn.push('Tip: turn on English [CC] subtitles once so CleanCut can scan ahead.');
   $('now-warning').hidden = !warn.length;
@@ -242,7 +242,7 @@ function renderLists() {
     const meta = document.createElement('div');
     meta.className = 'small muted';
     const preset = p.settings.preset === 'custom' ? 'custom' : PRESETS[p.settings.preset]?.label;
-    meta.textContent = `${preset} · by ${p.author} · ${p.subscribers} using${p.titleKey || p.canonicalKey ? '' : ' · all titles'}`;
+    meta.textContent = `${preset} · by ${p.author}${p.titleKey || p.canonicalKey ? '' : ' · all titles'}`;
     if (p.description) meta.title = p.description;
     info.append(name, meta);
     const use = document.createElement('button');
@@ -265,6 +265,12 @@ async function refreshPage() {
 }
 
 // ---- wiring --------------------------------------------------------------------------
+
+/** Open the GitHub "new file" page for a contribution; when the file is too long for a link, put it on the clipboard first. */
+async function openContribution(res) {
+  if (res.needsPaste) await navigator.clipboard.writeText(res.content).catch(() => {});
+  chrome.tabs.create({ url: res.url });
+}
 
 async function main() {
   // popup.html?tab=<id> targets a specific tab (handy for testing the popup in a normal tab).
@@ -303,11 +309,6 @@ async function main() {
 
   const dialog = $('publish-dialog');
   $('publish').addEventListener('click', async () => {
-    const { apiKey } = await chrome.storage.local.get('apiKey');
-    if (!apiKey) {
-      chrome.runtime.openOptionsPage();
-      return;
-    }
     $('pub-title').closest('label').hidden = !page?.ident;
     $('pub-title-name').textContent = page?.title || 'this title';
     $('pub-error').textContent = '';
@@ -322,20 +323,19 @@ async function main() {
     }
     const forTitle = page?.ident && $('pub-title').checked;
     const res = await chrome.runtime.sendMessage({
-      type: 'publishProfile',
+      type: 'contributeList',
       name,
       description: $('pub-desc').value.trim(),
       title: forTitle ? { ...page.ident.meta, platform: page.ident.platform, platformId: page.ident.platformId, canonicalKey: page.ident.canonicalKey } : null,
       // Segments you chose to let play this session become explicit exceptions.
-      overrides: forTitle ? { exclude: page.flagged.filter((f) => page.actions.some((a) => page.disabled.includes(a.key) && a.segmentIds.includes(f.id))).map((f) => f.id).filter((id) => /^\d+$/.test(id)) } : undefined,
+      overrides: forTitle ? { exclude: page.flagged.filter((f) => page.actions.some((a) => page.disabled.includes(a.key) && a.segmentIds.includes(f.id))).map((f) => f.id).filter((id) => /^s_[0-9a-f]{8}$/.test(id)) } : undefined,
     });
     if (res?.error) {
       $('pub-error').textContent = res.error;
       return;
     }
     dialog.close();
-    await toContent({ type: 'refresh' });
-    refreshPage();
+    await openContribution(res);
   });
 
   await refreshPage();

@@ -333,20 +333,18 @@ import { CATEGORY_COLORS, Overlay } from './overlay.js';
     state.markStart = null;
     const wasPlaying = !video.paused;
     video.pause();
-    const { apiKey } = alive() ? await chrome.storage.local.get('apiKey') : {};
-    const answer = await overlay.openTagForm({ start, end, canShare: !!apiKey });
+    const answer = await overlay.openTagForm({ start, end });
     if (wasPlaying) video.play().catch(() => {});
     if (!answer) return { cancelled: true };
     const res = await bg({
       type: 'saveTag',
       title: { ...state.ident.meta, platform: state.ident.platform, platformId: state.ident.platformId, canonicalKey: state.ident.canonicalKey, duration: video.duration },
       segment: { start, end, category: answer.category, severity: answer.severity, note: answer.note },
-      share: answer.share,
     });
     if (res?.segment) {
       state.local.push(res.segment);
       replan();
-      overlay.toast(res.shared ? 'Tag saved and shared — thank you!' : `Tag saved locally${res.shareError ? ` (sharing failed: ${res.shareError})` : ''}`, { color: '#7cb342' });
+      overlay.toast('Tag saved. Share it with everyone from CleanCut → Options → Your tags.', { color: '#7cb342', ms: 5000 });
     } else overlay.toast(`Could not save tag: ${res?.error || 'unknown error'}`, { color: '#e53935' });
     return res;
   }

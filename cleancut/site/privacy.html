@@ -13,25 +13,28 @@
 <h1>Privacy policy</h1>
 <p class="meta">Last updated: [[DATE]]</p>
 
-<p>CleanCut is a browser extension and a small community service. This page explains exactly what data the extension and the service handle. The short version: CleanCut collects the minimum needed to look up scene tags for what you're watching, and nothing else. We don't sell data, show ads, or build profiles.</p>
+<p>CleanCut is a browser extension. This page explains exactly what data it handles. The short version: it works from files it downloads and from your own device, and sends nothing about you to us. We don't sell data, show ads, or build profiles.</p>
 
 <h2>What stays on your device</h2>
 <ul>
   <li><strong>Subtitles.</strong> The extension reads the subtitle file the video player downloads and analyzes it locally. Subtitle text is never sent to us or anyone else.</li>
   <li><strong>Your settings</strong> (chosen rating, per-category choices, actions). These live in the browser's extension storage. If you're signed in to Chrome with sync turned on, the browser may sync them across your devices as it does for any extension.</li>
-  <li><strong>Your own tags</strong> and the cache of recently looked-up titles are stored locally in the extension.</li>
+  <li><strong>Your own tags</strong> and a cache of recently looked-up community data are stored locally in the extension.</li>
 </ul>
 
-<h2>What is sent to the CleanCut service</h2>
+<h2>What the extension downloads, and from where</h2>
+<p>Community tags and skip lists are public files in a GitHub repository, published on GitHub Pages. There is no CleanCut account and no CleanCut server that receives information about you.</p>
 <ul>
-  <li><strong>Title lookups.</strong> When you play a video on a supported site, the extension sends the site name and the video's ID (for example <code>netflix</code> and <code>70248288</code>), and, when known, the show name, season and episode, so the service can return the matching scene tags. This is a form of viewing information, and it's used only to answer the lookup.</li>
-  <li><strong>If you create an account:</strong> the display name you choose. We store a hash of your API key, not the key itself.</li>
-  <li><strong>If you share:</strong> the scene tags, votes and skip lists that you choose to publish, along with your display name, so other people can see them.</li>
+  <li><strong>The index.</strong> A small file listing which titles have community data. It is the same file for everyone and contains nothing about you. The extension checks it every few hours.</li>
+  <li><strong>Title files.</strong> Only when the index says there is data for the title you're watching, the extension downloads that one file. This request tells GitHub (as host of the files) which title file was requested, along with your IP address and browser details that any web request includes. We don't see these requests. Titles without community data cause no request at all.</li>
+  <li>The extension never uploads the title you watch, your viewing history, your account on any streaming site, or subtitles.</li>
 </ul>
-<p>Lookups work without an account. We do not receive your Netflix or Amazon account, your viewing history, video content or subtitles, or anything about other sites you visit.</p>
 
-<h2>Server logs</h2>
-<p>The service keeps a temporary record of your IP address in memory to limit abuse (rate limiting). It is not written to the database. Our hosting provider may keep standard access logs for a limited period for security and operations. [[LOG_RETENTION: state your provider's retention, e.g. 14 days]]</p>
+<h2>If you choose to contribute</h2>
+<p>Sharing a tag or skip list is always your explicit action: CleanCut opens a GitHub page with a pre-filled file, and nothing is submitted until you propose it there. Contributions are <strong>public</strong>, including the title, timestamps, any note you write, and your GitHub username (GitHub's own policies cover your GitHub account). You can ask us to remove a contribution at any time (see Support).</p>
+
+<h2>Hosting logs</h2>
+<p>GitHub, as the host of GitHub Pages, may keep standard access logs under its own privacy statement. CleanCut itself runs no server and keeps no logs.</p>
 
 <h2>What we do not do</h2>
 <ul>
@@ -45,18 +48,18 @@
   <li><strong>Access to netflix.com and primevideo.com / amazon video pages:</strong> to detect what's playing and to skip, mute or blur it.</li>
   <li><strong>storage:</strong> to save your settings and tags.</li>
   <li><strong>activeTab / scripting:</strong> so the popup can show and control the current tab's player.</li>
-  <li><strong>Optional access to other sites:</strong> asked for at the moment you choose to use CleanCut on a site, or to point it at a different community server. You can decline.</li>
+  <li><strong>Other sites:</strong> CleanCut works on another page only when you click its toolbar button there (<code>activeTab</code>).</li>
 </ul>
 
 <h2>Your choices</h2>
 <ul>
   <li>Uninstalling the extension removes everything stored on your device.</li>
-  <li>To delete your account and the tags, votes and skip lists linked to it, contact us at the address below and we'll remove them.</li>
-  <li>You can point the extension at a different community server in Options, or turn it off, at any time.</li>
+  <li>To remove something you contributed, open an issue or email us at the address below and we'll delete the file. (Git history keeps old versions; we can ask GitHub to purge personal data on request.)</li>
+  <li>You can turn the extension off at any time from its popup.</li>
 </ul>
 
 <h2>Children</h2>
-<p>CleanCut is designed to help families. It is operated for adults and doesn't knowingly collect personal information from children under 13. The community features ask only for a display name; please don't use a real name.</p>
+<p>CleanCut is designed to help families. It is operated for adults and doesn't knowingly collect personal information from children under 13. There are no accounts. Contributions are public on GitHub, so please don't include personal details in notes.</p>
 
 <h2>Changes</h2>
 <p>If this policy changes materially, we'll update the date above and note it in the extension's release notes.</p>

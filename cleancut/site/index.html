@@ -22,7 +22,7 @@
     <h1>Watch any show at the rating you choose.</h1>
     <p class="lede">CleanCut runs on top of the streaming sites you already use and skips, mutes or blurs the scenes above your rating. Take an R-rated series and watch it as PG-13, PG or G.</p>
     <a id="install" class="btn" href="#">Add to Chrome — free</a><a class="btn ghost" href="#how">How it works</a>
-    <small id="install-note">Works in Chrome and Edge. Currently in beta.</small>
+    <small id="install-note">Works in Chrome and Edge. Currently in beta; community data is just getting started.</small>
   </div>
   <div class="shots">
     <img class="wide" src="img/overlay.png" alt="A toast reads 'Skipped 0:10 · violence (strong)' with an Undo button, and a coloured strip of cuts runs along the bottom of the player" width="560">
@@ -33,7 +33,7 @@
     <h2>How it works</h2>
     <div class="grid">
       <div class="card"><h3>1. Pick a rating</h3><p>Choose R, PG-13, PG or G from the toolbar popup, or tune each category yourself: nudity, sex, violence, gore, language, drugs and frightening scenes.</p></div>
-      <div class="card"><h3>2. It finds the scenes</h3><p>CleanCut combines scene tags from the community with a scan of the episode's own subtitles, run in your browser before the scenes play.</p></div>
+      <div class="card"><h3>2. It finds the scenes</h3><p>CleanCut combines reviewed community tags with a scan of the episode's own subtitles, run in your browser before the scenes play.</p></div>
       <div class="card"><h3>3. You just watch</h3><p>Scenes above your rating are skipped, muted or blurred. A small toast says what happened, and <strong>Undo</strong> lets any scene play.</p></div>
     </div>
   </section>
@@ -53,8 +53,8 @@
   <section>
     <h2>Built to stay out of your way</h2>
     <div class="grid">
-      <div class="card"><h3>Private by design</h3><p>Subtitles are analyzed on your device and never uploaded. The only thing sent out is which title you're watching, so we can look up its tags.</p></div>
-      <div class="card"><h3>Community powered</h3><p>Tag a scene with <code>Alt+[</code> and <code>Alt+]</code> while you watch, vote on others' tags, and share your settings as a skip list.</p></div>
+      <div class="card"><h3>Private by design</h3><p>Subtitles are analyzed on your device and never uploaded. There are no accounts and no CleanCut server. The extension just downloads public files of tags.</p></div>
+      <div class="card"><h3>Community powered</h3><p>Tag a scene with <code>Alt+[</code> and <code>Alt+]</code> while you watch, then submit it with one click. Every tag and skip list is reviewed on GitHub before it reaches anyone else. <a href="https://github.com/fabioelia/temp/tree/master/cleancut/community">See how</a>.</p></div>
       <div class="card"><h3>You stay in control</h3><p>CleanCut never copies, edits or redistributes a video. It only skips, mutes or blurs what's playing on your screen, for your own viewing.</p></div>
     </div>
   </section>
@@ -66,6 +66,7 @@
     <details><summary>Does it see the video frames?</summary><p>No. Streaming video is protected, so extensions can't read the picture. CleanCut works from tags and subtitles, so it can miss a scene that has neither. That's why community tags matter, and why machine-detected scenes show as suggestions until you trust them.</p></details>
     <details><summary>Is it legal?</summary><p>In the US, the Family Movie Act of 2005 allows skipping and muting parts of a film for private home viewing, as long as no altered copy is made. CleanCut works that way. Streaming services' terms and laws in other countries differ. This is not legal advice.</p></details>
     <details><summary>What does it cost?</summary><p>Nothing. There are no ads and no tracking.</p></details>
+    <details><summary>Who checks the community tags?</summary><p>Every tag and skip list is a file submitted as a GitHub pull request, and it's checked automatically and reviewed by a person before it's published. You can read every file in the <a href="https://github.com/fabioelia/temp/tree/master/cleancut/community">public repository</a>.</p></details>
     <details><summary>Is it affiliated with Netflix or Amazon?</summary><p>No. CleanCut is an independent project. Netflix and Prime Video are trademarks of their respective owners.</p></details>
   </section>
 </div>

@@ -1,16 +1,17 @@
 # Getting CleanCut on the Chrome Web Store
 
 The extension builds, packages and passes its tests. What's left is mostly
-paperwork, hosting, and a few manifest changes that decide how fast review goes.
+paperwork and testing on the real sites. There is no server to run: community data is
+reviewed files in this repo, published on GitHub Pages.
 
 ## 0. Blockers: do these first
 
 | # | Item | Why |
 | --- | --- | --- |
-| 1 | **Host the community server** and put its URL in `extension/src/config.js` (`DEFAULT_API`). Today it's `http://localhost:8787`, which can't work for anyone else. See [OPERATIONS.md](OPERATIONS.md). | Without it, every user gets no community tags. |
+| 1 | **Turn on GitHub Pages and merge to `master`** so the workflow publishes the site and `data/v1/index.json`. Settings → Pages → Source: *GitHub Actions*. Then open `https://fabioelia.github.io/temp/data/v1/index.json` to confirm. If the repo name differs, update `extension/src/config.js`. See [OPERATIONS.md](OPERATIONS.md). | The extension reads community data from there. Until it exists, users only get the subtitle scan and their own tags. |
 | 2 | **Test on real Netflix and Prime Video accounts.** The README says the adapters were only tested against the demo page. | Reviewers may try it. A listing that doesn't work gets rejected or reviewed badly. |
-| 3 | **Publish the website** (`site/`) and fill in the `[[PLACEHOLDERS]]` in `privacy.html` and `support.html`. | A privacy-policy URL is mandatory because the extension sends viewing info (title IDs) to a server. |
-| 4 | **Trim the store build's permissions** (section 3). | Broad host access triggers "in-depth review" (days to weeks). |
+| 3 | **Publish the website** (`site/`) and fill in the `[[PLACEHOLDERS]]` in `privacy.html` and `support.html`. | A privacy-policy URL is mandatory because the extension's requests for a title's file reveal that title to the host (GitHub). |
+| 4 | Build the store zip with `npm run package` (it drops the localhost permissions). | Dev-only permissions look suspicious to reviewers. |
 | 5 | Take **store screenshots** (section 2). The ones in `docs/` are from the demo player. | Store requires 1280×800 or 640×400. |
 
 ## 1. Account
@@ -38,15 +39,23 @@ npm run package      # → extension/dist/cleancut-chrome.zip  (upload this)
 | Support URL | `https://<your-domain>/support.html` | Page written. |
 | Website | the `site/` folder | Done. Deploy it to GitHub Pages, Cloudflare Pages or Netlify (all free). |
 
-## 3. Manifest changes for the store build
+## 3. Manifest for the store build
 
-Edit `STREAMING`, `DEV` and the manifest in `extension/build.mjs`:
+`npm run package` sets `CLEANCUT_STORE=1`, which already:
 
-1. **Remove `DEV` (`localhost`, `127.0.0.1`) from the Chrome store build.** Keep it for local builds. A simple `STORE=1` environment switch does it.
-2. **Remove `optional_host_permissions: https://*/*, http://*/*`.** It's what lets Options point at any custom server, and it's the single biggest review risk. Replace it with your own server's origin in `host_permissions`, and drop the custom-server field, or keep it only for the Firefox/dev build.
-3. Add your production API origin to `host_permissions`.
-4. Consider whether the Amazon `*/dp/*` patterns on every country domain are needed at launch. Fewer patterns, faster review. Start with `netflix.com` and `primevideo.com`.
-5. Name: **"CleanCut — watch at your rating"** is fine. Don't put "Netflix" or "Prime Video" in the name or icon. Mentioning them in the description to say where it works is allowed, but keep the "not affiliated" line.
+- **drops the `localhost` / `127.0.0.1` permissions** (used only by the demo page and the e2e test);
+- leaves **no wildcard host permissions**. There is no custom-server setting any more, so nothing requests access to arbitrary sites.
+
+What remains: `storage`, `scripting`, `activeTab`, and host access to Netflix, Prime Video and the Amazon video pages.
+Data is fetched from GitHub Pages, which allows cross-origin requests, so it needs no host permission.
+
+Optional trims, to speed up review:
+
+1. The Amazon `*/dp/*` patterns on ten country domains. Start with `netflix.com` and `primevideo.com` and add countries later.
+2. Name: **"CleanCut — watch at your rating"** is fine. Don't put "Netflix" or "Prime Video" in the name or icon. Mentioning them in the
+   description to say where it works is allowed, but keep the "not affiliated" line.
+
+Check the result any time: `npm run package && unzip -p extension/dist/cleancut-chrome.zip manifest.json`.
 
 ## 4. Listing copy (paste-ready)
 
@@ -59,13 +68,13 @@ Edit `STREAMING`, `DEV` and the manifest in `extension/build.mjs`:
 > CleanCut lets you watch at the rating you choose. Pick R, PG-13, PG or G (or set each category yourself) and CleanCut skips, mutes or blurs the scenes above it while you watch, so the whole family can enjoy the same show.
 >
 > HOW IT WORKS
-> • Community tags: people mark scenes by category and severity, and vote bad tags away.
+> • Community tags: people mark scenes by category and severity; every tag is reviewed on GitHub before it's published.
 > • Scan-ahead: when the player downloads the episode's English subtitles, CleanCut analyzes them in your browser for profanity and revealing sound cues, before those scenes play.
 > • Your own tags: press Alt+[ and Alt+] to mark a scene as you watch.
-> • Undo any cut with one click. Share your settings as a skip list.
+> • Undo any cut with one click. Submit your tags and skip lists to the community with one click.
 >
 > PRIVATE BY DESIGN
-> Subtitles are analyzed on your device and never uploaded. The only thing sent to the CleanCut service is which title you're watching, so it can look up tags. No ads, no tracking, no remote code.
+> Subtitles are analyzed on your device and never uploaded. No accounts, no CleanCut server, no ads, no tracking, no remote code. The extension just downloads public tag files.
 >
 > LIMITS
 > CleanCut can't see the video picture (streaming video is protected), so it relies on tags and subtitles and can miss untagged scenes. Streaming sites change often; if something breaks, tell us at the support page. Currently in beta.
@@ -89,11 +98,10 @@ Edit `STREAMING`, `DEV` and the manifest in `extension/build.mjs`:
 
 **Remote code:** *No.* Everything is bundled by esbuild into the package. (Verify: no `eval`, no remote `<script>`.)
 
-**Data usage disclosures.** Check against the form's current wording:
-- *Web history / website content*: the site and video ID of the title being watched, sent for the lookup. 
-- *Authentication information*: the API key, only if the user creates an account.
-- *Personally identifiable information*: the display name, only if they share tags.
-- Not collected: location, financial, health, personal communications, subtitles.
+**Data usage disclosures.** Check against the form's current wording. CleanCut itself receives nothing: there is no server and no account.
+The extension does download files from GitHub Pages, and requesting a title's file reveals that title to GitHub (the host), which the privacy
+policy states. If the form's definition of "collect" includes data that reaches a third-party host, tick **Web history**; if you're unsure, over-disclosing is safer than under-disclosing. Nothing else
+(location, financial, health, personal communications, authentication, personally identifiable information) is handled.
 
 **Certifications (tick all three):** data isn't sold; isn't used for unrelated purposes; isn't used for creditworthiness or lending.
 
@@ -108,16 +116,16 @@ Edit `STREAMING`, `DEV` and the manifest in `extension/build.mjs`:
 
 - **Platform risk.** Netflix and Amazon change their sites and could object. Similar tools exist (ClearPlay, VidAngel, and several Netflix-enhancement extensions), but there's no guarantee. The legal footing in the README (Family Movie Act) is US-only and isn't legal advice. Consider a one-hour consult with a lawyer before a broad public launch.
 - **It breaks silently.** If Netflix changes its player API, skips fail while mute/blur still work. Users see "doesn't work" reviews. See OPERATIONS.md for the monitoring plan.
-- **Cold start.** A new database has no community tags. At launch most value comes from the subtitle scan, so describe it that way. Seed popular titles with `cleancut-scan` before announcing.
+- **Cold start.** The community dataset starts empty. At launch most value comes from the subtitle scan, so describe it that way. Seed popular titles with `cleancut-scan` before announcing.
 
 ## 8. Pre-submission checklist
 
-- [ ] Server deployed on HTTPS; `DEFAULT_API` updated; `/v1/lookup` reachable from the extension
+- [ ] GitHub Pages enabled; `…/data/v1/index.json` loads; `config.js` matches the repo
 - [ ] Tested on a real Netflix episode and a real Prime episode (skip, mute, blur, Undo, tagging)
 - [ ] `[[PLACEHOLDERS]]` in `site/` replaced (`grep -rn '\[\[' site/`)
 - [ ] Site deployed; privacy and support URLs load
 - [ ] `STORE_URL` in `site/index.html` set after approval
-- [ ] DEV hosts and the wildcard optional hosts removed from the store build
+- [ ] Built with `npm run package` (no localhost hosts) and the manifest checked
 - [ ] Version bumped in `package.json` for every upload (the store rejects repeated versions)
 - [ ] 1+ screenshots (1280×800) and the 440×280 promo tile
 - [ ] Developer account verified, 2-step verification on
