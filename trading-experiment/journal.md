@@ -824,3 +824,4 @@ re-plans with the personas and a red-team.
 * Momentum's QQQ 11/30 675P shadow fired at 33.51 (QQQ 656.22 < 680.88). It was not taken: no edge (EV 0.88).
 * Macro's USO 153C did not fire (ask 5.10 > 4.10).
 * Momentum's QQQ 715C shadow is past its -50% level (2.56/2.64). Its 200-day exit is checked on the close.
+**Dashboard (Run A):** orders refreshed (2e14e92e; the old 24b9f795 was deleted).
