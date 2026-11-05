@@ -844,3 +844,22 @@ re-plans with the personas and a red-team.
 * The model's P(call -75%+) with the stop was 1.9%, and it happened on day 1. That is one draw, not a refutation, but the review should check how goal_odds
   treats one-day gaps at a 16.6 ^VIX entry.
 **Research:** four personas fired (macro, momentum, catalyst, options-vol), brief at research/2026-11-05/brief.md.
+**Personas (research/2026-11-05/): all four say no trade for Fri 11/6.**
+* **macro:** Reuters ties the rout to fears of AI and data-center regulation after the sweep (SOX -12%). The credit stress is AI-specific: HYG -0.31%, against
+  -1.03% beta-implied; HY OAS 3.32%. The jobs straddle is 1.48%, rich (jobs days pay 0.83 per $). New committed test `scripts/macro_1105.py`: on -4% days with
+  VIX9D > VIX3M (n 17), the SPY 11/20 745C pays 0.75 per $ and the 722P 0.92. Friday's Level 1 halt is ^GSPC 6,838.97.
+* **momentum:** SPY is 0.4% above its 200-day; the Nasdaq is in a correction (-11.9%). `scripts/momentum_1105.py`: after ^GSPC -4% days (n 34), calls entered
+  the next day return 0.80 per $, against 0.88 at random (t -1.80). The QQQ 715C shadow exited at 2.12 (-76%).
+* **catalyst:** no C1 setup (no sample name reports; today's drops were not earnings gaps). NVDA's 11/17 date is confirmed, with the reaction on 11/18, the last
+  session.
+* **options-vol:** goal_odds on 1 x SPY 12/04 750C (9.45/9.61; OI 449, failing the 1,000 minimum, as does every 12/04 call in the band): P($2,200) 26.8%,
+  P(beat SPY) 28.5%, P(below $1,000) 52.9%, EV 1.016 with the stop. Two contracts do not fit the cash. Cash beats SPY 0% of the time.
+**Decision (Claude, under the owner's autonomy grant): no second goal-budget bet on Friday.**
+1. The conditional evidence (two committed scripts, n 17-34) prices calls entered the day after a -4% day at 0.75-0.80 per $. That is below the 0.93 EV gate
+   the first bet had to pass, and goal_odds' unconditional 1.016 does not capture it.
+2. The in-band 12/04 calls fail the OI rule.
+3. It would stake about 70% of the remaining $1,385, with P(below $1,000) about 42-53%.
+4. The model's 1.9% tail (a 75%+ loss) happened on day 1, so its tails are not trustworthy in a regime shift.
+**Re-decided at the Sunday 11/8 review:** whether to pre-register a second variance bet for 11/9-11/13 once the VIX term structure normalizes, with
+full odds for the owner. Until then the account stays in cash.
+**Proposals for Fri 11/6: none** (no drafts, so no red-team).
