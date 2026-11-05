@@ -13,13 +13,22 @@
     return out;
   };
   const isProtected = (v) => !!v.mediaKeys; // Encrypted Media Extensions in use -> DRM content
+  // Which video is the main one, without reading layout (as CleanCut's largestVideo): one with media
+  // loaded beats one without, then the stream's own resolution decides. Thumbnails and hover previews
+  // usually have no source yet or a small stream.
+  const score = (v) => (v.currentSrc || v.src || v.srcObject ? 1 : 0) * ((v.readyState > 0 ? 1e9 : 0) + v.videoWidth * v.videoHeight);
+  // An ad is playing in a common web player (YouTube, video.js / Brightcove IMA, JW Player). During an ad
+  // the <video> plays the ad's own timeline, so its samples are logged as paused: no caption maps there.
+  const adPlaying = () => !!document.querySelector('#movie_player.ad-showing, .html5-video-player.ad-showing, .vjs-ad-playing, .vjs-ad-loading, .jw-flag-ads');
 
   function scan() {
-    return videos().map((v, i) => ({
+    const list = videos(), best = list.reduce((b, v, i) => (score(v) > (b < 0 ? -1 : score(list[b])) ? i : b), -1);
+    return list.map((v, i) => ({
       index: i,
       duration: Number.isFinite(v.duration) ? v.duration : null,
       width: v.videoWidth, height: v.videoHeight,
-      protected: isProtected(v),
+      hasMedia: !!(v.currentSrc || v.src || v.srcObject), score: score(v), main: i === best && score(v) > 0,
+      protected: isProtected(v), ad: adPlaying(),
       tracks: [...v.textTracks].map((t, j) => ({ index: j, kind: t.kind, label: t.label, language: t.language })),
     }));
   }
@@ -35,7 +44,7 @@
     const track = trackIndex != null ? v.textTracks[trackIndex] : null;
     if (track && track.mode === 'disabled') track.mode = 'hidden'; // loads cues without showing them
     const log = { t0: performance.now(), samples: [], cues: new Map(), v, track };
-    const sample = () => log.samples.push([performance.now() - log.t0, v.currentTime, v.paused ? 1 : 0]);
+    const sample = () => { const ad = adPlaying(); if (ad) log.adSeen = true; log.samples.push([performance.now() - log.t0, v.currentTime, v.paused || ad ? 1 : 0]); };
     const grab = () => { for (const c of cuesOf(track)) log.cues.set(`${c.start}|${c.end}|${c.text}`, c); };
     log.handlers = { timeupdate: sample, seeked: sample, pause: sample, play: sample, ratechange: sample };
     for (const [e, h] of Object.entries(log.handlers)) v.addEventListener(e, h);
@@ -92,7 +101,7 @@
     for (const [e, h] of Object.entries(log.handlers)) log.v.removeEventListener(e, h);
     if (log.track && log.onCue) log.track.removeEventListener('cuechange', log.onCue);
     log.samples.push([performance.now() - log.t0, log.v.currentTime, log.v.paused ? 1 : 0]);
-    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v) && !log.allowProtected, title: document.title, url: location.href, content: identify() };
+    return { samples: log.samples, cues: [...log.cues.values()].sort((a, b) => a.start - b.start), protectedDuring: isProtected(log.v) && !log.allowProtected, title: document.title, url: location.href, content: identify(), adSeen: !!log.adSeen };
   }
 
   window.__dubCapture = { scan, start, stop };

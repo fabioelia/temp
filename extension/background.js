@@ -13,7 +13,8 @@ async function inFrame(tabId, frameId, fn, args = []) {
 // (another site's player without permission, sandboxed or about: frames) doesn't break the scan.
 async function scan(tabId) {
   const frames = (await chrome.webNavigation.getAllFrames({ tabId }).catch(() => null)) || [{ frameId: 0, url: '' }];
-  const videos = [], net = [], blocked = new Map();
+  const videos = [], net = [], blocked = new Map(), hints = [];
+  let playerMeta = null;
   for (const f of frames) {
     const target = { tabId, frameIds: [f.frameId] };
     try {
@@ -30,11 +31,12 @@ async function scan(tabId) {
     try {
       const [r] = await chrome.scripting.executeScript({ target, func: () => window.__dubCapture?.scan() || [] });
       videos.push(...(r?.result || []).map((v) => ({ ...v, frameId: f.frameId, frameUrl: f.url })));
-      const [n] = await chrome.scripting.executeScript({ target, world: 'MAIN', func: () => window.__dubNet?.groups() || [] });
-      net.push(...(n?.result || []).map((g) => ({ ...g, frameId: f.frameId })));
+      const [n] = await chrome.scripting.executeScript({ target, world: 'MAIN', func: () => ({ groups: window.__dubNet?.groups() || [], hints: window.__dubNet?.hints?.() || [], meta: window.__dubNet?.meta?.() || null }) });
+      net.push(...(n?.result?.groups || []).map((g) => ({ ...g, frameId: f.frameId })));
+      hints.push(...(n?.result?.hints || [])); if (n?.result?.meta && !playerMeta) playerMeta = n.result.meta;
     } catch (e) { /* frame not accessible */ }
   }
-  return { videos, net, frames: frames.length, blocked: [...blocked.keys()] };
+  return { videos, net, frames: frames.length, blocked: [...blocked.keys()], hints: [...new Set(hints)], playerMeta };
 }
 
 // WebVTT/SRT text -> cues on the media timeline. HLS segments carry X-TIMESTAMP-MAP; segments of one
@@ -137,7 +139,18 @@ async function stop() {
   }
   const base = `dub-capture/${(log?.title || 'capture').replace(/[^\w\- ]+/g, '').trim().slice(0, 60) || 'capture'}-${new Date().toISOString().replace(/[:.]/g, '-')}`;
   const vtt = 'WEBVTT\n\n' + cues.map((c) => `${stamp(c.start)} --> ${stamp(c.end)}\n${c.speaker ? `<v ${c.speaker}>` : ''}${c.text}\n`).join('\n');
-  const meta = { format: 'dub-studio-capture', version: 3, source: log?.url, title: log?.title, content: log?.content || null, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected, signoff: capture.signoff || null,
+  let content = log?.content || null;
+  if (!content?.series) {                       // the page declared no episode: use the player's own data (YouTube, Vimeo)
+    try {
+      const frames = (await chrome.webNavigation.getAllFrames({ tabId: capture.tabId })) || [];
+      for (const f of frames) {
+        const [m] = await chrome.scripting.executeScript({ target: { tabId: capture.tabId, frameIds: [f.frameId] }, world: 'MAIN', func: () => window.__dubNet?.meta?.() || null }).catch(() => [null]);
+        const pm = m?.result;
+        if (pm?.name) { content = { ...(content || {}), name: pm.name, channel: pm.channel, runtime: pm.runtime, platform: pm.platform, platformId: pm.id, key: content?.key && content.from !== 'page title' ? content.key : `${pm.platform}:${pm.id}`, from: `${pm.platform} player data` }; break; }
+      }
+    } catch (e) { /* identity stays as the page declared it */ }
+  }
+  const meta = { format: 'dub-studio-capture', version: 3, source: log?.url, title: log?.title, content, adDuringRecording: !!log?.adSeen, recordedSeconds: r.seconds, cues: cues.length, protectedPlayback: !!capture.protected, signoff: capture.signoff || null,
     captions: capture.net ? { from: 'network', stream: capture.net.key, note: 'Constant offset may remain; Dub Studio re-aligns captions to the speech on import.' } : { from: 'text track' } };
   await chrome.downloads.download({ url: r.url, filename: `${base}.webm` });
   await chrome.downloads.download({ url: 'data:text/vtt;charset=utf-8,' + encodeURIComponent(vtt), filename: `${base}.vtt` });

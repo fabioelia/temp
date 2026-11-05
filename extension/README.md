@@ -43,6 +43,18 @@ Many players never expose captions as a `<track>`. They fetch `.vtt` files or HL
 
 It also gets a key such as `series-slug/s01e03`. Pick the `.json` with the captions in Dub Studio's **Captions…** and lines are grouped under that episode.
 
+**Video and caption detection, generalized from CleanCut** (`fabioelia/play-it-all`):
+- **The main video is preselected.** One with media loaded beats one without, then the stream's own resolution decides, so thumbnails and hover previews aren't picked. No page layout is read.
+- **YouTube:** caption tracks come from the player's own data (`ytInitialPlayerResponse`, the player's current response, and new player responses after in-app navigation).
+  - Manual tracks come before automatic ones, in every language, so the actor's own language is available.
+  - Tracks are downloaded as `json3`. YouTube's `json3`, `srv3` and older transcript formats are converted to WebVTT.
+  - When YouTube only gives a track to its own player (an empty download without its token), the popup asks you to turn CC on once. The player's own request is then read.
+  - The video's title, channel and length go into the capture's `.json` when the page declares nothing else.
+- **Vimeo:** tracks come from the player config (`window.playerConfig` in the embed, or a fetched `…/config`), one stream per language. The video's title and owner go into the capture's `.json`.
+- **Ads:** while an ad plays on YouTube, video.js / Brightcove IMA or JW Player, playback samples are logged as paused. The player plays the ad's own timeline then, so no caption is mapped onto the ad, and the capture's `.json` notes that an ad played.
+- **Caption CDNs** that refuse requests sent with cookies are retried without them.
+- **Not ported:** CleanCut's Netflix, Prime Video, Disney+, Max, Hulu, Peacock, Paramount+ and other subscription-service adapters. They read those services' private player data, and this extension doesn't target licensed catalogs.
+
 Audio always comes from tab capture. The extension doesn't download media segments.
 
 ## How it works

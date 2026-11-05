@@ -27,6 +27,7 @@ async function init() {
   try { lastScan = await send({ type: 'scan', tabId: tab.id }); ({ videos, net } = lastScan); } catch (e) { status(e.message, 'err'); return; }
   window.__lastScan = lastScan;
   if (net.length) status(`Found ${net.length} caption stream${net.length === 1 ? '' : 's'} loaded over the network. More segments are picked up while you record.`);
+  if (lastScan.hints?.length) status(`The player lists captions (${lastScan.hints.slice(0, 3).join(', ')}) that it only hands out to itself. Turn CC on in the player once, then reopen this popup.`);
   if (!videos.length) {
     $('start').disabled = true;
     if (lastScan.blocked.length) {
@@ -42,7 +43,11 @@ async function init() {
     return;
   }
   status(`Found ${videos.length} video${videos.length === 1 ? '' : 's'}${net.length ? ` and ${net.length} network caption stream${net.length === 1 ? '' : 's'}` : ''} in ${lastScan.frames} frame${lastScan.frames === 1 ? '' : 's'}.`);
-  $('video').replaceChildren(...videos.map((v, i) => new Option(`Video ${i + 1}${v.duration ? ' · ' + fmt(v.duration) : ''}${v.width ? ` · ${v.width}×${v.height}` : ''}${v.protected ? ' · protected' : ''}`, String(i))));
+  $('video').replaceChildren(...videos.map((v, i) => new Option(`Video ${i + 1}${v.duration ? ' · ' + fmt(v.duration) : ''}${v.width ? ` · ${v.width}×${v.height}` : ''}${v.protected ? ' · protected' : ''}${v.hasMedia === false ? ' · nothing loaded' : ''}`, String(i))));
+  // Preselect the main video (media loaded, largest stream), across all frames.
+  const best = videos.reduce((b, v, i) => ((v.score || 0) > (videos[b]?.score || 0) ? i : b), 0);
+  $('video').value = String(best);
+  if (videos.some((v) => v.ad)) status('An ad is playing. Recording works, but caption lines are only mapped once the programme is back.');
   fillTracks();
 }
 function recording(since) {
