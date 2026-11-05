@@ -1,0 +1,2 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-05,momentum,QQQ261130P00675000,33.51,"Cboe delayed chain 14:45 ET (bid 32.47, delta -0.65); trigger QQQ < 680.88 at 14:43 fired (QQQ 656.22 Yahoo live); shadow only, not taken (EV 0.88, confidence 1)"

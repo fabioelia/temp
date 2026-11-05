@@ -801,3 +801,26 @@ with OI >= 1000 whose ask passes its Kelly row (likely the 150P or 145P). It can
 **Macro:** ES=F 7,722.75 (flat), NQ=F -1.0% (chips and data-center names lower after the sweep), ^VIX 16.78, ^TNX 4.90. CL=F 89.29 (+1.3%) after an IRGC claim
 of two tankers and a tug on fire in Hormuz (unverified). No Anthropic filing in the last 2 days. Yahoo, single source.
 **SPY 780C:** no news against it. The goal GTC at 9.62 rests; the stop is 3.39 at 14:43.
+
+## 2026-11-05 (Thu) Pre-close (14:44 EST)
+**Driver:** an AI-stock rout (Reuters 13:29-13:33 ET: "Nasdaq set to confirm correction as AI stocks tumble"; "Wall Street fear gauge jumps most since
+'Liberation Day'"; Bloomberg 13:40 ET). ^GSPC 7,410.39 (-3.6%), SPY 738.70 (-3.7%, Robinhood), QQQ 656.22 (-5.2%), ^VIX 26.32 (+58% from 16.61),
+^TNX 4.82; Oracle and Intel among the decliners. There was no halt: Level 1 is 7,150.42.
+**Shot 2 (the goal-budget SPY 12/04 780C): the -50% stop fired, and the call was sold.**
+* Robinhood live: 1.43/1.49 at 19:44 UTC, at or below the 3.39 stop.
+* Steps, per LIVE_MODE: cancelled the resting 9.62 GTC first (cancel confirmed 19:44:22 UTC; K007 marked "cancelled to exit"). Paper O017 (sell all) added and
+  confirmed; the Cboe stamp was 1.31/1.37. Gate K008 approved at 1.46 (the high-fill-rate sell 1.451, rounded up). The review showed no alerts and fees of $0.04.
+* **Filled 1 @ 1.46 at 19:45:02 UTC.** Realized -$533.08 on the shot ($679.04 in, $145.96 back).
+* Robinhood reconciled: flat, cash $1,384.82. Real P/L since the start: -$615.16.
+* The stop was pre-registered, and selling was applied without discretion. The call had already lost about 79% in one session, gapping far through the stop:
+  the stop could save only the remaining $143.
+* Tax memo: live.py flags two possible wash sales between the two SPY call trades. These are different strikes and expiries; the 10/22 note applies.
+**O016 (QCOM C1 put) cancelled: the trigger failed.** QCOM was 159.655 at 14:44 (Robinhood), above the 159.33 line. It had been about -12% pre-market and
+recovered to -7.8%. Even on a trigger, the in-band 150P (Cboe 5.40/5.65, delta -0.35, IV 67%, OI 4791) was above 64% IV, where the 15-DTE Kelly table says no
+trade. No widening.
+**No new orders.** Doing nothing is the rule-consistent choice: nothing pre-registered or researched applies to a 3.6% down day, and tonight's Run B
+re-plans with the personas and a red-team.
+**Idea watch (research/2026-11-05/ideas-fired.csv):**
+* Momentum's QQQ 11/30 675P shadow fired at 33.51 (QQQ 656.22 < 680.88). It was not taken: no edge (EV 0.88).
+* Macro's USO 153C did not fire (ask 5.10 > 4.10).
+* Momentum's QQQ 715C shadow is past its -50% level (2.56/2.64). Its 200-day exit is checked on the close.

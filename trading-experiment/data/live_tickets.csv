@@ -5,4 +5,5 @@ K003,2026-10-22T14:45:26-04:00,2026-10-22,O006,SPY261120C00790000,sell,,1.000000
 K004,2026-11-04T14:47:16-05:00,2026-11-04,O014,SPY261204C00780000,buy,669.00,1,failed,"Limit 6.69 sat below the bid after the quote moved to 6.71/6.75 within 30 s; cancelled at 19:48:08 UTC, nothing filled. Re-gated at the new high-fill-rate buy price."
 K005,2026-11-04T14:48:19-05:00,2026-11-04,O014,SPY261204C00780000,buy,677.00,1,failed,"Not sent: the quote moved to 6.78/6.82 at review (19:48:23 UTC), so 6.77 would sit below the bid. Re-gated at the high-fill-rate buy 6.802 rounded down."
 K006,2026-11-04T14:48:32-05:00,2026-11-04,O014,SPY261204C00780000,buy,680.00,1,recorded,broker order 6aeb8c1e-555a-4fef-abc1-bce24786dade
-K007,2026-11-04T17:14:39-05:00,2026-11-04,TP-SPY261204C00780000,SPY261204C00780000,sell,resting,1,placed,broker order 6aebae59-ebfa-44e2-9271-abe8dd030f96
+K007,2026-11-04T17:14:39-05:00,2026-11-04,TP-SPY261204C00780000,SPY261204C00780000,sell,resting,1,failed,cancelled to exit: the -50% stop fired at the 11/5 14:43 check (bid 1.43 <= 3.39); broker cancel confirmed 19:44:22 UTC
+K008,2026-11-05T14:44:47-05:00,2026-11-05,O017,SPY261204C00780000,sell,,1.000000,recorded,broker order 6aecdcbe-78ba-42df-8cc9-562debb3d823
