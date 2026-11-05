@@ -790,3 +790,14 @@ and both positions sold at any 14:43 check with equity >= $2,200.
 * Worst joint loss at the two stops is about $550. A put of about $420 lowers the call-alone P($2,200) of about 43% slightly. The put has its own edge, and
   the goal question is noted for Thursday's red-team.
 **Dashboard (11/04):** five files refreshed (summary 92403954, equity 878418c5, positions bd94d279, orders 24b9f795, trades d415bdf4); the old files were deleted.
+
+## 2026-11-05 (Thu) Pre-open (09:18 EST)
+**QCOM:** down nearly 12% pre-market (TradingKey, Yahoo Finance, Seeking Alpha, 08:48-09:10 ET). Handset chip revenue fell 26%, with margin pressure and memory
+pricing; Susquehanna trimmed its target. The 8-K (2.02) and a Form 4 were filed on 11/4. At about 152, QCOM is well below the 159.33 C1 line, so the O016 trigger
+is likely to fire at 14:43.
+**Note for Run A:** at QCOM near 152 the 155P is likely in the money, near delta 0.55, outside the band. Run A takes the 11/20 put in the live band 0.30-0.45
+with OI >= 1000 whose ask passes its Kelly row (likely the 150P or 145P). It cancels O016 and adds and confirms the replacement, with every gate (spread
+<= 5%, IV <= 72%, the 15-DTE Kelly row at the next-higher IV, the 4.40 cap, a fresh red-team) checked on that contract. No gate is widened.
+**Macro:** ES=F 7,722.75 (flat), NQ=F -1.0% (chips and data-center names lower after the sweep), ^VIX 16.78, ^TNX 4.90. CL=F 89.29 (+1.3%) after an IRGC claim
+of two tankers and a tug on fire in Hormuz (unverified). No Anthropic filing in the last 2 days. Yahoo, single source.
+**SPY 780C:** no news against it. The goal GTC at 9.62 rests; the stop is 3.39 at 14:43.
