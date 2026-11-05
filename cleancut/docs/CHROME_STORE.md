@@ -10,7 +10,7 @@ reviewed files in this repo, published on GitHub Pages.
 | --- | --- | --- |
 | 1 | **Turn on GitHub Pages and merge to `master`** so the workflow publishes the site and `data/v1/index.json`. Settings → Pages → Source: *GitHub Actions*. Then open `https://fabioelia.github.io/temp/data/v1/index.json` to confirm. If the repo name differs, update `extension/src/config.js`. See [OPERATIONS.md](OPERATIONS.md). | The extension reads community data from there. Until it exists, users only get the subtitle scan and their own tags. |
 | 2 | **Test on real Netflix and Prime Video accounts.** The README says the adapters were only tested against the demo page. | Reviewers may try it. A listing that doesn't work gets rejected or reviewed badly. |
-| 3 | **Publish the website** (`site/`) and fill in the `[[PLACEHOLDERS]]` in `privacy.html` and `support.html`. | A privacy-policy URL is mandatory because the extension's requests for a title's file reveal that title to the host (GitHub). |
+| 3 | **Publish the website** (`site/`). Contact is the GitHub issues page; add a support email later if you want one (and update both pages and the store listing). | A privacy-policy URL is mandatory because the extension's requests for a title's file reveal that title to the host (GitHub). |
 | 4 | Build the store zip with `npm run package` (it drops the localhost permissions). | Dev-only permissions look suspicious to reviewers. |
 | 5 | Take **store screenshots** (section 2). The ones in `docs/` are from the demo player. | Store requires 1280×800 or 640×400. |
 
@@ -122,7 +122,6 @@ policy states. If the form's definition of "collect" includes data that reaches 
 
 - [ ] GitHub Pages enabled; `…/data/v1/index.json` loads; `config.js` matches the repo
 - [ ] Tested on a real Netflix episode and a real Prime episode (skip, mute, blur, Undo, tagging)
-- [ ] `[[PLACEHOLDERS]]` in `site/` replaced (`grep -rn '\[\[' site/`)
 - [ ] Site deployed; privacy and support URLs load
 - [ ] `STORE_URL` in `site/index.html` set after approval
 - [ ] Built with `npm run package` (no localhost hosts) and the manifest checked
