@@ -117,6 +117,22 @@ def main():
                            f'${fk:,.0f} -> ' + ('FITS' if fk >= 100 * ask else 'no'))
         print(f'  S {S:.2f} ({g - 1:+.0%}): ' + '; '.join(out))
 
+    # fit_1104.py's table at dte 16: per spot, the highest quoted IV (25% .. the 1.3x cap) at which full Kelly covers the cheapest
+    # band put at model ask (BS x 1.025). IV / RV20 uses the flat RV20; the real gate is recomputed with the 11/17 close.
+    print(f'\n== fit table (dte {dte}): highest IV at which full Kelly covers 1 band put ==')
+    fk = {round(iv, 4): sizing.kelly(pay(iv / rv_flat, dte=dte)) * EQUITY
+          for iv in np.arange(0.25, GATE_X * rv_flat + 1e-9, 0.0025)}
+    for g in (0.92, 0.90, 0.88, 0.85):
+        S, best = g * S0, None
+        for iv, f in fk.items():
+            for K in strikes:
+                px, dl = ovg.bs_put(S, K, T, iv, r)
+                if 0.30 <= -dl <= 0.45 and f >= 102.5 * px:
+                    best = (iv, K, px * 1.025, f)
+                    break
+        print(f'  S {S:.2f} ({g - 1:+.0%}): ' + (f'IV <= {best[0]:.1%} ({best[0] / rv_flat:.2f}x), {best[1]:g}P ask~{best[2]:.2f}, '
+                                                 f'full Kelly ${best[3]:,.0f}' if best else 'none'))
+
 
 if __name__ == '__main__':
     main()
