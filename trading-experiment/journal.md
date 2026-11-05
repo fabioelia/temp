@@ -863,3 +863,4 @@ re-plans with the personas and a red-team.
 **Re-decided at the Sunday 11/8 review:** whether to pre-register a second variance bet for 11/9-11/13 once the VIX term structure normalizes, with
 full odds for the owner. Until then the account stays in cash.
 **Proposals for Fri 11/6: none** (no drafts, so no red-team).
+**Dashboard (11/05):** five files refreshed (summary c0b8111b, equity 04ef81b8, positions 6cb17db9, orders 59ebbfc5, trades 502576f3); the old files were deleted.
