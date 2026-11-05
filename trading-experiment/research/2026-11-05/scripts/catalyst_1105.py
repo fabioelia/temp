@@ -74,7 +74,11 @@ def main():
     print(f'RV20 {ds[0]}..{ds[-1]} = {rv20:.2%}; flat roll to {PRE} = {rv_flat:.2%}; IV cap 1.3x = {GATE_X * rv20:.1%} now, '
           f'{GATE_X * rv_flat:.1%} flat')
 
-    ts, meta, rows = ovg.load_chain(d / 'NVDA_chain.json')
+    # Tonight's Cboe file carries 120 rows under a 'B1VDA' root (11/13 only) that options_vol_gate's OCC regex rejects; drop them.
+    raw = json.loads((d / 'NVDA_chain.json').read_text())
+    raw['data']['options'] = [o for o in raw['data']['options'] if ovg.OCC.match(o['option'])]
+    (d / 'NVDA_chain_std.json').write_text(json.dumps(raw))
+    ts, meta, rows = ovg.load_chain(d / 'NVDA_chain_std.json')
     print(f'\nCboe chain {ts} UTC; close {meta.get("close")}, iv30 {meta.get("iv30")}')
     puts = sorted((x for x in rows if x['exp'] == EXP and x['cp'] == 'P' and 0.75 * S0 <= x['K'] <= 1.02 * S0), key=lambda x: x['K'])
     for x in puts:
@@ -104,11 +108,13 @@ def main():
         for iv in (ex * MILD, ex * SHOCK, GATE_X * rv_flat):
             fk = sizing.kelly(pay(iv / rv_flat, dte=dte)) * EQUITY
             band = [(K, *ovg.bs_put(S, K, T, iv, r)) for K in strikes if K >= 0.7 * S]
-            band = [(K, px * 1.025, dl) for K, px, dl in band if 0.30 <= -dl <= 0.45 and oi.get(K, 0) >= 1000]
+            # Added after the first run: no 12/04 strike near a -8..-12% spot has OI >= 1000 tonight (160P 769, 165P 558), and OI
+            # can build by 11/18, so the cheapest band put is shown whatever its OI, with tonight's OI beside it.
+            band = [(K, px * 1.025, dl) for K, px, dl in band if 0.30 <= -dl <= 0.45]
             if band:
                 K, ask, dl = min(band, key=lambda z: z[1])
-                out.append(f'IV {iv:.1%} ({iv / rv_flat:.2f}x): {K:g}P ask~{ask:.2f} vs full Kelly ${fk:,.0f} -> '
-                           + ('FITS' if fk >= 100 * ask else 'no'))
+                out.append(f'IV {iv:.1%} ({iv / rv_flat:.2f}x): {K:g}P ask~{ask:.2f} d{dl:+.2f} OI {oi.get(K, 0)} vs full Kelly '
+                           f'${fk:,.0f} -> ' + ('FITS' if fk >= 100 * ask else 'no'))
         print(f'  S {S:.2f} ({g - 1:+.0%}): ' + '; '.join(out))
 
 
