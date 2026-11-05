@@ -1,9 +1,5 @@
 # temp
 
-## cleancut/
-
-**CleanCut**: a browser extension that plays Netflix and Prime Video at the rating you choose (R, PG-13, PG, G). It skips, mutes or blurs explicit scenes using community-tagged timestamps and scan-ahead subtitle analysis. Includes a community server for sharing tags and skip lists, and an offline scanner that runs lightweight vision models. See [cleancut/README.md](cleancut/README.md).
-
 ## speaker-transcriber.html
 
 A single self-contained HTML page that transcribes audio or video **in the browser** and tags every line with the voice that said it.

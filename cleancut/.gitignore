@@ -1,6 +1,0 @@
-node_modules/
-extension/dist/
-*.zip
-data/
-server/public/demo.webm
-_site/
