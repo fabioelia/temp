@@ -1,0 +1,2 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-25,momentum,IWM261120C00285000,2.65,Cboe 10/23 close (quotes.py 10/25 18:36 ET),Russell FTD: 14:43 10/26-10/30 ex-Wed if IWM>=1.25% over prior close and >=279.00 on volume >=75% of prior day; no print <269.88; ask<=3.70,4

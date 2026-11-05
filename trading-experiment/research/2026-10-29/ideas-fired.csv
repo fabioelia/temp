@@ -1,0 +1,3 @@
+date,persona,contract,ask_at_trigger,source
+2026-10-29,contrarian,QQQ261120C00750000,2.57,Cboe delayed chain 14:45 ET (bid 2.54; IV 18.65%; delta 0.15; QQQ 712.30 Yahoo in 701.16-716.00; VIX 16.90); not taken (committee dropped it 10/26; delta far below band; strategy review: no edge)
+2026-10-29,catalyst,GOOGL261120P00280000,7.55,Cboe delayed chain 14:45 ET (bid 7.25; IV 32%; delta -0.44; GOOGL 282.25); the price condition was met but the ask cap (4.50) and the O010 IV cap (30%) failed; logged so the shadow book marks from today's ask rather than the pre-print 1.18; not taken

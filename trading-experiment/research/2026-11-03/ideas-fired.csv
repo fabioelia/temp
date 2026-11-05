@@ -1,0 +1,3 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-03,macro,USO261127C00163000,7.10,Cboe delayed chain 14:44 ET (bid 6.75; spread 5.1%; IV 57%; delta 0.44; USO 157.66); shadow trigger met (ask <= 7.25; spread <= 10%); not taken (no edge; EV 0.75)
+2026-11-03,macro,USO261127P00150000,5.85,Cboe delayed chain 14:44 ET (bid 5.50; spread 6.2%; IV 57%; delta -0.34); shadow trigger met (ask <= 6.35; spread <= 10%); not taken (no edge; EV 0.86)

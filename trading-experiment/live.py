@@ -1,0 +1,432 @@
+#!/usr/bin/env python3
+"""Real-money safety gate and ledger for live mode (stdlib only). See LIVE_MODE.md.
+
+This module never talks to a broker. The portfolio manager places orders through the broker connector
+ONLY after `gate` approves a ticket, then reports what happened with `placed` / `record` / `fail`.
+Everything the gate checks is enforced here, in code, from files in the repo:
+
+  * KILL_SWITCH file present            -> every order refused (the owner can create it from GitHub in seconds)
+  * live.enabled false                  -> every order refused
+  * only orders the tracker has CONFIRMED today (pre-close decision flow), before the last-order cutoff
+  * real capital cap                    -> never more than live.capital_cap_usd deployed, whatever the account holds
+  * max single order, leveraged-ETF cap, 4 fills a day, no same-day round trips, no shorting
+  * LOSS LIMIT: when the experiment is down live.loss_limit_usd ($1,000 since 2026-10-18) it STOPS: buys are refused, everything
+    is sold to cash, then KILL_SWITCH is created. Only the owner re-arms it, after talking.
+  * one ticket per order id, so a crashed or repeated run cannot place the same order twice
+  * OPTIONS (strategy.allow_options): buy calls/puts only, whole contracts, limit orders; premium may only use cash above
+    capital_cap - loss_limit, so every open option can expire worthless and the loss still stops at the limit
+
+  live.py status
+  live.py check [--marks XLE=68.1,GUSH=24.9]      run every pre-close and post-close; trips the loss limit
+  live.py gate --order O003 [--ref-price 68.5] [--marks ...]
+  live.py gate --order O004 --limit 2.55        options: limit = per-share premium from the broker's live quote
+  live.py placed --ticket K001 --broker-order-id ABC
+  live.py record --ticket K001 --qty 5.1 --avg-price 68.55 [--fees 0.01] [--broker-order-id ABC]
+  live.py fail --ticket K001 --reason "..."
+  live.py kill --reason "..."
+"""
+import argparse
+import json
+import math
+import sys
+import uuid
+from datetime import time
+
+import tracker as T
+
+ROOT, DATA = T.ROOT, T.DATA
+LIVE_LEDGER, TICKETS, KILL = DATA / "live_ledger.csv", DATA / "live_tickets.csv", ROOT / "KILL_SWITCH"
+STATE = DATA / "live_state.json"
+LEDGER_COLS = ["id", "ts_et", "date", "ticker", "side", "qty", "avg_price", "notional", "fees", "order_id",
+               "ticket", "broker_order_id", "note"]
+TICKET_COLS = ["ticket", "ts_et", "date", "order_id", "ticker", "side", "usd", "qty", "status", "reason"]
+LIVE = T.CFG.get("live", {})
+
+
+def refuse(msg):
+    print(f"REFUSED: {msg}")
+    sys.exit(2)
+
+
+def hhmm(s):
+    h, m = s.split(":")
+    return time(int(h), int(m))
+
+
+def live_state():
+    """Replay the live ledger: positions, cost basis, realized P/L, fills per day."""
+    pos, realized, per_day = {}, 0.0, {}
+    for r in T.read_csv(LIVE_LEDGER):
+        t, q, px, fee = r["ticker"], float(r["qty"]), float(r["avg_price"]), float(r["fees"] or 0)
+        per_day.setdefault(r["date"], []).append(r)
+        p = pos.setdefault(t, {"qty": 0.0, "cost": 0.0})
+        m = T.mult(t)
+        if r["side"] == "buy":
+            p["qty"] += q
+            p["cost"] += q * px * m + fee
+        else:
+            avg = p["cost"] / p["qty"]
+            realized += q * px * m - fee - avg * q
+            p["cost"] -= avg * q
+            p["qty"] -= q
+            if p["qty"] <= 1e-6:
+                del pos[t]
+    return {"pos": pos, "realized": realized, "per_day": per_day,
+            "deployed": sum(p["cost"] for p in pos.values())}
+
+
+def parse_marks(s):
+    return {k.strip().upper(): float(v) for k, v in (kv.split("=") for kv in s.split(","))} if s else {}
+
+
+def experiment_equity(st, day, extra=None):
+    """Capital cap + realized + unrealized. Prices: marks passed in, else the latest recorded close, else cost."""
+    paper = T.load_marks()
+    unreal = 0.0
+    for t, p in st["pos"].items():
+        px = (extra or {}).get(t) or T.mark_on(paper, t, day)[0]
+        if px:
+            unreal += p["qty"] * px * T.mult(t) - p["cost"]
+    return LIVE["capital_cap_usd"] + st["realized"] + unreal
+
+
+def stopped():
+    return json.loads(STATE.read_text()).get("stopped", False) if STATE.exists() else False
+
+
+def set_stopped(reason, equity):
+    STATE.write_text(json.dumps({"stopped": True, "at": T.now_et().isoformat(timespec="seconds"),
+                                 "reason": reason, "equity": round(equity, 2)}, indent=1) + "\n")
+
+
+def trip_if_breached(st, day, extra=None):
+    """Persist the STOP the first time the loss limit is crossed. Returns (is_stopped, equity, loss)."""
+    eq = experiment_equity(st, day, extra)
+    loss = LIVE["capital_cap_usd"] - eq
+    if loss >= LIVE.get("loss_limit_usd", 500) and not stopped():
+        set_stopped(f"experiment down ${loss:,.2f} (limit ${LIVE.get('loss_limit_usd', 500):,.0f})", eq)
+    return stopped(), eq, loss
+
+
+def ref_id(ticket):
+    """Deterministic broker idempotency key per ticket: a retried placement re-sends the same ref_id."""
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"https://github.com/fabioelia/temp/trading-experiment/{ticket}"))
+
+
+def tickets():
+    return T.read_csv(TICKETS)
+
+
+def add_ticket(row):
+    rows = tickets()
+    row["ticket"] = f"K{len(rows) + 1:03d}"
+    rows.append(row)
+    T.write_csv(TICKETS, TICKET_COLS, rows)
+    return row["ticket"]
+
+
+def set_ticket(tid, **kw):
+    rows = tickets()
+    for r in rows:
+        if r["ticket"] == tid:
+            r.update(kw)
+            T.write_csv(TICKETS, TICKET_COLS, rows)
+            return r
+    sys.exit(f"no ticket {tid}")
+
+
+def cmd_gate(a):
+    now = T.now_et()
+    day = now.date().isoformat()
+    if not LIVE.get("enabled"):
+        refuse("live mode is not enabled in config.json (live.enabled is false)")
+    if KILL.exists():
+        refuse("KILL_SWITCH file is present: all real orders are halted until the owner removes it")
+    if not T.is_trading_day(now.date()):
+        refuse(f"{day} is not a trading day")
+    o = next((r for r in T.read_csv(T.ORDERS) if r["id"] == a.order), None)
+    if o is None or o["status"] != "pending":
+        refuse(f"order {a.order} is not a pending order")
+    tk, side = o["ticker"], o["side"]
+    st = live_state()
+    halted, eq, loss = trip_if_breached(st, day, parse_marks(a.marks))
+    limit_time = hhmm(LIVE.get("flatten_cutoff_et", "15:58")) if (halted and side == "sell") else hhmm(LIVE.get("last_order_cutoff_et", "15:50"))
+    if now.time() > limit_time:
+        refuse(f"{now:%H:%M} ET is after the {limit_time:%H:%M} ET last-order cutoff")
+    if not T.confirmed_for(o, day):
+        refuse(f"order {a.order} was not confirmed today by the pre-close decision flow")
+    if any(t["order_id"] == a.order and t["status"] in ("approved", "placed", "recorded") for t in tickets()):
+        refuse(f"order {a.order} already has a ticket (no duplicate real orders)")
+    cap = LIVE["capital_cap_usd"]
+    todays = st["per_day"].get(day, [])
+    open_tickets = [t for t in tickets() if t["date"] == day and t["status"] in ("approved", "placed")]
+    if len(todays) + len(open_tickets) >= T.CFG["max_trades_per_day"]:
+        refuse(f"daily cap of {T.CFG['max_trades_per_day']} real fills reached")
+    if tk in {r["ticker"] for r in todays} | {t["ticker"] for t in open_tickets}:
+        refuse(f"{tk} already traded today (no same-day round trips or repeat fills)")
+    if side == "sell" and any(t["ticker"] == tk and t["status"] == "placed" and is_resting(t) for t in tickets()):
+        refuse(f"a resting GTC take-profit holds {tk}: cancel it at the broker (cancel_option_order) and `live.py fail` its ticket first")
+    ref = a.ref_price
+    usd = qty = None
+    note = ""
+    opt = T.is_option(tk)
+    strat = T.STRAT
+    if side == "buy" and not opt and not strat.get("allow_stock_buys", True):
+        refuse("stock/ETF buys are switched off (options-only strategy)")
+    if opt and side == "buy":
+        if halted:
+            refuse(f"LOSS LIMIT hit (experiment down ${loss:,.2f}): no new buys")
+        if not strat.get("allow_options"):
+            refuse("options are switched off (strategy.allow_options)")
+        if not a.limit or a.limit <= 0:
+            refuse("an option order needs --limit (per-share premium from the broker's live quote)")
+        if (T.occ_expiry(tk) - now.date()).days < strat.get("min_days_to_expiry", 3):
+            refuse(f"{tk} expires {T.occ_expiry(tk)}: too close")
+        # the contract's tick from get_option_instruments min_ticks when given (penny classes like SPY trade in $0.01); else the
+        # standard option ticks: $0.05 at/above $3.00, $0.01 below
+        tick = a.tick if a.tick else (0.05 if a.limit >= 3 else 0.01)
+        if abs(round(a.limit / tick) * tick - a.limit) > 1e-9:
+            refuse(f"limit {a.limit} is not on the ${tick:.2f} tick; round it (down for a buy) first")
+        if o["max_price"] and a.limit > float(o["max_price"]):
+            refuse(f"limit {a.limit} above the order's max_price {o['max_price']}")
+        fee = strat.get("option_fee_per_contract", 0.05)
+        cash_live = cap + st["realized"] - st["deployed"]
+        # premium of buy tickets approved or placed but not yet recorded is already spoken for
+        reserved = sum(float(t["usd"] or 0) + fee * float(t["qty"] or 0) for t in tickets()
+                       if t["status"] in ("approved", "placed") and t["side"] == "buy")
+        avail = cash_live - (cap - LIVE.get("loss_limit_usd", 500)) - reserved
+        want = float(o["size_value"]) * a.limit * 100 if o["size_type"] == "qty" else float(o["size_value"])
+        single = LIVE.get("max_single_order_pct", 0.30) * cap
+        # size like the paper tracker: premium within the ask, the floor and the single-order cap; fees only have to fit above the floor
+        qty = int(min(want, avail, single) // (a.limit * 100))
+        while qty > 0 and qty * (a.limit * 100 + fee) > avail + 1e-9:
+            qty -= 1
+        if qty < 1:
+            refuse(f"loss budget left (${max(avail, 0):,.2f} above the floor) buys no contract at {a.limit}")
+        usd = round(qty * a.limit * 100, 2)
+        tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
+                          "side": side, "usd": f"{usd:.2f}", "qty": str(qty), "status": "approved", "reason": ""})
+        print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
+                          "side": "buy_to_open", "contracts": qty, "order_type": "limit", "limit_price": a.limit, "premium_usd": usd,
+                          "budget_left_after": round(avail - usd - qty * fee, 2), "stopped": halted}, indent=1))
+        return
+    if side == "buy":
+        if halted:
+            refuse(f"LOSS LIMIT hit (experiment down ${loss:,.2f}): no new buys; sell everything to cash. Owner re-arms after talking")
+        want = float(o["size_value"]) if o["size_type"] == "usd" else (float(o["size_value"]) * ref if ref else None)
+        if want is None:
+            refuse("a quantity-sized buy needs --ref-price")
+        usd = min(want, cap - st["deployed"], LIVE.get("max_single_order_pct", 0.30) * cap)
+        if tk in set(LIVE.get("leveraged_etfs", [])):
+            usd = min(usd, LIVE.get("max_leveraged_each_pct", 0.15) * cap - st["pos"].get(tk, {"cost": 0.0})["cost"])
+        usd = math.floor(usd * 100) / 100
+        if usd < T.CFG["min_order_usd"]:
+            refuse(f"no room under the real-capital caps (deployed ${st['deployed']:.2f} of ${cap:.2f})")
+        if abs(usd - want) >= 0.01:
+            note = f"reduced from ${want:.2f} by the real-money caps"
+    else:
+        held = st["pos"].get(tk, {"qty": 0.0})["qty"]
+        if held <= 1e-9:
+            refuse(f"the live ledger holds no {tk} to sell (no shorting)")
+        kind = o["size_type"]
+        if opt:
+            qty = held if (halted or kind == "all") else (min(int(float(o["size_value"])), held) if kind == "qty"
+                                                           else max(1, int(held * float(o["size_value"]) / 100)))
+        elif halted or kind == "all":
+            qty = held
+        elif kind == "pct":
+            qty = held * float(o["size_value"]) / 100
+        elif kind == "qty":
+            qty = min(float(o["size_value"]), held)
+        else:
+            if not ref:
+                refuse("a dollar-sized sell needs --ref-price")
+            qty = min(float(o["size_value"]) / ref, held)
+        qty = qty if opt else round(qty, 6)
+    tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
+                      "side": side, "usd": f"{usd:.2f}" if usd else "", "qty": f"{qty:.6f}" if qty else "",
+                      "status": "approved", "reason": ""})
+    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
+                      "side": "sell_to_close" if opt else side, "order_type": "limit" if (opt and a.limit) else "market",
+                      "limit_price": a.limit if opt else None, "notional_usd": usd,
+                      ("contracts" if opt else "shares"): qty, "sell_all": bool(side == "sell" and (halted or o["size_type"] == "all")),
+                      "stopped": halted, "note": note}, indent=1))
+
+
+def cmd_check(a):
+    now = T.now_et()
+    day = now.date().isoformat()
+    if not LIVE.get("enabled"):
+        print("live mode disabled: nothing to check")
+        return
+    st = live_state()
+    halted, eq, loss = trip_if_breached(st, day, parse_marks(a.marks))
+    print(f"experiment equity ${eq:,.2f} (cap ${LIVE['capital_cap_usd']:,.2f}); P/L ${-loss:+,.2f}; loss limit ${LIVE.get('loss_limit_usd', 500):,.0f}")
+    if not halted:
+        print("STATE: OK")
+        return
+    print("STATE: STOPPED. The loss limit was hit. No new buys. Sell everything to cash, then halt until the owner says otherwise.")
+    if st["pos"]:
+        print("FLATTEN REQUIRED, for each position create a confirmed sell and run it through the gate:")
+        for t, p in sorted(st["pos"].items()):
+            print(f"  tracker.py order add --ticker {t} --side sell --all --tier A --thesis 'LOSS LIMIT flatten' --confirm   # {p['qty']:.4f} sh")
+        sys.exit(3)
+    if not KILL.exists():
+        KILL.write_text(f"{now.isoformat(timespec='seconds')} loss limit hit and flattened; halted until the owner re-arms\n")
+        print("Flat. KILL_SWITCH created; commit and push it, tell the owner, and stop.")
+    sys.exit(3)
+
+
+RESTING = "resting GTC take-profit"
+
+
+def is_resting(t):
+    return t["reason"].startswith(RESTING) or t.get("usd", "") == "resting"
+
+
+def cmd_resting(a):
+    """A resting GTC sell-to-close limit at a take-profit level for contracts we hold (owner, 2026-10-26). It only reduces risk:
+    a sell of held contracts, priced at least `min_multiple` x the average cost, never able to fill on the day of a buy."""
+    now = T.now_et()
+    day = now.date().isoformat()
+    tp = T.STRAT.get("take_profit_resting", {})
+    if not LIVE.get("enabled"):
+        refuse("live mode is not enabled in config.json (live.enabled is false)")
+    if KILL.exists():
+        refuse("KILL_SWITCH file is present: all real orders are halted until the owner removes it")
+    if not tp.get("enabled"):
+        refuse("resting take-profits are switched off (strategy.take_profit_resting.enabled)")
+    tk = a.ticker.upper()
+    if not T.is_option(tk):
+        refuse("resting take-profits are for option positions only")
+    st = live_state()
+    p = st["pos"].get(tk)
+    if not p:
+        refuse(f"the live ledger holds no {tk}")
+    resting = sum(float(t["qty"] or 0) for t in tickets() if t["ticker"] == tk and t["status"] in ("approved", "placed") and is_resting(t))
+    if a.qty < 1 or a.qty != int(a.qty) or a.qty > p["qty"] - resting + 1e-9:
+        refuse(f"{a.qty:g} contracts is not available: {p['qty']:g} held, {resting:g} already resting")
+    avg = p["cost"] / p["qty"] / T.mult(tk)
+    floor = round(avg * tp.get("min_multiple", 1.4), 2)
+    if a.limit < floor:
+        refuse(f"limit {a.limit} is below {tp.get('min_multiple', 1.4)}x the average cost {avg:.4f} ({floor}): a resting order may only take profit")
+    tick = a.tick if a.tick else (0.05 if a.limit >= 3 else 0.01)
+    if abs(round(a.limit / tick) * tick - a.limit) > 1e-9:
+        refuse(f"limit {a.limit} is not on the ${tick:.2f} tick")
+    bought_today = any(r["ticker"] == tk and r["side"] == "buy" for r in st["per_day"].get(day, []))
+    if bought_today and now.time() < hhmm("16:00"):
+        refuse(f"{tk} was bought today: place the take-profit after the 16:00 close so it cannot fill today (no same-day round trips)")
+    tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": f"TP-{tk}", "ticker": tk, "side": "sell",
+                      "usd": "resting", "qty": str(int(a.qty)), "status": "approved", "reason": f"{RESTING} @ {a.limit}"})
+    print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "ticker": tk, "side": "sell_to_close",
+                      "contracts": int(a.qty), "order_type": "limit", "limit_price": a.limit, "time_in_force": "gtc",
+                      "avg_cost": round(avg, 4), "multiple": round(a.limit / avg, 3)}, indent=1))
+
+
+def cmd_placed(a):
+    r = set_ticket(a.ticket, status="placed", reason=f"broker order {a.broker_order_id}")
+    print(f"ticket {r['ticket']} marked placed")
+
+
+def cmd_record(a):
+    now = T.now_et()
+    tk = next((t for t in tickets() if t["ticket"] == a.ticket), None)
+    if tk is None or tk["status"] not in ("approved", "placed"):
+        sys.exit(f"ticket {a.ticket} is not open")
+    rows = T.read_csv(LIVE_LEDGER)
+    rows.append({"id": f"L{len(rows) + 1:03d}", "ts_et": now.isoformat(timespec="seconds"), "date": a.date or now.date().isoformat(),
+                 "ticker": tk["ticker"], "side": tk["side"], "qty": f"{a.qty:.6f}", "avg_price": a.avg_price,
+                 "notional": round(a.qty * a.avg_price * T.mult(tk["ticker"]), 2), "fees": a.fees, "order_id": tk["order_id"], "ticket": a.ticket,
+                 "broker_order_id": a.broker_order_id or "", "note": a.note or ""})
+    T.write_csv(LIVE_LEDGER, LEDGER_COLS, rows)
+    set_ticket(a.ticket, status="recorded")
+    print(f"recorded {rows[-1]['id']}: {tk['side']} {a.qty} {tk['ticker']} @ {a.avg_price}")
+
+
+def cmd_fail(a):
+    set_ticket(a.ticket, status="failed", reason=a.reason)
+    print(f"ticket {a.ticket} marked failed: {a.reason}")
+
+
+def cmd_kill(a):
+    KILL.write_text(f"{T.now_et().isoformat(timespec='seconds')} {a.reason}\n")
+    print(f"KILL_SWITCH created: {a.reason}. All real orders are now refused. Commit and push it. Only the owner removes it.")
+
+
+def cmd_status(a):
+    now = T.now_et()
+    day = now.date().isoformat()
+    st = live_state()
+    cap = LIVE.get("capital_cap_usd", 0)
+    print(f"live mode:        {'ENABLED' if LIVE.get('enabled') else 'disabled'}")
+    print(f"kill switch:      {'PRESENT (all real orders refused)' if KILL.exists() else 'absent'}")
+    print(f"loss-limit stop:  {'STOPPED' if stopped() else 'not tripped'} (limit ${LIVE.get('loss_limit_usd', 500):,.0f})")
+    print(f"real capital cap: ${cap:,.2f}   deployed (cost): ${st['deployed']:,.2f}   realized: ${st['realized']:+,.2f}")
+    if LIVE.get("enabled"):
+        print(f"experiment equity (last known prices): ${experiment_equity(st, day):,.2f}")
+    print(f"real fills today: {len(st['per_day'].get(day, []))} of {T.CFG['max_trades_per_day']}")
+    tx = T.tax_memo([{"date": r["date"], "side": r["side"], "ticker": r["ticker"], "qty": r["qty"],
+                      "price": r["avg_price"], "fees": r["fees"]} for r in T.read_csv(LIVE_LEDGER)])
+    print(f"tax memo (real fills, this year): short-term ${tx['short_term']:+,.2f}, long-term ${tx['long_term']:+,.2f}, "
+          f"possible wash sales {len(tx['wash'])}")
+    for w in tx["wash"]:
+        print(f"  WASH? {w['sale']} {w['ticker']} loss ${w['loss']:,.2f} -> {', '.join(w['replacements'])}")
+    for t, p in sorted(st["pos"].items()):
+        print(f"  {t:6} {p['qty']:.4f} sh, cost ${p['cost']:,.2f}")
+    rest = [t for t in tickets() if t["status"] == "placed" and is_resting(t)]
+    for t in rest:
+        print(f"  RESTING at the broker: {t['ticket']} sell {t['qty']} {t['ticker']} ({t['reason']}); check get_option_orders each run")
+    open_t = [t for t in tickets() if t["status"] in ("approved", "placed") and not (t["status"] == "placed" and is_resting(t))]
+    if open_t:
+        print("OPEN TICKETS (approved or placed but not recorded; reconcile with the broker before anything else):")
+        for t in open_t:
+            print(f"  {t['ticket']} {t['status']} {t['side']} {t['ticker']} order {t['order_id']}")
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = p.add_subparsers(dest="cmd", required=True)
+    g = sub.add_parser("gate")
+    g.add_argument("--order", required=True)
+    g.add_argument("--ref-price", type=float)
+    g.add_argument("--marks", help="fresh prices for held tickers, e.g. XLE=68.1,GUSH=24.9")
+    g.add_argument("--limit", type=float, help="option orders: per-share limit price from the broker's live quote")
+    g.add_argument("--tick", type=float, help="option orders: the contract's tick (min_ticks from get_option_instruments)")
+    g.set_defaults(fn=cmd_gate)
+    c = sub.add_parser("check")
+    c.add_argument("--marks")
+    c.set_defaults(fn=cmd_check)
+    pl = sub.add_parser("placed")
+    pl.add_argument("--ticket", required=True)
+    pl.add_argument("--broker-order-id", required=True)
+    pl.set_defaults(fn=cmd_placed)
+    r = sub.add_parser("record")
+    r.add_argument("--ticket", required=True)
+    r.add_argument("--qty", type=float, required=True)
+    r.add_argument("--avg-price", type=float, required=True)
+    r.add_argument("--fees", type=float, default=0.0)
+    r.add_argument("--broker-order-id")
+    r.add_argument("--note")
+    r.add_argument("--date", help="the execution date at the broker, when it was not today (a resting order that filled earlier)")
+    r.set_defaults(fn=cmd_record)
+    rs = sub.add_parser("resting", help="approve a resting GTC take-profit sell for held contracts")
+    rs.add_argument("--ticker", required=True)
+    rs.add_argument("--qty", type=float, required=True)
+    rs.add_argument("--limit", type=float, required=True)
+    rs.add_argument("--tick", type=float)
+    rs.set_defaults(fn=cmd_resting)
+    f = sub.add_parser("fail")
+    f.add_argument("--ticket", required=True)
+    f.add_argument("--reason", required=True)
+    f.set_defaults(fn=cmd_fail)
+    k = sub.add_parser("kill")
+    k.add_argument("--reason", required=True)
+    k.set_defaults(fn=cmd_kill)
+    s = sub.add_parser("status")
+    s.set_defaults(fn=cmd_status)
+    a = p.parse_args()
+    a.fn(a)
+
+
+if __name__ == "__main__":
+    main()
