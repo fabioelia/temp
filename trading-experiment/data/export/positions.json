@@ -1,15 +1,1 @@
-[
- {
-  "ticker": "SPY261204C00780000",
-  "qty": 1.0,
-  "avg_cost": 6.8204,
-  "last": 6.69,
-  "last_date": "2026-11-04",
-  "value": 669.0,
-  "unrealized": -13.04,
-  "unrealized_pct": -0.0191,
-  "stop": 3.41,
-  "target": null,
-  "opened": "2026-11-04"
- }
-]
+[]

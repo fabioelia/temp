@@ -825,3 +825,22 @@ re-plans with the personas and a red-team.
 * Macro's USO 153C did not fire (ask 5.10 > 4.10).
 * Momentum's QQQ 715C shadow is past its -50% level (2.56/2.64). Its 200-day exit is checked on the close.
 **Dashboard (Run A):** orders refreshed (2e14e92e; the old 24b9f795 was deleted).
+
+## 2026-11-05 (Thu) Post-close (Run B, 17:14 EST)
+**Booked:**
+* Paper T004 sold the call at the close, stamped 1.31, against a real 1.46.
+* **Paper $1,368.84 (-31.6%); real $1,384.84** (Robinhood $1,384.82, flat, no open orders; reconciled).
+* **SPY buy-and-hold $1,911.68** (SPY 733.00, -4.4%), so we trail SPY by $527 (27.6 points). $2,200 now needs +59% in 9 sessions.
+* `validate` OK; `live.py check` OK. No buy filled today, so there is no resting take-profit to place.
+**Close:**
+* QQQ -6.5%, NVDA -9.3%, AMD 404.40 (-17%), META -4.0%, MSFT -3.6%.
+* ^VIX 28.18 (+70%), with VIX9D 32.66 above VIX3M 25.55 (inverted).
+* CL=F 91.20 (+3.5%) after Iranian claims of tanker fires in Hormuz.
+* QCOM closed 156.75 (-9.5%). It fell through its C1 line only after the 14:43 check, so the rule rightly did not trade it.
+**What went wrong with Shot 2, for the Sunday review:**
+* The bet was a disclosed variance bet: the model gave a 44% chance of a stop.
+* A single -4.4% session took the call from 6.69 to about 1.3-1.5. The -50% stop, checked once a day, could not limit that gap. It realized -79%, not -50%,
+  as the playbook warned ("a gap can fill far lower").
+* The model's P(call -75%+) with the stop was 1.9%, and it happened on day 1. That is one draw, not a refutation, but the review should check how goal_odds
+  treats one-day gaps at a 16.6 ^VIX entry.
+**Research:** four personas fired (macro, momentum, catalyst, options-vol), brief at research/2026-11-05/brief.md.

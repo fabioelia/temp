@@ -37,5 +37,18 @@
   "slippage_bps": 0.0,
   "thesis": "Goal-budget bet (playbook, pre-registered 11/02 under the owner's autonomy grant), replacing O013. NOT AN EDGE: a choice of variance toward the owner's goals at a flat model EV. Size: 1 contract, about $673 (35% of equity); Kelly does not apply (no tested edge), so the size is the rule's one contract and $850 ceiling. Contract: the in-band call nearest delta 0.375 at the 14:44 check (Robinhood 19:45 UTC: 6.70/6.73, delta 0.369, IV 12.3%, OI 2149, spread 0.4%; Cboe 6.77/6.82). Gates, all PASS: goal_odds.py at the live quote with the -50% stop gives P($2,200) 44.7% (42.6-47.0) >= 35% and EV 1.020 (0.991-1.050) >= 0.93; P(ahead of SPY) 46.3% vs 4.4% in cash; P(below $1,600) 44.0%; no halt (^GSPC 7,703.87, +1.8%); ^VIX 16.79; risk red-team MODIFY (buy as specified; set the take-profit from actual cash after the fill). Exits: sell at the first 14:43 check with equity >= $2,200, via a resting GTC sell placed in Run B at ceil((2200 - cash after the buy, fees included) / 100) per share (about 9.56, 1.42x cost); the -50% stop at a 14:43 check (premium at or below half the fill); otherwise sell at the 11/18 14:43 check. No second contract, no averaging down.",
   "price_source": "decision-time quote 2026-11-04T14:47-05:00 (cboe delayed chain (single source) 2026-11-04T14:47 ET)"
+ },
+ {
+  "id": "T004",
+  "date": "2026-11-05",
+  "side": "sell",
+  "ticker": "SPY261204C00780000",
+  "qty": 1.0,
+  "fill_price": 1.31,
+  "gross": 131.0,
+  "fees": 0.04,
+  "slippage_bps": 0.0,
+  "thesis": "Stop exit (playbook Open shots, Shot 2 b): the -50% stop at a 14:43 check. Live Robinhood bid 1.43 / ask 1.49 at 19:44 UTC, at or below 3.39 (half of the 6.79 fill). SPY 738.70 (-3.7%) in an AI-stock rout (Reuters, Bloomberg; ^VIX 26.32, +58%). Pre-registered; no discretion. The resting 9.62 GTC (K007) was cancelled first.",
+  "price_source": "decision-time quote 2026-11-05T14:44-05:00 (cboe delayed chain (single source) 2026-11-05T14:44 ET)"
  }
 ]
