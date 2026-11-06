@@ -864,3 +864,9 @@ re-plans with the personas and a red-team.
 full odds for the owner. Until then the account stays in cash.
 **Proposals for Fri 11/6: none** (no drafts, so no red-team).
 **Dashboard (11/05):** five files refreshed (summary c0b8111b, equity 04ef81b8, positions 6cb17db9, orders 59ebbfc5, trades 502576f3); the old files were deleted.
+
+## 2026-11-06 (Fri) Pre-open (09:19 EST)
+**News:** October payrolls rose 165K against 59K expected, and unemployment fell to 4.1% (Barron's, Morningstar, 08:48-09:00 ET). Yields rose (^TNX 4.864); a
+strong print raises the chance of a Fed hike. Futures: ES=F 7,388.00 (flat), NQ=F 27,113.25 (+1.4%; chips stabilizing, Reuters). ^VIX 26.71; CL=F 90.99, after
+new IRGC claims of tankers hit by mines near Hormuz (unverified). No Anthropic filing in the last 2 days.
+**Plan unchanged:** all cash, no pending proposals. Run A only checks the idea log. The Sunday review decides on any second variance bet.
