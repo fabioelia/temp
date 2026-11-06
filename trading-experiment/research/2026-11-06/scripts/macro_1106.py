@@ -34,7 +34,8 @@ def fetch(raw):
     urls = {f'y_{s}.json': f'https://query1.finance.yahoo.com/v8/finance/chart/{s}?range=2y&interval=1d' for s in YSYM}
     urls.update({f'f_{s}.csv': f'https://fred.stlouisfed.org/graph/fredgraph.csv?id={s}&cosd=2025-09-01' for s in FRED})
     for fn, u in urls.items():
-        req = urllib.request.Request(u, headers={'User-Agent': UA})
+        # FRED drops connections from browser-like user agents; it answers a curl-style one
+        req = urllib.request.Request(u, headers={'User-Agent': 'curl/8.5.0' if 'fred.' in u else UA})
         for i in range(3):  # FRED sometimes times out; retry
             try:
                 with urllib.request.urlopen(req, timeout=60) as r:
