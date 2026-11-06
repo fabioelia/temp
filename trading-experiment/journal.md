@@ -870,3 +870,12 @@ full odds for the owner. Until then the account stays in cash.
 strong print raises the chance of a Fed hike. Futures: ES=F 7,388.00 (flat), NQ=F 27,113.25 (+1.4%; chips stabilizing, Reuters). ^VIX 26.71; CL=F 90.99, after
 new IRGC claims of tankers hit by mines near Hormuz (unverified). No Anthropic filing in the last 2 days.
 **Plan unchanged:** all cash, no pending proposals. Run A only checks the idea log. The Sunday review decides on any second variance bet.
+
+## 2026-11-06 (Fri) Pre-close (14:44 EST)
+**Driver:** the rout paused after a strong jobs report (payrolls +165K against 59K expected): "US Stock Rout Pauses as Dip Buyers Offer Support"
+(Bloomberg 14:31 ET). SPY 738.12 (+0.7%), QQQ 658.90 (+1.8%), NVDA 187.46 (+3.2%) (Yahoo live, single source); ^VIX 24.80 (from 28.18).
+**Orders:** none pending, none added, nothing to confirm. All cash ($1,384.84 real). No open position, so there are no exits to check.
+**Idea watch (research/2026-11-06/ideas-fired.csv):**
+* Macro's SPY 11/20 722P shadow fired at 6.89 (trigger: ask <= 10.82). It was not taken (no edge).
+* The SPY 11/20 745C dip-buy shadow (macro and momentum) did not fire: ask 8.57 > 8.44.
+* The options-vol 12/04 and 12/18 750C references have no Friday trigger. For the record, they are at 9.85/9.92 and 13.14/13.24.

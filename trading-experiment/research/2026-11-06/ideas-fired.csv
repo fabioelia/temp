@@ -1,0 +1,2 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-06,macro,SPY261120P00722000,6.89,"Cboe delayed chain 14:44 ET (bid 6.82, delta -0.30, IV 24.0%); trigger ask <= 10.82 at the Fri 14:43 check fired; shadow only, not taken (no edge: 0.92 per $ in macro_1105.py)"
