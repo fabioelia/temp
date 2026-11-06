@@ -39,6 +39,7 @@ your own outputs, and **never run any git command, even read-only ones**. Finish
 * **Exits for anything else:** decided at entry. 1 contract sells all at +50%; 2+ sell half at +50% and the rest at +100%, resting GTC from the evening of the buy; stop at
   an underlying level, with the -50% backstop.
 * **Anthropic conflict guardrail:** every persona is Claude, built by Anthropic, so there is no Anthropic or ANT-thesis idea. GOOGL, AMZN, MSFT, AVGO and NVDA ideas
+  use public facts only, and the link is disclosed. (Continuation restored 11/06; it was cut off when the rules section was copied.)
 * **Positions:** at most 4 positions, never average down, no re-entry of the goal-budget bet without a new pre-registered rule.
 
 ## Today

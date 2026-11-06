@@ -249,6 +249,10 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     - **No second goal-budget bet on Friday.** Calls entered after a -4% day pay 0.75-0.80 per $ (macro_1105.py, momentum_1105.py), below the 0.93
       gate. The 12/04 band fails OI, and the bet would be about 70% of equity. The Sunday review decides on any pre-registered second bet.
 
+  - **Update, Fri 11/6 Run B (research/2026-11-06/):** all four personas say no trade for Monday. CSCO C1 is conditional for Fri 11/13 (Kelly fits only at
+    IV <= ~38%). A December hike is priced at 77%; CPI is Tue 11/10. A second variance bet would now give about 22% for $2,200 and 42%+ below $1,000, and
+    only on a 12/18 expiry that breaks the 5-week rule. The Sunday review decides.
+
 * **Goal-budget bet, decided by Claude under the owner's autonomy grant (2026-11-02: "You dont need my approval to do anything work autonomously").**
   The owner's goals are $2,200 and beating SPY; they removed the buy caps and gave the whole $2,000. With no evidence-backed edge available, a cash finish beats SPY
   only about 15% of the time and reaches $2,200 never.
@@ -317,6 +321,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-06 (Run B): no proposals for Monday; CSCO C1 conditional for 11/13; second-bet odds handed to the Sunday review.
 * 2026-11-05: the goal call was stopped out (-$533); no second bet on Friday (conditional EV 0.75-0.80 per $ after -4% days); decided Sunday.
 * 2026-11-04: the goal-budget call was bought (SPY 12/04 780C at 6.79 real; GTC at 9.62; stop 3.39). O016 (QCOM C1; a 4.40 cap; equity >= $2,200 closes both) is conditional for 11/5. The C1 size
   gate uses the 15-DTE Kelly table when it is lower than sizing.py's 25-DTE figure.

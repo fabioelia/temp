@@ -888,3 +888,20 @@ new IRGC claims of tankers hit by mines near Hormuz (unverified). No Anthropic f
 **Close:** QQQ +1.4%, NVDA +2.8%, MSFT -1.0%; ^VIX 25.64, with VIX9D 27.18 > VIX3M 24.60 (still inverted); ^TNX 4.86; CL=F 90.34.
 **Research:** four personas fired with shorter briefs (research/2026-11-06/brief.md). The Sunday review (all six) does the real re-plan, including any
 second variance bet.
+**Personas (research/2026-11-06/): all four say no trade for Mon 11/9.**
+* **macro:** a December Fed hike is priced at 77% (Kalshi 77.5%, Polymarket 76.5%, ZQZ26 77%, up from 66%). CPI is Tue 11/10 at 08:30 ET (two calendars
+  citing BLS). AI regulation is plans and headlines only; nothing can pass by 11/18. HY OAS is at a 1-year high (3.48%), but HYG held. The SPY 12/4 720P is
+  shadow only (0.92 per $).
+* **momentum:** SPY is 0.7% above its 200-day (730.59 Monday) and 4.0% under its 50-day; ^NDX is -13.6% from its record. After a -4% day followed by a
+  0-1% day, calls priced at 0.18 per $ (n 2) and 0.45 on -3.5% days (n 7): Kelly $0. The SPY 11/30 750C is shadow only.
+* **catalyst:** no sample name reports on Monday. **CSCO reports Thu 11/12 after the close.** The C1 setup for Fri 11/13 is conditional (the 12/18 put is the
+  only expiry with OI >= 1000; Kelly fits only at IV <= ~38%, against a ~49% IV gate). NVDA 11/18: Kelly blocks it. SEC: MSFT ($25B), META ($15B) and GOOGL
+  (EUR 6B) raised debt.
+* **options-vol (input for Sunday):** only the 12/18 expiry has in-band OI >= 1000, and it breaks the 5-week rule. SPY 12/18 755C at 10.30/10.44: P($2,200)
+  22.0%, P(beat SPY) 24.8%, P(below $1,000) 42.1%, EV 1.015 with the stop (raw-path EV 0.953). An intraday-stop bound (ov_1106.py) raises P(below $1,000) to
+  46-55% and cuts EV to 0.956. goal_odds cannot model intraday stops.
+**Proposals for Mon 11/9: none** (no drafts, so no red-team). The Sunday review decides the CSCO C1 setup and any second variance bet.
+**Brief fix:** the Anthropic guardrail's second line ("use public facts only, and the link is disclosed") had been cut off in the 11/04-11/06 briefs when I
+copied the rules section. It is restored in those files; no persona proposed an Anthropic-linked idea in that period. The Sunday brief is written from
+RULES.md and playbook.md directly.
+**Dashboard (11/06):** five files refreshed (summary 2d868e64, equity 26420ce2, positions 700ea29e, orders 2cc8b5ae, trades 8a502bf8); the old files were deleted.
