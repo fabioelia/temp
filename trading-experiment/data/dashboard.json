@@ -1,5 +1,5 @@
 {
-  "asof": "2026-11-05",
+  "asof": "2026-11-06",
   "start_cash": 2000.0,
   "goal": 2200.0,
   "end_date": "2026-11-18",
@@ -11,9 +11,9 @@
   "slippage": 49.0,
   "realized": -631.16,
   "progress_to_goal": -3.1558000000000006,
-  "trading_days_left": 9,
-  "required_daily_return": 0.05413605013459177,
-  "bench_value": 1911.68,
+  "trading_days_left": 8,
+  "required_daily_return": 0.061105948455644876,
+  "bench_value": 1917.66,
   "benchmark": "SPY",
   "series": [
     {
@@ -90,6 +90,11 @@
       "date": "2026-11-05",
       "equity": 1368.84,
       "bench": 1911.68
+    },
+    {
+      "date": "2026-11-06",
+      "equity": 1368.84,
+      "bench": 1917.66
     }
   ],
   "positions": [],

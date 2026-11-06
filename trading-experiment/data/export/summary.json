@@ -1,6 +1,6 @@
 [
  {
-  "asof": "2026-11-05",
+  "asof": "2026-11-06",
   "equity": 1368.84,
   "pnl": -631.16,
   "pnl_pct": -0.3156,
@@ -11,10 +11,10 @@
   "fees": 0.16,
   "slippage": 49.0,
   "realized": -631.16,
-  "benchmark_value": 1911.68,
-  "benchmark_pnl_pct": -0.0442,
-  "trading_days_left": 9,
-  "required_daily_return": 0.0541,
+  "benchmark_value": 1917.66,
+  "benchmark_pnl_pct": -0.0412,
+  "trading_days_left": 8,
+  "required_daily_return": 0.0611,
   "fills": 4,
   "verified_fills": 4,
   "closed_trades": 2,

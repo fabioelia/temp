@@ -879,3 +879,12 @@ new IRGC claims of tankers hit by mines near Hormuz (unverified). No Anthropic f
 * Macro's SPY 11/20 722P shadow fired at 6.89 (trigger: ask <= 10.82). It was not taken (no edge).
 * The SPY 11/20 745C dip-buy shadow (macro and momentum) did not fire: ask 8.57 > 8.44.
 * The options-vol 12/04 and 12/18 750C references have no Friday trigger. For the record, they are at 9.85/9.92 and 13.14/13.24.
+
+## 2026-11-06 (Fri) Post-close (Run B, 17:15 EST)
+**Booked:** no fills, all cash.
+* **Real $1,384.84** (Robinhood $1,384.82, flat, no orders; reconciled). **Paper $1,368.84 (-31.6%).**
+* **SPY buy-and-hold $1,917.66** (SPY 735.29, +0.3%), so we trail SPY by $533 (27.8 points). $2,200 needs +59% in 8 sessions.
+* `validate` OK; `live.py check` OK. No resting orders.
+**Close:** QQQ +1.4%, NVDA +2.8%, MSFT -1.0%; ^VIX 25.64, with VIX9D 27.18 > VIX3M 24.60 (still inverted); ^TNX 4.86; CL=F 90.34.
+**Research:** four personas fired with shorter briefs (research/2026-11-06/brief.md). The Sunday review (all six) does the real re-plan, including any
+second variance bet.
