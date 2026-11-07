@@ -52,8 +52,9 @@ python3 trading-experiment/live.py status          # live mode, kill switch, los
 If `KILL_SWITCH` exists, make no real orders at all and say so. If `live.py status` shows open tickets, reconcile them with the broker before anything else.
 Live mode is ENABLED: confirm the Robinhood tools are loaded (ToolSearch "Robinhood get_option_quotes"). If they are missing, make no live orders this run, keep the paper
 ledger going, and tell the owner in the run's message. Use only the agent account (nickname MCP, ending 5318) and only the tools listed in `data/live_tools.md`.
-Read `RULES.md`, `playbook.md`, the last entries of `journal.md`. Weekend or NYSE holiday: Runs A and B do nothing (say so in one line). After `end_date` in `config.json`: write the
-**final report** (last section) and disable the schedule.
+Read `RULES.md`, `playbook.md`, the last entries of `journal.md`. Weekend or NYSE holiday: Runs A and B do nothing (say so in one line). Since 2026-11-07 there is no `end_date`
+(the owner retired the date and amount target: "just focus on making money"), so the schedule runs until the owner stops it; the final report (last
+section) is written only if the owner ends the experiment.
 
 ---
 
@@ -158,6 +159,14 @@ happens: nothing new fills.
 * Re-plan the week; cancel stale proposals and write Monday's proposals (created on the Sunday date). Monday's Run A makes the real decision.
 * Update `playbook.md` with a dated changelog line. Do not re-trade history: the ledger is append-only; fixes go in the journal as dated notes.
 
+## Rule evolution (every Sunday review, and whenever a rule causes harm; owner 2026-11-07: "evolve the rules as we learn")
+* After the retrospective, list every rule that cost money, blocked a good trade, or rests on an untested assumption. For each, write a proposal
+  (rule, change, evidence from a committed script or a cited study, sample size) and test it before the vote.
+* A fresh risk agent red-teams the proposals; adopted changes get a dated changelog line in `playbook.md`, the matching edit in `RULES.md` /
+  `LIVE_MODE.md` / `config.json` / code (with a test), and an update of `data/export/rules.json` plus the dashboard's `rules` dataset (`DASHBOARD.md`).
+* New strategies enter the same way: a pre-registered claim, a test, a verdict (CONFIRMED / WEAK / REJECTED), and only CONFIRMED ones trade, sized by the
+  sizing method. The owner's fixed limits (the agent account's money, no transfers, no margin borrowing, the kill switch) are never changed by this process.
+
 ## Weekly retrospective (every Sunday, before the re-plan)
 Goal: learn where, when and why things went well or badly, and evolve the process. Write `trading-experiment/reviews/<ISO year>-W<week>.md` from `reviews/TEMPLATE.md`.
 1. **Facts, generated, not remembered:** `python3 trading-experiment/review.py week --end <Friday> --out trading-experiment/reviews/<year>-W<week>.md`, then write the
@@ -175,7 +184,7 @@ Goal: learn where, when and why things went well or badly, and evolve the proces
 7. Have a fresh `risk` agent red-team the draft review (what did we credit to skill that was luck, or blame on luck that was process; what change is missing), then finish it.
 8. Summarize the review in `journal.md` (five lines) and in the run's message to the owner: what went well, what went badly, the root causes, the changes.
 
-## Final report (first run after `end_date`)
+## Final report (only when the owner ends the experiment; there is no `end_date` since 2026-11-07)
 Write `FINAL_REPORT.md`: result against the $2,200 goal (and the original $4,000), against SPY buy-and-hold, win rate, payoff, max drawdown, fees plus slippage, how many fills used the cross-checked feed,
 the best and worst decisions, and what the experiment can and cannot show about AI trading skill. Commit, push, then use `list_triggers` to find all three "AI Trading Challenge"
 scheduled tasks (all of them: pre-open, pre-close, post-close, Sunday) and disable them with `update_trigger enabled=false`.

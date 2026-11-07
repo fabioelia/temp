@@ -11,13 +11,13 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 ## The limits (enforced in code by `live.py`, not just by intention)
 | Limit | Value |
 |---|---|
-| Real capital at work | **$2,000 at most**, whatever the account holds |
+| Real capital at work | **At most the money in the MCP agent account** (owner 2026-11-07: "At most is the money on the mcp account and no transfers"); the code counts the $2,000 start plus realized P/L, which is the account's balance while nothing is transferred |
 | Loss limit | **Down $2,000** since 2026-10-30 (owner: "Remove caps on place a buy. You have 2 k to work with"; it was $1,000): it now trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH` |
 | Largest single order | no separate cap since 2026-10-30 (owner); the $2,000 capital cap and the cash on hand bind (was 22.5%, $450, from 10/24; 30% before) |
 | Options (current strategy) | buy-to-open / sell-to-close only, whole contracts, **limit orders at the broker's live quote**; premium from any cash on hand, with **no floor** since 2026-10-30 (the whole $2,000 can be lost) |
 | Stock / ETF buys | switched off by the options strategy (were: 30% per order, leveraged ETFs 15%) |
 | Leveraged / inverse ETF | 15% of the cap ($300) per name |
-| Fills per day | 4, no same-day round trips, no shorting |
+| Fills per day | no cap since 2026-11-07 (owner); no same-day round trips (pattern-day-trader guard: limited-margin account under $25k), no shorting |
 | Orders allowed | only those the pre-close run confirmed that day, only through a `live.py gate` ticket, before 15:50 ET (flatten sells until 15:58) |
 | Duplicates | one ticket per order id: a crashed or repeated run cannot place the same order twice |
 

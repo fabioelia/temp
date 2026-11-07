@@ -2,7 +2,7 @@
 
 Nothing here is financial advice.
 
-**Real money through live mode, with the paper ledger as the shadow model.** Live mode has been ENABLED since 2026-10-18 (`LIVE_MODE.md`). The owner authorized real
+**Real money through live mode, with the paper ledger as the shadow model.** (Mandate and rule-evolution process: next section.) Live mode has been ENABLED since 2026-10-18 (`LIVE_MODE.md`). The owner authorized real
 orders for up to $2,000; the loss limit is the full $2,000 since 2026-10-30 (it was $500, then $1,000). Every real order must pass `live.py gate` (confirmed by the
 pre-close run, capped, ticketed, never duplicated). Outside the gate, a brokerage connector may be used only for read-only quotes and the experiment's own positions.
 Never deposits, withdrawals, transfers or account changes; never selling options to open, multi-leg options or exercise (buying calls/puts is the strategy, below);
@@ -10,17 +10,37 @@ never crypto, margin or shorting; never the owner's other holdings. A `KILL_SWIT
 (Header corrected 2026-11-07: it still said "simulation only" and a $1,000 loss limit. A one-page summary of every rule in force is the dashboard's
 "The rules in force" section, from `data/export/rules.json`.)
 
+## Owner's mandate (2026-11-07) and how the rules evolve
+The owner, 2026-11-07: "Forget about the date target + target amount. Instead just focus on making money instead." "At most is the money on the mcp account
+and no transfers. Ignore fills limit for the day you can do more if needed." "2k budget the rest defined on there is up to u." On the Anthropic guardrail:
+"Absolutely research and if the data recommends moving on these do it." On options-only: "you need to figure out the best option for our targets."
+"I really want you to evolve the rules as we learn and get better and discover new strategies."
+* **Objective:** make money. Grow the agent account with a positive expected return and controlled drawdowns. There is no date or amount target and no end
+  date; SPY buy-and-hold stays as the yardstick the results are reported against, not a target.
+* **The owner's limits (fixed):** at most the money in the MCP agent account (the original $2,000, now its balance); no transfers in or out; no margin borrowing;
+  the agent account only; the kill switch. Everything else in this file is Claude's rulebook and changes as the evidence does.
+* **How a rule changes (the rule-evolution process):**
+  1. A proposal names the rule, the change and the evidence: a committed script or a cited study, tested on data before the decision. Losses and wins
+     from our own trades count as evidence only with their sample size stated.
+  2. A fresh risk red-team reviews it.
+  3. It is adopted at the Sunday review (or sooner if a rule is causing harm now), with a dated changelog line in `playbook.md` and the journal.
+  4. The dashboard's "The rules in force" list (`data/export/rules.json`) is updated in the same run.
+  A rule that keeps failing its own test is retired the same way.
+
 ## Account and goal
 * Start: **$2,000 cash**, Robinhood-style retail account. No margin, no shorting, no crypto, no OTC. Options only as the strategy below allows (buy to open, sell to close; owner's choice 2026-10-17).
-* Window: first fills **Mon 2026-10-19** (close) through **Wed 2026-11-18** (close). 23 sessions; no NYSE holiday inside it.
-* Goal: **$2,200** (+10%) by 11/18, and **beat SPY buy-and-hold** over the same window (owner, 2026-10-24: "Aim for something more reasonable as a target then."; it was
-  $4,000, +100%, until then).
+* Window: first fills **Mon 2026-10-19** (close). **No end date since 2026-11-07** (it was the 11/18 close).
+* Objective since 2026-11-07: **make money** (see the mandate above). Retired: the $2,200 (+10%) goal by 11/18 and the "beat SPY" target (owner, 2026-10-24,
+  had set them; before that $4,000, +100%). SPY buy-and-hold remains the reported yardstick.
 * Primary scoreboard: equity at the final close. Secondary (reported daily): return vs SPY buy-and-hold with the same $2,000,
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
 
 ## Strategy and universe (owner, 2026-10-17: "Options with the $500 budget"; 2026-10-18: "Update the 500 budget to 1k instead"; 2026-10-30: "Remove caps on place a buy. You have 2 k to work with")
-* **Options only, buying only.** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
+* **Instrument choice is Claude's since 2026-11-07** (owner: "you need to figure out the best option for our targets"). The account allows stocks and ETFs
+  (fractional), long options, and at options Level 2 covered calls and cash-secured puts; spreads need Level 3, which only the owner can request. Until the
+  strategy research adopts a change through the process above, the rules below (options buying only) stay in force.
+* **Options only, buying only (current default).** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
 * **The whole $2,000 is the budget (since 2026-10-30, owner).** There is no cash floor and no single-order cap any more: premium may use any cash on hand, up to
   the $2,000 capital cap. Every open option can still expire worthless, so **the whole $2,000 can be lost**. (Before: premium came only from cash above a $1,000
@@ -56,11 +76,13 @@ never crypto, margin or shorting; never the owner's other holdings. A `KILL_SWIT
 5. A proposal is valid for the next session only unless `--gtd` extends it.
 
 ## Trade limits (enforced in code)
-* **Max 4 fills per day** (each buy or sell fill counts as one). Unfilled/skipped orders do not count.
+* **No daily fill cap since 2026-11-07** (owner: "Ignore fills limit for the day you can do more if needed"; it was 4 a day).
+* **Pattern-day-trader guard:** the agent account is *limited margin* with under $25,000, so more than 3 day trades in 5 business days would restrict it for
+  90 days. The code still refuses same-day round trips; a change to allow up to 3 per 5 sessions for risk exits goes through the process above.
 * **No same-day round trips and no second fill in the same ticker on one day.**
 * No shorting (a sell is capped at shares held), cash can never go negative.
 * Sale proceeds may fund a buy at the same close (Robinhood Instant behaviour). The no-round-trip rule keeps this clear of good-faith violations
-  (T+1 settlement; PDT does not apply to this cash-style account).
+  (T+1 settlement). The account is limited margin, so the PDT rule does apply (see above).
 * Trading days are real NYSE sessions only.
 
 ## Costs (all modeled; fills are charged both)
@@ -83,7 +105,7 @@ convexity*: take the asymmetric shots, but cap the damage.
   per position, the regime gate, staging, event exposure, the -15%/-25% drawdown breakers and the ratchet do not apply to option premium.
   - **Removed 2026-10-30 (owner):** the $1,000 floor and loss limit, the 22.5% ($450) single-order cap, and the playbook's buy caps ($250-400 shots, the $1,700
     pause line, the near-goal house-money rule).
-  - **Still in force:** the $2,000 capital cap, 4 fills a day, no same-day round trips, at most 4 positions, never average down, the evidence rules and gates in
+  - **Still in force:** the money in the agent account as the cap (no transfers), no same-day round trips (PDT guard), at most 4 positions, never average down, the evidence rules and gates in
     `playbook.md`, the kill switch and the gate tickets.
   - The live loss-limit stop is set to the full $2,000, so it trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH`.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.

@@ -23,6 +23,7 @@ class Live(unittest.TestCase):
         c["strategy"]["allow_stock_buys"] = True
         c["live"]["loss_limit_usd"] = 500.0  # tests below assume the original $500 limit
         c["live"]["max_single_order_pct"] = 0.3  # and the original 30% single-order cap
+        c["max_trades_per_day"] = 4  # the cap mechanism is tested at the original 4 a day (the owner removed the cap on 2026-11-07)
         p.write_text(json.dumps(c))
 
     def tearDown(self):

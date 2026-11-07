@@ -2,7 +2,18 @@
 
 Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; Sunday review revisions on 2026-10-18). The owner chose options with the loss budget to go after the $4,000 target; on 2026-10-24 the target became $2,200 (+10%) and beating SPY. Version 1 (stocks and ETFs, bounded convexity) is in git history.
 
-## Stance: measured shots toward $2,200 (since 2026-10-24)
+## Stance since 2026-11-07: make money (owner retired the $2,200 / 11/18 target)
+* **Objective:** grow the agent account (now $1,384.84) with a positive expected return and controlled drawdowns, with no date or amount target (RULES.md,
+  "Owner's mandate"). The owner's fixed limits: the money in the MCP account, no transfers, no margin borrowing, the kill switch. Everything else here is Claude's
+  and evolves through the rule-evolution process.
+* **What the evidence says so far (our own reviews):** buying options loses on average (D1, D3 CONFIRMED); the only confirmed option setup (C1 down-gap puts)
+  is about break-even and rare; every popular timing rule tested failed or decayed; the goal-budget variance bet was a deliberate gamble, not an edge. A
+  goal-free "make money" mandate removes the reason to gamble. The research now asks what has a positive expected return for this account: equity
+  exposure (the equity premium) with or without a trend filter, a T-bill ETF for idle cash, Level 2 premium selling (cash-secured puts, covered calls), and
+  long options only where an edge is measured. Until the Sunday 11/8 review adopts a strategy, the account stays in cash and the existing rules apply.
+* **Retired 2026-11-07:** the goal-budget variance bet (it existed only to chase the date target), the goal arithmetic below, and the daily fill cap.
+
+## (Retired 2026-11-07) Stance: measured shots toward $2,200 (since 2026-10-24)
 * **The arithmetic.** From $1,917.92 (10/23) the $2,200 goal needs about +$282, +31% on the $918 budget: one shot that doubles on ~$300, or two that each make
   +50%. Beating SPY needs about +3.3% more than SPY makes from here. Judgment, not a backtest: perhaps 25-35% to reach $2,200, and better than even to finish ahead of
   a losing SPY; the most likely bad outcome is now a few hundred dollars lost, not the whole budget.
@@ -280,9 +291,11 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
 * **Anthropic IPO (S-1 filed 10/26, Nasdaq "ANT"; owner flagged it; `research/2026-10-26/anthropic-s1.md`).** No price range yet; pricing is likely after our window
   or at its edge, so ANT itself is not tradable here. Watch `research.py sec filings 2130357 --days 7` in Run 0 for the S-1/A (price range, September numbers),
   then the roadshow and pricing dates. The filing moved AI names on 10/26 (NVDA, AVGO +2.3-2.4%). **Conflict guardrail:** every persona is Claude, built by
-  Anthropic, so (1) no idea whose thesis is Anthropic or ANT itself; (2) an AMZN/GOOGL/MSFT/AVGO/NVDA idea may use only facts quoted from public filings and news,
-  must pass the consensus check (the "IPO halo" is the consensus trade), and the red-team must say whether the Anthropic link is the thesis; (3) the journal
-  discloses the link on any such trade.
+  Anthropic. **Revised 2026-11-07 (owner: "Absolutely research and if the data recommends moving on these do it"):** (1) an Anthropic-linked idea, ANT
+  itself included once it lists, is allowed when the evidence supports it, through the normal evidence rules; (2) always public information only: Claude has
+  no non-public information about Anthropic and must never claim or use any; (3) the conflict is disclosed in the thesis and the journal; (4) the red-team
+  states whether the thesis leans on optimism about Anthropic, and the consensus check still applies (the "IPO halo" is the consensus trade). (Before: no
+  idea whose thesis was Anthropic or ANT.)
 * **11/9-11/17: the NVDA run-up** (strategy review C2: NVDA's own run-up since 2015 is -0.08%, and calls add nothing over a random call; tie-break only). NVDA reports **after the close on Tue 11/17** (company-verified per Robinhood `get_earnings_results`, checked 2026-10-18; it was wrongly assumed to be
   11/18). A run-up position must be **sold by the 11/17 close**; holding it overnight is a one-day bet on the print scored at the 11/18 close, and needs an explicit journal reason.
 
@@ -321,6 +334,9 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-07 (owner's new mandate): the objective is to make money, with no date or amount target; the cap is the money in the agent account, with no
+  transfers; no daily fill cap; instrument choice delegated to Claude; the Anthropic guardrail is evidence-based (public information only, disclosed); a
+  rule-evolution process is added (RULES.md). The goal-budget bet is retired. Strategy research started for the Sunday 11/8 review.
 * 2026-11-06 (Run B): no proposals for Monday; CSCO C1 conditional for 11/13; second-bet odds handed to the Sunday review.
 * 2026-11-05: the goal call was stopped out (-$533); no second bet on Friday (conditional EV 0.75-0.80 per $ after -4% days); decided Sunday.
 * 2026-11-04: the goal-budget call was bought (SPY 12/04 780C at 6.79 real; GTC at 9.62; stop 3.39). O016 (QCOM C1; a 4.40 cap; equity >= $2,200 closes both) is conditional for 11/5. The C1 size

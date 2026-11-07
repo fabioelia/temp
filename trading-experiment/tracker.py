@@ -729,9 +729,10 @@ def build_dashboard(D):
                           "opened": p["opened"]})
     last = eq_rows[-1] if eq_rows else None
     equity = float(last["equity"]) if last else CFG["starting_cash"]
-    days_left = trading_days_after(D, d(CFG["end_date"]))
-    goal = CFG["goal_equity"]
-    req = (goal / equity) ** (1 / days_left) - 1 if days_left > 0 and equity > 0 else None
+    # goal and end date are optional since 2026-11-07 (owner retired them: "just focus on making money")
+    days_left = trading_days_after(D, d(CFG["end_date"])) if CFG.get("end_date") else None
+    goal = CFG.get("goal_equity")
+    req = (goal / equity) ** (1 / days_left) - 1 if goal and days_left and equity > 0 else None
     series = [{"date": CFG["baseline_date"], "equity": CFG["starting_cash"], "bench": CFG["starting_cash"]}]
     for r in eq_rows:
         series.append({"date": r["date"], "equity": float(r["equity"]),
@@ -739,7 +740,7 @@ def build_dashboard(D):
     return {"asof": day, "start_cash": CFG["starting_cash"], "goal": goal, "end_date": CFG["end_date"],
             "equity": equity, "pnl": equity - CFG["starting_cash"], "pnl_pct": equity / CFG["starting_cash"] - 1,
             "cash": st["cash"], "fees": st["fees"], "slippage": st["slippage"], "realized": st["realized"],
-            "progress_to_goal": (equity - CFG["starting_cash"]) / (goal - CFG["starting_cash"]),
+            "progress_to_goal": (equity - CFG["starting_cash"]) / (goal - CFG["starting_cash"]) if goal else None,
             "trading_days_left": days_left, "required_daily_return": req,
             "bench_value": float(last["bench_value"]) if last and last["bench_value"] else None,
             "benchmark": CFG["benchmark"], "series": series, "positions": positions,
@@ -754,8 +755,9 @@ def export_rows(b):
     """Row-array JSON files for the dashboard artifact (data/export/*.json)."""
     out = DATA / "export"
     out.mkdir(parents=True, exist_ok=True)
-    s, start, goal = b["stats"], CFG["starting_cash"], CFG["goal_equity"]
-    base, end = d(CFG["baseline_date"]), d(CFG["end_date"])
+    s, start, goal = b["stats"], CFG["starting_cash"], CFG.get("goal_equity")
+    base = d(CFG["baseline_date"])
+    end = d(CFG["end_date"]) if CFG.get("end_date") else d(b["asof"])
     n_total = trading_days_after(base, end)
     have = {x["date"]: x for x in b["series"]}
     days, cur = [base], base
@@ -767,11 +769,12 @@ def export_rows(b):
         i = trading_days_after(base, day)
         row = have.get(day.isoformat(), {})
         curve.append({"date": day.isoformat(), "equity": row.get("equity"), "benchmark": row.get("bench"),
-                      "pace": round(start * (goal / start) ** (i / n_total), 2)})
+                      "pace": round(start * (goal / start) ** (i / n_total), 2) if goal and n_total else None})
     spy_pnl = (b["bench_value"] / start - 1) if b["bench_value"] else None
     summary = [{"asof": b["asof"], "equity": round(b["equity"], 2), "pnl": round(b["pnl"], 2),
                 "pnl_pct": round(b["pnl_pct"], 4), "goal": goal, "end_date": b["end_date"],
-                "progress_to_goal": round(b["progress_to_goal"], 4), "cash": round(b["cash"], 2),
+                "progress_to_goal": round(b["progress_to_goal"], 4) if b["progress_to_goal"] is not None else None,
+                "cash": round(b["cash"], 2),
                 "fees": round(b["fees"], 2), "slippage": round(b["slippage"], 2),
                 "realized": round(b["realized"], 2), "benchmark_value": b["bench_value"],
                 "benchmark_pnl_pct": round(spy_pnl, 4) if spy_pnl is not None else None,
@@ -818,15 +821,17 @@ def write_reports(D):
     export_rows(b)
     s = b["stats"]
     L = [f"# Paper-trading scoreboard (as of {b['asof']})", "",
-         "> SIMULATION. No real money. Prices come from public web sources; fills are modeled at the close "
-         "with slippage and fees (see RULES.md).", "",
-         f"**Equity {money(b['equity'])}** | P/L {money(b['pnl'])} ({pct(b['pnl_pct'])}) | goal "
-         f"{money(b['goal'])} by {b['end_date']} | {b['progress_to_goal'] * 100:.1f}% of the way",
+         "> The paper ledger: the shadow model of the real account (live mode is on; real fills are in data/live_ledger.csv). "
+         "Paper fills are modeled at the close with slippage and fees (see RULES.md).", "",
+         f"**Equity {money(b['equity'])}** | P/L {money(b['pnl'])} ({pct(b['pnl_pct'])}) since the start"
+         + (f" | goal {money(b['goal'])} by {b['end_date']} | {b['progress_to_goal'] * 100:.1f}% of the way" if b['goal'] else
+            " | objective: make money (no date or amount target since 2026-11-07)"),
          f"- Cash {money(b['cash'])} | realized {money(b['realized'])} | fees paid {money(b['fees'])} | "
          f"slippage cost {money(b['slippage'])}",
          f"- {b['benchmark']} buy-and-hold with same $: {money(b['bench_value']) if b['bench_value'] else 'n/a'}",
-         f"- Trading days left: {b['trading_days_left']}"
-         + (f" | needed per day to hit goal: {pct(b['required_daily_return'])}" if b["required_daily_return"] else ""),
+         (f"- Trading days left: {b['trading_days_left']}"
+          + (f" | needed per day to hit goal: {pct(b['required_daily_return'])}" if b["required_daily_return"] else "")
+          if b["trading_days_left"] is not None else "- No end date (the owner retired it on 2026-11-07)"),
          f"- Est. after-tax equity if liquidated (memo, {int(CFG['tax_rate_memo'] * 100)}% on gains): "
          f"{money(b['est_after_tax_equity'])}", "", "## Positions", ""]
     if b["positions"]:
