@@ -1,261 +1,233 @@
 [
  {
   "id": "R01",
-  "group": "1. Goal and account",
-  "rule": "Goal: $2,200 (+10% on $2,000) by the 11/18 close, and beat SPY buy-and-hold with the same money over the same window.",
+  "group": "1. Objective (owner)",
+  "rule": "Make money: grow the agent account with a positive expected return and controlled drawdowns. No target amount and no end date. SPY buy-and-hold is the yardstick results are reported against, not a target.",
   "status": "in force",
-  "source": "Owner 10/24 (was $4,000); RULES.md"
+  "source": "Owner 11/07: \"Forget about the date target + target amount. Instead just focus on making money\""
  },
  {
   "id": "R02",
-  "group": "1. Goal and account",
-  "rule": "Window: fills from Mon 10/19 to the Wed 11/18 close, on NYSE sessions only.",
+  "group": "2. Owner's limits (fixed)",
+  "rule": "At most the money in the MCP agent account (started with $2,000; now its balance). No transfers in or out.",
   "status": "in force",
-  "source": "RULES.md"
+  "source": "Owner 11/07: \"At most is the money on the mcp account and no transfers\"; \"2k budget\""
  },
  {
   "id": "R03",
-  "group": "1. Goal and account",
-  "rule": "Real money only in the Robinhood agent account (nickname MCP, ending 5318). The paper ledger runs alongside as the shadow model.",
+  "group": "2. Owner's limits (fixed)",
+  "rule": "No margin borrowing; the agent account only (••••5318), never the owner's other accounts.",
   "status": "in force",
-  "source": "Owner 10/17; LIVE_MODE.md"
+  "source": "Owner 11/07; LIVE_MODE.md"
  },
  {
   "id": "R04",
-  "group": "2. Hard limits (never)",
-  "rule": "Options only, buying only: buy to open calls or puts, sell to close. Never sell to open, never multi-leg, never exercise. Stock and ETF buys are switched off.",
-  "status": "in force",
-  "source": "Owner 10/17; enforced by tracker.py and live.py"
- },
- {
-  "id": "R05",
-  "group": "2. Hard limits (never)",
-  "rule": "Never deposits, withdrawals, transfers, account-setting changes, crypto, margin or shorting. Never touch the owner's other holdings or accounts.",
-  "status": "in force",
-  "source": "LIVE_MODE.md"
- },
- {
-  "id": "R06",
-  "group": "2. Hard limits (never)",
-  "rule": "At most $2,000 of real money at work. The loss-limit stop trips only if all $2,000 is lost.",
-  "status": "in force",
-  "source": "Owner 10/30 (was $1,000); enforced by live.py"
- },
- {
-  "id": "R07",
-  "group": "2. Hard limits (never)",
-  "rule": "At most 4 fills a day, no same-day round trips, no second fill in one ticker on a day, at most 4 open positions, never average down.",
-  "status": "in force",
-  "source": "RULES.md; enforced by tracker.py and live.py"
- },
- {
-  "id": "R08",
-  "group": "2. Hard limits (never)",
-  "rule": "Every real order needs a live.py gate ticket: confirmed by the pre-close run that day before 15:50 ET, placed as a limit order at the broker's live quote, one ticket per order.",
-  "status": "in force",
-  "source": "LIVE_MODE.md; enforced by live.py"
- },
- {
-  "id": "R09",
-  "group": "2. Hard limits (never)",
+  "group": "2. Owner's limits (fixed)",
   "rule": "Kill switch: a KILL_SWITCH file (or the owner's word) stops all orders. Only the owner removes it.",
   "status": "in force",
   "source": "LIVE_MODE.md"
  },
  {
-  "id": "R10",
-  "group": "2. Hard limits (never)",
-  "rule": "Conflict guardrail: every persona is Claude, built by Anthropic. No trade whose thesis is Anthropic or its IPO. GOOGL, AMZN, MSFT, AVGO and NVDA ideas use public facts only, and the link is disclosed.",
+  "id": "R05",
+  "group": "3. Account safety (AI)",
+  "rule": "Never deposits, withdrawals, account-setting changes, crypto or shorting. No banking or credit tools.",
   "status": "in force",
-  "source": "playbook.md (Anthropic IPO)"
+  "source": "LIVE_MODE.md (kept)"
  },
  {
-  "id": "R11",
-  "group": "3. Money and sizing",
-  "rule": "The whole $2,000 is the budget: no cash floor and no single-order cap. The whole $2,000 can be lost.",
+  "id": "R06",
+  "group": "3. Account safety (AI)",
+  "rule": "Pattern-day-trader guard: the account is limited-margin under $25k, so no more than 3 day trades in 5 business days. For now the code refuses all same-day round trips.",
   "status": "in force",
-  "source": "Owner 10/30: \"Remove caps on place a buy. You have 2 k to work with\""
+  "source": "Account type checked 11/07; FINRA PDT rule"
  },
  {
-  "id": "R12",
-  "group": "3. Money and sizing",
-  "rule": "Each order's thesis states its size and why, with Kelly sizing from a tested payoff distribution (sizing.py): full, half and quarter Kelly, planned at half-Kelly.",
+  "id": "R07",
+  "group": "3. Account safety (AI)",
+  "rule": "Every real order goes through the order gate: confirmed by the pre-close run that day before 15:50 ET, a limit order at the broker's live quote, one ticket per order. No daily fill cap.",
   "status": "in force",
-  "source": "W44 review 11/01; playbook.md"
+  "source": "Owner 11/07 (fill cap removed); enforced by live.py"
  },
  {
-  "id": "R13",
-  "group": "3. Money and sizing",
-  "rule": "Buy one contract only when full Kelly covers its cost; otherwise no trade.",
-  "status": "in force",
-  "source": "W44 red-team; playbook.md"
- },
- {
-  "id": "R14",
-  "group": "3. Money and sizing",
-  "rule": "Theme caps at cost: AI/semis at most 40% of equity, energy at most 40%. Leveraged or inverse ETFs at most $300 each.",
-  "status": "in force",
-  "source": "RULES.md; LIVE_MODE.md"
- },
- {
-  "id": "R15",
-  "group": "3. Money and sizing",
-  "rule": "At most one new shot a day. Doing nothing is a valid trade.",
-  "status": "in force",
-  "source": "playbook.md; RULES.md"
- },
- {
-  "id": "R16",
-  "group": "4. Contracts",
-  "rule": "Liquid US stocks and ETFs only. Open interest at least 1,000 at the strike; spread at most 5% of the mid (10% for commodity or sector ETFs such as USO).",
-  "status": "in force",
-  "source": "playbook.md (What to buy)"
- },
- {
-  "id": "R17",
-  "group": "4. Contracts",
-  "rule": "Delta 0.30-0.45, never below 0.25. Expiry 2-5 weeks out; no entry within 3 days of expiry; every option is sold at least one session before it expires.",
-  "status": "in force",
-  "source": "playbook.md; enforced by tracker.py"
- },
- {
-  "id": "R18",
-  "group": "4. Contracts",
-  "rule": "Event premium: buy only at the print day's 14:43 decision, only if the implied move is at most 0.9x the median of recent reactions, and sell at the next day's decision.",
-  "status": "in force",
-  "source": "Options-vol rule 10/18; playbook.md"
- },
- {
-  "id": "R19",
-  "group": "5. Evidence",
-  "rule": "An edge figure counts only if it comes from a committed script or a cited published study.",
-  "status": "in force",
-  "source": "Strategy review 10/29"
- },
- {
-  "id": "R20",
-  "group": "5. Evidence",
-  "rule": "Retired arguments (may not be cited): the midterm-window rally, the Halloween effect, the turn of the month, RSI(2) dips, a follow-through day as an edge, \"IV is low\", the pre-earnings run-up through calls, FINRA short-volume spikes, Wikipedia attention, the put/call ratio.",
-  "status": "in force",
-  "source": "Strategy review 10/29; alt-data review 10/30"
- },
- {
-  "id": "R21",
-  "group": "5. Evidence",
-  "rule": "Consensus check: every proposal says what a generic AI would recommend. A match needs a measured edge.",
-  "status": "in force",
-  "source": "W43 review"
- },
- {
-  "id": "R22",
-  "group": "5. Evidence",
-  "rule": "Prediction-market odds are an input to the macro brief, not a trading signal.",
-  "status": "in force",
-  "source": "Alt-data review 10/30"
- },
- {
-  "id": "R23",
-  "group": "6. Setups",
-  "rule": "C1, the one confirmed setup: a mega-cap down gap of 8% or more vs the pre-print close at the reaction day's 14:43 check. Buy 1 put at delta 0.30-0.45 with IV at most 1.3x the pre-print 20-day realized vol, spread at most 5%, OI at least 1,000, expiry at least 14 days, sized by Kelly at the contract's days to expiry. No market gates (provisional).",
-  "status": "in force",
-  "source": "W44 review 11/01; playbook.md"
- },
- {
-  "id": "R24",
-  "group": "6. Setups",
-  "rule": "Goal-budget variance bet: pre-registered 11/02 for one entry on 11/04 (1 SPY call, delta 0.35-0.40, at most $850, -50% stop). It was used and stopped out on 11/05. No re-entry without a new pre-registered rule, goal odds on live quotes and a red-team; the Sunday 11/08 review decides.",
-  "status": "in force",
-  "source": "Claude under the owner's autonomy grant 11/02; playbook.md"
- },
- {
-  "id": "R25",
-  "group": "7. Exits",
-  "rule": "The exit plan is written at entry. One contract sells all at +50%; two or more sell half at +50% and the rest at +100%, as a resting GTC limit at the broker from the evening of the buy. The stop moves to cost after a 14:43 check shows +40%.",
-  "status": "in force",
-  "source": "W43 review; owner 10/26 (resting GTC)"
- },
- {
-  "id": "R26",
-  "group": "7. Exits",
-  "rule": "Stops sit at the underlying level where the thesis is wrong, with a -50% premium backstop. They are checked at the 14:43 check, and a breached stop sells the same day.",
-  "status": "in force",
-  "source": "playbook.md; DAILY_ROUTINE.md"
- },
- {
-  "id": "R27",
-  "group": "7. Exits",
-  "rule": "C1 puts: hold 5 sessions (time exit), with the -50% backstop; no take-profit and no resting GTC.",
-  "status": "in force",
-  "source": "Strategy review exception 10/29"
- },
- {
-  "id": "R28",
-  "group": "7. Exits",
-  "rule": "Goal-budget exception: the resting GTC sits at the $2,200-equity price (at least 1.4x cost) instead of +50%. No resting stop orders on options (gap risk).",
-  "status": "in force",
-  "source": "Pre-registered 11/02; LIVE_MODE.md"
- },
- {
-  "id": "R29",
-  "group": "8. Order process",
-  "rule": "Evening and Sunday runs write proposals only. The 14:43 pre-close run re-decides everything on fresh quotes and confirms, cancels or adds before 15:50 ET; anything unconfirmed does not fill.",
-  "status": "in force",
-  "source": "RULES.md (Execution protocol)"
- },
- {
-  "id": "R30",
-  "group": "8. Order process",
-  "rule": "The pre-open run checks news only: it may cancel or add proposals, but never confirms or places an order.",
-  "status": "in force",
-  "source": "DAILY_ROUTINE.md"
- },
- {
-  "id": "R31",
-  "group": "8. Order process",
-  "rule": "Buys of 20% of equity or more (or any leveraged ETF) need a fresh risk red-team first; every draft proposal from the evening run is red-teamed.",
-  "status": "in force",
-  "source": "DAILY_ROUTINE.md"
- },
- {
-  "id": "R32",
-  "group": "9. Integrity",
-  "rule": "Prices come from quotes.py (two providers within 0.3%) or the broker's live quote; the AI never types a price. A close that cannot be verified skips the order.",
-  "status": "in force",
-  "source": "RULES.md (Quote integrity)"
- },
- {
-  "id": "R33",
-  "group": "9. Integrity",
-  "rule": "The ledger, marks and journal are append-only; corrections are dated journal notes. Every order carries a written thesis and every fill a price source.",
-  "status": "in force",
-  "source": "RULES.md (Integrity rules)"
- },
- {
-  "id": "R34",
-  "group": "9. Integrity",
-  "rule": "Breaking a soft guardrail needs a dated journal entry that names the rule and why.",
+  "id": "R08",
+  "group": "3. Account safety (AI)",
+  "rule": "At most 4 open positions; never average down.",
   "status": "in force",
   "source": "RULES.md"
  },
  {
-  "id": "R35",
-  "group": "10. Proposed for the 11/08 review",
-  "rule": "Check stops during the day (about 10:00 and 12:00 ET as well as 14:43), or rest a stop-limit with a floor, on any open option.",
-  "status": "proposed",
-  "source": "Reflection 11/05 (the once-a-day stop cost about $190)"
+  "id": "R09",
+  "group": "4. Instruments (AI)",
+  "rule": "Allowed by the account: stocks and ETFs (fractional), long calls and puts, and at Level 2 covered calls and cash-secured puts. Spreads need Level 3, which only the owner can request.",
+  "status": "in force",
+  "source": "Robinhood account check 11/07"
  },
  {
-  "id": "R36",
-  "group": "10. Proposed for the 11/08 review",
-  "rule": "Entry checklist: \"Who loses from today's driver, and how much of the underlying do they weigh?\"",
-  "status": "proposed",
-  "source": "Reflection 11/05 (the AI-regulation driver was misread)"
+  "id": "R10",
+  "group": "4. Instruments (AI)",
+  "rule": "Current default until the strategy research adopts a change: buying options only (no selling to open, no multi-leg, no exercise; close before expiry); idle money stays in cash.",
+  "status": "in force",
+  "source": "Owner 11/07: \"you need to figure out the best option\"; RULES.md"
  },
  {
-  "id": "R37",
-  "group": "10. Proposed for the 11/08 review",
-  "rule": "Size so that a 75%+ loss on day 1 still leaves the goal reachable; treat model tails as optimistic after event days.",
-  "status": "proposed",
+  "id": "R11",
+  "group": "4. Instruments (AI)",
+  "rule": "Anthropic-linked ideas (ANT included once it lists) are allowed when the evidence supports them: public information only, the conflict disclosed, and the red-team checks for optimism bias.",
+  "status": "in force",
+  "source": "Owner 11/07: \"if the data recommends moving on these do it\"; playbook.md"
+ },
+ {
+  "id": "R12",
+  "group": "5. Sizing (AI)",
+  "rule": "Each order's thesis states its size and why. Sizing for a tested edge uses Kelly from its tested payoff distribution (sizing.py), planned at half-Kelly; one contract only when full Kelly covers it.",
+  "status": "in force",
+  "source": "W44 review; playbook.md"
+ },
+ {
+  "id": "R13",
+  "group": "5. Sizing (AI)",
+  "rule": "Theme caps at cost: AI/semis at most 40% of equity, energy at most 40%; leveraged ETFs at most 15% each.",
+  "status": "in force",
+  "source": "RULES.md"
+ },
+ {
+  "id": "R14",
+  "group": "5. Sizing (AI)",
+  "rule": "No bet sized to chase a target: with no date target, variance bets without an edge are retired.",
+  "status": "in force",
+  "source": "Mandate change 11/07; playbook.md"
+ },
+ {
+  "id": "R15",
+  "group": "6. Contracts (AI)",
+  "rule": "Options: open interest at least 1,000, spread at most 5% of the mid (10% for commodity or sector ETFs), delta 0.30-0.45 (never below 0.25), expiry 2-5 weeks, no entry within 3 days of expiry; sell at least one session before expiry.",
+  "status": "in force",
+  "source": "playbook.md (What to buy)"
+ },
+ {
+  "id": "R16",
+  "group": "6. Contracts (AI)",
+  "rule": "Event premium only at the print day's 14:43 decision, when the implied move is at most 0.9x recent reactions; sell the next day.",
+  "status": "in force",
+  "source": "Options-vol rule 10/18"
+ },
+ {
+  "id": "R17",
+  "group": "7. Evidence (AI)",
+  "rule": "An edge counts only if it comes from a committed script or a cited published study, tested before the decision; our own trades count only with their sample size.",
+  "status": "in force",
+  "source": "Strategy review 10/29; RULES.md (rule evolution)"
+ },
+ {
+  "id": "R18",
+  "group": "7. Evidence (AI)",
+  "rule": "Retired as tested and failed: the midterm rally, the Halloween effect, the turn of the month, RSI(2) dips, a follow-through day as an edge, \"IV is low\", the pre-earnings run-up through calls, FINRA short-volume spikes, Wikipedia attention, the put/call ratio, dip-buying calls after a -4% day.",
+  "status": "in force",
+  "source": "Strategy reviews 10/29-10/30; research 11/05"
+ },
+ {
+  "id": "R19",
+  "group": "7. Evidence (AI)",
+  "rule": "Consensus check: if the idea is what any AI would suggest, it needs a measured edge.",
+  "status": "in force",
+  "source": "W43 review"
+ },
+ {
+  "id": "R20",
+  "group": "8. Setups (AI)",
+  "rule": "Earnings-drop put (C1): a large company down 8% or more vs its pre-earnings close at the reaction day's 14:43 check; 1 put at delta 0.30-0.45, IV at most 1.3x the pre-print 20-day realized vol, spread at most 5%, OI at least 1,000, expiry at least 14 days, sized by Kelly.",
+  "status": "in force",
+  "source": "W44 review 11/01"
+ },
+ {
+  "id": "R21",
+  "group": "9. Exits (AI)",
+  "rule": "The exit plan is written at entry. One contract sells all at +50%, two or more half at +50% and the rest at +100%, as a resting sell order at the broker; the stop moves to cost after a check at +40%.",
+  "status": "in force",
+  "source": "W43 review; 10/26 (resting orders)"
+ },
+ {
+  "id": "R22",
+  "group": "9. Exits (AI)",
+  "rule": "Stops at the price where the thesis is wrong, with a -50% premium backstop, checked at the 14:43 check; a breached stop sells the same day.",
+  "status": "in force",
+  "source": "playbook.md"
+ },
+ {
+  "id": "R23",
+  "group": "9. Exits (AI)",
+  "rule": "Earnings-drop puts: hold 5 sessions with the -50% backstop; no take-profit.",
+  "status": "in force",
+  "source": "Strategy review exception 10/29"
+ },
+ {
+  "id": "R24",
+  "group": "10. Process (AI)",
+  "rule": "Evening and Sunday runs propose; the 14:43 run decides on fresh prices before 15:50 ET; anything unconfirmed does not fill. The pre-open run never confirms or places.",
+  "status": "in force",
+  "source": "RULES.md; DAILY_ROUTINE.md"
+ },
+ {
+  "id": "R25",
+  "group": "10. Process (AI)",
+  "rule": "Buys of 20% of equity or more (or a leveraged ETF) need a fresh risk red-team; every evening draft is red-teamed.",
+  "status": "in force",
+  "source": "DAILY_ROUTINE.md"
+ },
+ {
+  "id": "R26",
+  "group": "10. Process (AI)",
+  "rule": "Prices come from verified feeds or the broker's live quote, never typed in; the ledger and journal are append-only, with a reason and a price source for every order and fill.",
+  "status": "in force",
+  "source": "RULES.md (Integrity)"
+ },
+ {
+  "id": "R27",
+  "group": "11. How rules change (AI)",
+  "rule": "Any rule except the owner's limits can change: a proposal with evidence, a fresh red-team, adoption with a dated log entry (usually at the Sunday review), and this list updated the same day. A rule that keeps failing its own test is retired the same way.",
+  "status": "in force",
+  "source": "Owner 11/07: \"evolve the rules as we learn\"; RULES.md"
+ },
+ {
+  "id": "R28",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Hold an S&P 500 ETF for the equity premium, possibly with a trend filter (above the 200-day average, else a T-bill ETF), instead of sitting in cash.",
+  "status": "under test",
+  "source": "Strategy v2 claims S1, S2, S4"
+ },
+ {
+  "id": "R29",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Park idle cash in a T-bill ETF (SGOV or BIL) to earn the T-bill rate.",
+  "status": "under test",
+  "source": "Strategy v2 claim S3"
+ },
+ {
+  "id": "R30",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Sell cash-secured puts or covered calls where the account size allows, to earn the volatility premium instead of paying it.",
+  "status": "under test",
+  "source": "Strategy v2 claims P1, P2 (P3: spreads, if the owner requests Level 3)"
+ },
+ {
+  "id": "R31",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Check stops during the day as well as at 14:43, and allow up to 3 same-day exits in 5 days for risk (the PDT limit).",
+  "status": "under test",
   "source": "Reflection 11/05"
+ },
+ {
+  "id": "R32",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Entry checklist: \"Who loses from today's news, and how much of the underlying do they weigh?\"",
+  "status": "under test",
+  "source": "Reflection 11/05"
+ },
+ {
+  "id": "R33",
+  "group": "12. Under test (for the 11/08 review)",
+  "rule": "Anthropic-linked trades: the IPO timeline, base rates and any tested halo effect.",
+  "status": "under test",
+  "source": "Strategy v2 claim A1"
  }
 ]

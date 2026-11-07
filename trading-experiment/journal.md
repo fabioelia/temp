@@ -905,3 +905,28 @@ second variance bet.
 copied the rules section. It is restored in those files; no persona proposed an Anthropic-linked idea in that period. The Sunday brief is written from
 RULES.md and playbook.md directly.
 **Dashboard (11/06):** five files refreshed (summary 2d868e64, equity 26420ce2, positions 700ea29e, orders 2cc8b5ae, trades 8a502bf8); the old files were deleted.
+
+## 2026-11-07 (Sat) Owner's new mandate: make money; the rules are mine to evolve
+**Owner's words:**
+* "Forget about the date target + target amount. Instead just focus on making money instead."
+* "At most is the money on the mcp account and no transfers. Ignore fills limit for the day you can do more if needed."
+* On the Anthropic guardrail: "Absolutely research and if the data recommends moving on these do it."
+* On options-only: "you need to figure out the best option for our targets."
+* "2k budget the rest defined on there is up to u."
+* On the contract rules: "I have no idea those are not my rules."
+* "I really want you to evolve the rules as we learn and get better and discover new strategies."
+**Done now:**
+1. config.json: goal and end date set to null (the old window is kept as a record), the daily fill cap removed (1000 is a technical ceiling), and the mandate
+   recorded. The tracker makes goal metrics optional and the tests pass (85). STATUS reads "objective: make money".
+2. RULES.md: a mandate section and a **rule-evolution process** (proposal with evidence, red-team, dated adoption, the dashboard list updated). The owner's
+   fixed limits are now separate from my rules; the PDT guard is explained (the agent account is **limited margin** under $25k, so more than 3 day trades in
+   5 days would restrict it); instrument choice is delegated, with options buying as the default until research adopts a change.
+3. playbook.md: a new stance ("make money"); the goal-budget bet retired; the Anthropic guardrail revised to evidence-based (public information only, always;
+   disclosed; the red-team checks for optimism bias). LIVE_MODE.md: the cap is the agent account's money, and there is no fill cap.
+4. DAILY_ROUTINE.md: no end date or final report; a "Rule evolution" step in the Sunday review.
+5. **All four scheduled tasks rewritten** with the new mandate. They no longer shut down after 11/18; the Sunday review now includes rule evolution.
+6. **Dashboard:** goal tiles and the goal line replaced by return since the start, worst drawdown and cash. The intro now says it is real money with a
+   paper mirror (it wrongly said "pretend money"). "The rules in force" now separates the owner's limits from my rules (33 rules, 6 under test).
+7. **Strategy v2 research** pre-registered (research/strategy-v2/claims.md): S1-S4 equity and T-bill strategies, P1-P3 premium selling, A1
+   Anthropic-linked evidence. Three agents are running for the Sunday review.
+**Account facts checked:** agent account ••••5318 is limited margin, options Level 2 (long options, covered calls, cash-secured puts; no spreads), $1,384.82.
