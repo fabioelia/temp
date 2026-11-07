@@ -1,17 +1,20 @@
 # Rules of the game
 
-Simulation only. No brokerage account is touched. Nothing here is financial advice.
+Nothing here is financial advice.
 
-**Paper by default; real money only through live mode.** The scoreboard in `data/` is a simulation. The owner has separately authorized real orders for up to $2,000 with a $1,000 loss limit (raised from $500 on 2026-10-18),
-in live mode only (`LIVE_MODE.md`): disabled until the broker connector is verified, then every real order must pass `live.py gate` (confirmed by the pre-close run, capped, ticketed, never duplicated).
-Outside the gate, a brokerage connector may be used only for read-only quotes and the experiment's own positions. Never deposits, withdrawals, transfers or account changes; never selling options to open,
-multi-leg options or exercise (buying calls/puts is the strategy, below); never crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` file stops everything until the owner removes it; the agent must never remove it.
+**Real money through live mode, with the paper ledger as the shadow model.** Live mode has been ENABLED since 2026-10-18 (`LIVE_MODE.md`). The owner authorized real
+orders for up to $2,000; the loss limit is the full $2,000 since 2026-10-30 (it was $500, then $1,000). Every real order must pass `live.py gate` (confirmed by the
+pre-close run, capped, ticketed, never duplicated). Outside the gate, a brokerage connector may be used only for read-only quotes and the experiment's own positions.
+Never deposits, withdrawals, transfers or account changes; never selling options to open, multi-leg options or exercise (buying calls/puts is the strategy, below);
+never crypto, margin or shorting; never the owner's other holdings. A `KILL_SWITCH` file stops everything until the owner removes it; the agent must never remove it.
+(Header corrected 2026-11-07: it still said "simulation only" and a $1,000 loss limit. A one-page summary of every rule in force is the dashboard's
+"The rules in force" section, from `data/export/rules.json`.)
 
 ## Account and goal
 * Start: **$2,000 cash**, Robinhood-style retail account. No margin, no shorting, no crypto, no OTC. Options only as the strategy below allows (buy to open, sell to close; owner's choice 2026-10-17).
 * Window: first fills **Mon 2026-10-19** (close) through **Wed 2026-11-18** (close). 23 sessions; no NYSE holiday inside it.
 * Goal: **$2,200** (+10%) by 11/18, and **beat SPY buy-and-hold** over the same window (owner, 2026-10-24: "Aim for something more reasonable as a target then."; it was
-  $4,000, +100%, until then). From the 10/23 equity of $1,917.92 that is +14.7%: about +$282 on the $918 budget left above the floor.
+  $4,000, +100%, until then).
 * Primary scoreboard: equity at the final close. Secondary (reported daily): return vs SPY buy-and-hold with the same $2,000,
   max drawdown, win rate, payoff ratio, fees plus slippage paid. One month cannot prove skill either way (see `research/2026-10-17/risk.md`);
   the secondary numbers are there to keep the result honest.
