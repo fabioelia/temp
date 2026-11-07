@@ -243,7 +243,7 @@ def main():
     sf = s.add_parser("filings")
     sf.add_argument("ticker")
     sf.add_argument("--days", type=int, default=14)
-    sf.add_argument("--forms", default="8-K,10-Q,10-K,4,SC 13D,S-1,424B4")
+    sf.add_argument("--forms", default="8-K,10-Q,10-K,4,SC 13D,S-1,S-1/A,424B1,424B3,424B4,FWP,RW")  # S-1/A added 2026-11-07: the ANT amendment of 11/02 was missed
     sf.add_argument("-n", type=int, default=20)
     sf.set_defaults(fn=cmd_sec_filings)
     si = s.add_parser("insiders")

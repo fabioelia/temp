@@ -1,5 +1,6 @@
 """research.py parsers (offline fixtures) and the SEC contact-email guard."""
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -47,6 +48,12 @@ class Research(unittest.TestCase):
 
     def test_numeric_cik_skips_the_ticker_list(self):  # an IPO filer has no ticker yet
         self.assertEqual(research.cik_for("2130357"), 2130357)
+
+    def test_default_filing_forms_include_ipo_amendments(self):  # the ANT S-1/A of 2026-11-02 was missed by the old default
+        src = Path(research.__file__).read_text()
+        default = re.search(r'sf.add_argument\("--forms", default="([^"]+)"', src).group(1).split(",")
+        for form in ("S-1", "S-1/A", "424B4"):
+            self.assertIn(form, default)
 
     def test_html_to_text_drops_scripts_and_keeps_paragraphs(self):
         raw = ("<html><title>Fed holds</title><script>var x=1</script><nav>menu</nav>"

@@ -390,7 +390,7 @@ def spread_trades(m, d_short=0.20, d_long=0.10, mult_s=1.0, mult_l=1.0):
 
 def p3_report(m, t, label):
     print(f'\n-- P3 SPY 30-DTE put credit spread 0.20/0.10 delta {label} --')
-    print('  period      n     EV/$risk  ann.(x12) NW t   hit   max-loss share  credit/risk  worst trade (date)    p1')
+    print('  period      n     EV/$risk  per yr     NW t   hit   max-loss share  credit/risk  worst trade (date)    p1')
     out = {}
     for pn, lo, hi in PER:
         mk = L.period_mask(t['dates'], lo, hi)
@@ -467,8 +467,8 @@ def nov5(m, label):
         if (D - d[i]).days >= 30:  # a 30-day spread opened then had expired before 11/05
             continue
         T0 = 30 / 365.0
-        Ks = float(L.strike_for_delta(S[i], T0, iv[i], r[i], q[i], 0.20, 'P'))
-        Kl = float(L.strike_for_delta(S[i], T0, iv[i], r[i], q[i], 0.10, 'P'))
+        Ks = float(np.atleast_1d(L.strike_for_delta(S[i], T0, iv[i], r[i], q[i], 0.20, 'P'))[0])
+        Kl = float(np.atleast_1d(L.strike_for_delta(S[i], T0, iv[i], r[i], q[i], 0.10, 'P'))[0])
         cr = float(L.bs(S[i], Ks, T0, iv[i], r[i], q[i], 'P')) * (1 - HS) - float(L.bs(S[i], Kl, T0, iv[i], r[i], q[i], 'P')) * (1 + HS)
         risk = Ks - Kl - cr
         T1 = max(30 - (D - d[i]).days, 0) / 365.0

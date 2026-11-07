@@ -930,3 +930,12 @@ RULES.md and playbook.md directly.
 7. **Strategy v2 research** pre-registered (research/strategy-v2/claims.md): S1-S4 equity and T-bill strategies, P1-P3 premium selling, A1
    Anthropic-linked evidence. Three agents are running for the Sunday review.
 **Account facts checked:** agent account ••••5318 is limited margin, options Level 2 (long options, covered calls, cash-secured puts; no spreads), $1,384.82.
+**Strategy v2 results (for the Sunday review):**
+* **Core equity** (research/strategy-v2/core-equity.md): S1 SPY WEAK (7 of 8 cells pass; pre-2010 12-month t 1.98). S2 trend filters REJECTED (smaller
+  drawdowns, but a lower Sharpe since 2010: 0.68 and 0.59 vs 0.76). S3 SGOV WEAK (closest version: issuer pages blocked; drawdown -0.03%, spread 2 bp, yield
+  about 3.6-4.0%). S4 QQQ WEAK (Sharpe higher in both halves, t 0.17; max drawdown -83%). For $1,385 in SPY: 12 months average +$171, range -$278 to +$500;
+  a 2008-style crash -$650 to -$765.
+* **A1 Anthropic** (research/strategy-v2/anthropic-a1.md): REJECTED. The large-IPO base rate is -23% vs SPY over a year; holders fell 1.8% around IPO day.
+  Guard only: no AMZN or GOOGL adds into the ANT pricing.
+**Missed filing (my error):** ANT's S-1/A No. 1 (11/02) was not reported. The daily check filtered to "S-1" and not "S-1/A". The default forms are fixed, with
+a test, and the memo is updated. The owner asked on 10/26 to keep an eye on the S-1, so this was a monitoring miss.

@@ -35,3 +35,12 @@ no non-public information about the offering; only the public filing and public 
    priced rich (1.11-1.14x).
 5. **Supply** (hypothesis, grade C): a very large IPO can pull money out of the AI megacaps as funds make room, and a cornerstone holder can fall after the IPO even
    when it rose into it. Both are anecdotes here, not base rates; neither is a trigger.
+
+## Update 2026-11-07: S-1/A No. 1 (filed 2026-11-02), missed by the daily check until now
+* https://www.sec.gov/Archives/edgar/data/2130357/000162828026068676/anthropicpbc-sx1ax1.htm. It adds the 9/30 financials; the price range is still blank and
+  there is no 424B prospectus yet (strategy-v2 A1 memo). Press reports put the listing before Thanksgiving.
+* **Why it was missed:** `research.py sec filings` filtered to S-1 but not S-1/A by default. Fixed 2026-11-07: S-1/A, 424B1/B3/B4, FWP and RW are now in
+  the default, with a test.
+* **Strategy v2 A1 (REJECTED):** for 16 US IPOs that raised $3B or more, buying at the first-day close returned -23% vs SPY over 250 days (t -2.0). Partner
+  or holder stocks fell 1.8% over the IPO day and the next (t -2.7). Options on an IPO of $3B or more can list from the 2nd business day (Cboe Rule 4.3).
+  Guard only: don't add AMZN or GOOGL into the ANT pricing.
