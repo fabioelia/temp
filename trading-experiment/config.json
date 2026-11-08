@@ -93,14 +93,14 @@
     "2026-12-24"
   ],
   "strategy": {
-    "name": "options with the loss budget",
-    "allow_stock_buys": false,
+    "name": "index core (VOO + SGOV) plus option setups with a measured edge",
+    "allow_stock_buys": true,
     "allow_options": true,
     "loss_limit_usd": 2000.0,
     "min_days_to_expiry": 3,
     "option_fee_per_contract": 0.04,
     "option_auto_sell_haircut": 0.1,
-    "note": "2026-10-17 owner chose options with the loss budget; 2026-10-18 owner: 'Update the 500 budget to 1k instead'. Buy calls/puts only; premium may only use cash above starting_cash - loss_limit ($1,000 floor), so every open option can expire worthless and the loss still stops at $1,000. Stock buys off; options closed at least a session before expiry. 2026-10-30, owner: 'Remove caps on place a buy. You have 2 k to work with': the loss budget is now the full $2,000 (cash floor $0).",
+    "note": "2026-10-17 owner chose options with the loss budget; 2026-10-18 owner: 'Update the 500 budget to 1k instead'. Buy calls/puts only; premium may only use cash above starting_cash - loss_limit ($1,000 floor), so every open option can expire worthless and the loss still stops at $1,000. Stock buys off; options closed at least a session before expiry. 2026-10-30, owner: 'Remove caps on place a buy. You have 2 k to work with': the loss budget is now the full $2,000 (cash floor $0). 2026-11-08 (Sunday rule-evolution vote, red-team MODIFY adopted): stock/ETF buys on for the index core: about 80% VOO, about 20% SGOV; long options only for CONFIRMED setups (C1), sized by Kelly on current equity.",
     "option_fee_source": "Robinhood review_option_order 2026-10-18: OCC $0.02 + ORF $0.02 per contract, no contract fee (Gold)",
     "take_profit_resting": {
       "enabled": true,
@@ -132,5 +132,6 @@
       "2k budget the rest defined on there is up to u.",
       "I really want you to evolve the rules as we learn and get better and discover new strategies"
     ]
-  }
+  },
+  "owner_alert_equity_usd": 1000.0
 }

@@ -10,7 +10,14 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   is about break-even and rare; every popular timing rule tested failed or decayed; the goal-budget variance bet was a deliberate gamble, not an edge. A
   goal-free "make money" mandate removes the reason to gamble. The research now asks what has a positive expected return for this account: equity
   exposure (the equity premium) with or without a trend filter, a T-bill ETF for idle cash, Level 2 premium selling (cash-secured puts, covered calls), and
-  long options only where an edge is measured. Until the Sunday 11/8 review adopts a strategy, the account stays in cash and the existing rules apply.
+  long options only where an edge is measured.
+* **Adopted 2026-11-08 (rule-evolution vote, red-team MODIFY): the index core.** About 80% VOO and about 20% SGOV, bought as a lump sum at the next
+  pre-close check, held without stops or timing rules (the trend filters, the regime gate and staging all failed tests or were retired). Options only for
+  CONFIRMED setups (C1), sized by Kelly on current equity (about $235 at most now), from the SGOV reserve; never sell VOO to fund options. The exception:
+  S1 was WEAK, not CONFIRMED (t 1.98 in one cell), and the core rests on it plus the cited equity-premium literature. **Honest expectations:** about
+  +$100 a year on the account; a 2008 replay is about -$610 on the core (about -$890 if the reserve were also lost; the worst in sample, not the worst
+  possible). **VOO, not SPY:** same index, a lower fee (0.03%), and it may avoid a wash sale against the 11/5 SPY call loss; whether same-index ETFs
+  count as substantially identical is unsettled, the worst case only defers the $533 loss, and the owner's IRAs count too.
 * **Retired 2026-11-07:** the goal-budget variance bet (it existed only to chase the date target), the goal arithmetic below, and the daily fill cap.
 
 ## (Retired 2026-11-07) Stance: measured shots toward $2,200 (since 2026-10-24)
@@ -60,6 +67,9 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - a follow-through day as an edge figure (WEAK, 10-day t 0.9; IWM 0.95);
   - "IV is low" as a reason to buy (REJECTED);
   - the pre-earnings run-up through calls (tie-break only).
+  - Strategy v2 (2026-11-07/08, `research/strategy-v2/README.md`): trend filters (REJECTED), the stock-era regime gate (REJECTED), cash-secured puts at
+    this size (REJECTED), covered calls (WEAK, not adopted), Level 3 spreads (UNTESTABLE; not requested), Anthropic-linked buys (REJECTED; guard: no
+    AMZN/GOOGL adds into the ANT pricing), dip-buying calls after a -4% day (0.75-0.80 per $).
   - Alternative data (review 2026-10-30, `research/alt-data/README.md`): FINRA short-volume spikes (REJECTED), Wikipedia attention spikes (REJECTED), the put/call
     ratio (WEAK, decayed). Prediction-market odds (`research/alt-data/scripts/predmkt.py`) are an input to the macro brief, not a signal.
 
@@ -96,8 +106,12 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   with the -50% backstop and no take-profit, and no resting GTC is placed. Two model checks found that a +50% target cuts this setup's EV below 1:
   the strategy review's D4 (holding beat the target set by about 0.14 at the real skew) and the 10/29 red-team (1.14 to 0.97, scripts/risk_exit_paths.py).
   The owner can override this.
-* Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). Both are checked once a day
-  at 14:43, so a gap can fill well past either.
+* Stops go where the thesis is wrong, in the underlying (a level, a failed breakout); the -50% premium stop is the backstop (`--stop-pct 50`). They are checked
+  at 14:43 and, **since 2026-11-08, at a mid-session check (about 11:00 ET) while any non-C1 option is open** (on 11/5 the call hit its stop by 10:00 and
+  was sold at 14:43, costing about $190). The check is a scheduled task created at the entry and removed at the exit. C1 puts keep their tested 14:43-only
+  exit until it is re-tested. A gap can still fill past any stop.
+* **Index core (VOO, SGOV): no stop and no take-profit.** It is sold only on a rule change, at the owner's request, or to rebalance; it is never sold to fund
+  options. The owner is alerted if equity falls below $1,000.
 * Honest note from the W43 red-team: replayed on shot 1, the +50% one-contract rule would not have fired (the best 14:43 check was +46.7%) and a stop at cost would still
   have filled at 2.93 after the gap; once-a-day checks cannot catch intraday peaks. Hence the resting GTC take-profit (owner approved 2026-10-26; placed in Run B
   on the evening of the buy, `LIVE_MODE.md` "Resting take-profit").
@@ -334,6 +348,10 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-08 (Sunday rule-evolution vote, red-team MODIFY): the index core adopted (about 80% VOO, 20% SGOV; a stated exception, S1 WEAK); the regime gate,
+  staging, circuit breakers and ratchet retired for the core (regime_gate.py: lower Sharpe in both halves); options only for CONFIRMED setups, Kelly on
+  current equity, never funded by selling VOO; a mid-session stop check for non-C1 options; a "who loses from today's driver?" line in every brief and
+  thesis; an owner alert below $1,000.
 * 2026-11-07 (owner's new mandate): the objective is to make money, with no date or amount target; the cap is the money in the agent account, with no
   transfers; no daily fill cap; instrument choice delegated to Claude; the Anthropic guardrail is evidence-based (public information only, disclosed); a
   rule-evolution process is added (RULES.md). The goal-budget bet is retired. Strategy research started for the Sunday 11/8 review.

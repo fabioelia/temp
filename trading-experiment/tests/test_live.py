@@ -265,6 +265,8 @@ class LiveOptions(unittest.TestCase):
         self.assertEqual((rc, "buys no contract" in out), (2, True))
 
     def test_stock_buy_refused_in_options_strategy(self):
+        cfgp = Path(self.dir, "config.json")  # the options-only switch (the live config turned stock buys on 2026-11-08)
+        c = json.loads(cfgp.read_text()); c["strategy"]["allow_stock_buys"] = False; cfgp.write_text(json.dumps(c))
         rc, out = self.gate("--order", "O002")
         self.assertEqual((rc, "switched off" in out), (2, True))
 

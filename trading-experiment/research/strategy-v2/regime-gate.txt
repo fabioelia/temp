@@ -1,0 +1,8 @@
+full       buy-and-hold: CAGR  10.72%  vol  18.5%  Sharpe  0.51  maxDD  -55.2%  worst yr 2008  -36.8%  in-equity 100.0%
+           regime gate:  CAGR   7.10%  vol  12.3%  Sharpe  0.41  maxDD  -40.3%  worst yr 2008  -26.8%  in-equity  61.6%  days at 50%: 38.4%  switches/yr 20.7
+pre-2010   buy-and-hold: CAGR   7.68%  vol  19.9%  Sharpe  0.29  maxDD  -55.2%  worst yr 2008  -36.8%  in-equity 100.0%
+           regime gate:  CAGR   5.06%  vol  12.7%  Sharpe  0.18  maxDD  -40.3%  worst yr 2008  -26.8%  in-equity  55.7%  days at 50%: 44.3%  switches/yr 23.3
+2010-2026  buy-and-hold: CAGR  13.85%  vol  17.1%  Sharpe  0.76  maxDD  -33.7%  worst yr 2022  -18.2%  in-equity 100.0%
+           regime gate:  CAGR   9.18%  vol  11.9%  Sharpe  0.67  maxDD  -21.1%  worst yr 2022  -12.8%  in-equity  67.6%  days at 50%: 32.4%  switches/yr 18.2
+sample 1993-02-17 .. 2026-11-06; state at the last close (2026-11-06): 50% (SPY 735.29 vs prior 10-day high 772.31; VIX 25.64)
+VERDICT: RETIRE the regime gate for the index core (fails the S2 bar)

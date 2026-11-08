@@ -40,7 +40,14 @@ and no transfers. Ignore fills limit for the day you can do more if needed." "2k
 * **Instrument choice is Claude's since 2026-11-07** (owner: "you need to figure out the best option for our targets"). The account allows stocks and ETFs
   (fractional), long options, and at options Level 2 covered calls and cash-secured puts; spreads need Level 3, which only the owner can request. Until the
   strategy research adopts a change through the process above, the rules below (options buying only) stay in force.
-* **Options only, buying only (current default).** Buy-to-open calls or puts on liquid US-listed stocks and ETFs, sell-to-close them later. Never sell an option to open, never multi-leg, never
+* **Adopted 2026-11-08 (rule-evolution vote; strategy v2):** an **index core** of about 80% of equity in VOO (S&P 500) and about 20% in SGOV (T-bills),
+  bought as a lump sum, held without stops or timing rules. This is a **stated exception** to "only CONFIRMED claims trade": S1 came back WEAK (7 of 8
+  cells pass; the miss is t 1.98, a power issue), and the cited literature (Dimson-Marsh-Staunton; Vanguard 2012 on lump sum vs staging) supports a
+  positive mean. Expect about +$100 a year on the account, not a monthly gain; a 2008 replay would cost about $610 on the core (about $890 if the reserve
+  were also lost). That is the worst case in the sample, not the worst possible.
+* **Options:** long calls or puts only for CONFIRMED setups (C1 today), sized by Kelly on current equity (about $235 at most now), funded from the SGOV
+  reserve, never by selling VOO. No bet with EV below 1 unless the owner names a budget for it. Selling options to open stays off (P1 REJECTED, P2 WEAK
+  and not adopted). The option rules below still apply to any option trade. Never sell an option to open, never multi-leg, never
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
 * **The whole $2,000 is the budget (since 2026-10-30, owner).** There is no cash floor and no single-order cap any more: premium may use any cash on hand, up to
   the $2,000 capital cap. Every open option can still expire worthless, so **the whole $2,000 can be lost**. (Before: premium came only from cash above a $1,000
@@ -109,18 +116,19 @@ convexity*: take the asymmetric shots, but cap the damage.
     `playbook.md`, the kill switch and the gate tickets.
   - The live loss-limit stop is set to the full $2,000, so it trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH`.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
-* **Concentration:** max 4 positions, no single name above 30% of equity at entry. (Clarified 11/04, after the goal-budget call was bought at 35% of equity:
+* **Concentration:** max 4 positions (VOO and SGOV count), no single name above 30% of equity at entry. (Clarified 11/04, after the goal-budget call was bought at 35% of equity:
   for option premium, only the "Still in force" list above applies, which keeps the 4-position limit. The 30% single-name line is a stock-era limit and
   was superseded by the owner's 10/30 removal of the single-order cap. The gate's `max_single_order_pct` is 1.0. The ambiguity is logged in the journal.) **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
 * **Risk per position to its closing stop:** <= 2% of equity core, <= 3% satellite (assume the realised loss is 1.5x planned, 2x for 3x ETFs).
-* **Regime gate:** while the S&P 500 is below its prior 10-day closing high *and* VIX >= 20, keep invested <= 50%. Above 50% only after the S&P closes above its
-  prior 10-day closing high with VIX falling.
-* **Staging:** Mon <= 30% invested, Tue <= 55%, Wed <= 75%, unless a confirmed regime change justifies more (journal the reason).
+* **Regime gate (RETIRED 2026-11-08 for the index core):** it was: while the S&P 500 is below its prior 10-day closing high *and* VIX >= 20, keep invested
+  <= 50%. Tested (`research/strategy-v2/scripts/regime_gate.py`): it lowered the Sharpe in both halves (0.18 vs 0.29 before 2010; 0.67 vs 0.76 since) while
+  shrinking drawdowns (-40% vs -55%). It failed the S2 bar.
+* **Staging (RETIRED 2026-11-08):** a lump sum beat staged entry about two-thirds of the time (Vanguard 2012); the core is bought in one order.
 * **Events:** <= 10% of equity in any one stock through its own earnings; <= 50% invested at the 10/28 close (FOMC); <= 35% at the 11/3 close (midterms).
 * **Leveraged ETFs:** <= 15% of equity each, never averaged down, exit after 8 sessions without +5% progress.
-* **Circuit breakers:** a -6% close-to-close equity day means no new buys next session; -15% from peak equity halves exposure; -25% goes to cash/SPY until
-  the committee reviews in the journal.
-* **Ratchet:** at +30% equity, lock a +10% floor (stops must not risk below it); above +60%, risk only profits above +30%.
+* **Circuit breakers and the ratchet (RETIRED 2026-11-08 for the index core):** untested timing rules of the kind that failed S2 and the regime-gate test.
+  In their place: **alert the owner if equity falls below $1,000** (config `owner_alert_equity_usd`). The live loss stop is set at -$2,000, so it trips only
+  at $0; the kill switch is the owner's.
 * **Pyramiding:** add only to winners (up 3-5%, new closing high), then move the whole stop to breakeven. Never average down.
 * **Trade budget:** the cap of 4 fills a day is a ceiling. Aim for <= 2 per day on average, weekly turnover <= 150%, and keep a slot free for stop exits.
 * Doing nothing is a valid trade.

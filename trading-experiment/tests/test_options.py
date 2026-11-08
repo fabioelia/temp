@@ -63,6 +63,7 @@ class Options(unittest.TestCase):
         c = json.loads(cfg.read_text())
         c["strategy"]["option_fee_per_contract"] = 0.05
         c["strategy"]["loss_limit_usd"] = 500.0
+        c["strategy"]["allow_stock_buys"] = False  # these tests exercise the options-only switch (the live config turned stock buys on 2026-11-08)
         cfg.write_text(json.dumps(c))
         port = self.srv.server_address[1]
         self.env = dict(os.environ, QUOTES_BASE_CBOE=f"http://127.0.0.1:{port}", QUOTES_BASE_YAHOO=f"http://127.0.0.1:{port}",

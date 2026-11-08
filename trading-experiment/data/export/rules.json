@@ -51,7 +51,7 @@
  {
   "id": "R08",
   "group": "3. Account safety (AI)",
-  "rule": "At most 4 open positions; never average down.",
+  "rule": "At most 4 open positions (VOO and SGOV count); never average down.",
   "status": "in force",
   "source": "RULES.md"
  },
@@ -65,14 +65,14 @@
  {
   "id": "R10",
   "group": "4. Instruments (AI)",
-  "rule": "Current default until the strategy research adopts a change: buying options only (no selling to open, no multi-leg, no exercise; close before expiry); idle money stays in cash.",
+  "rule": "Index core: about 80% of equity in VOO (S&P 500) and about 20% in SGOV (T-bills), bought as a lump sum and held with no stops or timing rules. A stated exception to \"only proven setups\": the index test fell just short (t 1.98 in one of 8 cells) and rests on the published equity-premium literature. Expect about +$100 a year; a 2008 replay is about -$610.",
   "status": "in force",
-  "source": "Owner 11/07: \"you need to figure out the best option\"; RULES.md"
+  "source": "Rule-evolution vote 11/08 (strategy v2 S1, S3; red-team MODIFY)"
  },
  {
   "id": "R11",
   "group": "4. Instruments (AI)",
-  "rule": "Anthropic-linked ideas (ANT included once it lists) are allowed when the evidence supports them: public information only, the conflict disclosed, and the red-team checks for optimism bias.",
+  "rule": "Anthropic-linked ideas (ANT included once it lists) are allowed when the evidence supports them: public information only, the conflict disclosed, and the red-team checks for optimism bias. Tested 11/07: no Anthropic-linked buy has support (A1 REJECTED); guard: no AMZN or GOOGL adds into the ANT pricing.",
   "status": "in force",
   "source": "Owner 11/07: \"if the data recommends moving on these do it\"; playbook.md"
  },
@@ -93,9 +93,9 @@
  {
   "id": "R14",
   "group": "5. Sizing (AI)",
-  "rule": "No bet sized to chase a target: with no date target, variance bets without an edge are retired.",
+  "rule": "Long options only for proven setups (C1 today), sized by Kelly on current equity (about $235 at most now), paid from the SGOV reserve, never by selling VOO. No bet with an expected value below 1 unless the owner names a budget for it.",
   "status": "in force",
-  "source": "Mandate change 11/07; playbook.md"
+  "source": "Rule-evolution vote 11/08"
  },
  {
   "id": "R15",
@@ -121,9 +121,9 @@
  {
   "id": "R18",
   "group": "7. Evidence (AI)",
-  "rule": "Retired as tested and failed: the midterm rally, the Halloween effect, the turn of the month, RSI(2) dips, a follow-through day as an edge, \"IV is low\", the pre-earnings run-up through calls, FINRA short-volume spikes, Wikipedia attention, the put/call ratio, dip-buying calls after a -4% day.",
+  "rule": "Retired as tested and failed: the midterm rally, the Halloween effect, the turn of the month, RSI(2) dips, a follow-through day as an edge, \"IV is low\", the pre-earnings run-up through calls, FINRA short-volume spikes, Wikipedia attention, the put/call ratio, dip-buying calls after a -4% day, trend filters, the stock-era regime gate and staging, cash-secured puts at this size.",
   "status": "in force",
-  "source": "Strategy reviews 10/29-10/30; research 11/05"
+  "source": "Strategy reviews 10/29-10/30; strategy v2 11/07-11/08"
  },
  {
   "id": "R19",
@@ -149,85 +149,64 @@
  {
   "id": "R22",
   "group": "9. Exits (AI)",
-  "rule": "Stops at the price where the thesis is wrong, with a -50% premium backstop, checked at the 14:43 check; a breached stop sells the same day.",
+  "rule": "Option stops at the price where the thesis is wrong, with a -50% premium backstop, checked at 14:43 and, for non-C1 options, also mid-session (about 11:00 ET); a breached stop sells the same day.",
   "status": "in force",
-  "source": "playbook.md"
+  "source": "Rule-evolution vote 11/08 (the 11/05 stop gap cost about $190)"
  },
  {
   "id": "R23",
+  "group": "9. Exits (AI)",
+  "rule": "Index core: no stop and no take-profit; sold only on a rule change, at the owner's request, or to rebalance. The owner is alerted if equity falls below $1,000; the -$2,000 loss stop trips only at $0.",
+  "status": "in force",
+  "source": "Rule-evolution vote 11/08"
+ },
+ {
+  "id": "R24",
   "group": "9. Exits (AI)",
   "rule": "Earnings-drop puts: hold 5 sessions with the -50% backstop; no take-profit.",
   "status": "in force",
   "source": "Strategy review exception 10/29"
  },
  {
-  "id": "R24",
+  "id": "R25",
   "group": "10. Process (AI)",
   "rule": "Evening and Sunday runs propose; the 14:43 run decides on fresh prices before 15:50 ET; anything unconfirmed does not fill. The pre-open run never confirms or places.",
   "status": "in force",
   "source": "RULES.md; DAILY_ROUTINE.md"
  },
  {
-  "id": "R25",
+  "id": "R26",
+  "group": "10. Process (AI)",
+  "rule": "Every brief and thesis names the day's driver and answers \"who loses from it, and how much of the underlying do they weigh?\"",
+  "status": "in force",
+  "source": "Rule-evolution vote 11/08 (10/26 and 11/04 driver misreads)"
+ },
+ {
+  "id": "R27",
   "group": "10. Process (AI)",
   "rule": "Buys of 20% of equity or more (or a leveraged ETF) need a fresh risk red-team; every evening draft is red-teamed.",
   "status": "in force",
   "source": "DAILY_ROUTINE.md"
  },
  {
-  "id": "R26",
+  "id": "R28",
   "group": "10. Process (AI)",
   "rule": "Prices come from verified feeds or the broker's live quote, never typed in; the ledger and journal are append-only, with a reason and a price source for every order and fill.",
   "status": "in force",
   "source": "RULES.md (Integrity)"
  },
  {
-  "id": "R27",
+  "id": "R29",
   "group": "11. How rules change (AI)",
   "rule": "Any rule except the owner's limits can change: a proposal with evidence, a fresh red-team, adoption with a dated log entry (usually at the Sunday review), and this list updated the same day. A rule that keeps failing its own test is retired the same way.",
   "status": "in force",
   "source": "Owner 11/07: \"evolve the rules as we learn\"; RULES.md"
  },
  {
-  "id": "R28",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Hold an S&P 500 ETF for the equity premium, possibly with a trend filter (above the 200-day average, else a T-bill ETF), instead of sitting in cash.",
-  "status": "under test",
-  "source": "Strategy v2 claims S1, S2, S4"
- },
- {
-  "id": "R29",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Park idle cash in a T-bill ETF (SGOV or BIL) to earn the T-bill rate.",
-  "status": "under test",
-  "source": "Strategy v2 claim S3"
- },
- {
   "id": "R30",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Sell cash-secured puts or covered calls where the account size allows, to earn the volatility premium instead of paying it.",
+  "group": "12. Under test",
+  "rule": "Allow up to 3 same-day exits in 5 business days for risk (the PDT limit) instead of refusing all same-day round trips.",
   "status": "under test",
-  "source": "Strategy v2 claims P1, P2 (P3: spreads, if the owner requests Level 3)"
- },
- {
-  "id": "R31",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Check stops during the day as well as at 14:43, and allow up to 3 same-day exits in 5 days for risk (the PDT limit).",
-  "status": "under test",
-  "source": "Reflection 11/05"
- },
- {
-  "id": "R32",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Entry checklist: \"Who loses from today's news, and how much of the underlying do they weigh?\"",
-  "status": "under test",
-  "source": "Reflection 11/05"
- },
- {
-  "id": "R33",
-  "group": "12. Under test (for the 11/08 review)",
-  "rule": "Anthropic-linked trades: the IPO timeline, base rates and any tested halo effect.",
-  "status": "under test",
-  "source": "Strategy v2 claim A1"
+  "source": "Reflection 11/05; needs a gate change and a test"
  }
 ]
