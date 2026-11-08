@@ -17,7 +17,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   S1 was WEAK, not CONFIRMED (t 1.98 in one cell), and the core rests on it plus the cited equity-premium literature. **Honest expectations:** about
   +$100 a year on the account; a 2008 replay is about -$610 on the core (about -$890 if the reserve were also lost; the worst in sample, not the worst
   possible). **VOO, not SPY:** same index, a lower fee (0.03%), and it may avoid a wash sale against the 11/5 SPY call loss; whether same-index ETFs
-  count as substantially identical is unsettled, the worst case only defers the $533 loss, and the owner's IRAs count too.
+  count as substantially identical is unsettled, the worst case only defers the $533 loss, and the owner's IRAs count too. **No SPY shares or SPY options
+  before 12/06** (30 days after the 11/05 loss).
 * **Retired 2026-11-07:** the goal-budget variance bet (it existed only to chase the date target), the goal arithmetic below, and the daily fill cap.
 
 ## (Retired 2026-11-07) Stance: measured shots toward $2,200 (since 2026-10-24)

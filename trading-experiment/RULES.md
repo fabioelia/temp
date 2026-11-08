@@ -48,7 +48,7 @@ and no transfers. Ignore fills limit for the day you can do more if needed." "2k
 * **Options:** long calls or puts only for CONFIRMED setups (C1 today), sized by Kelly on current equity (about $235 at most now), funded from the SGOV
   reserve, never by selling VOO. No bet with EV below 1 unless the owner names a budget for it. Selling options to open stays off (P1 REJECTED, P2 WEAK
   and not adopted). The option rules below still apply to any option trade. Never sell an option to open, never multi-leg, never
-  exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are switched off (`strategy.allow_stock_buys`).
+  exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are on since 2026-11-08 for the index core only (`strategy.allow_stock_buys`; VOO and SGOV).
 * **The whole $2,000 is the budget (since 2026-10-30, owner).** There is no cash floor and no single-order cap any more: premium may use any cash on hand, up to
   the $2,000 capital cap. Every open option can still expire worthless, so **the whole $2,000 can be lost**. (Before: premium came only from cash above a $1,000
   floor; from 10/24 a single order was capped at $450, with a $1,700 pause line. All removed by the owner's instruction.)

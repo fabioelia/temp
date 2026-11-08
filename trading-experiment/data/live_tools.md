@@ -19,7 +19,8 @@ Read: get_accounts, get_portfolio, get_trade_approval_setting, get_equity_quotes
 get_equity_analyst_ratings, get_equity_news, get_earnings_calendar, get_earnings_results, get_equity_positions, get_equity_tradability, get_option_chains,
 get_option_instruments, get_option_quotes, get_option_positions, get_option_orders, get_equity_orders, get_sec_filing_index, get_sec_filing, get_sec_filing_facts.
 Orders (only with an approved `live.py gate` ticket): review_option_order, place_option_order (single leg; buy-to-open / sell-to-close; limit; the ticket's ref_id),
-cancel_option_order (own orders). Equity order tools stay unused while stock buys are off.
+cancel_option_order (own orders). Since 2026-11-08 (index core adopted): review_equity_order and place_equity_order (dollar-amount market orders in regular
+hours, gate ticket only; VOO and SGOV), get_equity_orders and cancel_equity_order (own orders only).
 
 ## Never call (still visible in the tool list: the owner should switch them off in the connector's tool permissions)
 exercise_option, cancel_option_exercise, place_crypto_order, cancel_crypto_order, preview_crypto_order, place_advanced_order, cancel_advanced_order,
