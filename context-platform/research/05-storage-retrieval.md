@@ -6,7 +6,7 @@
 
 ## 0. The answer to the founder, in one paragraph
 
-You can't avoid storing *something*. "Pure RAG" is also the wrong baseline. My recommendation is a **lean, encrypted, derived index plus live hydration from the source**. You store canonical metadata, the set of mailboxes that hold each message (this is the ACL), cleaned "new content" text with quoted replies, signatures and disclaimers stripped, a lexical index, and embeddings. You do **not** keep raw MIME, HTML, or attachment binaries. Those are fetched from Gmail/Graph when an agent opens a message. That's about **4–6% of the raw bytes** (≈100–135 GB vs 2.25 TB for 1,000 users). It is not "zero duplication", though. An inverted index and embeddings carry most of the *meaning* of the mail, so they must be governed like a copy. On top of that index, agents get **tools** (search with people/date/direction filters, open a whole thread, expand a person, follow a timeline) and iterate, instead of getting one top-k dump. Summaries and fact extraction are **lazy and tiered**. Skip an LLM-built knowledge graph in v1. Build a deterministic communication graph from metadata. Add commitments, decisions and temporal facts in v2, stored in Postgres with provenance.
+You can't avoid storing *something*, and "pure RAG" is the wrong baseline. Recommendation: a **lean, encrypted, derived index plus live hydration from the source**. Store canonical metadata, the set of mailboxes holding each message (this is the ACL), cleaned "new content" text (quoted replies, signatures and disclaimers stripped), a lexical index, and embeddings. Do **not** keep raw MIME, HTML or attachment binaries; fetch them from Gmail/Graph when an agent opens a message. That's about **4–6% of the raw bytes** (≈100–135 GB vs 2.25 TB for 1,000 users), but it is not "zero duplication": the index and embeddings carry most of the *meaning*, so govern them like a copy. Agents get **tools** (filtered search, open a whole thread, expand a person, follow a timeline) and iterate instead of receiving one top-k dump. Summaries and extraction are **lazy and tiered**. No LLM-built knowledge graph in v1; build a deterministic communication graph from metadata, and add commitments, decisions and temporal facts in v2, in Postgres with provenance.
 
 ---
 
@@ -30,10 +30,10 @@ One point holds across all four columns: **the credential is the real blast radi
 **Gmail** ([quota page](https://developers.google.com/workspace/gmail/api/reference/quota), verified):
 - `messages.list` costs 5 units and returns **only `id` and `threadId`**, at most 500 per page ([ref](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages/list)). No snippets and no relevance scores. The ordering is unspecified.
 - `messages.get` costs 20 units, or **60** for `full`/`raw`. `threads.get` costs 40, or 120 for full.
-- Limits: **6,000 units/min per user** for projects created on or after 1 May 2026, 1.2M units/min per project, and an **80M units/day per-project threshold** above which Google "plans to incur charges… later in 2026", with ≥90 days' notice. Pricing isn't published yet.
+- Limits: **6,000 units/min per user** for projects created on or after 1 May 2026, 1.2M units/min per project, and an **80M units/day per-project threshold**; Google says exceeding quotas "is planned to incur charges… later in 2026" with ≥90 days' notice, and pricing isn't published yet.
 - Search is the Gmail search-box syntax (`from:`, `after:`, `label:`, `has:attachment`, `rfc822msgid:`) ([operators](https://support.google.com/mail/answer/7190)). It is lexical only.
 
-Worked example (estimate): one user-scoped agent search is 1 list, 20 metadata gets and 5 full gets, about **705 units**. That allows ≈8 searches/min/user, and an agentic loop that searches 5 times per task hits the ceiling fast. One org-wide question fanned out to 1,000 mailboxes costs ≈7,600 units. That gives about **10,500 such questions/day for *all* your customers combined** before the planned charges, because quota is per GCP project.
+Worked example (estimate): a user-scoped search (1 list, 20 metadata gets, 5 full gets) costs ≈**705 units**, so ≈8 searches/min/user; an agent that searches 5 times per task hits the ceiling fast. An org-wide question fanned out to 1,000 mailboxes costs ≈7,600 units, i.e. ≈**10,500 such questions/day for *all* customers combined** before planned charges, because quota is per GCP project.
 
 **Microsoft Graph** (verified):
 - `$search` on `/messages` uses KQL and "returns up to 1,000 results… **sorted by the date and time the message was sent**", not by relevance ([docs](https://learn.microsoft.com/en-us/graph/search-query-parameter)).
@@ -41,9 +41,9 @@ Worked example (estimate): one user-scoped agent search is 1 list, 20 metadata g
 - Throttling is **10,000 requests per 10 min and 4 concurrent requests per app per mailbox** ([docs](https://learn.microsoft.com/en-us/graph/throttling-limits)).
 - The Copilot Retrieval API covers SharePoint, OneDrive and connectors only, not mail, and is delegated-only and license-gated ([docs](https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/api-reference/retrieval-api-overview)).
 
-**Strategic note.** Google now hosts an official **Gmail MCP server**, in developer preview at `gmailmcp.googleapis.com`. Claude or ChatGPT can already search a single user's Gmail through it ([Workspace blog](https://workspaceupdates.googleblog.com/2026/05/agent-tools-and-security-updates-for-workspace-developers.html); [config guide](https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server)). Pure federation is therefore table stakes, not a product. Your differentiation has to come from cross-mailbox context, dedup, governance, better-than-Gmail retrieval, and derived knowledge.
+**Strategic note.** Google now hosts an official **Gmail MCP server** (developer preview, `gmailmcp.googleapis.com`) through which Claude or ChatGPT can already search one user's Gmail ([Workspace blog](https://workspaceupdates.googleblog.com/2026/05/agent-tools-and-security-updates-for-workspace-developers.html); [config guide](https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server)). Pure federation is table stakes, not a product; differentiation must come from cross-mailbox context, dedup, governance, better-than-Gmail retrieval and derived knowledge.
 
-Federation still earns a role in the design. It is a **freshness supplement** for the minutes between arrival and indexing, and the path to **cold history** outside the indexed window. Glean does exactly this: its native Gmail index defaults to "~6 months of history and up to 5,000 Inbox threads per user" ([Glean](https://docs.glean.com/connectors/native/gmail/choose-your-setup)), and federated search supplements it ([Glean federated](https://docs.glean.com/connectors/native/gmail-federated/about)).
+Federation still has two roles: a **freshness supplement** between arrival and indexing, and the path to **cold history** outside the indexed window. Glean does exactly this: its native Gmail index covers "approximately 6 months of history and up to 5,000 Inbox threads per user" by default ([Glean](https://docs.glean.com/connectors/native/gmail/choose-your-setup)), and federated search supplements it ([Glean federated](https://docs.glean.com/connectors/native/gmail-federated/about)).
 
 ### 1.3 (b) Index-only: what it leaks, and whether it is "not duplicating"
 
@@ -264,7 +264,7 @@ PURGED  (holdings=0 → destroy DEK; delete units/vectors/tsv; recompute or drop
 | **b+**: adds encrypted clean text (~18 GB compressed) | **100–135 GB** | 4.5–5.9% |
 | Derived layers (5M summaries, ~10M facts, edges) | ~10 GB | <0.5% |
 
-**Storage dollars are not the decision driver.** Raw on S3 at ~$0.023/GB-month is ≈$52/month. b+ on managed Postgres at ~$0.10–0.23/GB-month with a replica costs about the same. Turbopuffer lists ≤$0.33/GB-month with a $256/month minimum on Scale ([pricing](https://turbopuffer.com/pricing)). Compute, LLM spend and source-API quota are what cost money.
+**Storage dollars are not the decision driver.** Raw on S3 at ~$0.023/GB-month is ≈$52/month. b+ on managed Postgres at ~$0.10–0.23/GB-month with a replica costs about the same. Turbopuffer's calculator lists storage at ≤$0.33/GB, presumably per month, with a $256/month minimum on Scale ([pricing](https://turbopuffer.com/pricing)). Compute, LLM spend and source-API quota are what cost money.
 
 **Embeddings, one-time per 1,000 seats.** About 15,000 MTok (messages with headers, thread cards, attachments). At voyage-4-lite $0.02/MTok that's ≈**$300**; at voyage-4 $0.06/MTok it's ≈$900, or ≈$600 via batch at −33% ([Voyage, verified](https://docs.voyageai.com/docs/pricing)). OpenAI text-embedding-3-small is ~$0.02/MTok, $0.01 in batch (third-party figure, estimate). Ongoing: about 30k unique messages/day comes to <$1/day.
 
@@ -376,5 +376,6 @@ flowchart LR
 
 ### Key risks and open questions
 - Gmail's quota billing (pricing unannounced) can dominate unit economics, so model it as soon as Google publishes it.
+- Slack (later): since 29 May 2025, commercially distributed non-Marketplace apps get `conversations.history` at 1 request/min and 15 objects ([Slack](https://docs.slack.dev/changelog/2025/05/29/rate-limit-changes-for-non-marketplace-apps)). Budget for a Marketplace listing before planning any Slack index.
 - Person-level opt-out semantics: does "my mail" include copies held by colleagues? This is a product and legal decision, and the schema supports both answers.
 - Whether org-scoped agents are acceptable to employees and works councils. That belongs to the governance and legal workstreams, but it determines which retrieval scopes ship first.
