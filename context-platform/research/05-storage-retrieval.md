@@ -69,7 +69,7 @@ Then choose between **b-strict** (no text kept) and **b+** (encrypted clean text
 | Clean new-content text (message, attachment text) | Yes, envelope-encrypted, per-message DEK | Enables rerank, snippets, threads, summarization |
 | Lexical index + embeddings | Yes | Tenant-scoped; physically purged on delete |
 | Raw MIME / HTML / attachment binaries | **No.** Transient only (encrypted staging, TTL ≤ 1h) | Hydrated live on "open" |
-| Summaries / facts / edges | Lazy, tiered, with lineage | §2.4, §6 |
+| Summaries / facts / edges | Lazy, tiered, with lineage | §2.3, §6 |
 | History outside the hot window (e.g. >18–24 months) | Federated plus lazy ingest on access | Cuts backfill quota and LLM spend |
 
 Live hydration doubles as a **read-time re-check**: if the source returns 404 or the message has left all authorized mailboxes, the agent sees nothing and a tombstone is raised.
@@ -88,20 +88,19 @@ Live hydration doubles as a **read-time re-check**: if the source returns 404 or
 
 ### 2.2 What works (in priority order)
 
-1. **Clean at ingest.** Strip quoted history, signatures, legal disclaimers, and banners such as "EXTERNAL" injected by mail gateways. Use reply-structure parsing first: In-Reply-To lets you diff against the parent body. Fall back to libraries such as [Talon](https://github.com/mailgun/talon), whose maintenance is spotty, or [email_reply_parser](https://github.com/github/email_reply_parser), plus learned rules per tenant.
+1. **Clean at ingest.** Strip quoted history, signatures, disclaimers and gateway banners ("EXTERNAL"). Diff against the parent body via In-Reply-To first; fall back to [Talon](https://github.com/mailgun/talon) (spotty maintenance) or [email_reply_parser](https://github.com/github/email_reply_parser), plus per-tenant learned rules.
 2. **Classify mail type deterministically before any LLM call.** `List-Unsubscribe`, `Precedence: bulk`, no-reply senders, ESP domains, and calendar MIME parts mark human vs automated vs calendar mail. Exclude or downweight automated mail. This is the single biggest lever on both quality and cost.
 3. **Units.** Index the **message new-content** (≈400 tokens) and a **thread card** (subject, participants, first/last message, or a summary). Retrieve threads, and return **whole de-duplicated threads** to the model.
 4. **Hybrid retrieval.** Combine BM25 and dense vectors with reciprocal-rank fusion, then **rerank** the top 50. Names, SKUs, invoice numbers and codenames need lexical matching. Anthropic's contextual-retrieval study reported top-20 retrieval failures falling 35% with contextual embeddings, 49% with contextual BM25 added, and **67% with reranking** ([Anthropic](https://www.anthropic.com/news/contextual-retrieval)).
 5. **Contextual retrieval, email edition.** For email, most of the "context" is structured, so a **templated header** prepended before embedding ("Thread: Q3 renewal · From Dana (Sales) to Raj (Acme) · 2026-09-14 · reply to Raj's pricing question") captures most of the benefit at zero LLM cost. Reserve LLM-written context for long messages and attachments.
-6. **Metadata filters and features.** Filter on people and orgs (resolved entities, not strings), date ranges, direction (inbound/outbound/internal), labels/folders, has-attachment, and "I replied". Ranking priors include recency, the user's reply history with the sender, thread length, and human vs automated.
-7. **Time-awareness.** Expose `as_of` and `latest_state` options. Sort the final context chronologically. Prefer the latest message for status questions.
-8. **Agentic retrieval.** Give the agent tools and let it iterate. This follows Anthropic's "just-in-time" context guidance: hold lightweight identifiers and load data through tools when needed ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)). Proposed MCP tool surface:
+6. **Metadata filters and time.** Filter on resolved people/orgs (entities, not strings), dates, direction, labels, attachments and "I replied"; rank with recency, reply history and human-vs-automated priors. Expose `as_of`/`latest_state`, prefer the latest message for status questions, and sort final context chronologically.
+7. **Agentic retrieval.** Give the agent tools and let it iterate. This follows Anthropic's "just-in-time" context guidance: hold lightweight identifiers and load data through tools when needed ([Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)). Proposed MCP tool surface:
    - `search(query, people[], orgs[], from, to, direction, date_range, labels, has_attachment, kind=human|any, limit)` returns thread cards with IDs, participants, dates and a 300-character snippet
    - `get_thread(thread_id, view=new_content|full|summary)` returns the de-duplicated, chronological transcript
    - `get_message(message_id, attachments=false)` hydrates the original live from the source
    - `find_people(q)` and `person_context(person_id)` return top collaborators, recent threads and org
    - `timeline(entity|topic, range)`; v2: `open_commitments(person)` and `decisions(topic)`
-9. **Long context, used sparingly.** Current models take 1M tokens. Chroma's "context rot" study shows reliability falls as input grows, even on trivial tasks ([Chroma](https://research.trychroma.com/context-rot)). Budget roughly 20–60k tokens of *whole threads* per answer, not 500k of loosely related mail.
+8. **Long context, used sparingly.** Current models take 1M tokens. Chroma's "context rot" study shows reliability falls as input grows, even on trivial tasks ([Chroma](https://research.trychroma.com/context-rot)). Budget roughly 20–60k tokens of *whole threads* per answer, not 500k of loosely related mail.
 
 ### 2.3 Knowledge-graph approaches, evaluated for email
 
@@ -124,19 +123,11 @@ Evidence on the payoff is mixed. Zep reports 94.8% vs 93.4% on DMR and "up to 18
 
 ## 3. Email-specific data modeling
 
-**Cross-mailbox dedup.**
-- The key is `(tenant, rfc822_message_id, content_hash)`. The hash covers *normalized* From, Date and clean new-content, not raw bytes, because each holder's copy differs: gateway banners, Safe Links rewriting, appended disclaimers.
-- Message-IDs are sometimes missing or reused, so fall back to the hash.
-- Each holding keeps the provider's own `message_id`/`threadId`, needed for hydration, plus a variant hash.
-- `rfc822msgid:` in Gmail and `internetMessageId` in Graph let you re-locate a message in any holder's mailbox.
+**Cross-mailbox dedup.** Key on `(tenant, rfc822_message_id, content_hash)`, hashing *normalized* From, Date and clean new-content rather than raw bytes, because holders' copies differ (gateway banners, Safe Links rewriting, appended disclaimers). Message-IDs are sometimes missing or reused, so fall back to the hash. Each holding keeps the provider's own `message_id`/`threadId` for hydration plus a variant hash; `rfc822msgid:` (Gmail) and `internetMessageId` (Graph) re-locate a message in any holder's mailbox.
 
 **ACL = holdings.** The principals who may see a message are the mailboxes that hold it (sender's Sent plus in-tenant recipients), expanded through delegation, shared mailboxes and group or collaborative inboxes. One trap: **BCC is holder-specific**. It appears only in the sender's and the BCC recipient's copies, so participant rows need a `visible_to_holding` scope.
 
-**Threads.**
-- Gmail `threadId` and Graph `conversationId` are per-mailbox heuristics. Build a global thread with the [JWZ algorithm](https://www.jwz.org/doc/threading.html) over Message-ID, In-Reply-To and References ([RFC 5322](https://www.rfc-editor.org/rfc/rfc5322)).
-- Union in provider groupings from all holders.
-- Fall back to normalized subject, participant overlap and a time window.
-- Model forwards as a separate `forwarded_from` edge.
+**Threads.** Gmail `threadId` and Graph `conversationId` are per-mailbox heuristics. Build global threads with the [JWZ algorithm](https://www.jwz.org/doc/threading.html) over Message-ID/In-Reply-To/References ([RFC 5322](https://www.rfc-editor.org/rfc/rfc5322)), union in provider groupings from all holders, fall back to normalized subject + participant overlap + time window, and model forwards as a separate `forwarded_from` edge.
 
 **Attachments.**
 - Dedupe by SHA-256 of content.
@@ -207,12 +198,7 @@ Partition the large tables by `tenant_id` (hash or list) so tenant offboarding i
 | Team/group agent (e.g. all sales mailboxes) | 5–30% | ANN with iterative filtered scan, or a namespace per group |
 | Org-scoped agent minus exclusions/opt-outs | 90–99% | ANN plus post-filter with modest over-fetch |
 
-**How Glean does it.**
-- Every document carries an ACL (users and groups, allow and deny).
-- A separate identity crawl syncs groups.
-- Permissions are enforced at query time by expanding the user into principals ([Glean SDK](https://developers.glean.com/libraries/indexing-sdk/permissions)).
-- Notably, Glean scopes email to the mailbox owner and runs its MCP tools under each user's own authorization ([Glean](https://docs.glean.com/connectors/native/gmail/choose-your-setup)).
-- Engines with built-in document-level security, such as OpenSearch, support the same pattern, but advise keeping DLS queries simple for performance ([OpenSearch](https://docs.opensearch.org/latest/security/access-control/document-level-security/)).
+**How Glean does it.** Documents carry ACLs (users/groups, allow/deny), a separate identity crawl syncs groups, and permissions are enforced at query time by expanding the user into principals ([Glean SDK](https://developers.glean.com/libraries/indexing-sdk/permissions)). Notably, Glean scopes email to the mailbox owner and runs its MCP tools under each user's own authorization ([Glean](https://docs.glean.com/connectors/native/gmail/choose-your-setup)). OpenSearch-style document-level security supports the same pattern but advises keeping DLS queries simple ([OpenSearch](https://docs.opensearch.org/latest/security/access-control/document-level-security/)).
 
 **ACL changes in email are mostly per-message and append-only.**
 - *Dropped from a thread:* the user keeps the earlier messages and never receives later ones. The per-message ACL handles this. **Derived artifacts are where leaks happen:** a thread summary built over M1–M5 leaks M4 to someone who only holds M1–M3. Key summaries by `acl_class` (most threads have 1–2 holder sets), or generate them at read time for the requester. A fact is visible only if the requester can see **all** of its supporting messages, or at least the one being cited.
@@ -299,16 +285,7 @@ PURGED  (holdings=0 → destroy DEK; delete units/vectors/tsv; recompute or drop
 
 Ongoing (estimate): 60 mailbox messages/user/day gives ~12k human unique messages/day, each an incremental thread-summary update. That's ≈**$80/month per 1,000 seats** on Haiku 5.5 vs ≈$1,600 on Sonnet 5.5.
 
-Cost cutters:
-1. Rules-based mail-type filtering before any LLM call.
-2. Summarize **on first read** (lazy), and pre-compute only for active human threads.
-3. Model tiering with escalation on low confidence.
-4. Batch API for backfill.
-5. Cache the static instruction and schema prefix.
-6. Incremental summaries (prior summary plus the new message), never full regeneration.
-7. A hot window (e.g. 18–24 months) for backfill.
-
-Thinking tokens bill as output. Run extraction at low effort, with thinking disabled where the model allows it (Haiku 5.5 allows it at effort ≤ high).
+**Cost cutters:** rules-based mail-type filtering before any LLM call; summarize **on first read** and pre-compute only for active human threads; model tiering with escalation on low confidence; Batch API for backfill; cache the static instruction prefix; incremental summaries (prior summary + new message); a hot window (e.g. 18–24 months). Thinking tokens bill as output, so run extraction at low effort with thinking disabled where allowed (Haiku 5.5: effort ≤ high).
 
 **The hidden cost is source-API quota.** A Gmail backfill fetches metadata for all 30M instances (20 units each) and full content for the 15M unique messages (60 each), about **1.5B units**. That's **≈19 days of the 80M/day per-project free threshold**, and the threshold is shared across *all* tenants on one GCP project. Per mailbox it takes ~4 hours at 6,000 units/min. Paid pricing above the threshold is unannounced, so it is the biggest unknown in this model. Mitigations:
 - backfill the hot window first;
