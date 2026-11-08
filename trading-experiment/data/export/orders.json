@@ -82,5 +82,33 @@
   "state": "Confirmed 2026-11-05 14:44 ET",
   "reason": "",
   "thesis": "Stop exit (playbook Open shots, Shot 2 b): the -50% stop at a 14:43 check. Live Robinhood bid 1.43 / ask 1.49 at 19:44 UTC, at or below 3.39 (half of the 6.79 fill). SPY 738.70 (-3.7%) in an AI-stock rout (Reuters, Bloomberg; ^VIX 26.32, +58%). Pre-registered; no discretion. The resting 9.62 GTC (K007) was cancelled first."
+ },
+ {
+  "id": "O018",
+  "created": "2026-11-08",
+  "side": "buy",
+  "ticker": "VOO",
+  "size": "$1,100",
+  "stop": "",
+  "target": "",
+  "max_price": null,
+  "status": "pending",
+  "state": "Proposal, not yet confirmed",
+  "reason": "",
+  "thesis": "Index core (adopted at the 11/08 rule-evolution vote, red-team MODIFY): about 80% of equity in VOO (S&P 500, 0.03% fee), a lump sum held without stops or timing rules. Evidence: strategy v2 S1 WEAK (7 of 8 cells; a stated exception backed by the equity-premium literature: Dimson-Marsh-Staunton); trend filters and the regime gate REJECTED (regime_gate.py); staging retired (Vanguard 2012). Size: $1,100 of $1,384.84 (79%); expect about +$100 a year on the account; a 2008 replay about -$610 on the core. Who loses from today's driver: AI-regulation fears hit the AI/semis weights (VOO holds them at index weight; no extra tilt). Execution (risk persona): a dollar-amount market order through the gate at the 14:43 check; skip if a halt, a quote older than 2 minutes, unleveraged buying power below $1,375, or any review_equity_order alert; if partially filled by 15:30, cancel the rest and finish next session. VOO, not SPY: no SPY shares or options before 12/06 (wash-sale window). Exits: none (no stop, no take-profit); sold only on a rule change, at the owner's request or to rebalance; never sold to fund options. Persona checks 11/08: macro, momentum, contrarian, historian, risk found nothing that should delay it."
+ },
+ {
+  "id": "O019",
+  "created": "2026-11-08",
+  "side": "buy",
+  "ticker": "SGOV",
+  "size": "$265",
+  "stop": "",
+  "target": "",
+  "max_price": null,
+  "status": "pending",
+  "state": "Proposal, not yet confirmed",
+  "reason": "",
+  "thesis": "Index core reserve (adopted 11/08): about 20% of equity in SGOV (0-3 month T-bills, about 3.6-4.0% a year, worst drawdown -0.03%; strategy v2 S3 WEAK, closest version). It is the dry powder for CONFIRMED option setups (one C1 contract: full Kelly about $235 at most) so VOO is never sold to fund options. Size $265; about $19.82 stays in cash as a buffer (the ledger counts $0.02 more than the broker). Placed after VOO shows filled. Same execution checks as VOO. Exits: sold only to fund a CONFIRMED setup, on a rule change or at the owner's request."
  }
 ]

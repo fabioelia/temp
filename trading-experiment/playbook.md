@@ -13,7 +13,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   long options only where an edge is measured.
 * **Adopted 2026-11-08 (rule-evolution vote, red-team MODIFY): the index core.** About 80% VOO and about 20% SGOV, bought as a lump sum at the next
   pre-close check, held without stops or timing rules (the trend filters, the regime gate and staging all failed tests or were retired). Options only for
-  CONFIRMED setups (C1), sized by Kelly on current equity (about $235 at most now), from the SGOV reserve; never sell VOO to fund options. The exception:
+  CONFIRMED setups (C1), sized at most min(full Kelly at the contract's DTE on current equity, the SGOV reserve), about $190-263 at IV = RV20
+  (ov_1108.py), from the SGOV reserve; never sell VOO to fund options. The exception:
   S1 was WEAK, not CONFIRMED (t 1.98 in one cell), and the core rests on it plus the cited equity-premium literature. **Honest expectations:** about
   +$100 a year on the account; a 2008 replay is about -$610 on the core (about -$890 if the reserve were also lost; the worst in sample, not the worst
   possible). **VOO, not SPY:** same index, a lower fee (0.03%), and it may avoid a wash sale against the 11/5 SPY call loss; whether same-index ETFs
@@ -278,6 +279,17 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - **Update, Fri 11/6 Run B (research/2026-11-06/):** all four personas say no trade for Monday. CSCO C1 is conditional for Fri 11/13 (Kelly fits only at
     IV <= ~38%). A December hike is priced at 77%; CPI is Tue 11/10. A second variance bet would now give about 22% for $2,200 and 42%+ below $1,000, and
     only on a 12/18 expiry that breaks the 5-week rule. The Sunday review decides.
+
+* **Week of 11/9 plan (Sunday 11/8 review, research/2026-11-08/, reviews/2026-W45.md):**
+  - **Mon 11/9 14:43: the index core.** O018 VOO $1,100, then O019 SGOV $265 once VOO shows filled; about $19.82 stays in cash. Skip on a halt, a quote
+    older than 2 minutes, unleveraged buying power below $1,375, or a review alert; a partial fill is cancelled at 15:30 and finished the next session.
+    Seven personas found nothing that should delay it (historian: after a 10%+ Nasdaq correction the S&P's next 12 months averaged +14.7% vs +9.4% on
+    any day, n 14 episodes; the downside tail is wider, with the 1-month 10th percentile -9% to -10%).
+  - **Fri 11/13 14:43: CSCO C1, conditional** (reports Thu 11/12 after the close; the proposal is written in Thursday's Run B from the 11/12 close). The
+    trigger is CSCO at or below 0.92x that close; 1 12/18 put (the only expiry with OI >= 1,000), delta 0.30-0.45, spread <= 5%, IV <= 1.3x RV20, ask
+    <= min(full Kelly/100 at 35 DTE, 2.77): 2.63 at IV = RV20, 1.87 at 1.1x. Funded by selling SGOV. It is likely to fail on IV or spread.
+  - **Watch:** CPI Tue 11/10 (not a reason to delay); NVDA's board probe of its CEO (Axios, DW, 11/8; no 8-K yet); NVDA earnings 11/17 after the close
+    (C1 shadow only; the reserve could not fund it after a CSCO trade); the ANT IPO pricing (guard: no AMZN or GOOGL adds). No SPY shares or options before 12/06.
 
 * **Goal-budget bet, decided by Claude under the owner's autonomy grant (2026-11-02: "You dont need my approval to do anything work autonomously").**
   The owner's goals are $2,200 and beating SPY; they removed the buy caps and gave the whole $2,000. With no evidence-backed edge available, a cash finish beats SPY

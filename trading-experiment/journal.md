@@ -939,3 +939,18 @@ RULES.md and playbook.md directly.
   Guard only: no AMZN or GOOGL adds into the ANT pricing.
 **Missed filing (my error):** ANT's S-1/A No. 1 (11/02) was not reported. The daily check filtered to "S-1" and not "S-1/A". The default forms are fixed, with
 a test, and the memo is updated. The owner asked on 10/26 to keep an eye on the S-1, so this was a monitoring miss.
+
+## 2026-11-08 (Sun) Weekly review (W45) and rule evolution
+1. **Week:** -$533 on the goal call; real $1,384.84 (-30.8%) vs SPY -4.1%; 2 real trades, 2 losses. The root cause is ours (a no-edge bet our gate let
+   through, a once-a-day stop, a misread driver); discipline held after the loss. Review: reviews/2026-W45.md, red-teamed and corrected.
+2. **Rules evolved (red-team MODIFY, all adopted as modified):** the index core (about 80% VOO, 20% SGOV, lump sum, a stated exception: S1 WEAK); the
+   regime gate tested and RETIRED (regime_gate.py: lower Sharpe in both halves), with staging, circuit breakers and the ratchet retired for the core; options
+   only for CONFIRMED setups, sized at min(full Kelly at the contract's DTE, the reserve); a mid-session stop check for non-C1 options; "who loses from
+   today's driver?" in every brief and thesis; an owner alert below $1,000.
+3. **Bug fixed before any money moved:** live.py sized ETF buys at $2,000 minus deployed and ignored the -$615 realized loss. It now uses the actual cash,
+   with a test (87 tests pass).
+4. **Monday's proposals:** O018 VOO $1,100, then O019 SGOV $265 (about $19.82 cash buffer). All seven personas found nothing that should delay it. CSCO C1 is
+   conditional for Fri 11/13.
+5. **Owner-facing honesty:** this is a slow way to make money, about +$100 a year expected, with crash risk of about -$610 on the core; it is the only
+   approach the evidence supports for this account.
+**Dashboard (11/08):** rules (ce6b243f) and orders (e9a107e8) refreshed; the old files were deleted. Summary, equity, positions and trades are unchanged since Friday (no session).

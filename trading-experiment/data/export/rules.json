@@ -93,7 +93,7 @@
  {
   "id": "R14",
   "group": "5. Sizing (AI)",
-  "rule": "Long options only for proven setups (C1 today), sized by Kelly on current equity (about $235 at most now), paid from the SGOV reserve, never by selling VOO. No bet with an expected value below 1 unless the owner names a budget for it.",
+  "rule": "Long options only for proven setups (C1 today), sized at most the full Kelly amount at the contract's expiry or the SGOV reserve, whichever is smaller (about $190-263 now), paid from the SGOV reserve, never by selling VOO. No bet with an expected value below 1 unless the owner names a budget for it.",
   "status": "in force",
   "source": "Rule-evolution vote 11/08"
  },

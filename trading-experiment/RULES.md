@@ -45,8 +45,8 @@ and no transfers. Ignore fills limit for the day you can do more if needed." "2k
   cells pass; the miss is t 1.98, a power issue), and the cited literature (Dimson-Marsh-Staunton; Vanguard 2012 on lump sum vs staging) supports a
   positive mean. Expect about +$100 a year on the account, not a monthly gain; a 2008 replay would cost about $610 on the core (about $890 if the reserve
   were also lost). That is the worst case in the sample, not the worst possible.
-* **Options:** long calls or puts only for CONFIRMED setups (C1 today), sized by Kelly on current equity (about $235 at most now), funded from the SGOV
-  reserve, never by selling VOO. No bet with EV below 1 unless the owner names a budget for it. Selling options to open stays off (P1 REJECTED, P2 WEAK
+* **Options:** long calls or puts only for CONFIRMED setups (C1 today), sized at most min(full Kelly at the contract's DTE on current equity, the SGOV
+  reserve) (about $190-263 at IV = RV20; research/2026-11-08/scripts/ov_1108.py), funded from the SGOV reserve, never by selling VOO. No bet with EV below 1 unless the owner names a budget for it. Selling options to open stays off (P1 REJECTED, P2 WEAK
   and not adopted). The option rules below still apply to any option trade. Never sell an option to open, never multi-leg, never
   exercise; close every option at least one session before it expires (the tracker auto-queues this). Stock and ETF buys are on since 2026-11-08 for the index core only (`strategy.allow_stock_buys`; VOO and SGOV).
 * **The whole $2,000 is the budget (since 2026-10-30, owner).** There is no cash floor and no single-order cap any more: premium may use any cash on hand, up to
