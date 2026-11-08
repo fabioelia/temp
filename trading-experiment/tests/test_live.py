@@ -123,6 +123,18 @@ class Live(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertAlmostEqual(json.loads(out)["shares"], 5.1)
 
+    def test_stock_buy_is_capped_by_cash_after_a_realized_loss(self):  # 2026-11-08 fix: it used cap - deployed
+        self.set_live(max_single_order_pct=1.0)
+        self.buy_and_record("AAA", "600", 10, 60)                           # cost $600
+        self.confirmed("AAA", at="2026-10-20T14:50", side="sell")
+        rc, out = self.gate("O002", "2026-10-20T14:55")
+        self.assertEqual(rc, 0, out)
+        self.run_cmd("live.py", "2026-10-20T14:57", "record", "--ticket", json.loads(out)["ticket"], "--qty", "10", "--avg-price", "30")
+        self.confirmed("BBB", "1900", "2026-10-21T14:50")                  # realized -$300: $1,700 of cash is left
+        rc, out = self.gate("O003", "2026-10-21T14:55")
+        self.assertEqual(rc, 0, out)
+        self.assertAlmostEqual(json.loads(out)["notional_usd"], 1700.0, places=2)
+
     def test_loss_limit_stops_buys_forces_flatten_then_kills(self):
         self.buy_and_record("XLE", "600", 10, 60)  # cost $600
         # XLE collapses: experiment equity = 2000 - 600 + 10*0.01 -> down ~$600 > $500 limit

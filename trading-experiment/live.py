@@ -216,7 +216,12 @@ def cmd_gate(a):
         want = float(o["size_value"]) if o["size_type"] == "usd" else (float(o["size_value"]) * ref if ref else None)
         if want is None:
             refuse("a quantity-sized buy needs --ref-price")
-        usd = min(want, cap - st["deployed"], LIVE.get("max_single_order_pct", 0.30) * cap)
+        # cash actually in the account: the start plus realized P/L minus what is deployed (fixed 2026-11-08: this used cap - deployed and
+        # ignored realized losses, so after the -$615 it would have approved up to $2,000 against $1,384.84 of cash); buy tickets approved
+        # or placed but not yet recorded are already spoken for
+        reserved = sum(float(t["usd"] or 0) for t in tickets() if t["status"] in ("approved", "placed") and t["side"] == "buy")
+        cash_live = cap + st["realized"] - st["deployed"] - reserved
+        usd = min(want, cash_live, LIVE.get("max_single_order_pct", 0.30) * cap)
         if tk in set(LIVE.get("leveraged_etfs", [])):
             usd = min(usd, LIVE.get("max_leveraged_each_pct", 0.15) * cap - st["pos"].get(tk, {"cost": 0.0})["cost"])
         usd = math.floor(usd * 100) / 100
