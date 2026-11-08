@@ -53,12 +53,12 @@ Federation still earns a role in the design. It is a **freshness supplement** fo
 
 **Verdict: (b) is byte-minimization, not data-minimization.** It drops ~95% of the bytes (HTML, MIME, attachment binaries, quoted duplicates) but keeps most of the meaning. Sell it honestly: "a minimized, encrypted, derived index under your key, with deletion propagation within N hours." Don't say "we don't store your email."
 
-There is also a practical choice between **b-strict** (no text kept) and **b+** (encrypted clean text kept). Reranking, snippets, thread assembly, contextual headers, summarization and evals all need text. In b-strict, reranking 50 candidates means 50 source fetches, which costs 1,000–3,000 Gmail units and adds hundreds of milliseconds per query. And because the index already exposes the text, storing the clean text **encrypted under per-message keys** barely raises the risk while adding something the index lacks: crypto-shredding. **Choose b+.**
+Then choose between **b-strict** (no text kept) and **b+** (encrypted clean text kept). Reranking, snippets, thread assembly, summarization and evals all need text; in b-strict, reranking 50 candidates means 50 source fetches (1,000–3,000 Gmail units, hundreds of ms per query). Since the index already exposes the text, storing clean text **encrypted under per-message keys** barely raises risk and adds what the index lacks: crypto-shredding. **Choose b+.**
 
 ### 1.4 (c) and (d)
 
-- **(c) Full encrypted copy.** This gives maximum flexibility: re-embedding when models improve without re-hitting quotas, full attachment search, and independence from API outages. Encryption at rest does little against an application-layer compromise, because the app must decrypt to serve. Use it only for **silo/enterprise tenants who explicitly want it** (or in M365 via Microsoft Graph Data Connect into the *customer's* Azure, ≈$0.75 per 1,000 objects per [Microsoft](https://azure.microsoft.com/en-us/pricing/details/graph-data-connect/), estimate).
-- **(d) Derived-only.** Summaries are model outputs, so errors compound and agents can't quote or verify. It still needs an LLM pass over everything. Derived layers belong *on top of* (b+), never instead of it.
+- **(c) Full encrypted copy.** Maximum flexibility (re-embed without re-hitting quotas, full attachment search, no API outage dependency), but encryption at rest does little against an app-layer compromise, since the app must decrypt to serve. Offer it only to **silo/enterprise tenants who ask** (in M365, possibly via Graph Data Connect into the *customer's* Azure, ≈$0.75 per 1,000 objects per [Microsoft](https://azure.microsoft.com/en-us/pricing/details/graph-data-connect/), estimate).
+- **(d) Derived-only.** Summaries are model outputs, so errors compound and agents can't quote or verify, and it still needs an LLM pass over everything. Derived layers belong *on top of* (b+).
 
 ### 1.5 Recommended hybrid
 
@@ -80,12 +80,11 @@ Live hydration doubles as a **read-time re-check**: if the source returns 404 or
 
 ### 2.1 Failure modes of chunk → embed → top-k
 
-1. **Quoted-reply duplication.** The same paragraph appears in 6 replies and 4 mailboxes, so top-k fills with near-duplicates.
-2. **Chunks lose who/when/thread.** "Sounds good, let's do Tuesday" is meaningless without its parent message.
-3. **Automated mail dominates the corpus.** Notifications, newsletters and receipts are often the majority, and they are lexically rich.
-4. **Questions are structured.** Questions like "What did *Dana* promise *Acme* *last month*?" need entity and time filters, not cosine similarity.
-5. **Time matters.** The latest message supersedes earlier ones, and the right answer is usually the current state.
-6. **Questions are multi-hop and aggregative** ("all vendors who quoted >$50k"). One-shot top-k can't enumerate.
+1. **Quoted-reply duplication.** One paragraph sits in 6 replies across 4 mailboxes, so top-k fills with near-duplicates.
+2. **Chunks lose who/when/thread.** "Sounds good, let's do Tuesday" means nothing without its parent.
+3. **Automated mail dominates.** Notifications and newsletters are often the majority, and lexically rich.
+4. **Questions are structured and temporal.** "What did *Dana* promise *Acme* *last month*?" needs entity and time filters, and the latest message supersedes earlier ones.
+5. **Questions aggregate** ("all vendors who quoted >$50k"). One-shot top-k can't enumerate.
 
 ### 2.2 What works (in priority order)
 
@@ -322,12 +321,12 @@ Thinking tokens bill as output. Run extraction at low effort, with thinking disa
 
 | Option | Hybrid BM25 + vector | ACL filtering | Ops burden | Multi-tenant / CMEK | Fit |
 |---|---|---|---|---|---|
-| **Postgres + pgvector** (+ BM25 ext.) | pgvector + [pg_textsearch](https://www.tigerdata.com/blog/introducing-pg_textsearch-true-bm25-ranking-hybrid-retrieval-postgres) (PostgreSQL license) or [ParadeDB](https://github.com/paradedb/paradedb) (AGPL/commercial); managed availability is uneven; `tsvector` as fallback | SQL joins, RLS, iterative scans | Low | Pooled with RLS + app-level envelope encryption; instance CMEK for silos | **MVP system of record + search** |
+| **Postgres + pgvector** (+ BM25 ext.) | pgvector + [pg_textsearch](https://www.tigerdata.com/blog/introducing-pg_textsearch-true-bm25-ranking-hybrid-retrieval-postgres) or [ParadeDB](https://github.com/paradedb/paradedb) (AGPL); managed availability uneven; `tsvector` fallback | Joins, RLS, iterative scans | Low | Pooled + RLS + app-level envelope encryption; instance CMEK for silos | **MVP SoR + search** |
 | **OpenSearch / Elasticsearch** | Mature | DLS with templated role queries | Medium-high (JVM, shards) | Index or alias per tenant | Viable if the team knows it |
 | **Vespa** | Best-in-class ranking (phased, tensors) | Rich; **streaming mode** gives exact per-user search built for personal data such as email ([Vespa](https://blog.vespa.ai/scaling-personal-ai-assistants-with-streaming-mode/)) | High | Vespa Cloud or self-host | v2 if ranking sophistication matters |
 | **Turbopuffer** | BM25 + vectors, client-side fusion | Filters on an inverted index | Very low (serverless, object storage) | Unlimited namespaces; CMEK per namespace on Enterprise ([docs](https://turbopuffer.com/docs)) | **v2 default search tier** |
 | **LanceDB** | FTS + vectors, open format on object storage | Filters | Low-medium | Good for silo or embedded deployments | Silo/BYOC option |
-| **Neo4j** vs **graph-in-Postgres** | n/a | Neo4j needs its own ACL layer | Neo4j adds a second system of record and a second purge path | — | **Postgres** (adjacency tables + recursive CTEs) until evals prove otherwise |
+| **Neo4j** vs **graph-in-Postgres** | n/a | Neo4j needs its own ACL layer | Neo4j adds a second SoR and purge path | — | **Postgres** (adjacency + recursive CTEs) until evals say otherwise |
 
 **Multi-tenancy.** Default to *pooled but silo-capable*: `tenant_id` everywhere, tenant-partitioned tables, per-tenant KEKs, and per-tenant search namespaces. Offer **silo** deployments (dedicated database and namespace, region pinning, customer-managed KEK, optionally BYOC or the full-copy option) to regulated enterprise customers. Revoking a customer-managed key is the customer's kill switch. Design every reader to fail closed when unwrap fails.
 
@@ -341,7 +340,7 @@ Thinking tokens bill as output. Run extraction at low effort, with thinking disa
 **v2 stack.**
 - Postgres stays the system of record for metadata, ACL, lineage and policy.
 - Retrieval units move to **Turbopuffer**: a namespace per tenant for org-scoped search, plus per-mailbox namespaces or filtered queries for user scope. Choose Vespa instead if learned ranking becomes the moat.
-- Add the facts/commitments layer, the M365 connector, silo deployments, and an Graphiti bake-off behind the eval.
+- Add the facts/commitments layer, the M365 connector, silo deployments, and a Graphiti bake-off behind the eval.
 
 ---
 
@@ -387,34 +386,16 @@ flowchart LR
 
 ### What to measure: an email retrieval eval
 
-1. **Corpora.**
-   - [EnronQA](https://arxiv.org/abs/2505.00263) (103,638 emails, 528,304 QA pairs, 150 inboxes) for public development.
-   - A synthetic multi-mailbox org corpus for permission and dedup tests.
-   - Design-partner data evaluated **in-tenant** with consent, so no data leaves.
-2. **Question taxonomy** (stratified):
-   - lookup ("find the email where…");
-   - temporal or latest-state;
-   - people and org ("who's been talking to Acme?");
-   - aggregation or enumeration;
-   - commitments and decisions (v2);
-   - attachments;
-   - **negatives** (no answer exists);
-   - **permission probes**: user A asks targeted questions about B-only content.
+1. **Corpora:** [EnronQA](https://arxiv.org/abs/2505.00263) (103,638 emails, 528,304 QA pairs, 150 inboxes) for public development; a synthetic multi-mailbox org for permission and dedup tests; design-partner data evaluated **in-tenant** with consent.
+2. **Question taxonomy** (stratified): lookup; temporal/latest-state; people and org ("who's been talking to Acme?"); aggregation; commitments and decisions (v2); attachments; **negatives** (no answer exists); **permission probes** (user A asks targeted questions about B-only content).
 3. **Generation.** Sample threads, have an LLM write the question and gold thread/message IDs, apply an EnronQA-style *specificity filter* (a model must pick the right email from 10 near neighbours), and have humans review 10–20%.
 4. **Metrics.**
    - *Retrieval:* Recall@10/50 on gold threads, nDCG@10.
    - *Answers:* correctness via a rubric-based LLM judge, citation precision and recall, and correct abstention on negatives.
    - *Agent:* tool calls, tokens, $ and p50/p95 latency per task.
    - *Governance, as hard gates:* **leakage = 0** on permission probes; **deletion SLA**: canary messages deleted at source must vanish from every artifact within the SLA; **embargo violations = 0**; freshness lag.
-5. **Ablations to run first:**
-   - chunks vs message units vs thread units;
-   - quote-stripping on vs off;
-   - BM25, dense, hybrid, hybrid + rerank;
-   - templated vs LLM contextual headers;
-   - one-shot top-k vs agentic tools;
-   - summaries on vs off;
-   - hot-window length.
-6. **Online signals:** opened-thread-after-search rate, re-query rate, answer acceptance.
+5. **Ablations to run first:** chunk vs message vs thread units; quote-stripping on/off; BM25 vs dense vs hybrid vs hybrid + rerank; templated vs LLM contextual headers; one-shot top-k vs agentic tools; summaries on/off; hot-window length.
+6. **Online signals:** opened-thread-after-search, re-query rate, answer acceptance.
 
 ### Key risks and open questions
 - Gmail's quota billing (pricing unannounced) can dominate unit economics, so model it as soon as Google publishes it.
