@@ -85,11 +85,11 @@ A metadata pre-pass (20) followed by raw (60) only pays off if more than a third
 **Implication:** backfill cost, not feasibility, is the constraint. Use **tiered backfill**. Pass 1 covers the last 90 days for every in-scope user: about 3k msgs per user, 360M units, about 5 h at the project cap or about 4.5 days under the threshold. Pass 2 covers deep history, throttled to the budget. The steady state is cheap: about 120 new messages per user per day at 60 units, plus `history.list` and a daily `watch`, comes to about 7.5k units per user per day. One project therefore carries **about 10k mailboxes** of steady state under the free threshold. For large tenants, file quota-increase requests (billing must be enabled) or use BYO projects.
 
 **Safe parallelization:**
-- Use a two-level token bucket in Redis: per user at 100 units/s and per project at 20k units/s, debited *before* each call by the method's cost.
-- Keep at most about 4–8 requests in flight per user. Gmail returns "too many concurrent requests for user"-style 429s at an undocumented concurrency **(unverified threshold)**.
-- On 403 `rateLimitExceeded`/`userRateLimitExceeded`, 429 and 5xx, use truncated exponential backoff with jitter, capped at 32–64 s (Google's guidance). Shrink that user's bucket for 5 min (AIMD).
-- Checkpoint `(user, pageToken, last_id)` per page. Schedule users with weighted fair queuing across tenants so one tenant's backfill cannot starve another's incremental sync. Incremental sync always has priority over backfill.
-- Capture the `historyId` from `getProfile` **before** listing starts, so incremental sync can pick up from it without a gap.
+- Debit a two-level Redis token bucket (100 units/s per user, 20k units/s per project) by the method's cost *before* each call.
+- Keep about 4–8 requests in flight per user. Gmail's per-user concurrency 429 threshold is undocumented **(unverified)**.
+- On 403 `rateLimitExceeded`, 429 or 5xx, use truncated exponential backoff with jitter, capped at 32–64 s (Google's guidance), and shrink that user's bucket for 5 min (AIMD).
+- Checkpoint `(user, pageToken)` per page. Use weighted fair queuing across tenants, and always run incremental sync ahead of backfill.
+- Capture the `historyId` from `getProfile` **before** listing, so incremental sync picks up without a gap.
 
 ### 1.4 Incremental sync, opt-out and deletion
 
@@ -126,9 +126,8 @@ Backfill honours the embargo with `q=before:<now−N epoch-seconds>`. With N = 0
   - It needs a Vault licence and Vault privileges (licence tiers **unverified**).
   - Allows no more than **20 exports in progress per organization**; export writes are 20/min per project ([Vault limits](https://developers.google.com/workspace/vault/limits)).
   - Exports expire after 15 days, and exports still running after 24 h return partial results ([Vault help](https://support.google.com/vault/answer/2473458)).
-  - It has no change feed.
-  - It returns *retained* mail that users deleted, which breaks deletion-propagation semantics unless reconciled against Gmail IDs. Mapping Vault records to Gmail IDs is **unverified**.
-  - Its one use: a quota-free bulk accelerator for very large tenants, followed by reconciliation against the Gmail API.
+  - It has no change feed, and it returns *retained* mail that users deleted, which breaks deletion semantics unless reconciled against Gmail IDs (that mapping is **unverified**).
+  - Its one use: a quota-free bulk accelerator for very large tenants.
 
 ### 1.7 Other Workspace sources (brief)
 
@@ -256,7 +255,7 @@ This is *better* than Google: the platform enforces mailbox scope.
 
 **Per-tenant isolation:** a separate SA or app credential per tenant, partitioned queues (key `tenant:mailbox`), per-tenant fair-share quotas, per-tenant KMS keys (security lane), region cells for residency, and no cross-tenant batching.
 
-**Observability:** per-mailbox sync lag; quota burn vs. budget; 429 rate; watch and subscription expiry horizon; history-404 rate; DLQ depth; exclusions per rule; deletion-SLA p99; reconciliation drift (count of IDs found missing).
+**Observability:** sync lag per mailbox, quota burn vs. budget, 429 and history-404 rates, watch expiry horizon, DLQ depth, exclusions per rule, deletion-SLA p99, and reconciliation drift.
 
 **Illustrative Gmail incremental sync loop (Python, not runnable as-is):**
 
