@@ -954,3 +954,13 @@ a test, and the memo is updated. The owner asked on 10/26 to keep an eye on the 
 5. **Owner-facing honesty:** this is a slow way to make money, about +$100 a year expected, with crash risk of about -$610 on the core; it is the only
    approach the evidence supports for this account.
 **Dashboard (11/08):** rules (ce6b243f) and orders (e9a107e8) refreshed; the old files were deleted. Summary, equity, positions and trades are unchanged since Friday (no session).
+
+## 2026-11-09 (Mon) Pre-open (09:22 EST)
+**News:**
+* ES=F 7,462.75 (+0.8%), NQ=F +0.8%, ^VIX 23.25 (from 25.64), ^TNX 4.84.
+* NVDA is falling pre-market on its board's probe of whether CEO Huang was "the target of a foreign intelligence effort" (CBS, Morningstar, 09:14-09:20 ET;
+  no 8-K in the last 2 days). It is VOO's largest weight; who loses: NVDA holders, with VOO at index weight only.
+* Oil fell (CL=F 86.93, -4.3%) on a disputed report that Iran eased its Hormuz demands. CPI is Tuesday.
+* No Anthropic filing in the last 3 days (the filter now includes S-1/A).
+**Plan unchanged:** O018 (VOO $1,100) and O019 (SGOV $265) are decided at the 14:43 check, with the risk persona's skip conditions. No news is a halt, a
+closure or an evidence error.
