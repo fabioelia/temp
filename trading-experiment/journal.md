@@ -978,3 +978,4 @@ Veterans Day (Wed) is a normal stock-market session.
 **Robinhood reconciled:** VOO 1.587599 (avg 692.87), SGOV 2.636818 (avg 100.50), cash $19.82, buying power $19.82 (no margin used). Account $1,384.61.
 **Idea watch (research/2026-11-09/ideas-fired.csv):** the macro SPY 12/04 720P shadow fired at 4.47 and the momentum SPY 11/30 750C shadow at 13.36; neither
 was taken (no edge).
+**Dashboard (Run A):** orders refreshed (50471617; the old e9a107e8 was deleted).
