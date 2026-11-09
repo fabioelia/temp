@@ -964,3 +964,17 @@ a test, and the memo is updated. The owner asked on 10/26 to keep an eye on the 
 * No Anthropic filing in the last 3 days (the filter now includes S-1/A).
 **Plan unchanged:** O018 (VOO $1,100) and O019 (SGOV $265) are decided at the 14:43 check, with the risk persona's skip conditions. No news is a halt, a
 closure or an evidence error.
+
+## 2026-11-09 (Mon) Pre-close (14:44 EST): the index core is bought
+**Driver:** the chip rebound (Benzinga 12:59 ET: "Nasdaq 100 Jumps 3% as Chips Rebound; Nvidia Lags Most Since DeepSeek"). NVDA fell about 5% on its board's
+probe of the CEO. SPY 753.97 (+2.5%), VOO 693.05 (+2.5%), ^VIX 20.38. Who loses: NVDA holders; VOO holds it at index weight (about 7%), roughly -0.4% on VOO.
+Veterans Day (Wed) is a normal stock-market session.
+**Checks (risk persona's 11/08 conditions), all passed:** Robinhood VOO 692.95/693.01 and SGOV 100.49/100.50, seconds old, active, matching Yahoo within
+0.3%; unleveraged buying power $1,384.82 (>= $1,375); no halt; review_equity_order showed no alerts.
+**Fresh risk red-team (the buy is 20%+ of equity):** APPROVE both, as written.
+**Orders and fills:**
+* O018 confirmed; gate K009 approved $1,100 (market, dollar amount). **Filled 1.587599 VOO @ 692.8699 at 19:45:39 UTC**, no fees.
+* O019 confirmed; gate K010 approved $265. **Filled 2.636818 SGOV @ 100.4999 at 19:46:05 UTC**, no fees.
+**Robinhood reconciled:** VOO 1.587599 (avg 692.87), SGOV 2.636818 (avg 100.50), cash $19.82, buying power $19.82 (no margin used). Account $1,384.61.
+**Idea watch (research/2026-11-09/ideas-fired.csv):** the macro SPY 12/04 720P shadow fired at 4.47 and the momentum SPY 11/30 750C shadow at 13.36; neither
+was taken (no edge).
