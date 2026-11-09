@@ -987,3 +987,14 @@ real $1,383.25** at the close (VOO 691.87, SGOV 100.50; Robinhood $1,384.39 with
 **No resting take-profit:** the index core has no stop and no take-profit by rule; no option was bought.
 **Close:** QQQ +3.5%, META +5.1%, NVDA -4.3% (the CEO probe); ^VIX 19.92, with the term structure normal again; CL=F 86.38 (-4.9%).
 **Research:** four personas fired (brief at research/2026-11-09/brief.md).
+**Personas (research/2026-11-09/): all four say no trade for Tue 11/10.**
+* **macro:** CPI is a normal-session event. The S&P 500 halt levels from ^GSPC 7,549.94 are 7,021.44 / 6,568.45 (15-minute halts before 15:25) and 6,039.95
+  (closes the day). The 11/06 SPY 12/4 720P shadow hit its stop at the close.
+* **momentum:** SPY is +3.0% above its 200-day and -1.7% under its 50-day; QQQ is 0.3% under its 200-day (681.17). The QQQ 11/30 675P shadow exited at its
+  -50% backstop (bid 13.69 vs 33.51, -59%); the SPY 11/30 750C shadow is open (+2.4%).
+* **catalyst:** no sample name reports for Tuesday. CSCO for Fri 11/13: the line is 0.92x the 11/12 close (about 90.76 at 98.65). RV20 rose to 44.2%, so the
+  put fits only at IV of about 37.5-43% (12/18 put; tonight's spreads are 6-28%). NVDA: the CEO probe, no 8-K; shadow only.
+* **options-vol:** a CPI straddle fails the rules (0DTE, two legs, fills after the print; priced 0.78%, about 1.05x a normal day). CSCO ask ceilings on
+  $1,383.25 and the $265 reserve: 2.65 up to 0.99x, 2.63 at 1.0x, 1.87 at 1.1x (scripts/ov_1109.py).
+**Proposals for Tue 11/10: none** (no drafts, so no red-team). The core is held.
+**Dashboard (11/09):** five files refreshed (summary 0825ab21, equity ab13972a, positions 449f8f57, orders d8d17e33, trades 13dc7301); the old files were deleted.
