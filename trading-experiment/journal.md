@@ -979,3 +979,11 @@ Veterans Day (Wed) is a normal stock-market session.
 **Idea watch (research/2026-11-09/ideas-fired.csv):** the macro SPY 12/04 720P shadow fired at 4.47 and the momentum SPY 11/30 750C shadow at 13.36; neither
 was taken (no edge).
 **Dashboard (Run A):** orders refreshed (50471617; the old e9a107e8 was deleted).
+
+## 2026-11-09 (Mon) Post-close (Run B, 17:15 EST)
+**Booked:** paper T005 VOO 1.5891 @ 692.22 and T006 SGOV 2.6354 @ 100.55 (close-model fills; the real fills were 692.87 and 100.50). **Paper $1,368.14;
+real $1,383.25** at the close (VOO 691.87, SGOV 100.50; Robinhood $1,384.39 with after-hours marks; cash $19.82; reconciled). **SPY buy-and-hold $1,963.04**
+(SPY 752.69, +2.4%). Since the 11/07 mandate change, real P/L is -$1.59. `validate` OK; `live.py check` OK.
+**No resting take-profit:** the index core has no stop and no take-profit by rule; no option was bought.
+**Close:** QQQ +3.5%, META +5.1%, NVDA -4.3% (the CEO probe); ^VIX 19.92, with the term structure normal again; CL=F 86.38 (-4.9%).
+**Research:** four personas fired (brief at research/2026-11-09/brief.md).
