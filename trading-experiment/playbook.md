@@ -290,6 +290,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     <= min(full Kelly/100 at 35 DTE, 2.77): 2.63 at IV = RV20, 1.87 at 1.1x. Funded by selling SGOV. It is likely to fail on IV or spread.
   - **Update, Mon 11/9:** the core was bought (1.587599 VOO @ 692.87, 2.636818 SGOV @ 100.50; cash $19.82). No proposals for Tuesday. CSCO's line moves with its
     11/12 close (about 90.76 at 98.65); RV20 rose to 44.2%, so the put fits only at IV of about 37.5-43%.
+  - **Update, Tue 11/10:** the hot CPI (0.4% headline, 0.3% core) left the core held (no rule acts on it). No Wednesday proposals. CSCO's line is about 90.30
+    at 98.15; the put fits only at IV of 36-42%. ANT's S-1/A No. 2 assumes $74.00 with a $26B private placement (Google, NVIDIA $10B each); A1 stays REJECTED.
   - **Watch:** CPI Tue 11/10 (not a reason to delay); NVDA's board probe of its CEO (Axios, DW, 11/8; no 8-K yet); NVDA earnings 11/17 after the close
     (C1 shadow only; the reserve could not fund it after a CSCO trade); the ANT IPO pricing (guard: no AMZN or GOOGL adds). No SPY shares or options before 12/06.
 
@@ -363,6 +365,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-10: core held through the hot CPI; no Wednesday proposals; ANT S-1/A No. 2 noted (A1 unchanged).
 * 2026-11-09: the index core was bought (VOO $1,100, SGOV $265); no Tuesday proposals.
 * 2026-11-08 (Sunday rule-evolution vote, red-team MODIFY): the index core adopted (about 80% VOO, 20% SGOV; a stated exception, S1 WEAK); the regime gate,
   staging, circuit breakers and ratchet retired for the core (regime_gate.py: lower Sharpe in both halves); options only for CONFIRMED setups, Kelly on

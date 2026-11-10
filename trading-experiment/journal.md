@@ -1026,3 +1026,13 @@ $19.82). **Paper $1,364.45.** **SPY buy-and-hold $1,955.81** (SPY 749.92, -0.4%)
 **For the Sunday rule-evolution list:** with the index core in place, the daily four-persona round finds "no trade" almost every night. Propose running the
 full round only on nights with a pending setup (a C1 reaction day, an open option) and a short single-agent news check otherwise. The evidence is the run
 record since 11/02 (12 rounds, 0 trades from them); this saves cost without changing a trading rule.
+**Personas (research/2026-11-10/): all four say no trade for Wed 11/11.**
+* **macro:** October core CPI was +0.3% m/m (BLS CUSR0000SA0L1E, +0.296%), so the 11/08 SPY 12/11 720P shadow fired at the 11/10 check (ask 5.82; logged in
+  ideas-fired.csv). Wednesday is Veterans Day: stocks and options open, the bond market closed. Halt levels 6,994.47 / 6,543.21 / 6,016.74. December: +27.5 bp
+  priced (25 bp certain, about 10% odds of 50 bp).
+* **momentum:** SPY is +2.6% above its 200-day, QQQ -1.0% below it (4 closes in a row); the SPY 11/30 750C shadow is -15% with no exit.
+* **catalyst:** no C1 reaction day Wednesday (none of the Tue-pm or Wed-am reporters is in the sample). CSCO line for Friday: 0.92x the 11/12 close (90.30
+  at 98.15); a 12/18 put fits only at IV of 36.0-41.8% with the $265 cap. NVDA: a shareholder suit and the board's probe (Wachtell), no 8-K, not a C1.
+* **options-vol:** D1 rules out other option buys; CSCO ceilings 2.62 at k 1.0, 1.86 at 1.1 (scripts/ov_run_1110.py, a wrapper around ov_1109.py).
+**Proposals for Wed 11/11: none** (no drafts, so no red-team). The core is held.
+**Dashboard (11/10):** summary (84b60000), equity (43a71475) and positions (61aa608a) refreshed; orders and trades unchanged; the old files were deleted.
