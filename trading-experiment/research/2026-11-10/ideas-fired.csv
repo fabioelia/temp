@@ -1,0 +1,2 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-10,macro,SPY261211P00720000,5.82,"Cboe delayed chain 14:44 ET (bid 5.77, delta -0.23; journal Run A 11/10); trigger core CPI >= 0.3% m/m fired: BLS CUSR0000SA0L1E 339.900 vs 338.896 = +0.296%, published 0.3% (macro memo 11/10, verified after the 14:43 check); shadow only, not taken (no edge; delta outside band)"
