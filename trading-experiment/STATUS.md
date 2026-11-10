@@ -1,19 +1,19 @@
-# Paper-trading scoreboard (as of 2026-11-09)
+# Paper-trading scoreboard (as of 2026-11-10)
 
 > The paper ledger: the shadow model of the real account (live mode is on; real fills are in data/live_ledger.csv). Paper fills are modeled at the close with slippage and fees (see RULES.md).
 
-**Equity $1,368.14** | P/L -$631.86 (-31.59%) since the start | objective: make money (no date or amount target since 2026-11-07)
+**Equity $1,364.45** | P/L -$635.55 (-31.78%) since the start | objective: make money (no date or amount target since 2026-11-07)
 - Cash $3.84 | realized -$631.16 | fees paid $0.18 | slippage cost $49.68
-- SPY buy-and-hold with same $: $1,963.04
+- SPY buy-and-hold with same $: $1,955.81
 - No end date (the owner retired it on 2026-11-07)
-- Est. after-tax equity if liquidated (memo, 24% on gains): $1,368.14
+- Est. after-tax equity if liquidated (memo, 24% on gains): $1,364.45
 
 ## Positions
 
 | Ticker | Qty | Avg cost | Last | Value | Unreal. | Stop | Target |
 |---|---|---|---|---|---|---|---|
-| SGOV | 2.6354 | 100.55 | 100.50 | $264.86 | -$0.14 (-0.05%) |  |  |
-| VOO | 1.5891 | 692.22 | 691.87 | $1,099.44 | -$0.56 (-0.05%) |  |  |
+| SGOV | 2.6354 | 100.55 | 100.53 | $264.94 | -$0.06 (-0.02%) |  |  |
+| VOO | 1.5891 | 692.22 | 689.50 | $1,095.67 | -$4.33 (-0.39%) |  |  |
 
 ## Pending orders (fill at next close)
 
@@ -25,7 +25,7 @@ _None._
 - Fills priced by the cross-checked quote feed: 6 of 6
 - Win rate: 0%
 - Payoff: n/a
-- Max drawdown: -36.53%
+- Max drawdown: -36.70%
 
 ## Taxes (memo, not tax advice)
 

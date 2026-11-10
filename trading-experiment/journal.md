@@ -1017,3 +1017,12 @@ is $1,377.38 (above the $1,000 owner alert); `live.py check` OK.
 **Orders:** none pending, none added, nothing to confirm.
 **Idea watch:** macro's SPY 12/11 720P shadow needs core CPI of 0.3% or more. The core figure was not found in this run's sources (headline 0.4% only), so the
 trigger is left unverified and not logged as fired; the put is 5.77/5.82 (Cboe 14:44 ET). The momentum SPY 11/30 750C shadow stays open.
+
+## 2026-11-10 (Tue) Post-close (Run B, 17:19 EST)
+**Booked:** no fills. **Real $1,379.57** at the close (VOO 689.50, SGOV 100.53; Robinhood $1,381.17 with after-hours marks; positions reconciled; cash
+$19.82). **Paper $1,364.45.** **SPY buy-and-hold $1,955.81** (SPY 749.92, -0.4%). Since 11/07 real P/L is -$5.27. `validate` OK; `live.py check` OK.
+**Close:** the hot CPI day. ^TNX 4.98, TLT -1.3%, NVDA -5.5% (the CEO probe and a lawsuit), MSFT -2.2%, AMZN +1.5%; ^VIX 19.46.
+**Research:** four personas fired (brief research/2026-11-10/brief.md).
+**For the Sunday rule-evolution list:** with the index core in place, the daily four-persona round finds "no trade" almost every night. Propose running the
+full round only on nights with a pending setup (a C1 reaction day, an open option) and a short single-agent news check otherwise. The evidence is the run
+record since 11/02 (12 rounds, 0 trades from them); this saves cost without changing a trading rule.
