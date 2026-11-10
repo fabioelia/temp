@@ -44,3 +44,24 @@ no non-public information about the offering; only the public filing and public 
 * **Strategy v2 A1 (REJECTED):** for 16 US IPOs that raised $3B or more, buying at the first-day close returned -23% vs SPY over 250 days (t -2.0). Partner
   or holder stocks fell 1.8% over the IPO day and the next (t -2.7). Options on an IPO of $3B or more can list from the 2nd business day (Cboe Rule 4.3).
   Guard only: don't add AMZN or GOOGL into the ANT pricing.
+
+## Update 2026-11-10: S-1/A No. 2 (filed 2026-11-10, before the open), with an assumed price
+* https://www.sec.gov/Archives/edgar/data/2130357/000162828026072484/anthropicpbc-sx1ax2.htm
+* **Assumed IPO price:** $74.00 per share, "the midpoint of the estimated offering price range set forth on the cover page". The cover range itself did not
+  come through the text extraction, so it is not quoted here.
+* **Net proceeds:** about $84.6B (about $93.7B with the underwriters' option), counting the concurrent private placement.
+* **Concurrent private placement:** $26.0B of Class N at the IPO price, contingent on the offering:
+  - Google $10.0B
+  - NVIDIA $10.0B
+  - AMD $2.5B
+  - Broadcom $1.0B
+  - Micron $1.0B
+  - Microsoft $1.0B
+  - TSMC $0.5B
+  These shares are not under lock-up.
+* Directors' affiliates have indicated up to $303M of Class A purchases. Lock-ups run 180 and 365 days, with 3.6B shares that may become eligible early.
+* **For us (A1 REJECTED; the conflict disclosed; public information only):**
+  - No ANT buy. For 16 large IPOs, buying at the first-day close returned -23% vs SPY over a year.
+  - The guard holds: no AMZN or GOOGL adds into the pricing.
+  - The index core holds the private-placement buyers (NVDA, GOOGL, AMD, AVGO, MU, MSFT) at index weight only.
+  - Options on ANT could list from the 2nd business day after the IPO (Cboe Rule 4.3).

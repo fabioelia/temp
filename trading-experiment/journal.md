@@ -998,3 +998,12 @@ real $1,383.25** at the close (VOO 691.87, SGOV 100.50; Robinhood $1,384.39 with
   $1,383.25 and the $265 reserve: 2.65 up to 0.99x, 2.63 at 1.0x, 1.87 at 1.1x (scripts/ov_1109.py).
 **Proposals for Tue 11/10: none** (no drafts, so no red-team). The core is held.
 **Dashboard (11/09):** five files refreshed (summary 0825ab21, equity ab13972a, positions 449f8f57, orders d8d17e33, trades 13dc7301); the old files were deleted.
+
+## 2026-11-10 (Tue) Pre-open (09:19 EST)
+**CPI hot:** October CPI rose 0.4% m/m against 0.24% expected (Morningstar, Fox Business, Reuters, 08:44-09:12 ET), adding to rate-hike fears. Futures:
+ES=F 7,529.25 (-0.6%), NQ=F -1.0%. ^TNX 4.954 (+9 bp), ^VIX 21.11, CL=F 84.56.
+**ANT S-1/A No. 2 filed today:** assumed price $74.00 (the range midpoint); about $84.6B of proceeds; a $26.0B concurrent private placement. Google
+($10.0B) and NVIDIA ($10.0B) lead, with AMD, Broadcom, Micron, Microsoft and TSMC. Memo updated: research/2026-10-26/anthropic-s1.md. A1 stays REJECTED,
+and the AMZN/GOOGL guard holds.
+**NVDA:** a shareholder lawsuit over the CEO "spy affair" disclosures (Boston Herald); no 8-K.
+**Plan unchanged:** the index core is held (no stop and no timing rule acts on CPI); no proposals for today; CSCO C1 Friday.
