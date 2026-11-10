@@ -1007,3 +1007,13 @@ ES=F 7,529.25 (-0.6%), NQ=F -1.0%. ^TNX 4.954 (+9 bp), ^VIX 21.11, CL=F 84.56.
 and the AMZN/GOOGL guard holds.
 **NVDA:** a shareholder lawsuit over the CEO "spy affair" disclosures (Boston Herald); no 8-K.
 **Plan unchanged:** the index core is held (no stop and no timing rule acts on CPI); no proposals for today; CSCO C1 Friday.
+
+## 2026-11-10 (Tue) Pre-close (14:44 EST)
+**Driver:** the hot October CPI (0.4% m/m against 0.24% expected); yields jumped and a December hike is now fully priced (headlines 13:25-14:28 ET). SPY
+748.69 (-0.5%), VOO 688.22 (-0.5%), SGOV 100.52 (Yahoo live, single source). Who loses: rate-sensitive and long-duration growth names (the index's tech
+weights); the core holds them at index weight only.
+**Positions:** the index core (VOO 1.587599, SGOV 2.636818, cash $19.82) is held. It has no stop and no take-profit by rule. Experiment equity at live marks
+is $1,377.38 (above the $1,000 owner alert); `live.py check` OK.
+**Orders:** none pending, none added, nothing to confirm.
+**Idea watch:** macro's SPY 12/11 720P shadow needs core CPI of 0.3% or more. The core figure was not found in this run's sources (headline 0.4% only), so the
+trigger is left unverified and not logged as fired; the put is 5.77/5.82 (Cboe 14:44 ET). The momentum SPY 11/30 750C shadow stays open.
