@@ -61,7 +61,7 @@ Yahoo's BZ=F closed 92.63, which is the Brent Jan 2027 contract.
 Any trigger on oil or rates must name one of these series exactly. Numbers in a brief come from this table, never from an older brief.
 
 
-**What moved:** the AI trade revived after CoreWeave's beat-and-raise (Tue after the close): chips up, NVDA +2.9% (173.73), QQQ +1.6%; Veterans Day kept the
+**What moved:** the AI trade revived after CoreWeave's beat-and-raise (Tue after the close): chips up, NVDA +2.9% (173.73), QQQ +2.3% (corrected from +1.6%, momentum 11/11); Veterans Day kept the
 bond market closed. CSCO closed 100.76 (+2.7%) before Thursday's print.
 
 ## The week ahead
