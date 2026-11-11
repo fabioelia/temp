@@ -10,11 +10,3 @@ A single self-contained HTML page that transcribes audio or video **in the brows
 - **Word-level alignment** (with Whisper models exported with attention outputs), click-to-seek, live playback highlighting, and TXT / SRT / VTT / JSON export.
 
 Open the file in a modern browser (Chrome or Edge 113+ recommended for WebGPU). The page itself has no dependencies; the Transformers.js library is loaded from jsDelivr and the models from the Hugging Face Hub on first use, then cached by the browser. No audio ever leaves the machine.
-
-## pr-radar/
-
-A Chrome extension (side panel) that tracks your open PRs, their checks and labels, and the Claude sessions that link them. See [`pr-radar/README.md`](pr-radar/README.md).
-
-## pr-radar-mac/
-
-PR Radar as a macOS menu bar app (Electron): a menu bar icon with the "needs you" count and the extension's panel as a popover. See [`pr-radar-mac/README.md`](pr-radar-mac/README.md).
