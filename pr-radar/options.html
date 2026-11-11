@@ -17,6 +17,7 @@
       #probes { margin-top: 10px; border-collapse: collapse; font-size: 12px; }
       #probes td { padding: 4px 10px 4px 0; vertical-align: top; border-top: 1px solid var(--border); }
       #probes .bad { color: var(--alert); }
+      .repos .tabs { flex-wrap: wrap; }
       .tabs button.on { border-color: var(--accent); color: var(--accent); }
       fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 12px 0; padding: 8px 12px 12px; }
       legend { font-weight: 600; padding: 0 4px; }
@@ -58,15 +59,10 @@
       </section>
       <section>
         <h2>What to track</h2>
-        <div class="row">
-          <span class="muted">Suggestions from</span>
-          <select id="suggestRepo"><option value="">add a token first</option></select>
-          <button id="suggest">Load its labels and check names</button>
-          <span id="suggestStatus" class="muted"></span>
-        </div>
-        <div class="tabs row">
+        <div class="tabs row" id="viewTabs">
           <button data-tab="form" class="on">Form</button>
           <button data-tab="json">JSON</button>
+          <span id="suggestStatus" class="muted"></span>
         </div>
         <div id="form"></div>
         <textarea id="config" spellcheck="false" hidden></textarea>

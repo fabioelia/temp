@@ -1,22 +1,29 @@
 // The settings form: one editable list per config section, generated from
 // SECTIONS. It edits a plain config object and calls onChange after every
-// edit; options.js keeps the JSON tab in step.
+// edit; options.js keeps the JSON tab in step. Searches and General are
+// shared; the other sections edit the repo picked under "Repos you track".
 import { h } from './dom.js';
-import { DEFAULT_CONFIG as D, nameToRegex, regexToName } from './lib.js';
+import { DEFAULT_CONFIG as D, NEW_REPO_PROFILE, nameToRegex, regexToName } from './lib.js';
 
-const byTitle = (items, key) => items.map((it) => [it[key], it]);
+// Presets: the generic new-repo items plus the Newton monorepo's, deduped.
+const NEWTON = D.repos['Newton-Research-Inc/newton'];
+const byTitle = (key, title) => {
+  const items = [...NEW_REPO_PROFILE[key], ...NEWTON[key]];
+  return [...new Map(items.map((it) => [it[title], it])).entries()];
+};
 
 export const SECTIONS = [
   {
     key: 'queries',
+    shared: true,
     title: 'Searches',
-    help: 'Each search is one section of the panel, in GitHub search syntax. @me means you.',
+    help: 'Each search is one section of the panel, in GitHub search syntax (@me means you). Every search is limited to the repos you track.',
     fields: [
       { k: 'title', label: 'Section name', ph: 'My PRs' },
       { k: 'q', label: 'GitHub search', ph: 'is:pr is:open author:@me', wide: true },
     ],
     presets: [
-      ...byTitle(D.queries, 'title'),
+      ...D.queries.map((q) => [q.title, q]),
       ['PRs I’m involved in', { title: 'Involved', q: 'is:pr is:open involves:@me archived:false' }],
       ['Bot PRs in a repo', { title: 'Bot PRs', q: 'is:pr is:open repo:OWNER/REPO author:app/the-newton-bot' }],
       ['Everything open in a repo', { title: 'Repo', q: 'is:pr is:open repo:OWNER/REPO' }],
@@ -31,21 +38,22 @@ export const SECTIONS = [
       { k: 'kind', label: 'Means', type: 'select', options: [['alert', 'Needs me'], ['ok', 'Good'], ['pending', 'In progress'], ['info', 'Info']] },
       { k: 'notify', label: 'Notify when added', type: 'checkbox' },
     ],
-    presets: byTitle(D.labels, 'name'),
+    presets: byTitle('labels', 'name'),
     blank: { name: '', kind: 'info' },
   },
   {
     key: 'checks',
     title: 'Checks to show',
-    help: 'Type a check name exactly as GitHub shows it (load suggestions above), or /a pattern/.',
+    help: 'Type a check name exactly as GitHub shows it (it autocompletes), * for every check, or /a pattern/. "Sum up" turns all matches into one chip.',
     fields: [
       { k: 'label', label: 'Short name', ph: 'CI' },
       { k: 'match', label: 'Check name', list: 'dl-checks', wide: true, toUi: regexToName, fromUi: nameToRegex },
+      { k: 'rollup', label: 'Sum up every match', type: 'checkbox' },
       { k: 'notify', label: 'Notify when it finishes', type: 'checkbox' },
       { k: 'showTitle', label: 'Show its result text', type: 'checkbox' },
       { k: 'alertTitle', label: 'Needs me if the text matches', ph: 'Not recommended', optional: true, showIf: (r) => r.showTitle },
     ],
-    presets: byTitle(D.checks, 'label'),
+    presets: byTitle('checks', 'label'),
     blank: { label: '', match: '' },
   },
   {
@@ -64,7 +72,7 @@ export const SECTIONS = [
       { k: 'alert', label: 'Needs me if the value matches', ph: '⛔', optional: true },
     ],
     presets: [
-      ...byTitle(D.extractors, 'name'),
+      ...byTitle('extractors', 'name'),
       ['Jira keys', { name: 'Jira', source: 'body', regex: '\\[([A-Z][A-Z0-9]+-\\d+)\\]', all: true, kind: 'text' }],
       ['Links to a site…', 'site'],
     ],
@@ -85,7 +93,7 @@ export const SECTIONS = [
       { k: 'label', label: 'Label', list: 'dl-labels', showIf: (r) => r.type?.endsWith('Label') },
       { k: 'when', label: 'Show on', type: 'select', options: [['', 'Any PR'], ['draft', 'Drafts'], ['ready', 'Ready PRs']] },
     ],
-    presets: byTitle(D.actions, 'title'),
+    presets: byTitle('actions', 'title'),
     blank: { title: '', type: 'toggleLabel', label: '' },
   },
 ];
@@ -155,8 +163,12 @@ export function renderBuilder(root, cfg, onChange) {
       ),
     ),
   );
-  const sections = SECTIONS.map((sec) => {
-    const list = (cfg[sec.key] ||= []);
+  cfg.repos ||= {};
+  const repos = Object.keys(cfg.repos);
+  if (!cfg.repos[current]) current = repos[0] || null;
+  const sections = SECTIONS.filter((sec) => sec.shared || current).map((sec) => {
+    const target = sec.shared ? cfg : cfg.repos[current];
+    const list = (target[sec.key] ||= []);
     const move = (i, d) => {
       [list[i], list[i + d]] = [list[i + d], list[i]];
       changed();
@@ -187,14 +199,73 @@ export function renderBuilder(root, cfg, onChange) {
     });
     return h(
       'fieldset',
-      {},
-      h('legend', {}, sec.title),
+      { 'data-shared': sec.shared ? 'yes' : undefined },
+      h('legend', {}, sec.shared ? sec.title : `${sec.title} · ${current}`),
       h('p', { class: 'muted' }, sec.help),
       rows.length ? rows : h('p', { class: 'muted' }, 'None yet.'),
       h('div', { class: 'row' }, h('button', { onclick: () => add(sec.blank || Object.fromEntries(sec.fields.map((f) => [f.k, '']))) }, '+ Add'), preset),
     );
   });
-  root.replaceChildren(general, ...sections);
+  const shared = sections.filter((el) => el.dataset.shared);
+  const perRepo = sections.filter((el) => !el.dataset.shared);
+  root.replaceChildren(general, ...shared, repoPicker(cfg, changed, rerender), ...perRepo);
+}
+
+// The selected repo, and the repos the token can see (for the add list).
+let current = null;
+let known = [];
+let onSelect = () => {};
+export function setKnownRepos(repos) {
+  known = repos;
+}
+export function onRepoSelected(fn) {
+  onSelect = fn;
+}
+
+function repoPicker(cfg, changed, rerender) {
+  const repos = Object.keys(cfg.repos);
+  const select = (repo) => {
+    current = repo;
+    rerender();
+    onSelect(repo);
+  };
+  const add = (repo, from) => {
+    repo = repo.trim().replace(/^https:\/\/github\.com\//, '').replace(/\/$/, '');
+    if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) return alert('Enter a repo as owner/name.');
+    if (!cfg.repos[repo]) cfg.repos[repo] = structuredClone(from ? cfg.repos[from] : NEW_REPO_PROFILE);
+    changed();
+    select(repo);
+  };
+  const name = h('input', { type: 'text', placeholder: 'owner/name', list: 'dl-repos' });
+  const startFrom = h('select', {}, h('option', { value: '' }, 'starting from the basics'), repos.map((r) => h('option', { value: r }, `as a copy of ${r}`)));
+  const tabs = repos.map((r) =>
+    h('button', { class: r === current ? 'on' : '', onclick: () => select(r) }, r),
+  );
+  return h(
+    'fieldset',
+    { class: 'repos' },
+    h('legend', {}, 'Repos you track'),
+    h('p', { class: 'muted' }, 'Only these repos are tracked. Each has its own labels, checks, text to pull out and buttons, edited below.'),
+    h('datalist', { id: 'dl-repos' }, known.filter((r) => !cfg.repos[r]).map((r) => h('option', { value: r }))),
+    repos.length ? h('div', { class: 'row tabs' }, tabs) : h('p', { class: 'muted' }, 'No repos yet.'),
+    h('div', { class: 'row' }, 'Add ', name, ' ', startFrom, h('button', { onclick: () => add(name.value, startFrom.value) }, '+ Add repo')),
+    current
+      ? h(
+          'div',
+          { class: 'row' },
+          h('strong', {}, `Editing ${current}`),
+          h('button', {
+            onclick: () => {
+              if (!confirm(`Stop tracking ${current} and delete its settings?`)) return;
+              delete cfg.repos[current];
+              current = null;
+              changed();
+              rerender();
+            },
+          }, 'Remove repo'),
+        )
+      : null,
+  );
 }
 
 export function fillSuggestions(labels, checks) {

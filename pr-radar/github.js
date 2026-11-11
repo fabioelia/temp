@@ -201,8 +201,11 @@ export async function jobLog(token, repo, jobId) {
 }
 
 // Check names seen on a repo's recent PRs, for the settings form to suggest.
+// Falls back to the newest PR's Actions jobs when check runs are hidden.
 export async function checkNames(token, repo) {
   const { data } = await graphql(token, QUERY, { q: `repo:${repo} is:pr sort:updated-desc`, n: 10 });
-  const names = data.search.nodes.filter(Boolean).flatMap((pr) => flattenContexts(pr).map((c) => c.name));
+  const prs = data.search.nodes.filter(Boolean);
+  let names = prs.flatMap((pr) => flattenContexts(pr).map((c) => c.name));
+  if (!names.length && prs[0]?.headRefOid) names = (await actionsContexts(token, repo, prs[0].headRefOid)).map((c) => c.name);
   return [...new Set(names)].sort();
 }

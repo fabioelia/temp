@@ -26,7 +26,9 @@ The token is kept in `chrome.storage.local` for this browser profile only.
 
 ## Configure
 
-The settings page has a **Form** tab and a **JSON** tab that edit the same config. In the form, every section has **+ Add**, ↑/↓ to reorder, ✕ to delete and a list of presets. Pick a repo under **Suggestions from** and click **Load its labels and check names**: the label and check-name fields then autocomplete from that repo. Check names are typed as plain names; write `/pattern/` for a regex. The JSON tab is there for copying a config to someone else or for anything the form doesn't cover. **Reset to defaults** loads the preset in `lib.js` (`DEFAULT_CONFIG`), which is tuned for the Newton monorepo.
+**Only the repos you set up are tracked.** Every search is limited to them (with `repo:` qualifiers), and PRs from any other repo are ignored. Each repo has its own labels, checks, extractors and buttons; searches and the General settings are shared. Under **Repos you track**, add a repo (it autocompletes from the repos your token can see), starting from the basics (an "All checks" summary chip, Claude session links, draft/ready/close buttons) or as a copy of a repo you already set up. The defaults come with `Newton-Research-Inc/newton` set up. Settings saved by an earlier version move under that repo.
+
+The settings page has a **Form** tab and a **JSON** tab that edit the same config. In the form, every section has **+ Add**, ↑/↓ to reorder, ✕ to delete and a list of presets. When you pick a repo to edit, its labels and recent check names load, and the label and check-name fields autocomplete from them. Check names are typed as plain names; `*` means every check, and `/pattern/` is a regex. The JSON tab is there for copying a config to someone else or for anything the form doesn't cover. **Reset to defaults** loads the preset in `lib.js` (`DEFAULT_CONFIG`), which is tuned for the Newton monorepo.
 
 The JSON fields:
 
@@ -34,11 +36,12 @@ The JSON fields:
 |---|---|
 | `pollMinutes` | Poll interval (minimum 0.5). Each query is one GraphQL call; GitHub allows 5,000 points an hour. |
 | `checksSource` | `auto` (default), `checks` or `actions`. See **Where checks come from** below. |
-| `queries[]` | `{title, q}`: GitHub search syntax, one panel section each. A PR in several shows under the first. |
-| `labels[]` | `{name, kind, notify}`: `kind` is `alert` (counts as "needs you"), `ok`, `pending` or `info`. Labels not listed stay hidden unless `showOtherLabels` is true. |
-| `checks[]` | `{label, match, notify, showTitle, alertTitle}`: `match` is a regex on the check name. If one name has several runs, the newest one that wasn't skipped counts. `showTitle` shows the check's output title; `alertTitle` is a regex on that title that counts as "needs you". |
-| `extractors[]` | `{name, source, contains, regex, all, kind, notify, artifacts}`: pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. `artifacts` is a regex on artifact names: the chip then downloads the matching artifacts of the Actions run linked from the same text (the last `/actions/runs/<id>` link in it). |
-| `actions[]` | `{title, type, label, when}`: `type` is `addLabel`, `removeLabel`, `toggleLabel`, `markReady`, `convertToDraft` or `close`. `when` is `draft` or `ready`. An add button hides when the label is already there, and a remove button when it isn't; a toggle shows `+` or `−`. |
+| `queries[]` | `{title, q}`: GitHub search syntax, one panel section each, limited to the repos in `repos`. A PR in several shows under the first. |
+| `repos` | `{"owner/name": {labels, checks, extractors, actions}}`: the repos you track, each with the four lists below. |
+| `labels[]` (per repo) | `{name, kind, notify}`: `kind` is `alert` (counts as "needs you"), `ok`, `pending` or `info`. Labels not listed stay hidden unless `showOtherLabels` is true. |
+| `checks[]` (per repo) | `{label, match, rollup, notify, showTitle, alertTitle}`: `match` is a regex on the check name. If one name has several runs, the newest one that wasn't skipped counts. `rollup: true` sums every matching check into one chip, worst state first. `showTitle` shows the check's output title; `alertTitle` is a regex on that title that counts as "needs you". |
+| `extractors[]` (per repo) | `{name, source, contains, regex, all, kind, notify, artifacts}`: pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. `artifacts` is a regex on artifact names: the chip then downloads the matching artifacts of the Actions run linked from the same text (the last `/actions/runs/<id>` link in it). |
+| `actions[]` (per repo) | `{title, type, label, when}`: `type` is `addLabel`, `removeLabel`, `toggleLabel`, `markReady`, `convertToDraft` or `close`. `when` is `draft` or `ready`. An add button hides when the label is already there, and a remove button when it isn't; a toggle shows `+` or `−`. |
 | `attention` | `{failedChecks, changesRequested, conflicts}`: other things that count as "needs you". |
 
 Examples:

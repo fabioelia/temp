@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, actionButton, allChecks, checksHidden, diff, flattenContexts, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, NEW_REPO_PROFILE, actionButton, mergeConfig, profileFor, scopedQuery, allChecks, checksHidden, diff, flattenContexts, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -132,9 +132,11 @@ test('rowsForUrl matches PR pages and linked sessions, not prefixes of other num
 
 test('validateConfig rejects bad regexes and unknown actions', () => {
   assert.deepEqual(validateConfig(cfg), []);
-  const bad = { ...cfg, checks: [{ label: 'x', match: '(' }], actions: [{ title: 'y', type: 'merge' }] };
+  const bad = { ...cfg, repos: { 'o/r': { ...NEW_REPO_PROFILE, checks: [{ label: 'x', match: '(' }], actions: [{ title: 'y', type: 'merge' }] } } };
   const errors = validateConfig(bad);
   assert.equal(errors.length, 2);
+  assert.ok(errors.every((e) => e.startsWith('o/r: ')));
+  assert.deepEqual(validateConfig({ ...cfg, repos: {} }), ['Add at least one repo: only repos that are set up are tracked.']);
 });
 
 test('summarizeErrors collapses per-PR errors into one line per field', () => {
@@ -222,8 +224,10 @@ test('check names round-trip through the form and patterns stay patterns', () =>
     assert.equal(regexToName(re), name);
   }
   assert.equal(nameToRegex('/^ci .*Test$/'), '^ci .*Test$');
+  assert.equal(nameToRegex('*'), '.');
+  assert.equal(regexToName(NEW_REPO_PROFILE.checks[0].match), '*');
   assert.equal(regexToName('^ci .*Test$'), '/^ci .*Test$/');
-  assert.deepEqual(cfg.checks.map((c) => regexToName(c.match)), ['CI Success', 'preview / Build, deploy, comment', 'playwright / Resolve Playwright gate status', 'qa-test', 'review/gate']);
+  assert.deepEqual(profileFor(cfg, 'Newton-Research-Inc/newton').checks.map((c) => regexToName(c.match)), ['CI Success', 'preview / Build, deploy, comment', 'playwright / Resolve Playwright gate status', 'qa-test', 'review/gate']);
 });
 
 test('checksHidden spots nulled check runs; the AI verdict reads the last ledger cycle and alerts on block', () => {
@@ -240,4 +244,36 @@ test('normalize takes substitute contexts (Actions jobs) when given', () => {
   const row = normalize(pr(), cfg, contexts);
   assert.equal(row.checks[0].state, 'fail');
   assert.equal(row.checks[1].state, 'missing');
+});
+
+test('an old saved config moves under the Newton repo; a new one keeps its repos', () => {
+  const legacy = { pollMinutes: 5, labels: [{ name: 'x', kind: 'alert' }], checks: [], extractors: [], actions: [] };
+  const m = mergeConfig(legacy);
+  assert.equal(m.pollMinutes, 5);
+  assert.deepEqual(Object.keys(m.repos), ['Newton-Research-Inc/newton']);
+  assert.deepEqual(m.repos['Newton-Research-Inc/newton'].labels, [{ name: 'x', kind: 'alert' }]);
+  assert.equal(m.labels, undefined);
+  assert.deepEqual(Object.keys(mergeConfig({ repos: { 'a/b': NEW_REPO_PROFILE } }).repos), ['a/b']);
+  assert.deepEqual(mergeConfig(undefined), cfg);
+});
+
+test('searches are limited to the set-up repos', () => {
+  const two = { ...cfg, repos: { 'a/b': NEW_REPO_PROFILE, 'c/d': NEW_REPO_PROFILE } };
+  assert.equal(scopedQuery('is:pr is:open author:@me', two), 'is:pr is:open author:@me repo:a/b repo:c/d');
+});
+
+test('a new repo gets one rollup chip: worst state of every check, one run per name', () => {
+  const other = { ...cfg, repos: { 'a/b': NEW_REPO_PROFILE } };
+  const contexts = [
+    { name: 'lint', state: 'pass', at: '1' },
+    { name: 'test', state: 'fail', at: '1', url: 'u-old' },
+    { name: 'test', state: 'pass', at: '2', url: 'u-new' },
+    { name: 'build', state: 'pending', at: '1', url: 'u-build' },
+  ];
+  const row = normalize(pr({ repository: { nameWithOwner: 'a/b' } }), other, contexts);
+  assert.deepEqual(row.checks, [{ label: 'All checks', state: 'pending', title: '1 of 3 pending', url: 'u-build' }]);
+  const failing = normalize(pr({ repository: { nameWithOwner: 'a/b' } }), other, [...contexts, { name: 'e2e', state: 'fail', at: '1', url: 'u-e2e' }]);
+  assert.equal(failing.checks[0].state, 'fail');
+  assert.equal(failing.checks[0].url, 'u-e2e');
+  assert.deepEqual(failing.attention, ['All checks failed']);
 });

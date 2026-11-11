@@ -1,5 +1,5 @@
 import { DRAFT_MUTATIONS, actionsContexts, gh, graphql } from './github.js';
-import { QUERY, checksHidden, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
+import { QUERY, checksHidden, diff, mergeConfig, normalize, profileFor, rowsForUrl, scopedQuery, summarizeErrors } from './lib.js';
 
 async function settings() {
   const { config, token } = await chrome.storage.local.get(['config', 'token']);
@@ -31,6 +31,11 @@ async function refresh() {
     return;
   }
   const { snapshot: prev } = await chrome.storage.local.get('snapshot');
+  if (!Object.keys(config.repos).length) {
+    await chrome.storage.local.set({ snapshot: { rows: [], sections: [], error: 'No repos set up yet. Add one in Settings: only repos you set up are tracked.', fetchedAt: null } });
+    chrome.action.setBadgeText({ text: '' });
+    return;
+  }
   try {
     const seen = new Set();
     const sections = [];
@@ -38,14 +43,16 @@ async function refresh() {
     const errors = [];
     const pending = [];
     for (const { title, q } of config.queries) {
-      const { data, errors: partial = [] } = await graphql(token, QUERY, { q, n: 50 });
+      const { data, errors: partial = [] } = await graphql(token, QUERY, { q: scopedQuery(q, config), n: 50 });
       rate = data.rateLimit;
       const blocked = new Set(partial.filter(touchesChecks).map((e) => e.path[2]));
       // The Actions fallback replaces exactly the fields these errors are about.
       errors.push(...(config.checksSource === 'checks' ? partial : partial.filter((e) => !touchesChecks(e))));
       const keys = [];
       data.search.nodes.forEach((node, i) => {
-        if (!node?.number) return;
+        // The search is limited to set-up repos; this also drops a PR that
+        // matched while its repo was being removed from settings.
+        if (!node?.number || !config.repos[node.repository.nameWithOwner]) return;
         const key = `${node.repository.nameWithOwner}#${node.number}`;
         if (seen.has(key)) return;
         seen.add(key);
@@ -107,7 +114,7 @@ async function act({ action, row, jobUrl }) {
 // only needs Actions read to list the run's artifacts.
 async function download({ row, extractor }) {
   const { config, token } = await settings();
-  const ex = config.extractors.find((e) => e.name === extractor);
+  const ex = profileFor(config, row.repo).extractors.find((e) => e.name === extractor);
   const run = row.artifactRuns?.[extractor];
   if (!ex?.artifacts || !run) throw new Error(`No Actions run linked from ${extractor}.`);
   const { artifacts } = await gh(token, `/repos/${row.repo}/actions/runs/${run}/artifacts?per_page=100`);

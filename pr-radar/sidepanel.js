@@ -1,6 +1,6 @@
 import { h } from './dom.js';
 import { jobLog, listLabels, prChecks } from './github.js';
-import { actionButton, mergeConfig, rowsForUrl } from './lib.js';
+import { actionButton, mergeConfig, profileFor, rowsForUrl } from './lib.js';
 
 const ICON = { pass: '✅', fail: '❌', pending: '⏳', neutral: '➖', cancelled: '⊘', skipped: '⤼', missing: '·' };
 const $ = (id) => document.getElementById(id);
@@ -63,7 +63,7 @@ function shortSession(url) {
 }
 
 function card(row, current) {
-  const { config } = state;
+  const config = profileFor(state.config, row.repo);
   const checks = row.checks.map((c) => {
     const chip = h(
       c.url ? 'a' : 'span',
@@ -261,7 +261,7 @@ function togglePicker(row) {
 function picker(row) {
   const p = state.picker;
   if (!p.labels) return h('div', { class: 'picker muted' }, 'Loading labels…');
-  const configured = state.config.labels.map((l) => l.name);
+  const configured = profileFor(state.config, row.repo).labels.map((l) => l.name);
   const isOn = (n) => (row.allLabels.includes(n) || p.add.has(n)) && !p.remove.has(n);
   const rank = (n) => (row.allLabels.includes(n) ? 0 : configured.includes(n) ? 1 : 2);
   const list = h('div', { class: 'picker-list' });

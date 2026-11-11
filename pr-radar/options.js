@@ -1,4 +1,4 @@
-import { fillSuggestions, renderBuilder } from './builder.js';
+import { fillSuggestions, onRepoSelected, renderBuilder, setKnownRepos } from './builder.js';
 import { checkNames, diagnose, listLabels, listRepos, whoami } from './github.js';
 import { DEFAULT_CONFIG, mergeConfig, validateConfig } from './lib.js';
 
@@ -37,7 +37,7 @@ function setTab(next) {
   if (tab === 'form') show(cfg);
   $('form').hidden = tab !== 'form';
   $('config').hidden = tab !== 'json';
-  for (const b of document.querySelectorAll('.tabs button')) b.classList.toggle('on', b.dataset.tab === tab);
+  for (const b of document.querySelectorAll('#viewTabs button')) b.classList.toggle('on', b.dataset.tab === tab);
 }
 
 async function load() {
@@ -45,13 +45,29 @@ async function load() {
   show(structuredClone(mergeConfig(config)));
   $('token').value = token || '';
   if (token) listRepos(token).then(fillRepos).catch(() => {});
+  const first = Object.keys(cfg.repos)[0];
+  if (token && first) suggest(first);
 }
 
 function fillRepos(repos) {
-  for (const id of ['repo', 'suggestRepo']) $(id).replaceChildren(...repos.map((r) => new Option(r, r)));
+  $('repo').replaceChildren(...repos.map((r) => new Option(r, r)));
+  setKnownRepos(repos);
+  if (tab === 'form') show(cfg);
 }
 
-for (const b of document.querySelectorAll('.tabs button')) b.addEventListener('click', () => setTab(b.dataset.tab));
+// Labels and check names of the repo being edited, so its fields autocomplete.
+async function suggest(repo) {
+  $('suggestStatus').textContent = `Loading suggestions from ${repo}…`;
+  const [labels, checks] = await Promise.allSettled([listLabels(token(), repo), checkNames(token(), repo)]);
+  fillSuggestions(labels.value || [], checks.value || []);
+  $('suggestStatus').textContent = `${repo}: ${[
+    labels.value ? `${labels.value.length} labels` : `labels unavailable (${labels.reason.message})`,
+    checks.value ? `${checks.value.length} check names` : `check names unavailable (${checks.reason.message})`,
+  ].join(', ')} autocomplete in the form.`;
+}
+onRepoSelected(suggest);
+
+for (const b of document.querySelectorAll('#viewTabs button')) b.addEventListener('click', () => setTab(b.dataset.tab));
 
 $('save').addEventListener('click', async () => {
   if (!readJson()) return;
@@ -66,17 +82,6 @@ $('reset').addEventListener('click', () => {
   status('Defaults loaded. Save to apply.');
 });
 
-$('suggest').addEventListener('click', async () => {
-  const repo = $('suggestRepo').value;
-  if (!repo) return;
-  $('suggestStatus').textContent = 'Loading…';
-  const [labels, checks] = await Promise.allSettled([listLabels(token(), repo), checkNames(token(), repo)]);
-  fillSuggestions(labels.value || [], checks.value || []);
-  $('suggestStatus').textContent = [
-    labels.value ? `${labels.value.length} labels` : `labels: ${labels.reason.message}`,
-    checks.value ? `${checks.value.length} check names` : `checks: ${checks.reason.message}`,
-  ].join(' · ') + ' — they now autocomplete in the form.';
-});
 
 const token = () => $('token').value.trim();
 const cell = (text, cls) => Object.assign(document.createElement('td'), { textContent: text, className: cls || '' });
