@@ -150,7 +150,9 @@ def cmd_gate(a):
     tk, side = o["ticker"], o["side"]
     st = live_state()
     halted, eq, loss = trip_if_breached(st, day, parse_marks(a.marks))
-    limit_time = hhmm(LIVE.get("flatten_cutoff_et", "15:58")) if (halted and side == "sell") else hhmm(LIVE.get("last_order_cutoff_et", "15:50"))
+    # exits (sells of what we hold) keep the later flatten cutoff and skip the fill cap: getting out must stay possible
+    # (adopted 2026-11-11 from the day-trader-skill review; the same-day round-trip and resting-order guards still apply to sells)
+    limit_time = hhmm(LIVE.get("flatten_cutoff_et", "15:58")) if side == "sell" else hhmm(LIVE.get("last_order_cutoff_et", "15:50"))
     if now.time() > limit_time:
         refuse(f"{now:%H:%M} ET is after the {limit_time:%H:%M} ET last-order cutoff")
     if not T.confirmed_for(o, day):
@@ -160,7 +162,7 @@ def cmd_gate(a):
     cap = LIVE["capital_cap_usd"]
     todays = st["per_day"].get(day, [])
     open_tickets = [t for t in tickets() if t["date"] == day and t["status"] in ("approved", "placed")]
-    if len(todays) + len(open_tickets) >= T.CFG["max_trades_per_day"]:
+    if side == "buy" and len(todays) + len(open_tickets) >= T.CFG["max_trades_per_day"]:
         refuse(f"daily cap of {T.CFG['max_trades_per_day']} real fills reached")
     if tk in {r["ticker"] for r in todays} | {t["ticker"] for t in open_tickets}:
         refuse(f"{tk} already traded today (no same-day round trips or repeat fills)")
@@ -347,6 +349,12 @@ def cmd_record(a):
     tk = next((t for t in tickets() if t["ticket"] == a.ticket), None)
     if tk is None or tk["status"] not in ("approved", "placed"):
         sys.exit(f"ticket {a.ticket} is not open")
+    mismatch = fill_mismatch(tk, a.qty, a.avg_price)
+    if mismatch and not a.accept_mismatch:
+        sys.exit(f"the fill does not match ticket {a.ticket}: {mismatch}. Check the broker order; if the broker really filled this, "
+                 f"record it with --accept-mismatch \"<why>\" (the ledger follows the broker) and log it in the journal")
+    if mismatch:
+        a.note = f"{a.note + '; ' if a.note else ''}MISMATCH accepted: {mismatch} ({a.accept_mismatch})"
     rows = T.read_csv(LIVE_LEDGER)
     rows.append({"id": f"L{len(rows) + 1:03d}", "ts_et": now.isoformat(timespec="seconds"), "date": a.date or now.date().isoformat(),
                  "ticker": tk["ticker"], "side": tk["side"], "qty": f"{a.qty:.6f}", "avg_price": a.avg_price,
@@ -355,6 +363,20 @@ def cmd_record(a):
     T.write_csv(LIVE_LEDGER, LEDGER_COLS, rows)
     set_ticket(a.ticket, status="recorded")
     print(f"recorded {rows[-1]['id']}: {tk['side']} {a.qty} {tk['ticker']} @ {a.avg_price}")
+
+
+def fill_mismatch(tk, qty, avg_price):
+    """How a fill differs from what its ticket approved, or None. Adapted 2026-11-11 from the day-trader-skill review (its
+    risk check fingerprints each approved order). Quantity may not exceed the ticket's; a buy's cost may not exceed the
+    approved dollars (to the cent for option premium, which is qty x limit x 100; 0.5% for a dollar-sized stock buy)."""
+    if tk["qty"] and qty > float(tk["qty"]) + 1e-6:
+        return f"quantity {qty:g} is above the approved {float(tk['qty']):g}"
+    if tk["side"] == "buy" and tk["usd"] not in ("", "resting"):
+        cost, ok = qty * avg_price * T.mult(tk["ticker"]), float(tk["usd"])
+        tol = 0.01 if T.is_option(tk["ticker"]) else max(0.02, 0.005 * ok)
+        if cost > ok + tol:
+            return f"cost ${cost:,.2f} is above the approved ${ok:,.2f}"
+    return None
 
 
 def cmd_fail(a):
@@ -422,6 +444,7 @@ def main():
     r.add_argument("--broker-order-id")
     r.add_argument("--note")
     r.add_argument("--date", help="the execution date at the broker, when it was not today (a resting order that filled earlier)")
+    r.add_argument("--accept-mismatch", metavar="WHY", help="record a fill that differs from its ticket (the broker really filled it); the reason goes in the note")
     r.set_defaults(fn=cmd_record)
     rs = sub.add_parser("resting", help="approve a resting GTC take-profit sell for held contracts")
     rs.add_argument("--ticker", required=True)

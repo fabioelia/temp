@@ -125,6 +125,34 @@ class Live(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertAlmostEqual(json.loads(out)["shares"], 5.1)
 
+    def test_exits_keep_the_flatten_cutoff_and_skip_the_fill_cap(self):  # 2026-11-11, day-trader-skill review
+        self.buy_and_record("XLE", "350", 5.1, 68.5)
+        TUE = "2026-10-20"
+        for i, t in enumerate(["AAA", "BBB", "CCC", "DDD"]):
+            self.confirmed(t, "100", f"{TUE}T14:4{i}")
+            self.assertEqual(self.gate(f"O00{i + 2}", f"{TUE}T14:5{i}")[0], 0)  # the 4-a-day cap is now full
+        self.confirmed("EEE", "100", f"{TUE}T14:45")
+        rc, out = self.gate("O006", f"{TUE}T14:55")
+        self.assertEqual((rc, "daily cap" in out), (2, True))  # a fifth buy is still refused
+        self.confirmed("XLE", at=f"{TUE}T14:46", side="sell")
+        rc, out = self.gate("O007", f"{TUE}T15:55")  # an exit: after the 15:50 buy cutoff and over the cap, still approved
+        self.assertEqual(rc, 0, out)
+        rc, out = self.gate("O006", f"{TUE}T15:55")
+        self.assertEqual((rc, "cutoff" in out), (2, True))  # a buy at 15:55 is still refused
+        rc, out = self.gate("O007", f"{TUE}T15:59")
+        self.assertEqual((rc, "cutoff" in out), (2, True))  # and nothing goes after the 15:58 flatten cutoff
+
+    def test_a_fill_must_match_its_ticket(self):  # 2026-11-11, adapted from the day-trader-skill order fingerprint
+        self.confirmed("XLE", "350")
+        tid = json.loads(self.gate("O001")[1])["ticket"]
+        rc, out = self.run_cmd("live.py", f"{MON}T14:57", "record", "--ticket", tid, "--qty", "5.1", "--avg-price", "70")
+        self.assertEqual((rc, "above the approved $350.00" in out), (1, True))  # $357 for a $350 ticket: a typo or a different order
+        rc, out = self.run_cmd("live.py", f"{MON}T14:57", "record", "--ticket", tid, "--qty", "5.1", "--avg-price", "70",
+                               "--accept-mismatch", "broker filled it")
+        self.assertEqual(rc, 0, out)
+        row = Path(self.dir, "data", "live_ledger.csv").read_text().strip().splitlines()[-1]
+        self.assertIn("MISMATCH accepted", row)
+
     def test_stock_buy_is_capped_by_cash_after_a_realized_loss(self):  # 2026-11-08 fix: it used cap - deployed
         self.set_live(max_single_order_pct=1.0)
         self.buy_and_record("AAA", "600", 10, 60)                           # cost $600
@@ -348,6 +376,12 @@ class LiveResting(unittest.TestCase):
         self.live("2026-10-20T14:56", "fail", "--ticket", tid, "--reason", "cancelled to exit")
         rc, out = self.live("2026-10-20T14:57", "gate", "--order", "O002", "--limit", "4.00", "--tick", "0.01")
         self.assertEqual(rc, 0, out)
+
+    def test_an_option_fill_above_its_limit_or_quantity_is_refused(self):
+        rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")
+        tid = json.loads(out)["ticket"]
+        rc, out = self.live("2026-10-20T14:45", "record", "--ticket", tid, "--qty", "2", "--avg-price", "5.63")
+        self.assertEqual((rc, "quantity 2 is above the approved 1" in out), (1, True))
 
     def test_a_fill_is_recorded_on_its_broker_date(self):
         rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")

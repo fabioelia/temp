@@ -242,6 +242,41 @@
   "group": "12. Under test",
   "rule": "Allow up to 3 same-day exits in 5 business days for risk (the PDT limit) instead of refusing all same-day round trips.",
   "status": "under test",
-  "source": "Reflection 11/05; needs a gate change and a test"
+  "source": "Reflection 11/05. FINRA RN 26-10 replaced the $25k PDT rule (verified only by search excerpts of finra.org, since the site is blocked here); firms may phase in until 10/2027 and Robinhood's status is unknown. Proposal due at the 11/15 review"
+ },
+ {
+  "id": "R36",
+  "group": "3. Account safety (AI)",
+  "rule": "Exits stay possible: a sell of what we hold may go until the 15:58 cutoff (buys stop at 15:50) and skips any daily fill cap. It still needs its written confirmation, and the no-shorting, same-day and resting-order guards still apply.",
+  "status": "in force",
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py, tested"
+ },
+ {
+  "id": "R37",
+  "group": "3. Account safety (AI)",
+  "rule": "A recorded fill must match its ticket: no quantity above the approved one, and no cost above the approved dollars. A real broker mismatch is recorded with a stated reason and journaled.",
+  "status": "in force",
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py record, tested"
+ },
+ {
+  "id": "R38",
+  "group": "10. Process (AI)",
+  "rule": "Every option thesis states the break-even probability next to the estimated one, plus what holding the underlying for the same days would earn. Beating break-even only through the index's drift is the core's job.",
+  "status": "in force",
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); R1 result"
+ },
+ {
+  "id": "R39",
+  "group": "7. Evidence (AI)",
+  "rule": "No minimum reward:risk rule: a wider target for the same stop never raised the return (R1 REJECTED, SPY 1993-2026, both halves).",
+  "status": "in force",
+  "source": "research/strategy-v4/r1-reward-risk.txt"
+ },
+ {
+  "id": "R40",
+  "group": "10. Process (AI)",
+  "rule": "A move of 3% or more in a held or probed ticker with no headline or filing is named in the journal, as a lead and not a signal.",
+  "status": "in force",
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md)"
  }
 ]

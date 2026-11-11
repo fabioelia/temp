@@ -86,7 +86,7 @@ happens: nothing new fills.
 3. **Re-evaluate each proposal as if it were new.** Ask: *given what I know right now, is this still the best use of this money, at this size?* Compare it with the alternatives on the
    shortlist. Did the thesis change (news, oil, rates, a failed level, a flipped regime switch)? Is the price still inside its limit? Would adding it breach a cap?
    **Consensus check (W43 review):** if the idea is what a generic AI would recommend (the popular narrative), it needs a measured edge (event-vol ratio, IV vs realized, a
-   base rate translated into the option's own odds) or it is not a shot. **Exit at entry:** a buy is confirmed only with its exit plan written in the order's thesis: contracts,
+   base rate translated into the option's own odds) or it is not a shot. **Every option thesis also states two numbers (2026-11-11, R1):** the break-even probability next to the estimated one, and the drift-matched baseline (what holding the underlying for the same days would earn). A setup that beats break-even only through the index's drift is the core's job, not an option's. **Exit at entry:** a buy is confirmed only with its exit plan written in the order's thesis: contracts,
    the level where one is banked (+50-100%) or, with one contract, a full sale at +50%; the stop at the underlying level where the thesis is wrong, the premium stop as backstop;
    the stop moves to cost once a 14:43 check shows +40% or more. **Ceilings are not chased:** if a proposal's price ceiling is breached, skip it, unless the risk persona
    approved a specific alternate contract in advance (W43: the 790C swap got around the 785C's ceiling).
@@ -130,7 +130,8 @@ happens: nothing new fills.
    today, place its resting GTC take-profit now** (`LIVE_MODE.md`, "Resting take-profit"; except C1 down-gap puts, which hold to session 5 with no take-profit, `playbook.md` Exits); this is the one real order Run B may place, and it only reduces risk.
 1c. **Nightly mechanical check (adopted 2026-11-11; it always runs).** Broker vs ledger, the kill switch, the $1,000 owner alert, and the probe program's
    -$50 stop (`data/probes.csv`); earnings-date changes and 8-Ks for held names and the 25 C1 names; the W1 policy-odds and W4 futures flags; a W0
-   "who loses" basket when a qualifying policy event is within 10 sessions (playbook). **Step 2 runs only on decision nights:** a C1 reaction day, a PR3
+   "who loses" basket when a qualifying policy event is within 10 sessions (playbook). **A move with no story is said out loud (2026-11-11):** any held or probed
+   ticker that moved 3% or more from the prior close with no matching headline or filing is named in the journal, as a lead and not a signal. **Step 2 runs only on decision nights:** a C1 reaction day, a PR3
    entry or exit, an open-option or probe decision, or a qualifying policy event within 2 sessions, or an unscheduled shock. Otherwise the run journals
    the check, refreshes the dashboard and stops.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's

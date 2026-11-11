@@ -14,3 +14,13 @@ shares and no leverage.
 | T4 | **Same-month seasonality** (Keloharju-Linnainmaa-Nyberg 2016): the 5 of today's S&P 100 with the highest average return in the same calendar month over the prior 10+ years beat SPY in that month | Yahoo monthly total returns 1995-2026, today's S&P 100 (survivorship stated), long-only, 10 bps per turnover. CONFIRMED if the monthly excess is > 0 with t > 2 in both halves |
 | T5 | **Long-only stock momentum:** the 5 of today's S&P 100 with the best 12-1 month return, rebalanced monthly, beat SPY | Same data, 10 bps per turnover. Cited: Geczy-Samonov (2016), Blitz et al. (2020). CONFIRMED if the excess is > 0 with t > 2 in both halves |
 | P1 | **The election divergence gate** (as registered in `election-postmortem.md` section 4) | As written there: SPY +1% days, a sector of at least 10% weight lagging by 2+ of its own daily SDs; P(SPY 5-day minimum <= -3%) at least 1.5x, within VIX terciles; in-sample 1998-2012, out-of-sample 2013-2026; pass at Fisher p < 0.10 out of sample |
+
+## Added 2026-11-11, from the day-trader-skill review (pre-registered before any result)
+
+| ID | Claim | Test (fixed now) |
+|---|---|---|
+| R1 | **A reward:risk rule carries no edge by itself.** The reviewed repo (jakeschincariol/day-trader-skill) blocks entries under a minimum reward:risk and grades plans against the break-even share 1/(1+R). Claim tested: choosing a wider target for the same stop raises the expected return | SPY daily adjusted closes 1993-2026, halves split at 2010. Enter at a close when flat; exit at the first close at or below -k or at or above +R·k (k = 2% and 4%; R = 1, 2, 3; at most 250 sessions), 10 bps per round trip. Per trade, excess = trade log return − (the half's mean daily log return × sessions held). The claim is CONFIRMED only if, in both halves, the mean excess rises with R and the R = 3 mean is > 0 with t > 2. Prediction, written down now: REJECTED. The target-first share should be within 5 points of 1/(1+R) after the drift, and the excess should be about 0 for every R (the optional-stopping result) |
+
+**R1 amendment (2026-11-11, written after the first run and before the second).** The first run was degenerate. "Enter at a close when flat" re-enters at every exit close, so the trades tile every session of the half. The excess then sums to −10 bps per trade by construction: the log returns telescope, and the result is an identity, not evidence. The output is kept in `r1-reward-risk.txt` as run 1.
+
+**The amended test:** enter only on scheduled closes every 21 sessions, skipping a date if the last trade is still open. Every other part of the test is unchanged: the same exits, the same excess, the same CONFIRMED bar. With gaps between trades, the excess is no longer an identity.

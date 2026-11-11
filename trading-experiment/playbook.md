@@ -395,6 +395,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-11 (owner: "Review and learn from this" day-trader-skill repo): exits keep the 15:58 cutoff and skip the fill cap; `record` checks a fill against its ticket; option theses state the break-even and the drift-matched baseline; a move with no story is journaled. R1 (a reward:risk minimum) was REJECTED, so no such rule. The FINRA PDT change was verified only in part, and the same-day guard stays until 11/15. Memo: `research/strategy-v4/day-trader-skill-review.md`.
 * 2026-11-11 (Run B): the first W0 basket (Senate permitting bill, losers 17.7% of SPY); PR3's buy date fixed to match the tested script.
 * 2026-11-11 (owner's delegation; red-team MODIFY): the probe program (PR1 gold live, PR3 earnings run-up event-driven, PR2/PV3/PV1 paper; a -$50
   program stop; the whitelist and an 8-ticker limit in code), the policy-event watch (W0, W1, W2-as-flag, W4) and the nightly mechanical check replacing the

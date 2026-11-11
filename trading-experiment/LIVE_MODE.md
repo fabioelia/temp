@@ -18,7 +18,7 @@ Every run first confirms the Robinhood tools are loaded; if they are missing, it
 | Stock / ETF buys | on since 2026-11-08 for the index core (VOO, SGOV): a dollar-amount market order in regular hours through a gate ticket, sized from the account's actual cash; leveraged ETFs 15% |
 | Leveraged / inverse ETF | 15% of the cap ($300) per name |
 | Fills per day | no cap since 2026-11-07 (owner); no same-day round trips (pattern-day-trader guard: limited-margin account under $25k), no shorting |
-| Orders allowed | only those the pre-close run confirmed that day, only through a `live.py gate` ticket, before 15:50 ET (flatten sells until 15:58) |
+| Orders allowed | only those the pre-close run confirmed that day, only through a `live.py gate` ticket, before 15:50 ET for buys; sells of what we hold until 15:58 (since 2026-11-11) |
 | Duplicates | one ticket per order id: a crashed or repeated run cannot place the same order twice |
 
 "Pull the plug" is implemented as: sell all positions to cash, then halt. If you would rather it halt without selling, say so.
@@ -49,6 +49,8 @@ python3 trading-experiment/live.py gate --order O003 --marks ...   # APPROVED ti
 python3 trading-experiment/live.py placed --ticket K001 --broker-order-id <id>
 #   confirm the execution with the connector's order status, then:
 python3 trading-experiment/live.py record --ticket K001 --qty <filled shares> --avg-price <avg fill> --fees <fees>
+# since 2026-11-11 record refuses a fill that exceeds its ticket (quantity, or cost above the approved dollars);
+# a real broker mismatch: add --accept-mismatch "<why>" and log it in the journal
 #   anything unclear or failed:  live.py fail --ticket K001 --reason "..."   (never re-place without checking the broker's order history first)
 ```
 Run B (post-close) reconciles: broker positions against `data/live_ledger.csv`, runs `live.py check`, and reports real P/L next to the paper P/L.
