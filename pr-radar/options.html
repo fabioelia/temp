@@ -25,9 +25,10 @@
       <section>
         <h2>GitHub token</h2>
         <p class="muted">
-          Stored only in this browser profile (chrome.storage.local). Read-only use needs a classic token with
-          <code>repo</code>, or a fine-grained one with Pull requests, Issues, Checks and Metadata read on your repos.
-          The action buttons also need Pull requests + Issues write, and Actions write for re-running a job.
+          Stored only in this browser profile (chrome.storage.local). A classic token with <code>repo</code> covers
+          everything. A fine-grained token needs the org as resource owner and Pull requests, Issues and Commit
+          statuses read (write for the buttons, Actions write for re-runs), and may still be refused check runs.
+          Test, then Check access, shows what this token can actually read.
         </p>
         <div class="row">
           <input id="token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" />
