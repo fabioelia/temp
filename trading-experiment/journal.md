@@ -1052,3 +1052,25 @@ and run the same day (research/strategy-v3/README.md):
 * V4, pre-FOMC drift: REJECTED (gone since 2010).
 Nothing is adopted.
 **Process note:** the V1 agent ran one read-only `git status` against its brief's no-git rule (as on 10/30). There was no effect; the brief still says no git.
+
+## 2026-11-11 (Wed) Owner: "a handful to be probing and testing with"; the election warning signs
+**Owner:** "research more skills for investing I dont think we should land 1 investment but try to a have a handful to be probing and testing with. I'm also
+not clear how the new idea concept works ... and the warnings signs of the elections which we seemed to have missed."
+**Three research tracks (research/strategy-v4/):**
+1. **Election post-mortem (election-postmortem.md):** the warnings were public before our 11/4 buy.
+   - BofA (8/14, Oct) warned a sweep could cut stocks 10%+ via AI data centers.
+   - Reuters on 11/2 listed the losers (AI, memory, power, data centers).
+   - Polymarket odds on data-center moratoriums doubled in October.
+   - On election night Nasdaq futures fell 2.4% vs 1.3% for the S&P; our macro run had stopped at 19:05 ET.
+   - On 11/4 SPY was +1.7% while SOXX was -3.1%, and the "AI data center stocks dip" headline was in our own pre-open note.
+   Verdict: a reason to wait or size down, not a forecast. Proposed watch W0-W4: a losers list before events, policy odds, a divergence gate, a VXN/VIX
+   check, an event-night futures check. Claim P1 is registered.
+2. **Candidates (candidates.md):** 9 ranked, 3 skipped. No factor ETF beat SPY's Sharpe after launch. The top ones: the earnings premium in shares (C2 without
+   options), trend on non-equity assets, a gold sleeve, long-only momentum, insider purchase clusters, same-month seasonality.
+3. **Probe program (probe-program.md, draft):**
+   - About $200 carved from VOO; 4 live $50 probes in shares or ETFs, plus up to 4 paper probes.
+   - Admission needs a WEAK-or-better backtest; kill checks at weeks 4, 8 and 12, with a -$25 hard stop.
+   - Graduation needs CONFIRMED plus a deflated-Sharpe bar.
+   - Honest limit: $50 probes test fills, costs and discipline, not the edge.
+**Next:** tests T1-T5 and P1 are pre-registered (strategy-v4/claims.md) and running. A risk red-team of the program follows; the Sunday 11/15 vote decides;
+the first probes would start Mon 11/16.
