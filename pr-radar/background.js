@@ -1,32 +1,10 @@
+import { gh, graphql } from './github.js';
 import { QUERY, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
-
-const API = 'https://api.github.com';
 
 async function settings() {
   const { config, token } = await chrome.storage.local.get(['config', 'token']);
   return { config: mergeConfig(config), token };
 }
-
-async function gh(token, path, { method = 'GET', body } = {}) {
-  const res = await fetch(`${API}${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = res.status === 204 ? null : await res.json().catch(() => null);
-  if (!res.ok) throw new Error(`${method} ${path}: ${res.status} ${data?.message || ''}`.trim());
-  // GraphQL answers 200 with partial data when the token can't read some
-  // fields (a fine-grained token missing a permission); only fail outright
-  // when nothing came back.
-  if (data?.errors?.length && !data.data) throw new Error(summarizeErrors(data.errors));
-  return data;
-}
-
-const graphql = (token, query, variables) => gh(token, '/graphql', { method: 'POST', body: { query, variables } });
 
 async function refresh() {
   const { config, token } = await settings();

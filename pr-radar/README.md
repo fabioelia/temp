@@ -16,6 +16,7 @@ A Chrome side panel for keeping track of many open PRs and the Claude sessions b
 3. Paste a GitHub token and click **Test**:
    - **Classic token (recommended):** the `repo` scope covers reading and every button. If the org uses SAML single sign-on, click **Configure SSO** next to the token and authorize the org.
    - **Fine-grained token:** set **Resource owner** to the org (a token covers one owner, so "All repositories" under your personal account doesn't reach org repos). Repository permissions start at "No access", so set Pull requests, Issues and Commit statuses to read, plus Checks if listed. For the buttons, set Pull requests and Issues to write, and Actions to write for re-runs. The org may need to approve the token. Fine-grained tokens may still be refused check runs; if the panel says it can't read `statusCheckRollup`, use a classic token.
+   - **Test** lists the repos the token can see. Pick one and click **Check access** for a read-only check of each permission the panel uses.
    - If a permission is missing, the panel still shows what it could read and names each blocked field.
 4. Save. The first poll runs right away, then every `pollMinutes` minutes.
 
@@ -63,6 +64,7 @@ runs the unit tests for `lib.js` (Node 20+, no dependencies). The other files ar
 | File | Role |
 |---|---|
 | `lib.js` | Default config, GraphQL query, normalization, "needs you" rules, change detection, tab matching |
+| `github.js` | GitHub API calls and the token access check |
 | `background.js` | Polling, badge, notifications, write actions |
 | `sidepanel.*` | The panel |
 | `options.*` | Token and JSON config editor |

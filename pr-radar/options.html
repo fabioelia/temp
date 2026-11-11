@@ -12,6 +12,11 @@
       .row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
       #status { white-space: pre-wrap; }
       #status.bad { color: var(--alert); }
+      select { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); max-width: 100%; }
+      #repoList ul { columns: 2; font-size: 12px; margin: 6px 0; }
+      #probes { margin-top: 10px; border-collapse: collapse; font-size: 12px; }
+      #probes td { padding: 4px 10px 4px 0; vertical-align: top; border-top: 1px solid var(--border); }
+      #probes .bad { color: var(--alert); }
     </style>
   </head>
   <body>
@@ -27,6 +32,15 @@
         <div class="row">
           <input id="token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" />
           <button id="test">Test</button>
+        </div>
+        <div id="tokenInfo" class="muted" style="margin-top: 8px"></div>
+        <div id="access" hidden>
+          <details id="repoList" style="margin-top: 8px"><summary></summary><ul></ul></details>
+          <div class="row">
+            <select id="repo"></select>
+            <button id="check">Check access</button>
+          </div>
+          <table id="probes"></table>
         </div>
       </section>
       <section>
