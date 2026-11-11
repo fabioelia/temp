@@ -37,20 +37,33 @@ const NEWTON = {
   // artifacts: regex on artifact names; clicking the chip downloads the
   // matching artifacts of the Actions run linked from the same text.
   // show: {raw: display} renames values. alert: regex on the shown value
-  // that puts the PR in "needs you".
+  // that puts the PR in "needs you". report: qa | playwright parses the
+  // newest text holding `contains` into a report block instead (no regex).
   // Raw bodies are never stored, only what these extract, so keep them off
   // secrets (the preview block in a Newton PR body carries an MCP token).
   extractors: [
     SESSIONS,
     { name: 'Preview', source: 'body', regex: '<!-- pr-preview:start -->[\\s\\S]*?:link: (https://\\S+)', kind: 'link' },
+    // The qa-review pass's rolling comment, parsed into its defects, the
+    // checks that failed or were blocked, and its UX notes.
     {
-      name: 'QA verdict',
+      name: 'QA',
+      report: 'qa',
       source: 'comments',
       contains: '<!-- qa-tester:results -->',
-      regex: '> \\[!(?:CAUTION|WARNING|TIP)\\]\\s*\\r?\\n> \\*\\*(.+?)\\*\\*',
-      kind: 'text',
       notify: true,
       artifacts: '^qa-screenshots',
+      alert: '🐞',
+    },
+    // The Playwright workflow's rolling comment: progress while it runs, then
+    // the final counts and the failed and flaky tests.
+    {
+      name: 'Playwright',
+      report: 'playwright',
+      source: 'comments',
+      contains: '<!-- nri-playwright-results -->',
+      notify: true,
+      alert: 'failed',
     },
     // The AI review ledger's state block records each cycle's verdict; the
     // last one is the current review. Same source review/gate reads, so it
@@ -73,9 +86,9 @@ const NEWTON = {
     { title: 'Request QA', type: 'addLabel', label: 'qa-review', when: 'ready' },
     { title: 'Request AI review', type: 'addLabel', label: 'cursor-review' },
     { title: 'Mark ready', type: 'markReady', when: 'draft' },
+    { title: 'skip-qa', type: 'toggleLabel', label: 'skip-qa' },
     { title: 'Convert to draft', type: 'convertToDraft', when: 'ready' },
     { title: 'Close PR', type: 'close' },
-    { title: 'skip-qa', type: 'toggleLabel', label: 'skip-qa' },
   ],
 };
 
@@ -247,19 +260,22 @@ export function allChecks(contexts) {
     .sort((a, b) => STATE_ORDER.indexOf(a.state) - STATE_ORDER.indexOf(b.state) || a.name.localeCompare(b.name));
 }
 
-// The lines that name the failure and the last `n` lines of an Actions job
-// log, with the runner's timestamp prefix removed. ponytail: "names the
-// failure" is a heuristic (##[error], pytest FAILED/ERROR, "SomeError:"),
-// capped at 20 lines.
+// The lines that name the failure, and the `n` lines of an Actions job log
+// that lead up to its first ##[error] (or the last `n` when there is none),
+// with the runner's timestamp prefix removed. The end of a failed job's log
+// is its post-job cleanup, not the failure. ponytail: "names the failure" is
+// a heuristic (##[error], pytest FAILED/ERROR, "SomeError:"), capped at 20.
 export function logTail(text, n = 60) {
   const lines = text.replace(/\r/g, '').split('\n').map((l) => l.replace(/^\d{4}-\d\d-\d\dT[\d:.]+Z /, ''));
   while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+  const firstError = lines.findIndex((l) => l.startsWith('##[error]'));
+  const end = firstError === -1 ? lines.length : firstError + 1;
   return {
     errors: lines
       .filter((l) => /^##\[error\]|^(FAILED|ERROR) |\b[A-Z]\w*Error:/.test(l))
       .map((l) => l.replace(/^##\[error\]/, ''))
       .slice(0, 20),
-    tail: lines.slice(-n).join('\n'),
+    tail: lines.slice(Math.max(0, end - n), end).join('\n'),
   };
 }
 
@@ -271,16 +287,118 @@ function pickCheck(runs) {
 }
 
 function texts(pr, source, contains) {
-  const comments = [...nodes(pr.comments), ...nodes(pr.reviews)].map((c) => c.body || '');
-  const list = source === 'body' ? [pr.body || ''] : source === 'comments' ? comments : [pr.body || '', ...comments];
-  return contains ? list.filter((t) => t.includes(contains)) : list;
+  const comments = [...nodes(pr.comments), ...nodes(pr.reviews)].map((c) => ({ body: c.body || '', url: c.url }));
+  const body = { body: pr.body || '', url: pr.url };
+  const list = source === 'body' ? [body] : source === 'comments' ? comments : [body, ...comments];
+  return contains ? list.filter((t) => t.body.includes(contains)) : list;
 }
 
+// Markdown emphasis and code marks dropped, for showing a line as plain text.
+const plain = (t) => t.replace(/\*\*|__|`/g, '').replace(/\s+/g, ' ').trim();
+
+// Splits markdown into its `#`-heading sections: [{ heading, body }].
+function sections(text) {
+  const out = [{ heading: '', body: '' }];
+  for (const line of text.replace(/\r/g, '').split('\n')) {
+    if (/^#{2,4} /.test(line)) out.push({ heading: line.replace(/^#+ /, ''), body: '' });
+    else out[out.length - 1].body += `${line}\n`;
+  }
+  return out;
+}
+
+// The qa-review comment (guides/qa-testing.md, "Report structure"): verdict
+// alert, a checks table, a `### QA-n · severity — title` heading per defect,
+// and `- **UX-n · title**` bullets. Passing checks are left out on purpose.
+export function parseQaReport(text) {
+  const t = text.replace(/\r/g, '');
+  const tone = t.match(/^> \[!(CAUTION|WARNING|TIP)\]/m)?.[1] || '';
+  const verdict = plain(t.match(/^> \[!(?:CAUTION|WARNING|TIP)\]\s*\n> \*\*(.+?)\*\*/m)?.[1] || '');
+  const defects = [...t.matchAll(/^### (?:🐞\s*)?(QA-\d+)\s*·\s*([^—\n]+?)\s*—\s*(.+)$/gm)].map((m) => ({
+    id: m[1],
+    severity: m[2].trim().toLowerCase(),
+    title: plain(m[3]),
+  }));
+  const KIND = { '❌': 'fail', '⛔': 'blocked', '⚠️': 'flaky' };
+  const checks = [...t.matchAll(/^\|\s*(❌|⛔|⚠️)\s*\|\s*([^|\n]+?)\s*\|/gm)].map((m) => ({ kind: KIND[m[1]], title: plain(m[2]) }));
+  const uxSection = sections(t).find((s) => /UX notes/i.test(s.heading));
+  const ux = [...(uxSection?.body || '').matchAll(/^- \*\*(UX-\d+)\s*·\s*(.+?)\*\*/gm)].map((m) => ({ id: m[1], title: plain(m[2]) }));
+  return { kind: 'qa', tone, verdict, defects, checks, ux };
+}
+
+// The Playwright workflow's comment (apps/frontend/tests/scripts/report-comment.mjs):
+// "⏳ **Running…** n/N tests" and "**So far:**" while running, "**Stats:**"
+// once done, then "#### Failed Tests:" / "#### Failing so far:" and
+// "#### :warning: Flaky" lists.
+export function parsePlaywrightReport(text) {
+  const t = text.replace(/\r/g, '');
+  const num = (v) => (v === undefined ? 0 : Number(v));
+  const running = t.match(/\*\*Running…\*\* (\d+)\/(\d+) tests/);
+  const soFar = t.match(/\*\*So far:\*\* (\d+) passed, (\d+) failed, (\d+) flaky, (\d+) skipped/);
+  const stats = t.match(/\*\*Stats:\*\* (\d+) passed, (\d+) failed, (\d+) skipped(?:, (\d+) flaky)?(?: · ran in ([^\n]+))?/);
+  const r = { kind: 'playwright', state: 'unknown', passed: 0, failed: 0, flaky: 0, skipped: 0, done: 0, total: 0, duration: '', aborted: false, failedTests: [], flakyTests: [] };
+  if (/Playwright E2E tests were \*\*skipped\*\*/.test(t)) r.state = 'skipped';
+  else if (running) {
+    Object.assign(r, { state: 'running', done: num(running[1]), total: num(running[2]) });
+    if (soFar) Object.assign(r, { passed: num(soFar[1]), failed: num(soFar[2]), flaky: num(soFar[3]), skipped: num(soFar[4]) });
+  } else if (stats) {
+    Object.assign(r, { passed: num(stats[1]), failed: num(stats[2]), skipped: num(stats[3]), flaky: num(stats[4]), duration: (stats[5] || '').trim() });
+    r.state = r.failed ? 'failed' : 'passed';
+    r.total = r.passed + r.failed + r.skipped + r.flaky;
+    r.done = r.total;
+  }
+  r.aborted = /Aborted early after \d+ failures/.test(t);
+  const test = (line) => line.match(/^- (?::x: )?\*\*(.+?)\*\* \(`(.+?)`\)/);
+  for (const s of sections(t)) {
+    const list = /^(Failed Tests|Failing so far)/.test(s.heading) ? r.failedTests : /Flaky/.test(s.heading) ? r.flakyTests : null;
+    if (!list) continue;
+    for (const line of s.body.split('\n')) {
+      const m = test(line);
+      if (m) list.push({ title: plain(m[1]), file: m[2] });
+    }
+  }
+  return r;
+}
+
+// The one-line form of a report: the chip text, and what notify and alert see.
+export function reportSummary(r) {
+  if (r.kind === 'qa') {
+    const n = (k) => r.checks.filter((c) => c.kind === k).length;
+    const parts = [
+      r.defects.length && `🐞 ${r.defects.length} defect${r.defects.length === 1 ? '' : 's'}`,
+      n('fail') && !r.defects.length && `${n('fail')} failed`,
+      n('blocked') && `${n('blocked')} blocked`,
+      n('flaky') && `${n('flaky')} flaky`,
+      r.ux.length && `${r.ux.length} UX note${r.ux.length === 1 ? '' : 's'}`,
+    ].filter(Boolean);
+    return parts.length ? parts.join(' · ') : r.tone === 'TIP' ? '✅ Clean' : r.verdict || 'No findings';
+  }
+  if (r.state === 'running') return `⏳ Running ${r.done}/${r.total}${r.failed ? ` · ${r.failed} failed so far` : ''}`;
+  if (r.state === 'skipped') return 'Skipped';
+  if (r.state === 'unknown') return 'No results yet';
+  const counts = [r.failed && `${r.failed} failed`, r.flaky && `${r.flaky} flaky`].filter(Boolean);
+  return `${r.state === 'failed' ? '❌' : '✅'} ${r.passed}/${r.total - r.skipped} passed${counts.length ? ` · ${counts.join(' · ')}` : ''}`;
+}
+
+function reportReason(r) {
+  if (r.kind === 'qa') return r.defects.length ? `${r.defects.length} defect${r.defects.length === 1 ? '' : 's'}` : reportSummary(r);
+  return r.failed ? `${r.failed} failed${r.state === 'running' ? ' so far' : ''}` : reportSummary(r);
+}
+
+const PARSERS = { qa: parseQaReport, playwright: parsePlaywrightReport };
+
 function extract(pr, ex) {
+  if (ex.report) {
+    // A report reads the newest text holding the marker, not every match.
+    const t = texts(pr, ex.source || 'comments', ex.contains).pop();
+    if (!t) return { values: [], run: '' };
+    const report = { ...PARSERS[ex.report](t.body), url: t.url };
+    const run = ex.artifacts ? [...t.body.matchAll(/\/actions\/runs\/(\d+)/g)].pop()?.[1] || '' : '';
+    return { values: [reportSummary(report)], run, report };
+  }
   const re = new RegExp(ex.regex, 'g');
   const found = [];
   let source = '';
-  for (const t of texts(pr, ex.source || 'all', ex.contains)) {
+  for (const { body: t } of texts(pr, ex.source || 'all', ex.contains)) {
     for (const m of t.matchAll(re)) {
       found.push((m[1] ?? m[0]).trim());
       source = t;
@@ -317,6 +435,7 @@ export function normalize(pr, config, contexts = flattenContexts(pr)) {
   const results = config.extractors.map((ex) => [ex.name, extract(pr, ex)]);
   const extracted = Object.fromEntries(results.map(([n, r]) => [n, r.values]));
   const artifactRuns = Object.fromEntries(results.filter(([, r]) => r.run).map(([n, r]) => [n, r.run]));
+  const reports = Object.fromEntries(results.filter(([, r]) => r.report).map(([n, r]) => [n, r.report]));
   const row = {
     key: `${pr.repository.nameWithOwner}#${pr.number}`,
     id: pr.id,
@@ -335,6 +454,7 @@ export function normalize(pr, config, contexts = flattenContexts(pr)) {
     checks,
     extracted,
     artifactRuns,
+    reports,
   };
   row.attention = attention(row, config);
   return row;
@@ -352,7 +472,12 @@ export function attention(row, config) {
   });
   for (const ex of config.extractors) {
     if (!ex.alert) continue;
-    for (const v of row.extracted[ex.name] || []) if (new RegExp(ex.alert).test(v)) reasons.push(`${ex.name}: ${v}`);
+    for (const v of row.extracted[ex.name] || []) {
+      if (!new RegExp(ex.alert).test(v)) continue;
+      // A report's block already shows its summary, so the reason names only the cause.
+      const r = row.reports?.[ex.name];
+      reasons.push(r ? `${ex.name}: ${reportReason(r)}` : `${ex.name}: ${v}`);
+    }
   }
   if (a.changesRequested && row.reviewDecision === 'CHANGES_REQUESTED') reasons.push('Changes requested');
   if (a.conflicts && row.mergeable === 'CONFLICTING') reasons.push('Merge conflict');
@@ -515,6 +640,8 @@ export function validateConfig(cfg) {
       }
     }
     for (const ex of p.extractors || []) {
+      if (ex.report && !PARSERS[ex.report]) bad(`extractor "${ex.name}": unknown report ${ex.report}`);
+      if (!ex.report && !ex.regex) bad(`extractor "${ex.name}" has no pattern`);
       try {
         new RegExp(ex.regex);
         if (ex.alert) new RegExp(ex.alert);

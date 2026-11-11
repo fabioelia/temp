@@ -3,12 +3,13 @@
 A Chrome side panel for keeping track of many open PRs and the Claude sessions behind them: CI and other checks, labels you care about, values pulled out of PR bodies and comments, and buttons for the actions you take most. It polls the GitHub API and nothing else; there is no server.
 
 - **Side panel**: one section per search query, "needs you" PRs first. Each PR shows the checks you picked, your labels, links to its Claude sessions and preview, and extracted text such as the QA verdict. Filter box and a "Needs me" toggle.
-- **Check details**: click a card's background to see every check on the latest commit, failures first. Each failure shows GitHub's annotations (file:line and message), the check's summary, a **Show log tail** button for Actions jobs (the failure lines plus the last 60 lines), and re-run.
+- **Reports**: the QA pass and the Playwright run each get a block on the card. QA lists its defects (with severity), the checks that failed, were blocked or were flaky, and its UX notes; passing checks are left out. Playwright shows progress while it runs ("Running 132 of 345"), then how many tests ran, passed, failed, were flaky or skipped, with the names of the failed and flaky tests. Each block links to its comment, and the QA block downloads the screenshots artifact.
+- **Check details**: click a card's background to see every check on the latest commit, failures first. Each failure shows GitHub's annotations (file:line and message), the check's summary, a **Log** button for Actions jobs (the 60 lines leading up to the first error, with error lines highlighted, rather than the post-job cleanup at the end), and re-run.
 - **Toolbar badge**: how many PRs need you.
 - **Desktop notifications** when something you marked `notify` changes: a label is added, a check finishes, an extracted value changes, a draft is marked ready, or a PR leaves your list. Clicking one opens the PR.
 - **Follows your tabs**: on a PR page or a Claude session page, the panel highlights that PR.
 - **Badge on claude.ai**: on `claude.ai/code/session_…`, a small pill in the corner shows the PR(s) that link the session and their state. It reads only the page URL, never claude.ai's DOM.
-- **Actions**: request QA or AI review, toggle `skip-qa`, mark a draft ready or convert it back to draft, close the PR, re-run a failed Actions job. **🏷 Labels…** opens a picker with every label in the repo, so you can add or remove any of them at once. Every write takes two clicks.
+- **Actions**: the first two buttons in a repo's list show on the card; the rest and the label picker sit under **More**. Request QA or AI review, toggle `skip-qa`, mark a draft ready or convert it back to draft, close the PR, re-run a failed Actions job. **🏷 Labels…** opens a picker with every label in the repo, so you can add or remove any of them at once. Every write takes two clicks.
 - **Artifacts**: clicking the QA verdict chip downloads that run's `qa-screenshots-pr<N>` artifact through your GitHub login in the browser. The artifact expires after 14 days.
 
 ## Install
@@ -41,7 +42,7 @@ The JSON fields:
 | `repos` | `{"owner/name": {labels, checks, extractors, actions}}`: the repos you track, each with the four lists below. |
 | `labels[]` (per repo) | `{name, kind, notify}`: `kind` is `alert` (counts as "needs you"), `ok`, `pending` or `info`. Labels not listed stay hidden unless `showOtherLabels` is true. |
 | `checks[]` (per repo) | `{label, match, rollup, notify, showTitle, alertTitle}`: `match` is a regex on the check name. If one name has several runs, the newest one that wasn't skipped counts. `rollup: true` sums every matching check into one chip, worst state first. `showTitle` shows the check's output title; `alertTitle` is a regex on that title that counts as "needs you". |
-| `extractors[]` (per repo) | `{name, source, contains, regex, all, kind, notify, artifacts}`: pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. `artifacts` is a regex on artifact names: the chip then downloads the matching artifacts of the Actions run linked from the same text (the last `/actions/runs/<id>` link in it). |
+| `extractors[]` (per repo) | `{name, report, source, contains, regex, all, kind, notify, artifacts, alert}`: `report: "qa"` or `"playwright"` parses the newest text holding `contains` into a report block (no regex needed). Otherwise pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. `artifacts` is a regex on artifact names: the chip then downloads the matching artifacts of the Actions run linked from the same text (the last `/actions/runs/<id>` link in it). |
 | `actions[]` (per repo) | `{title, type, label, when}`: `type` is `addLabel`, `removeLabel`, `toggleLabel`, `markReady`, `convertToDraft` or `close`. `when` is `draft` or `ready`. An add button hides when the label is already there, and a remove button when it isn't; a toggle shows `+` or `−`. |
 | `attention` | `{failedChecks, changesRequested, conflicts}`: other things that count as "needs you". |
 
@@ -92,7 +93,8 @@ runs the unit tests for `lib.js` (Node 20+, no dependencies). The other files ar
 | `github.js` | GitHub API calls and the token access check |
 | `background.js` | Polling, badge, notifications, write actions |
 | `builder.js` | The settings form, generated from its `SECTIONS` table |
-| `dom.js` | The text-only element helper both pages use |
+| `theme.css` | Color tokens (light and dark) and the button, input, pill and switch styles both pages share |
+| `dom.js` | The text-only element helper and the icon set both pages use |
 | `sidepanel.*` | The panel |
 | `options.*` | Token and JSON config editor |
 | `content.js` | The badge on claude.ai session pages |

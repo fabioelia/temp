@@ -3,78 +3,68 @@
   <head>
     <meta charset="utf-8" />
     <title>PR Radar settings</title>
-    <link rel="stylesheet" href="sidepanel.css" />
-    <style>
-      main { max-width: 860px; padding: 16px; }
-      section { margin-bottom: 20px; }
-      textarea { width: 100%; min-height: 60vh; font: 12px/1.45 ui-monospace, Menlo, monospace; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); }
-      input[type='password'] { width: 100%; max-width: 480px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); }
-      .row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
-      #status { white-space: pre-wrap; }
-      #status.bad { color: var(--alert); }
-      select { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); max-width: 100%; }
-      #repoList ul { columns: 2; font-size: 12px; margin: 6px 0; }
-      #probes { margin-top: 10px; border-collapse: collapse; font-size: 12px; }
-      #probes td { padding: 4px 10px 4px 0; vertical-align: top; border-top: 1px solid var(--border); }
-      #probes .bad { color: var(--alert); }
-      .repos .tabs { flex-wrap: wrap; }
-      .tabs button.on { border-color: var(--accent); color: var(--accent); }
-      fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 12px 0; padding: 8px 12px 12px; }
-      legend { font-weight: 600; padding: 0 4px; }
-      fieldset > p { margin: 2px 0 8px; }
-      .item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--border); }
-      .items { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end; flex: 1; }
-      .item-tools { display: flex; gap: 2px; }
-      .field { display: flex; flex-direction: column; gap: 2px; min-width: 140px; }
-      .field.wide { flex: 1; min-width: 260px; }
-      .field input, .field select { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); font: inherit; }
-      .cb { display: flex; align-items: center; gap: 2px; font-size: 12px; white-space: nowrap; }
-      .savebar { position: sticky; bottom: 0; background: var(--bg); padding: 8px 0; border-top: 1px solid var(--border); }
-    </style>
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="options.css" />
   </head>
   <body>
-    <main>
-      <h1>PR Radar settings</h1>
-      <section>
-        <h2>GitHub token</h2>
-        <p class="muted">
-          Stored only in this browser profile (chrome.storage.local). A classic token with <code>repo</code> covers
-          everything. A fine-grained token needs the org as resource owner and Pull requests, Issues, Contents and
-          Commit statuses read (write for the buttons, Actions write for re-runs), and may still be refused check runs.
-          Test, then Check access, shows what this token can actually read.
-        </p>
-        <div class="row">
-          <input id="token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" />
-          <button id="test">Test</button>
+    <main class="page">
+      <header class="page-head">
+        <img src="icon.png" alt="" width="36" height="36" />
+        <div>
+          <h1>PR Radar settings</h1>
+          <p class="muted">What the side panel tracks, and the GitHub token it reads with.</p>
         </div>
-        <div id="tokenInfo" class="muted" style="margin-top: 8px"></div>
+      </header>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>GitHub token</h2>
+          <p class="muted">
+            Stored only in this browser profile. A classic token with <code>repo</code> covers everything. A fine-grained
+            token needs the org as resource owner and read access to Pull requests, Issues, Contents, Commit statuses and
+            Actions; add write access for the buttons.
+          </p>
+        </div>
+        <div class="token-row">
+          <input id="token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" aria-label="GitHub token" />
+          <button id="reveal" class="ghost">Show</button>
+          <button id="test">Test token</button>
+        </div>
+        <div id="tokenInfo" class="token-info" hidden></div>
         <div id="access" hidden>
-          <details id="repoList" style="margin-top: 8px"><summary></summary><ul></ul></details>
-          <div class="row">
-            <select id="repo"></select>
+          <details id="repoList"><summary></summary><ul></ul></details>
+          <div class="access-row">
+            <select id="repo" aria-label="Repo to check"></select>
             <button id="check">Check access</button>
           </div>
-          <table id="probes"></table>
+          <div id="probes" class="probes"></div>
         </div>
       </section>
-      <section>
+
+      <div class="track-head">
         <h2>What to track</h2>
-        <div class="tabs row" id="viewTabs">
-          <button data-tab="form" class="on">Form</button>
-          <button data-tab="json">JSON</button>
-          <span id="suggestStatus" class="muted"></span>
+        <span id="suggestStatus" class="muted"></span>
+        <span class="spacer"></span>
+        <div class="segmented" id="viewTabs" role="tablist">
+          <button data-tab="form" class="on" role="tab">Form</button>
+          <button data-tab="json" role="tab">JSON</button>
         </div>
-        <div id="form"></div>
-        <textarea id="config" spellcheck="false" hidden></textarea>
-        <datalist id="dl-labels"></datalist>
-        <datalist id="dl-checks"></datalist>
-        <div class="row savebar">
-          <button id="save">Save</button>
-          <button id="reset">Reset to defaults</button>
-          <span id="status" class="muted"></span>
-        </div>
-      </section>
+      </div>
+      <div id="form"></div>
+      <textarea id="config" spellcheck="false" hidden aria-label="Config as JSON"></textarea>
+      <datalist id="dl-labels"></datalist>
+      <datalist id="dl-checks"></datalist>
     </main>
+
+    <div class="savebar">
+      <div class="savebar-inner">
+        <span id="dirtyDot" class="dot"></span>
+        <span id="status" class="muted">All changes saved</span>
+        <span class="spacer"></span>
+        <button id="reset" class="ghost">Reset to defaults</button>
+        <button id="save" class="primary">Save</button>
+      </div>
+    </div>
     <script type="module" src="options.js"></script>
   </body>
 </html>

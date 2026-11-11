@@ -1,17 +1,37 @@
-import { h } from './dom.js';
+import { h, icon } from './dom.js';
 import { jobLog, listLabels, prChecks } from './github.js';
 import { actionButton, mergeConfig, profileFor, rowsForUrl } from './lib.js';
 
-const ICON = { pass: '✅', fail: '❌', pending: '⏳', neutral: '➖', cancelled: '⊘', skipped: '⤼', missing: '·' };
+const STATE_TEXT = { pass: 'passed', fail: 'failed', pending: 'running', neutral: 'neutral', cancelled: 'cancelled', skipped: 'skipped' };
 const $ = (id) => document.getElementById(id);
-let state = { snapshot: null, config: mergeConfig(), currentUrl: '', expanded: new Set() };
+let state = { snapshot: null, config: mergeConfig(), currentUrl: '', expanded: new Set(), needsOnly: false };
+
+// Collapsed sections are a per-viewer convenience, so localStorage is enough;
+// it can be unavailable, and the panel works the same without it.
+const collapsed = new Set(
+  (() => {
+    try {
+      return JSON.parse(localStorage.getItem('collapsed') || '[]');
+    } catch {
+      return [];
+    }
+  })(),
+);
+const saveCollapsed = () => {
+  try {
+    localStorage.setItem('collapsed', JSON.stringify([...collapsed]));
+  } catch {
+    /* storage blocked: collapse just won't persist */
+  }
+};
 
 const ago = (iso) => {
   const m = Math.round((Date.now() - new Date(iso)) / 60000);
   return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 48 * 60 ? `${Math.round(m / 60)}h ago` : `${Math.round(m / 1440)}d ago`;
 };
 
-const link = (href, ...text) => h('a', { href, target: '_blank', rel: 'noopener' }, ...text);
+const link = (href, attrs, ...children) => h('a', { href, target: '_blank', rel: 'noopener', ...attrs }, ...children);
+const dot = (s) => h('span', { class: `dot ${s}` });
 
 function send(msg) {
   return chrome.runtime.sendMessage(msg).then((r) => {
@@ -24,10 +44,10 @@ function send(msg) {
 // refresh re-renders the panel between the two clicks, and a fresh button
 // must still remember the first one.
 let armed = { id: null, until: 0 };
-function confirmButton(text, run, id) {
-  const btn = h('button', {}, text);
+function confirmButton(text, run, id, cls = 'ghost sm') {
+  const btn = h('button', { class: cls }, text);
   const arm = (on) => {
-    btn.textContent = on ? `Confirm: ${text}?` : text;
+    btn.textContent = on ? `Confirm ${text}?` : text;
     btn.classList.toggle('confirm', on);
   };
   if (armed.id === id && Date.now() < armed.until) arm(true);
@@ -43,7 +63,7 @@ function confirmButton(text, run, id) {
     btn.textContent = '…';
     try {
       await run();
-      btn.textContent = '✓ done';
+      btn.textContent = 'Done';
     } catch (e) {
       arm(false);
       btn.disabled = false;
@@ -58,70 +78,186 @@ function showError(msg) {
   $('error').textContent = msg || '';
 }
 
-function shortSession(url) {
-  return `Session ${url.split('session_')[1]?.slice(0, 6) || ''}`;
+const shortSession = (url) => `Session ${url.split('session_')[1]?.slice(0, 6) || ''}`;
+const hexColor = (c) => (/^[0-9a-f]{6}$/i.test(c || '') ? `#${c}` : '');
+
+function checkPill(row, c) {
+  const pill = h(
+    c.url ? 'a' : 'span',
+    { class: `pill ${c.state}`, href: c.url || undefined, target: c.url ? '_blank' : undefined, title: `${c.label}: ${STATE_TEXT[c.state] || c.state}${c.title ? ` — ${c.title}` : ''}` },
+    dot(c.state),
+    c.label,
+    c.title ? h('span', { class: 't' }, c.title) : null,
+  );
+  if (c.state !== 'fail' || !/\/job\/\d+/.test(c.url)) return pill;
+  const rerun = confirmButton('Re-run', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.label}`, 'rerun');
+  return h('span', { class: 'pill fail' }, dot('fail'), c.url ? link(c.url, { class: 'plain' }, c.label) : c.label, rerun);
+}
+
+function labelPill(l) {
+  const color = hexColor(l.color);
+  return h('span', { class: `pill label ${l.kind}` }, h('span', { class: 'dot', style: color ? `background:${color}` : undefined }), l.name);
+}
+
+function downloadButton(row, name) {
+  const btn = h('button', { class: 'ghost sm', title: "Download this run's artifacts" }, icon('download', 13), 'Screenshots');
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      await send({ type: 'download', row, extractor: name });
+    } catch (e) {
+      showError(e.message);
+    }
+    btn.disabled = false;
+  });
+  return btn;
+}
+
+const MAX_ITEMS = 8;
+function itemList(items, url) {
+  const shown = items.slice(0, MAX_ITEMS);
+  const more = items.length - shown.length;
+  return h(
+    'ul',
+    {},
+    shown.map(([k, cls, text]) => h('li', {}, h('span', { class: `k ${cls}` }, k), h('span', {}, text))),
+    more > 0 ? h('li', {}, link(url, {}, `+${more} more in the comment`)) : null,
+  );
+}
+
+function qaBlock(row, name, r) {
+  const items = [
+    ...r.defects.map((d) => [`${d.id} · ${d.severity}`, d.severity, d.title]),
+    ...r.checks.map((c) => [c.kind, c.kind, c.title]),
+    ...r.ux.map((u) => [u.id, 'ux', u.title]),
+  ];
+  return h(
+    'div',
+    { class: 'report' },
+    h(
+      'div',
+      { class: 'report-head' },
+      dot(r.defects.length || r.checks.some((c) => c.kind === 'fail') ? 'fail' : r.tone === 'TIP' ? 'pass' : 'neutral'),
+      name,
+      h('span', { class: 't' }, r.verdict),
+      row.artifactRuns?.[name] ? downloadButton(row, name) : null,
+      link(r.url, {}, 'Report', icon('external', 12)),
+    ),
+    items.length ? itemList(items, r.url) : null,
+  );
+}
+
+function playwrightBlock(name, r) {
+  const counts = [
+    ['fail', r.failed, 'failed'],
+    ['pending', r.flaky, 'flaky'],
+    ['pass', r.passed, 'passed'],
+    ['skipped', r.skipped, 'skipped'],
+  ].filter(([, n]) => n);
+  const head =
+    r.state === 'running'
+      ? `Running ${r.done} of ${r.total}`
+      : r.state === 'skipped'
+        ? 'Skipped for this PR'
+        : r.state === 'unknown'
+          ? 'No results yet'
+          : `${r.passed + r.failed + r.flaky} of ${r.total} ran${r.duration ? ` · ${r.duration}` : ''}${r.aborted ? ' · stopped early' : ''}`;
+  const items = [...r.failedTests.map((t) => ['fail', 'fail', t.title]), ...r.flakyTests.map((t) => ['flaky', 'flaky', t.title])];
+  return h(
+    'div',
+    { class: 'report' },
+    h('div', { class: 'report-head' }, dot(r.state === 'failed' ? 'fail' : r.state === 'running' ? 'pending' : r.state === 'passed' ? 'pass' : 'neutral'), name, h('span', { class: 't' }, head), link(r.url, {}, 'Results', icon('external', 12))),
+    counts.length ? h('div', { class: 'counts' }, counts.map(([s, n, label]) => h('span', { class: `pill ${s === 'pass' || s === 'skipped' ? '' : s}` }, dot(s), `${n} ${label}`))) : null,
+    items.length ? itemList(items, r.url) : null,
+  );
 }
 
 function card(row, current) {
   const config = profileFor(state.config, row.repo);
-  const checks = row.checks.map((c) => {
-    const chip = h(
-      c.url ? 'a' : 'span',
-      { class: `chip ${c.state}`, href: c.url || undefined, target: '_blank', title: `${c.label}: ${c.state}${c.title ? ` — ${c.title}` : ''}` },
-      `${c.label} ${ICON[c.state] || c.state}`,
-      c.title ? h('span', { class: 't' }, c.title) : null,
-    );
-    if (c.state !== 'fail' || !/\/job\/\d+/.test(c.url)) return chip;
-    return h('span', { class: 'chip fail' }, chip, confirmButton('↻ re-run', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.label}`));
-  });
-  const labels = row.labels.map((l) => h('span', { class: `chip label ${l.kind}` }, l.name));
-  const extracted = config.extractors.flatMap((ex) =>
-    (row.extracted[ex.name] || []).map((v) =>
-      ex.kind === 'link'
-        ? link(v, h('span', { class: 'chip' }, v.includes('claude.ai/code/session_') ? shortSession(v) : `${ex.name} ↗`))
-        : row.artifactRuns?.[ex.name]
-          ? downloadChip(row, ex.name, v)
-          : h('span', { class: 'chip', title: v }, `${ex.name}: `, h('span', { class: 't' }, v)),
-    ),
-  );
+  const open = state.expanded.has(row.key);
+  // A check with no data on this PR (a draft without a preview, a check
+  // the token can't see) is noise, so it isn't drawn.
+  const checks = row.checks.filter((c) => c.state !== 'missing').map((c) => checkPill(row, c));
+  const tags = [
+    ...row.labels.map(labelPill),
+    ...config.extractors
+      .filter((ex) => !ex.report)
+      .flatMap((ex) =>
+        (row.extracted[ex.name] || []).map((v) =>
+          ex.kind === 'link'
+            ? link(v, { class: 'pill link', title: v }, icon('link', 12), v.includes('claude.ai/code/session_') ? shortSession(v) : ex.name)
+            : h('span', { class: 'pill', title: v }, `${ex.name}`, h('span', { class: 't' }, v)),
+        ),
+      ),
+  ];
+  const reports = config.extractors
+    .filter((ex) => ex.report && row.reports?.[ex.name])
+    .map((ex) => (ex.report === 'qa' ? qaBlock(row, ex.name, row.reports[ex.name]) : playwrightBlock(ex.name, row.reports[ex.name])));
   const has = (label) => row.allLabels.includes(label);
   const actions = config.actions
     .filter((a) => !a.when || (a.when === 'draft') === row.isDraft)
-    .map((a) => actionButton(a, has))
-    .filter(Boolean)
-    .map(({ title, action }) => confirmButton(title, () => send({ type: 'act', action, row }), `${row.key}|${title}`));
-  actions.push(h('button', { onclick: () => togglePicker(row) }, state.picker?.key === row.key ? '🏷 Hide labels' : '🏷 Labels…'));
-
+    .map((a) => ({ a, b: actionButton(a, has) }))
+    .filter(({ b }) => b)
+    .map(({ a, b }) => confirmButton(b.title, () => send({ type: 'act', action: b.action, row }), `${row.key}|${b.title}`, a.type === 'close' ? 'ghost sm danger' : 'ghost sm'));
+  const running = row.checks.some((c) => c.state === 'pending');
   const el = h(
-    'div',
+    'article',
     {
-      class: ['card', row.attention.length && 'needs', row.isDraft && 'draft', current && 'current', state.expanded.has(row.key) && 'open'].filter(Boolean).join(' '),
+      class: ['card', row.attention.length ? 'needs' : running ? 'running' : '', row.isDraft && 'draft', current && 'current', open && 'open'].filter(Boolean).join(' '),
       'data-key': row.key,
-      title: 'Click for every check on this PR',
     },
-    h('div', { class: 'top' }, link(row.url, h('span', { class: 'num' }, `#${row.number}`)), h('span', { class: 'title', title: row.title }, row.title)),
+    h('div', { class: 'card-head' }, link(row.url, { class: 'title', title: row.title }, row.title), h('span', { class: 'num' }, `#${row.number}`)),
     h(
       'div',
-      { class: 'meta muted' },
+      { class: 'meta' },
       h('span', {}, row.repo.split('/')[1]),
+      h('span', { class: 'sep' }),
       h('span', {}, row.author),
-      row.isDraft ? h('span', { class: 'badge' }, 'Draft') : null,
-      row.stale ? h('span', { class: 'badge', title: "GitHub's Actions API failed on the last refresh" }, 'checks from last refresh') : null,
+      h('span', { class: 'sep' }),
       h('span', {}, ago(row.updatedAt)),
+      row.isDraft ? h('span', { class: 'tag-sm' }, 'Draft') : null,
+      row.stale ? h('span', { class: 'tag-sm warn', title: "GitHub's Actions API failed on the last refresh" }, 'checks from last refresh') : null,
     ),
-    row.attention.length ? h('div', { class: 'reasons' }, `⚑ ${row.attention.join(' · ')}`) : null,
-    h('div', { class: 'chips' }, checks),
-    labels.length || extracted.length ? h('div', { class: 'chips' }, labels, extracted) : null,
-    h('div', { class: 'actions' }, actions),
+    row.attention.length ? h('div', { class: 'reason' }, icon('alert', 13), row.attention.join(' · ')) : null,
+    checks.length ? h('div', { class: 'pills' }, checks) : null,
+    tags.length ? h('div', { class: 'pills' }, tags) : null,
+    reports,
+    h(
+      'div',
+      { class: 'card-foot' },
+      actions.slice(0, INLINE_ACTIONS),
+      h('span', { class: 'spacer' }),
+      moreMenu(row, actions.slice(INLINE_ACTIONS)),
+      h('button', { class: 'ghost sm expand', 'aria-expanded': String(open), onclick: () => toggleOpen(row) }, 'Checks', icon('chevron', 13)),
+    ),
     state.picker?.key === row.key ? picker(row) : null,
-    state.expanded.has(row.key) ? details(row) : null,
+    open ? details(row) : null,
   );
   el.addEventListener('click', (e) => {
-    if (e.target.closest('a, button, input, label, select, .picker, .details') || getSelection().toString()) return;
-    state.expanded.has(row.key) ? state.expanded.delete(row.key) : state.expanded.add(row.key);
-    render();
+    if (e.target.closest('a, button, input, label, select, .picker, .details, .report') || getSelection().toString()) return;
+    toggleOpen(row);
   });
   return el;
+}
+
+// The first buttons in a repo's list show on the card; the rest, and the
+// label picker, sit under More. Reordering in settings picks which.
+const INLINE_ACTIONS = 2;
+
+function moreMenu(row, rest) {
+  const open = state.menu === row.key;
+  const labels = h('button', { class: 'ghost sm', onclick: () => ((state.menu = null), togglePicker(row)) }, icon('tag', 13), 'Labels…');
+  return h(
+    'span',
+    { class: 'more' },
+    h('button', { class: `ghost sm${open ? ' on' : ''}`, 'aria-haspopup': 'menu', 'aria-expanded': String(open), onclick: () => ((state.menu = open ? null : row.key), render()) }, 'More', icon('chevron', 13)),
+    open ? h('div', { class: 'menu', role: 'menu' }, labels, rest) : null,
+  );
+}
+
+function toggleOpen(row) {
+  state.expanded.has(row.key) ? state.expanded.delete(row.key) : state.expanded.add(row.key);
+  render();
 }
 
 // Loaded on expand and again after each poll, since a poll means the checks
@@ -144,95 +280,89 @@ async function loadChecks(row) {
 }
 
 async function loadLog(row, jobId) {
-  logCache.set(jobId, { loading: true });
+  logCache.set(jobId, { loading: true, shown: true });
   render();
   const { token } = await chrome.storage.local.get('token');
   try {
-    logCache.set(jobId, { data: await jobLog(token, row.repo, jobId) });
+    logCache.set(jobId, { data: await jobLog(token, row.repo, jobId), shown: true });
   } catch (e) {
-    logCache.set(jobId, { error: e.message });
+    logCache.set(jobId, { error: e.message, shown: true });
   }
   render();
 }
 
 function checkLine(c) {
-  return h('div', { class: 'check-line' }, `${ICON[c.state] || c.state} `, c.url ? link(c.url, c.name) : c.name, c.title ? h('span', { class: 'muted' }, ` · ${c.title}`) : null);
+  return h('div', { class: 'check-line' }, dot(c.state), c.url ? link(c.url, {}, c.name) : h('span', {}, c.name), c.title ? h('span', { class: 't' }, c.title) : null);
+}
+
+function logBlock(data) {
+  const errors = new Set(data.errors);
+  const pre = h(
+    'pre',
+    { class: 'log' },
+    data.tail.split('\n').flatMap((line) => [errors.has(line.replace(/^##\[error\]/, '')) ? h('span', { class: 'err' }, line) : line, '\n']),
+  );
+  requestAnimationFrame(() => (pre.scrollTop = pre.scrollHeight));
+  return pre;
 }
 
 function failure(row, c) {
   const log = c.jobId && logCache.get(c.jobId);
+  const toggleLog = () => {
+    if (!log) return loadLog(row, c.jobId);
+    log.shown = !log.shown;
+    render();
+  };
   return h(
     'div',
     { class: 'failure' },
-    h('div', { class: 'check-line' }, `${ICON[c.state]} `, c.url ? link(c.url, c.name) : c.name, c.workflow ? h('span', { class: 'muted' }, ` · ${c.workflow}`) : null),
-    c.title ? h('div', { class: 'muted' }, c.title) : null,
+    h('div', { class: 'failure-head' }, dot(c.state), c.url ? link(c.url, {}, c.name) : h('span', {}, c.name), c.workflow ? h('span', { class: 'wf' }, c.workflow) : null),
+    c.title ? h('div', { class: 'step' }, c.title) : null,
     c.annotations?.length
-      ? h(
-          'ul',
-          { class: 'annotations' },
-          c.annotations.map((a) => h('li', {}, h('span', { class: 'muted' }, `${a.path}${a.line ? `:${a.line}` : ''} `), a.message)),
-        )
+      ? h('ul', { class: 'annotations' }, c.annotations.map((a) => h('li', {}, h('span', { class: 'path' }, `${a.path}${a.line ? `:${a.line}` : ''}`), ' ', a.message)))
       : null,
     c.summary ? h('div', { class: 'summary' }, c.summary.length > 600 ? `${c.summary.slice(0, 600)}…` : c.summary) : null,
     h(
       'div',
-      { class: 'actions' },
-      c.jobId && !log ? h('button', { onclick: () => loadLog(row, c.jobId) }, 'Show log tail') : null,
-      c.jobId ? confirmButton('↻ re-run job', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.name}`) : null,
+      { class: 'failure-actions' },
+      c.jobId ? h('button', { class: 'ghost sm', onclick: toggleLog }, icon('terminal', 13), log?.shown ? 'Hide log' : 'Log') : null,
+      c.jobId ? confirmButton('Re-run job', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.name}`) : null,
     ),
-    log?.loading ? h('div', { class: 'muted' }, 'Loading log…') : null,
-    log?.error ? h('div', { class: 'reasons' }, log.error) : null,
-    log?.data?.errors.length ? h('pre', { class: 'log errors' }, log.data.errors.join('\n')) : null,
-    log?.data ? scrolledToEnd(h('pre', { class: 'log' }, log.data.tail)) : null,
+    log?.shown && log.loading ? h('div', { class: 'step' }, 'Loading log…') : null,
+    log?.shown && log.error ? h('div', { class: 'banner error' }, log.error) : null,
+    log?.shown && log.data ? logBlock(log.data) : null,
   );
-}
-
-function scrolledToEnd(el) {
-  requestAnimationFrame(() => (el.scrollTop = el.scrollHeight));
-  return el;
 }
 
 function details(row) {
   const entry = checksCache.get(row.key);
   if (!entry || entry.at !== state.snapshot.fetchedAt) loadChecks(row);
   const pane = h('div', { class: 'details' });
-  if (entry?.error) pane.append(h('div', { class: 'reasons' }, entry.error));
+  if (entry?.error) pane.append(h('div', { class: 'banner error' }, entry.error));
   const data = entry?.data;
   if (!data) {
-    pane.append(h('div', { class: 'muted' }, 'Loading checks…'));
+    pane.append(h('div', { class: 'step' }, 'Loading checks…'));
     return pane;
   }
-  if (data.warning) pane.append(h('div', { class: 'reasons' }, data.warning));
-  if (data.note) pane.append(h('div', { class: 'muted' }, data.note));
+  if (data.warning) pane.append(h('div', { class: 'banner error' }, data.warning));
+  if (data.note) pane.append(h('div', { class: 'banner info' }, data.note));
   const by = Object.groupBy(data.checks, (c) => (['fail', 'cancelled'].includes(c.state) ? 'bad' : c.state === 'pending' ? 'running' : 'rest'));
   const count = (k) => by[k]?.length || 0;
   pane.append(
     h(
       'div',
-      { class: 'muted' },
-      `${count('bad')} failing · ${count('running')} running · ${count('rest')} other · `,
-      link(`${row.url}/checks`, 'checks tab'),
+      { class: 'details-head' },
+      count('bad') ? h('span', { class: 'pill fail' }, dot('fail'), `${count('bad')} failing`) : null,
+      count('running') ? h('span', { class: 'pill pending' }, dot('pending'), `${count('running')} running`) : null,
+      h('span', { class: 'pill' }, dot('pass'), `${count('rest')} other`),
+      link(`${row.url}/checks`, {}, 'Checks tab', icon('external', 12)),
     ),
   );
   for (const c of by.bad || []) pane.append(failure(row, c));
-  if (by.running) pane.append(h('div', { class: 'group' }, by.running.map(checkLine)));
-  if (by.rest) pane.append(h('details', {}, h('summary', {}, `${count('rest')} passed, skipped or neutral`), by.rest.map(checkLine)));
-  if (!data.checks.length) pane.append(h('div', { class: 'muted' }, 'No checks on the latest commit.'));
+  if (by.running) pane.append(h('div', { class: 'check-list' }, by.running.map(checkLine)));
+  if (by.rest) pane.append(h('details', {}, h('summary', {}, `${count('rest')} passed, skipped or neutral`), h('div', { class: 'check-list' }, by.rest.map(checkLine))));
+  if (!data.checks.length) pane.append(h('div', { class: 'step' }, 'No checks on the latest commit.'));
   return pane;
-}
-
-function downloadChip(row, name, value) {
-  const chip = h('button', { class: 'chip', title: `${value}\nClick to download this run's artifacts` }, `${name}: `, h('span', { class: 't' }, value), ' ⬇');
-  chip.addEventListener('click', async () => {
-    chip.disabled = true;
-    try {
-      await send({ type: 'download', row, extractor: name });
-    } catch (e) {
-      showError(e.message);
-    }
-    chip.disabled = false;
-  });
-  return chip;
 }
 
 // Repo label lists, fetched once per panel session.
@@ -251,8 +381,8 @@ function togglePicker(row) {
   if (state.picker) {
     const p = state.picker;
     repoLabels(row.repo)
-      .then((names) => {
-        p.labels = names;
+      .then((labels) => {
+        p.labels = labels;
         render();
       })
       .catch((e) => showError(e.message));
@@ -261,43 +391,49 @@ function togglePicker(row) {
 
 function picker(row) {
   const p = state.picker;
-  if (!p.labels) return h('div', { class: 'picker muted' }, 'Loading labels…');
+  if (!p.labels) return h('div', { class: 'picker' }, h('span', { class: 'step' }, 'Loading labels…'));
   const configured = profileFor(state.config, row.repo).labels.map((l) => l.name);
   const isOn = (n) => (row.allLabels.includes(n) || p.add.has(n)) && !p.remove.has(n);
   const rank = (n) => (row.allLabels.includes(n) ? 0 : configured.includes(n) ? 1 : 2);
   const list = h('div', { class: 'picker-list' });
   const fill = () => {
     const f = p.filter.toLowerCase();
-    const names = p.labels.filter((n) => n.toLowerCase().includes(f)).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+    const labels = p.labels.filter((l) => l.name.toLowerCase().includes(f)).sort((a, b) => rank(a.name) - rank(b.name) || a.name.localeCompare(b.name));
     list.replaceChildren(
-      ...names.map((n) => {
+      ...labels.map((l) => {
         const box = h('input', { type: 'checkbox' });
-        box.checked = isOn(n);
+        box.checked = isOn(l.name);
         box.addEventListener('change', () => {
-          const was = row.allLabels.includes(n);
-          for (const set of [p.add, p.remove]) set.delete(n);
-          if (box.checked !== was) (box.checked ? p.add : p.remove).add(n);
+          const was = row.allLabels.includes(l.name);
+          for (const set of [p.add, p.remove]) set.delete(l.name);
+          if (box.checked !== was) (box.checked ? p.add : p.remove).add(l.name);
           apply.replaceWith((apply = applyButton()));
         });
-        return h('label', {}, box, ` ${n}`);
+        const color = hexColor(l.color);
+        return h('label', {}, box, h('span', { class: 'dot', style: color ? `background:${color}` : undefined }), l.name);
       }),
     );
   };
   const applyButton = () =>
     p.add.size || p.remove.size
-      ? confirmButton(`Apply ${[...[...p.add].map((n) => `+${n}`), ...[...p.remove].map((n) => `−${n}`)].join(' ')}`, async () => {
-          await send({ type: 'act', action: { type: 'setLabels', add: [...p.add], remove: [...p.remove] }, row });
-          state.picker = null;
-        }, `${row.key}|apply`)
-      : h('span', { class: 'muted' }, 'Tick or untick labels, then apply.');
+      ? confirmButton(
+          `Apply ${[...[...p.add].map((n) => `+${n}`), ...[...p.remove].map((n) => `−${n}`)].join(' ')}`,
+          async () => {
+            await send({ type: 'act', action: { type: 'setLabels', add: [...p.add], remove: [...p.remove] }, row });
+            state.picker = null;
+          },
+          `${row.key}|apply`,
+          'primary sm',
+        )
+      : h('span', {}, 'Tick or untick labels, then apply.');
   let apply = applyButton();
-  const filter = h('input', { type: 'search', placeholder: 'Find a label…', value: p.filter });
+  const filter = h('input', { type: 'search', placeholder: 'Find a label', value: p.filter, 'aria-label': 'Find a label' });
   filter.addEventListener('input', () => {
     p.filter = filter.value;
     fill();
   });
   fill();
-  return h('div', { class: 'picker' }, filter, list, h('div', { class: 'actions' }, apply));
+  return h('div', { class: 'picker' }, filter, list, h('div', { class: 'picker-foot' }, apply));
 }
 
 function render() {
@@ -310,31 +446,59 @@ function render() {
     return;
   }
   state.renderPending = false;
-  const every = snapshot.busy ? `every ${config.pollMinutes}m while checks run` : `every ${config.quietPollMinutes}m, all settled`;
-  $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)} · ${every}` : '';
-  const left = [['REST', snapshot.rate?.rest], ['GraphQL', snapshot.rate?.graphql]]
-    .filter(([, r]) => Number.isFinite(r?.remaining))
-    .map(([name, r]) => `${name} ${r.remaining.toLocaleString()}`);
+  $('refresh').classList.remove('spin');
+  const every = snapshot.busy ? config.pollMinutes : config.quietPollMinutes;
+  $('updated').textContent = snapshot.fetchedAt ? `Updated ${ago(snapshot.fetchedAt)} · next in ~${every}m` : '';
+  $('updated').title = snapshot.busy ? 'A check is running, so the panel refreshes often.' : 'Everything has settled, so the panel refreshes less often.';
   const rest = snapshot.rate?.rest;
-  $('rate').textContent = left.length ? `· API left: ${left.join(' · ')}` : '';
-  $('rate').title = Number.isFinite(rest?.reset) ? `REST: of ${rest.limit.toLocaleString()} an hour, resets at ${new Date(rest.reset).toLocaleTimeString()}` : '';
+  const gql = snapshot.rate?.graphql;
+  $('rate').textContent = Number.isFinite(rest?.remaining) ? `${rest.remaining.toLocaleString()} API calls left` : '';
+  $('rate').title = [
+    Number.isFinite(rest?.remaining) && `REST: ${rest.remaining.toLocaleString()} of ${rest.limit.toLocaleString()} this hour, resets at ${new Date(rest.reset).toLocaleTimeString()}`,
+    Number.isFinite(gql?.remaining) && `GraphQL: ${gql.remaining.toLocaleString()} points left`,
+  ]
+    .filter(Boolean)
+    .join('\n');
   showError(snapshot.error || snapshot.warning);
+  const needs = snapshot.rows.filter((r) => r.attention.length).length;
+  $('needsCount').textContent = String(needs);
+  $('needsOnly').setAttribute('aria-pressed', String(state.needsOnly));
   const q = $('filter').value.trim().toLowerCase();
-  const needsOnly = $('needsOnly').checked;
   const byKey = Object.fromEntries(snapshot.rows.map((r) => [r.key, r]));
   const current = new Set(rowsForUrl(snapshot.rows, state.currentUrl, config).map((r) => r.key));
   const matches = (r) =>
-    (!needsOnly || r.attention.length) &&
-    (!q || [r.title, `#${r.number}`, r.author, r.repo, ...r.allLabels].join(' ').toLowerCase().includes(q));
+    (!state.needsOnly || r.attention.length) && (!q || [r.title, `#${r.number}`, r.author, r.repo, ...r.allLabels].join(' ').toLowerCase().includes(q));
 
   const list = $('list');
   list.replaceChildren();
+  if (!snapshot.rows.length && !snapshot.error) {
+    list.append(h('div', { class: 'empty-state' }, h('strong', {}, snapshot.fetchedAt ? 'No open PRs' : 'Loading…'), snapshot.fetchedAt ? 'Nothing matches your searches in the repos you track.' : ''));
+    return;
+  }
   for (const s of snapshot.sections) {
     const rows = s.keys.map((k) => byKey[k]).filter(matches);
     // Needs-you first, then most recently active.
     rows.sort((a, b) => (b.attention.length > 0) - (a.attention.length > 0) || (a.updatedAt < b.updatedAt ? 1 : -1));
-    list.append(h('h2', {}, `${s.title} (${rows.length})`));
-    if (!rows.length) list.append(h('div', { class: 'empty' }, 'Nothing here.'));
+    const shut = collapsed.has(s.title);
+    list.append(
+      h(
+        'button',
+        {
+          class: `section-head${shut ? ' collapsed' : ''}`,
+          'aria-expanded': String(!shut),
+          onclick: () => {
+            shut ? collapsed.delete(s.title) : collapsed.add(s.title);
+            saveCollapsed();
+            render();
+          },
+        },
+        icon('chevron', 12),
+        s.title,
+        h('span', { class: 'count' }, String(rows.length)),
+      ),
+    );
+    if (shut) continue;
+    if (!rows.length) list.append(h('div', { class: 'empty' }, state.needsOnly || q ? 'Nothing matches.' : 'No PRs here.'));
     for (const r of rows) list.append(card(r, current.has(r.key)));
   }
   list.querySelector('.card.current')?.scrollIntoView({ block: 'nearest' });
@@ -354,11 +518,35 @@ async function trackTab() {
   render();
 }
 
-$('refresh').addEventListener('click', () => send({ type: 'refresh' }).catch((e) => showError(e.message)));
+$('refresh').append(icon('refresh', 15));
+$('settings').append(icon('settings', 15));
+$('searchIcon').replaceWith(icon('search', 14));
+$('refresh').addEventListener('click', () => {
+  $('refresh').classList.add('spin');
+  send({ type: 'refresh' }).catch((e) => {
+    $('refresh').classList.remove('spin');
+    showError(e.message);
+  });
+});
 $('settings').addEventListener('click', () => chrome.runtime.openOptionsPage());
 $('filter').addEventListener('input', render);
+$('needsOnly').addEventListener('click', () => {
+  state.needsOnly = !state.needsOnly;
+  render();
+});
+document.addEventListener('click', (e) => {
+  if (state.menu && !e.target.closest('.more')) {
+    state.menu = null;
+    render();
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && state.menu) {
+    state.menu = null;
+    render();
+  }
+});
 document.addEventListener('focusout', () => setTimeout(() => state.renderPending && render()));
-$('needsOnly').addEventListener('change', render);
 chrome.storage.onChanged.addListener((c) => (c.snapshot || c.config) && load());
 chrome.tabs.onActivated.addListener(trackTab);
 chrome.tabs.onUpdated.addListener((_id, info) => info.url && trackTab());

@@ -3,22 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <title>PR Radar</title>
+    <link rel="stylesheet" href="theme.css" />
     <link rel="stylesheet" href="sidepanel.css" />
   </head>
   <body>
-    <header>
+    <header class="appbar">
+      <img src="icon.png" alt="" width="18" height="18" />
       <strong>PR Radar</strong>
-      <span id="updated" class="muted"></span>
-      <span id="rate" class="muted"></span>
       <span class="spacer"></span>
-      <button id="refresh" title="Refresh now">↻</button>
-      <button id="settings" title="Settings">⚙</button>
+      <button id="refresh" class="ghost icon" title="Refresh now" aria-label="Refresh now"></button>
+      <button id="settings" class="ghost icon" title="Settings" aria-label="Settings"></button>
     </header>
+    <div class="status"><span id="updated"></span><span class="spacer"></span><span id="rate"></span></div>
     <div class="controls">
-      <input id="filter" type="search" placeholder="Filter by title, #number, label, author…" />
-      <label><input id="needsOnly" type="checkbox" /> Needs me</label>
+      <label class="search">
+        <span id="searchIcon"></span>
+        <input id="filter" type="search" placeholder="Filter by title, #number, label, author" aria-label="Filter PRs" />
+      </label>
+      <button id="needsOnly" class="toggle" aria-pressed="false" title="Only PRs that need you">
+        Needs me <span id="needsCount" class="count">0</span>
+      </button>
     </div>
-    <div id="error" class="error" hidden></div>
+    <div id="error" class="banner error" hidden></div>
     <main id="list"></main>
     <script type="module" src="sidepanel.js"></script>
   </body>

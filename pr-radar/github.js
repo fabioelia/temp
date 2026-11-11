@@ -133,7 +133,7 @@ export async function listLabels(token, repo) {
   const names = [];
   for (let page = 1; page <= 3; page++) {
     const batch = await gh(token, `/repos/${repo}/labels?per_page=100&page=${page}`);
-    names.push(...batch.map((l) => l.name));
+    names.push(...batch.map((l) => ({ name: l.name, color: l.color })));
     if (batch.length < 100) break;
   }
   return names;

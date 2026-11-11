@@ -41,7 +41,7 @@ function pr(overrides = {}) {
       nodes: [
         { body: 'pushed a fix, see https://claude.ai/code/session_01AbCdEf and https://claude.ai/code/session_02XyZ', url: 'c1' },
         {
-          body: '<!-- qa-tester:results -->\r\n> [!CAUTION]\r\n> **🐞 1 defect in 7 checks.** Step 7 fails on QA-1.\r\n> develop · head a09439d',
+          body: '<!-- qa-tester:results -->\r\n> [!CAUTION]\r\n> **🐞 1 defect in 7 checks.** Step 7 fails on QA-1.\r\n> develop · head a09439d\r\n\r\n### 🐞 QA-1 · major — Links lost after reload\r\n',
           url: 'c2',
         },
       ],
@@ -83,14 +83,16 @@ test('normalize maps checks, labels and extracted values', () => {
   assert.deepEqual(row.allLabels, ['QA Reviewed - Failed', 'jira-ticket']);
   assert.deepEqual(row.extracted.Sessions, ['https://claude.ai/code/session_01AbCdEf', 'https://claude.ai/code/session_02XyZ']);
   assert.deepEqual(row.extracted.Preview, ['https://pr-4977.preview.newtonresearch.ai']);
-  assert.deepEqual(row.extracted['QA verdict'], ['🐞 1 defect in 7 checks.']);
+  assert.deepEqual(row.extracted.QA, ['🐞 1 defect']);
+  assert.deepEqual(row.reports.QA.defects, [{ id: 'QA-1', severity: 'major', title: 'Links lost after reload' }]);
+  assert.equal(row.reports.QA.url, 'c2');
   assert.ok(!JSON.stringify(row).includes('nmcp_SECRET'), 'raw body must not be stored');
 });
 
 test('attention collects every reason', () => {
   const row = normalize(pr({ mergeable: 'CONFLICTING', reviewDecision: 'CHANGES_REQUESTED' }), cfg);
-  assert.deepEqual(row.attention, ['QA Reviewed - Failed', 'CI failed', 'AI gate: 🔴 ⛔ Not recommended', 'Changes requested', 'Merge conflict']);
-  const clean = normalize(pr({ labels: { nodes: [] }, commits: { nodes: [] } }), cfg);
+  assert.deepEqual(row.attention, ['QA Reviewed - Failed', 'CI failed', 'AI gate: 🔴 ⛔ Not recommended', 'QA: 1 defect', 'Changes requested', 'Merge conflict']);
+  const clean = normalize(pr({ labels: { nodes: [] }, commits: { nodes: [] }, comments: { nodes: [] } }), cfg);
   assert.deepEqual(clean.attention, []);
 });
 
@@ -102,7 +104,7 @@ test('diff is silent on first load and reports configured changes after', () => 
   const [e] = diff([before], [after], cfg);
   assert.equal(e.url, after.url);
   assert.match(e.message, /Label: QA Reviewed - Failed/);
-  assert.match(e.message, /QA verdict: 🐞 1 defect in 7 checks\./);
+  assert.match(e.message, /QA: 🐞 1 defect/);
   assert.match(e.message, /Marked ready for review/);
   assert.equal(diff([after], [after], cfg).length, 0);
 });
@@ -153,11 +155,11 @@ test('summarizeErrors collapses per-PR errors into one line per field', () => {
   assert.match(summarizeErrors([{ message: 'x', path: ['search', 'nodes', 0, 'commits'] }]), /Can't read commits on 1 PR \(needs Contents: read/);
 });
 
-test('QA verdict records the run linked from the same comment, footer last', () => {
+test('the QA report records the run linked from the same comment, footer last', () => {
   const body = '<!-- qa-tester:results -->\n> [!TIP]\n> **✅ 5 checks pass.**\nsee https://github.com/o/r/actions/runs/111 for the old run\n_[workflow run](https://github.com/o/r/actions/runs/222) · 2026-11-11_';
   const row = normalize(pr({ comments: { nodes: [{ body, url: 'c' }] } }), cfg);
-  assert.deepEqual(row.extracted['QA verdict'], ['✅ 5 checks pass.']);
-  assert.equal(row.artifactRuns['QA verdict'], '222');
+  assert.deepEqual(row.extracted.QA, ['✅ Clean']);
+  assert.equal(row.artifactRuns.QA, '222');
   assert.equal(row.artifactRuns.Sessions, undefined, 'only extractors with `artifacts` record a run');
 });
 
@@ -207,13 +209,17 @@ test('allChecks lists every check once, failures first, with job ids and annotat
   assert.deepEqual(backend.annotations, [{ level: 'FAILURE', path: 'apps/x.py', line: 12, message: 'AssertionError' }]);
 });
 
-test('logTail strips timestamps, pulls error lines and keeps the end', () => {
-  const text = ['2026-11-11T18:00:00.1234567Z setup', '2026-11-11T18:00:00.5Z FAILED tests/test_x.py::test_a - AssertionError: 403 != 200', '2026-11-11T18:00:01.1Z ##[error]Process completed with exit code 1.', ...Array.from({ length: 70 }, (_, i) => `2026-11-11T18:00:02.0Z line ${i}`), '', ''].join('\r\n');
+test('logTail strips timestamps, pulls error lines and ends at the first error', () => {
+  const ts = (l) => `2026-11-11T18:00:00.1Z ${l}`;
+  const body = Array.from({ length: 70 }, (_, i) => ts(`step ${i}`));
+  const text = [ts('setup'), ...body, ts('FAILED tests/test_x.py::test_a - AssertionError: 403 != 200'), ts('##[error]Process completed with exit code 1.'), ts('Post job cleanup.'), ts('git config --unset'), '', ''].join('\r\n');
   const { errors, tail } = logTail(text);
   assert.deepEqual(errors, ['FAILED tests/test_x.py::test_a - AssertionError: 403 != 200', 'Process completed with exit code 1.']);
   const lines = tail.split('\n');
   assert.equal(lines.length, 60);
-  assert.equal(lines.at(-1), 'line 69');
+  assert.equal(lines.at(-1), '##[error]Process completed with exit code 1.');
+  assert.ok(!tail.includes('Post job cleanup'), 'cleanup after the error is left out');
+  assert.equal(logTail(ts('only line')).tail, 'only line');
 });
 
 test('check names round-trip through the form and patterns stay patterns', () => {
