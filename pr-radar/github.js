@@ -1,5 +1,5 @@
 // GitHub API calls shared by the service worker and the settings page.
-import { CONCLUSION, QUERY, allChecks, checksHidden, flattenContexts, logTail, summarizeErrors } from './lib.js';
+import { CONCLUSION, QUERY, allChecks, checksHidden, flattenContexts, logTail, mapLimit, summarizeErrors } from './lib.js';
 
 const API = 'https://api.github.com';
 
@@ -9,18 +9,39 @@ const API = 'https://api.github.com';
 // ponytail: in memory only, so a service-worker restart refetches once.
 const etags = new Map();
 
+// The REST limit as of the last response: GitHub sends it on every one.
+let restLimit = null;
+export const restRate = () => restLimit;
+
+// GitHub's jobs endpoint answers 502/503/504 now and then, most often on big
+// runs; a GET is safe to repeat, so it gets two more tries.
+const RETRY_DELAYS = [1000, 3000];
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export async function gh(token, path, { method = 'GET', body } = {}) {
   const cached = method === 'GET' ? etags.get(path) : null;
-  const res = await fetch(`${API}${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      ...(cached ? { 'If-None-Match': cached.etag } : {}),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let res;
+  for (let attempt = 0; ; attempt++) {
+    res = await fetch(`${API}${path}`, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        ...(cached ? { 'If-None-Match': cached.etag } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (method !== 'GET' || ![502, 503, 504].includes(res.status) || attempt >= RETRY_DELAYS.length) break;
+    await sleep(RETRY_DELAYS[attempt]);
+  }
+  if (res.headers.get('x-ratelimit-resource') === 'core') {
+    restLimit = {
+      remaining: Number(res.headers.get('x-ratelimit-remaining')),
+      limit: Number(res.headers.get('x-ratelimit-limit')),
+      reset: Number(res.headers.get('x-ratelimit-reset')) * 1000,
+    };
+  }
   if (res.status === 304 && cached) return cached.data;
   const data = res.status === 204 ? null : await res.json().catch(() => null);
   if (res.ok && method === 'GET' && res.headers.get('etag')) {
@@ -158,8 +179,12 @@ export async function actionsContexts(token, repo, sha) {
   if (!sha) return [];
   const { workflow_runs: runs } = await gh(token, `/repos/${repo}/actions/runs?head_sha=${sha}&per_page=100`);
   const live = runs.filter((r) => r.conclusion !== 'skipped');
-  const perRun = await Promise.all(
-    live.map(async (run) => {
+  // Two at a time per PR (the poll runs four PRs at once): firing every
+  // run's jobs request together is what draws GitHub's 502s.
+  const perRun = await mapLimit(
+    live,
+    2,
+    async (run) => {
       const { jobs } = await gh(token, `/repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`);
       return jobs.map((j) => {
         const failedStep = j.steps?.find((st) => st.conclusion === 'failure');
@@ -174,7 +199,7 @@ export async function actionsContexts(token, repo, sha) {
           annotations: [],
         };
       });
-    }),
+    },
   );
   return perRun.flat();
 }

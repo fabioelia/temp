@@ -106,6 +106,7 @@ function card(row, current) {
       h('span', {}, row.repo.split('/')[1]),
       h('span', {}, row.author),
       row.isDraft ? h('span', { class: 'badge' }, 'Draft') : null,
+      row.stale ? h('span', { class: 'badge', title: "GitHub's Actions API failed on the last refresh" }, 'checks from last refresh') : null,
       h('span', {}, ago(row.updatedAt)),
     ),
     row.attention.length ? h('div', { class: 'reasons' }, `⚑ ${row.attention.join(' · ')}`) : null,
@@ -310,6 +311,10 @@ function render() {
   }
   state.renderPending = false;
   $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)}` : '';
+  const rest = snapshot.rate?.rest;
+  const gql = snapshot.rate?.graphql;
+  $('rate').textContent = rest || gql ? `API left: ${[rest && `REST ${rest.remaining.toLocaleString()}`, gql && `GraphQL ${gql.remaining.toLocaleString()}`].filter(Boolean).join(' · ')}` : '';
+  $('rate').title = rest ? `Of ${rest.limit.toLocaleString()} an hour; resets at ${new Date(rest.reset).toLocaleTimeString()}` : '';
   showError(snapshot.error || snapshot.warning);
   const q = $('filter').value.trim().toLowerCase();
   const needsOnly = $('needsOnly').checked;

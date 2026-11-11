@@ -477,6 +477,20 @@ export function nameToRegex(text) {
   return t.length > 1 && t.startsWith('/') && t.endsWith('/') ? t.slice(1, -1) : `^${escapeRe(t)}$`;
 }
 
+// Runs `fn` over `items` with at most `limit` in flight, keeping order.
+export async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
+}
+
 export function validateConfig(cfg) {
   const errors = [];
   if (!Array.isArray(cfg.queries)) errors.push('"queries" must be an array');
