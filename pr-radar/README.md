@@ -14,8 +14,9 @@ A Chrome side panel for keeping track of many open PRs and the Claude sessions b
 1. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick this `pr-radar` folder.
 2. Click the PR Radar icon to open the side panel, then ⚙ for settings.
 3. Paste a GitHub token and click **Test**:
-   - Classic token: `repo` scope.
-   - Fine-grained token: read access to Pull requests, Issues, Checks and Metadata on the repos you track. Add write access to Pull requests and Issues for the label and mark-ready buttons, and to Actions for re-runs. An org can require approval for fine-grained tokens.
+   - **Classic token (recommended):** the `repo` scope covers reading and every button. If the org uses SAML single sign-on, click **Configure SSO** next to the token and authorize the org.
+   - **Fine-grained token:** set **Resource owner** to the org (a token covers one owner, so "All repositories" under your personal account doesn't reach org repos). Repository permissions start at "No access", so set Pull requests, Issues and Commit statuses to read, plus Checks if listed. For the buttons, set Pull requests and Issues to write, and Actions to write for re-runs. The org may need to approve the token. Fine-grained tokens may still be refused check runs; if the panel says it can't read `statusCheckRollup`, use a classic token.
+   - If a permission is missing, the panel still shows what it could read and names each blocked field.
 4. Save. The first poll runs right away, then every `pollMinutes` minutes.
 
 The token is kept in `chrome.storage.local` for this browser profile only.

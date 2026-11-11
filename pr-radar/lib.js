@@ -251,6 +251,31 @@ export function diff(prev, next, config) {
   return events;
 }
 
+const FIELD_HINT = {
+  statusCheckRollup: 'checks: needs Commit statuses + Checks read, which fine-grained tokens may not get, so use a classic token with repo',
+  comments: 'needs Issues + Pull requests read',
+  reviews: 'needs Pull requests read',
+  labels: 'needs Issues + Pull requests read',
+};
+
+// Collapses GraphQL's one-error-per-PR into one line per blocked field, e.g.
+// "Can't read statusCheckRollup on 20 PRs (…hint): Resource not accessible…".
+export function summarizeErrors(errors) {
+  const groups = new Map();
+  for (const e of errors) {
+    const field = (e.path || []).filter((p) => typeof p === 'string' && p !== 'nodes').pop() || 'query';
+    const key = `${field}\u0000${e.message}`;
+    groups.set(key, (groups.get(key) || 0) + 1);
+  }
+  return [...groups]
+    .map(([key, n]) => {
+      const [field, message] = key.split('\u0000');
+      const hint = FIELD_HINT[field] ? ` (${FIELD_HINT[field]})` : '';
+      return `Can't read ${field} on ${n} PR${n === 1 ? '' : 's'}${hint}: ${message}`;
+    })
+    .join('\n');
+}
+
 // True when `url` is `base` or a page under it: a PR's /files tab matches
 // its PR, but .../pull/49 never matches .../pull/4977.
 function within(url, base) {

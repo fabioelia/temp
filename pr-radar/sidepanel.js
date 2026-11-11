@@ -121,7 +121,7 @@ function render() {
   const { snapshot, config } = state;
   if (!snapshot) return;
   $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)}` : '';
-  showError(snapshot.error);
+  showError(snapshot.error || snapshot.warning);
   const q = $('filter').value.trim().toLowerCase();
   const needsOnly = $('needsOnly').checked;
   const byKey = Object.fromEntries(snapshot.rows.map((r) => [r.key, r]));

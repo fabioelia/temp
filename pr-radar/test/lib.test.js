@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, diff, normalize, rowsForUrl, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, diff, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -135,4 +135,17 @@ test('validateConfig rejects bad regexes and unknown actions', () => {
   const bad = { ...cfg, checks: [{ label: 'x', match: '(' }], actions: [{ title: 'y', type: 'merge' }] };
   const errors = validateConfig(bad);
   assert.equal(errors.length, 2);
+});
+
+test('summarizeErrors collapses per-PR errors into one line per field', () => {
+  const msg = 'Resource not accessible by personal access token';
+  const errors = [0, 1, 2].flatMap((i) => [
+    { message: msg, path: ['search', 'nodes', i, 'commits', 'nodes', 0, 'commit', 'statusCheckRollup'] },
+    { message: msg, path: ['search', 'nodes', i, 'comments'] },
+  ]);
+  const lines = summarizeErrors(errors).split('\n');
+  assert.equal(lines.length, 2);
+  assert.match(lines[0], /^Can't read statusCheckRollup on 3 PRs \(checks: .*classic token.*\): Resource not accessible/);
+  assert.match(lines[1], /^Can't read comments on 3 PRs \(needs Issues \+ Pull requests read\)/);
+  assert.equal(summarizeErrors([{ message: 'Bad credentials' }]), "Can't read query on 1 PR: Bad credentials");
 });

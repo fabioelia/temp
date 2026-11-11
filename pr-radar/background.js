@@ -1,4 +1,4 @@
-import { QUERY, diff, mergeConfig, normalize, rowsForUrl } from './lib.js';
+import { QUERY, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
 
 const API = 'https://api.github.com';
 
@@ -19,11 +19,14 @@ async function gh(token, path, { method = 'GET', body } = {}) {
   });
   const data = res.status === 204 ? null : await res.json().catch(() => null);
   if (!res.ok) throw new Error(`${method} ${path}: ${res.status} ${data?.message || ''}`.trim());
-  if (data?.errors?.length) throw new Error(data.errors.map((e) => e.message).join('; '));
+  // GraphQL answers 200 with partial data when the token can't read some
+  // fields (a fine-grained token missing a permission); only fail outright
+  // when nothing came back.
+  if (data?.errors?.length && !data.data) throw new Error(summarizeErrors(data.errors));
   return data;
 }
 
-const graphql = (token, query, variables) => gh(token, '/graphql', { method: 'POST', body: { query, variables } }).then((d) => d.data);
+const graphql = (token, query, variables) => gh(token, '/graphql', { method: 'POST', body: { query, variables } });
 
 async function refresh() {
   const { config, token } = await settings();
@@ -38,8 +41,10 @@ async function refresh() {
     const rows = [];
     const sections = [];
     let rate = null;
+    const errors = [];
     for (const { title, q } of config.queries) {
-      const data = await graphql(token, QUERY, { q, n: 50 });
+      const { data, errors: partial } = await graphql(token, QUERY, { q, n: 50 });
+      errors.push(...(partial || []));
       rate = data.rateLimit;
       const keys = [];
       for (const node of data.search.nodes) {
@@ -58,7 +63,8 @@ async function refresh() {
     const needs = rows.filter((r) => r.attention.length).length;
     chrome.action.setBadgeText({ text: needs ? String(needs) : '' });
     chrome.action.setBadgeBackgroundColor({ color: '#d73a4a' });
-    await chrome.storage.local.set({ snapshot: { rows, sections, rate, error: null, fetchedAt: new Date().toISOString() } });
+    const warning = errors.length ? summarizeErrors(errors) : null;
+    await chrome.storage.local.set({ snapshot: { rows, sections, rate, error: null, warning, fetchedAt: new Date().toISOString() } });
   } catch (err) {
     // Keep the last good rows on screen; only surface the error.
     await chrome.storage.local.set({ snapshot: { ...(prev || { rows: [], sections: [] }), error: String(err.message || err) } });
@@ -72,8 +78,10 @@ async function act({ action, row, jobUrl }) {
   const issue = `/repos/${owner}/${repo}/issues/${row.number}`;
   if (action.type === 'addLabel') await gh(token, `${issue}/labels`, { method: 'POST', body: { labels: [action.label] } });
   else if (action.type === 'removeLabel') await gh(token, `${issue}/labels/${encodeURIComponent(action.label)}`, { method: 'DELETE' });
-  else if (action.type === 'markReady')
-    await graphql(token, 'mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { clientMutationId } }', { id: row.id });
+  else if (action.type === 'markReady') {
+    const { errors } = await graphql(token, 'mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { clientMutationId } }', { id: row.id });
+    if (errors?.length) throw new Error(summarizeErrors(errors));
+  }
   else if (action.type === 'rerunJob') {
     const job = jobUrl.match(/\/job\/(\d+)/)?.[1];
     if (!job) throw new Error('Not an Actions job, so it cannot be re-run from here.');
