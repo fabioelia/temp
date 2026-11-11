@@ -3,12 +3,6 @@ import { CONCLUSION, QUERY, allChecks, checksHidden, flattenContexts, logTail, m
 
 const API = 'https://api.github.com';
 
-// GET responses kept with their ETag. Re-asking with If-None-Match gets a 304
-// when nothing changed, and GitHub doesn't count a 304 against the hourly
-// limit, which is what makes polling the Actions API for every PR affordable.
-// ponytail: in memory only, so a service-worker restart refetches once.
-const etags = new Map();
-
 // The REST limit as of the last response: GitHub sends it on every one.
 let restLimit = null;
 export const restRate = () => restLimit;
@@ -18,8 +12,9 @@ export const restRate = () => restLimit;
 const RETRY_DELAYS = [1000, 3000];
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export async function gh(token, path, { method = 'GET', body } = {}) {
-  const cached = method === 'GET' ? etags.get(path) : null;
+// One request with the retries. `etag` makes it conditional: GitHub answers
+// 304 when nothing changed, and a 304 doesn't count against the hourly limit.
+async function send(token, path, { method = 'GET', body, etag } = {}) {
   let res;
   for (let attempt = 0; ; attempt++) {
     res = await fetch(`${API}${path}`, {
@@ -28,7 +23,7 @@ export async function gh(token, path, { method = 'GET', body } = {}) {
         Authorization: `Bearer ${token}`,
         Accept: 'application/vnd.github+json',
         'Content-Type': 'application/json',
-        ...(cached ? { 'If-None-Match': cached.etag } : {}),
+        ...(etag ? { 'If-None-Match': etag } : {}),
       },
       body: body ? JSON.stringify(body) : undefined,
     });
@@ -42,18 +37,18 @@ export async function gh(token, path, { method = 'GET', body } = {}) {
       reset: Number(res.headers.get('x-ratelimit-reset')) * 1000,
     };
   }
-  if (res.status === 304 && cached) return cached.data;
+  if (res.status === 304) return { notModified: true, etag };
   const data = res.status === 204 ? null : await res.json().catch(() => null);
-  if (res.ok && method === 'GET' && res.headers.get('etag')) {
-    if (etags.size > 3000) etags.clear();
-    etags.set(path, { etag: res.headers.get('etag'), data });
-  }
   if (!res.ok) throw new Error(`${method} ${path.split('?')[0]}: ${res.status} ${data?.message || ''}`.trim());
   // GraphQL answers 200 with partial data when the token can't read some
   // fields (a fine-grained token missing a permission); only fail outright
   // when nothing came back.
   if (data?.errors?.length && !data.data) throw new Error(summarizeErrors(data.errors));
-  return data;
+  return { data, etag: res.headers.get('etag') || '' };
+}
+
+export async function gh(token, path, opts) {
+  return (await send(token, path, opts)).data;
 }
 
 export const DRAFT_MUTATIONS = {
@@ -171,38 +166,86 @@ query Checks($id: ID!) {
   }
 }`;
 
+// How long a PR whose runs have all finished goes without its run list being
+// checked again. Pushes and label changes bump the PR's updatedAt and are
+// seen at once; this only bounds how late a manual re-run shows up.
+const SETTLED_RECHECK_MS = 10 * 60 * 1000;
+
+function jobContexts(run, jobs) {
+  return jobs.map((j) => {
+    const failedStep = j.steps?.find((st) => st.conclusion === 'failure');
+    return {
+      name: j.name,
+      state: j.status !== 'completed' ? 'pending' : CONCLUSION[(j.conclusion || '').toUpperCase()] || 'neutral',
+      title: failedStep ? `Failed at: ${failedStep.name}` : '',
+      url: j.html_url,
+      at: j.started_at || '',
+      summary: '',
+      workflow: run.name,
+      annotations: [],
+    };
+  });
+}
+
+// An empty Actions cache. The service worker keeps one in
+// chrome.storage.session because Chrome stops an idle worker within about
+// 30 seconds, long before the next poll.
+export const emptyActionsCache = () => ({ runs: {}, jobs: {} });
+
 // The head commit's Actions jobs in the shape flattenContexts returns. Each
 // Actions job is also a check run with the same name, so configured check
-// names match either way. Fully skipped runs are not expanded: their jobs
-// would only add skipped entries.
-export async function actionsContexts(token, repo, sha) {
+// names match either way. Requests are skipped where `cache` shows nothing
+// can have changed: a finished run's jobs are reused until a re-run bumps
+// its updated_at, and a PR whose runs have all finished isn't re-listed
+// until the PR changes or SETTLED_RECHECK_MS passes. Every entry read or
+// written is marked `seen` so the caller can drop the rest.
+export async function actionsContexts(token, repo, sha, cache = emptyActionsCache(), prUpdatedAt = '') {
   if (!sha) return [];
-  const { workflow_runs: runs } = await gh(token, `/repos/${repo}/actions/runs?head_sha=${sha}&per_page=100`);
-  const live = runs.filter((r) => r.conclusion !== 'skipped');
+  const key = `${repo}@${sha}`;
+  const prev = cache.runs[key];
+  const settled = prev?.runs.every((r) => r.status === 'completed');
+  let entry = prev;
+  if (!(settled && prev.prUpdatedAt === prUpdatedAt && Date.now() - prev.at < SETTLED_RECHECK_MS)) {
+    const res = await send(token, `/repos/${repo}/actions/runs?head_sha=${sha}&per_page=100`, { etag: prev?.etag });
+    const runs = res.notModified
+      ? prev.runs
+      : res.data.workflow_runs.map((r) => ({ id: r.id, name: r.name, status: r.status, conclusion: r.conclusion, updated: r.updated_at }));
+    entry = { runs, etag: res.etag, at: Date.now(), prUpdatedAt };
+    cache.runs[key] = entry;
+  }
+  entry.seen = true;
+  // Fully skipped runs only add skipped entries, so they aren't expanded.
+  const live = entry.runs.filter((r) => r.conclusion !== 'skipped');
   // Two at a time per PR (the poll runs four PRs at once): firing every
   // run's jobs request together is what draws GitHub's 502s.
-  const perRun = await mapLimit(
-    live,
-    2,
-    async (run) => {
-      const { jobs } = await gh(token, `/repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`);
-      return jobs.map((j) => {
-        const failedStep = j.steps?.find((st) => st.conclusion === 'failure');
-        return {
-          name: j.name,
-          state: j.status !== 'completed' ? 'pending' : CONCLUSION[(j.conclusion || '').toUpperCase()] || 'neutral',
-          title: failedStep ? `Failed at: ${failedStep.name}` : '',
-          url: j.html_url,
-          at: j.started_at || '',
-          summary: '',
-          workflow: run.name,
-          annotations: [],
-        };
-      });
-    },
-  );
+  const perRun = await mapLimit(live, 2, async (run) => {
+    const hit = cache.jobs[run.id];
+    if (hit && run.status === 'completed' && hit.updated === run.updated && hit.done) {
+      hit.seen = true;
+      return hit.contexts;
+    }
+    const res = await send(token, `/repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`, { etag: hit?.etag });
+    const contexts = res.notModified ? hit.contexts : jobContexts(run, res.data.jobs);
+    cache.jobs[run.id] = { updated: run.updated, done: run.status === 'completed', etag: res.etag, contexts, seen: true };
+    return contexts;
+  });
   return perRun.flat();
 }
+
+// Drops entries the last poll didn't touch (merged PRs, old commits) and
+// clears the marks for the next one.
+export function pruneActionsCache(cache) {
+  for (const table of [cache.runs, cache.jobs]) {
+    for (const [k, v] of Object.entries(table)) {
+      if (v.seen) delete v.seen;
+      else delete table[k];
+    }
+  }
+  return cache;
+}
+
+// The side panel lives as long as it's open, so a plain object works there.
+const panelCache = emptyActionsCache();
 
 export async function prChecks(token, row) {
   if (row.checksFrom !== 'actions') {
@@ -211,7 +254,7 @@ export async function prChecks(token, row) {
     if (!checksHidden(data.node)) return { checks: allChecks(flattenContexts(data.node)), warning: errors?.length ? summarizeErrors(errors) : '' };
   }
   return {
-    checks: allChecks(await actionsContexts(token, row.repo, row.sha)),
+    checks: allChecks(await actionsContexts(token, row.repo, row.sha, panelCache, row.updatedAt)),
     warning: '',
     note: 'From the Actions API: Actions jobs only, no annotations. A classic token adds the rest.',
   };

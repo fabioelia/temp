@@ -34,7 +34,8 @@ The JSON fields:
 
 | Key | What it does |
 |---|---|
-| `pollMinutes` | Poll interval (minimum 0.5). Each query is one GraphQL call; GitHub allows 5,000 points an hour. |
+| `pollMinutes` | Minutes between polls while a check is running (minimum 0.5). Each search is one GraphQL call; GitHub allows 5,000 points an hour. |
+| `quietPollMinutes` | Minutes between polls once every check has settled (default 10). |
 | `checksSource` | `auto` (default), `checks` or `actions`. See **Where checks come from** below. |
 | `queries[]` | `{title, q}`: GitHub search syntax, one panel section each, limited to the repos in `repos`. A PR in several shows under the first. |
 | `repos` | `{"owner/name": {labels, checks, extractors, actions}}`: the repos you track, each with the four lists below. |
@@ -56,7 +57,17 @@ Examples:
 
 ## Where checks come from
 
-With a classic token, checks come from GitHub's Checks API inside the main GraphQL query. A fine-grained token can't call that API (GitHub lists it as a fine-grained token limitation), and gets `null` back for each check run. In `auto` mode the panel then reads the PR's head commit from the **Actions API**: one call for its workflow runs, then one per run that wasn't fully skipped for its jobs. Every Actions job is also a check run with the same name, so configured check names match either way, and the jobs API adds the name of the failed step. Repeat requests carry the last ETag, and GitHub doesn't count the resulting 304s against the hourly limit, so polling stays cheap while nothing changes.
+With a classic token, checks come from GitHub's Checks API inside the main GraphQL query. A fine-grained token can't call that API (GitHub lists it as a fine-grained token limitation), and gets `null` back for each check run. In `auto` mode the panel then reads the PR's head commit from the **Actions API**. Every Actions job is also a check run with the same name, so configured check names match either way, and the jobs API adds the name of the failed step.
+
+The Actions path only asks GitHub for what can have changed:
+
+- **A finished run is fetched once.** Its jobs are reused until a re-run changes its `updated_at`.
+- **A settled PR costs nothing.** When every run on the head commit has finished, its run list isn't asked for again until the PR changes (a push or a label bumps its `updatedAt`) or 10 minutes pass, which is how a manual re-run gets picked up.
+- **Everything else is a conditional request.** It carries the last ETag, and GitHub doesn't count the 304 it answers with against the hourly limit.
+- **The cache lives in `chrome.storage.session`.** Chrome stops an idle extension worker within about 30 seconds, long before the next poll, so an in-memory cache would be empty every time.
+- **Polling follows activity:** every `pollMinutes` while a check is running, every `quietPollMinutes` once everything has settled, and not at all while the computer is locked or idle for 10 minutes. It polls as soon as you're back.
+
+The panel header shows the REST and GraphQL requests left this hour.
 
 What the Actions API can't see: check runs that aren't Actions jobs, such as `review/gate` and the summary `CodeQL` check, and failure annotations. The **AI verdict** extractor reads the same verdict `review/gate` reports, from the AI review ledger comment, so it works with either token.
 

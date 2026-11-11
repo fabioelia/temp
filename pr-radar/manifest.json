@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "PR Radar",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Your open PRs, their checks, labels and linked Claude sessions in one side panel.",
-  "permissions": ["storage", "alarms", "notifications", "sidePanel", "downloads"],
+  "permissions": ["storage", "alarms", "notifications", "sidePanel", "downloads", "idle"],
   "host_permissions": [
     "https://api.github.com/*",
     "https://github.com/*",

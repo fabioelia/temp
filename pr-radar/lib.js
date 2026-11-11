@@ -98,7 +98,10 @@ export const NEW_REPO_PROFILE = {
 };
 
 export const DEFAULT_CONFIG = {
+  // Minutes between polls while a check is running, and once everything has
+  // settled. No polling at all while the computer is locked or idle.
   pollMinutes: 2,
+  quietPollMinutes: 10,
   // Where check results come from. checks: GitHub's Checks API (classic
   // token). actions: the Actions jobs API, which fine-grained tokens can
   // read but which only knows Actions jobs. auto: Checks API, falling back

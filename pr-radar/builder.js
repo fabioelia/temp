@@ -145,8 +145,10 @@ export function renderBuilder(root, cfg, onChange) {
     {},
     h('legend', {}, 'General'),
     h('div', { class: 'items' },
-      h('label', { class: 'field' }, h('span', { class: 'muted' }, 'Refresh every (minutes)'),
+      h('label', { class: 'field' }, h('span', { class: 'muted' }, 'Refresh while checks run (minutes)'),
         h('input', { type: 'number', min: '0.5', step: '0.5', value: String(cfg.pollMinutes ?? 2), oninput: (e) => ((cfg.pollMinutes = Number(e.target.value) || 2), changed()) })),
+      h('label', { class: 'field' }, h('span', { class: 'muted' }, 'Refresh when all settled (minutes)'),
+        h('input', { type: 'number', min: '0.5', step: '0.5', value: String(cfg.quietPollMinutes ?? 10), oninput: (e) => ((cfg.quietPollMinutes = Number(e.target.value) || 10), changed()) })),
       (() => {
         const sel = h('select', {}, [
           ['auto', 'Checks API, else Actions (automatic)'],

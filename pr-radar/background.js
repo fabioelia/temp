@@ -1,4 +1,4 @@
-import { DRAFT_MUTATIONS, actionsContexts, gh, graphql, restRate } from './github.js';
+import { DRAFT_MUTATIONS, actionsContexts, emptyActionsCache, gh, graphql, pruneActionsCache, restRate } from './github.js';
 import { QUERY, attention, checksHidden, diff, mapLimit, mergeConfig, normalize, profileFor, rowsForUrl, scopedQuery, summarizeErrors } from './lib.js';
 
 async function settings() {
@@ -9,7 +9,8 @@ async function settings() {
 const CHECK_FIELDS = ['commits', 'statusCheckRollup', 'contexts'];
 const touchesChecks = (e) => e.path?.some((p) => CHECK_FIELDS.includes(p));
 
-async function refresh() {
+// Returns whether anything is still running, which sets the next interval.
+async function poll() {
   const { config, token } = await settings();
   if (!token) {
     await chrome.storage.local.set({ snapshot: { rows: [], sections: [], error: 'Add a GitHub token in Settings.', fetchedAt: null } });
@@ -22,6 +23,7 @@ async function refresh() {
     chrome.action.setBadgeText({ text: '' });
     return;
   }
+  const { actionsCache = emptyActionsCache() } = await chrome.storage.session.get('actionsCache');
   try {
     const seen = new Set();
     const sections = [];
@@ -53,7 +55,7 @@ async function refresh() {
     const rows = await mapLimit(pending, 4, async (p) => {
       if (!viaActions(p)) return { ...normalize(p.node, config), checksFrom: 'checks' };
       try {
-        const contexts = await actionsContexts(token, p.node.repository.nameWithOwner, p.node.headRefOid);
+        const contexts = await actionsContexts(token, p.node.repository.nameWithOwner, p.node.headRefOid, actionsCache, p.node.updatedAt);
         return { ...normalize(p.node, config, contexts), checksFrom: 'actions' };
       } catch (e) {
         actionFailures.push(e.message);
@@ -85,12 +87,56 @@ async function refresh() {
         .filter(Boolean)
         .join('\n') || null;
     rate = { graphql: rate, rest: restRate() };
-    await chrome.storage.local.set({ snapshot: { rows, sections, rate, error: null, warning, fetchedAt: new Date().toISOString() } });
+    const busy = rows.some((r) => r.stale || r.checks.some((c) => c.state === 'pending'));
+    await chrome.storage.session.set({ actionsCache: pruneActionsCache(actionsCache) });
+    await chrome.storage.local.set({ snapshot: { rows, sections, rate, error: null, warning, busy, fetchedAt: new Date().toISOString() } });
+    return busy;
   } catch (err) {
     // Keep the last good rows on screen; only surface the error.
     await chrome.storage.local.set({ snapshot: { ...(prev || { rows: [], sections: [] }), error: String(err.message || err) } });
     chrome.action.setBadgeText({ text: '!' });
+    return true;
   }
+}
+
+// One poll at a time, so two never write the Actions cache over each other.
+// A refresh asked for mid-poll (a saved setting, a click) runs one more poll
+// afterwards: the running one may have read the settings before the change.
+let inFlight = null;
+let again = false;
+function refresh() {
+  if (inFlight) {
+    again = true;
+    return inFlight;
+  }
+  inFlight = (async () => {
+    let busy;
+    do {
+      again = false;
+      busy = await poll();
+    } while (again);
+    await schedule(busy);
+  })().finally(() => (inFlight = null));
+  return inFlight;
+}
+
+// While a check is running, poll every pollMinutes; once everything has
+// settled, every quietPollMinutes.
+async function schedule(busy = true) {
+  const { config } = await settings();
+  const minutes = busy ? config.pollMinutes : config.quietPollMinutes;
+  await chrome.alarms.clear('poll');
+  chrome.alarms.create('poll', { delayInMinutes: Math.max(0.5, Number(minutes) || 2) });
+}
+
+// No polling while the computer is locked or nobody has touched it for
+// IDLE_SECONDS; the first poll after they're back runs at once.
+const IDLE_SECONDS = 600;
+chrome.idle.setDetectionInterval(IDLE_SECONDS);
+chrome.idle.onStateChanged.addListener((state) => state === 'active' && refresh());
+async function onAlarm() {
+  if ((await chrome.idle.queryState(IDLE_SECONDS)) !== 'active') return schedule(false);
+  return refresh();
 }
 
 async function act({ action, row, jobUrl }) {
@@ -129,31 +175,19 @@ async function download({ row, extractor }) {
   return live.length;
 }
 
-async function schedule() {
-  const { config } = await settings();
-  await chrome.alarms.clear('poll');
-  chrome.alarms.create('poll', { periodInMinutes: Math.max(0.5, Number(config.pollMinutes) || 2) });
-}
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-  schedule();
   refresh();
 });
-chrome.runtime.onStartup.addListener(() => {
-  schedule();
-  refresh();
-});
-chrome.alarms.onAlarm.addListener((a) => a.name === 'poll' && refresh());
+chrome.runtime.onStartup.addListener(() => refresh());
+chrome.alarms.onAlarm.addListener((a) => a.name === 'poll' && onAlarm());
 chrome.notifications.onClicked.addListener((url) => {
   chrome.tabs.create({ url });
   chrome.notifications.clear(url);
 });
 chrome.storage.onChanged.addListener((changes) => {
-  if (changes.config || changes.token) {
-    schedule();
-    refresh();
-  }
+  if (changes.config || changes.token) refresh();
 });
 async function match(url) {
   const [{ snapshot }, { config }] = await Promise.all([chrome.storage.local.get('snapshot'), settings()]);
@@ -165,7 +199,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
     match(msg.url).then((rows) => reply({ ok: true, rows }));
     return true;
   }
-  const run = msg.type === 'refresh' ? refresh() : msg.type === 'act' ? act(msg).then(refresh) : msg.type === 'download' ? download(msg) : null;
+  const run = msg.type === 'refresh' ? refresh() : msg.type === 'act' ? act(msg).then(() => refresh()) : msg.type === 'download' ? download(msg) : null;
   if (!run) return false;
   run.then(() => reply({ ok: true })).catch((e) => reply({ ok: false, error: String(e.message || e) }));
   return true;

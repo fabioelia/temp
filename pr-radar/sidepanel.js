@@ -310,11 +310,14 @@ function render() {
     return;
   }
   state.renderPending = false;
-  $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)}` : '';
+  const every = snapshot.busy ? `every ${config.pollMinutes}m while checks run` : `every ${config.quietPollMinutes}m, all settled`;
+  $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)} · ${every}` : '';
+  const left = [['REST', snapshot.rate?.rest], ['GraphQL', snapshot.rate?.graphql]]
+    .filter(([, r]) => Number.isFinite(r?.remaining))
+    .map(([name, r]) => `${name} ${r.remaining.toLocaleString()}`);
   const rest = snapshot.rate?.rest;
-  const gql = snapshot.rate?.graphql;
-  $('rate').textContent = rest || gql ? `API left: ${[rest && `REST ${rest.remaining.toLocaleString()}`, gql && `GraphQL ${gql.remaining.toLocaleString()}`].filter(Boolean).join(' · ')}` : '';
-  $('rate').title = rest ? `Of ${rest.limit.toLocaleString()} an hour; resets at ${new Date(rest.reset).toLocaleTimeString()}` : '';
+  $('rate').textContent = left.length ? `· API left: ${left.join(' · ')}` : '';
+  $('rate').title = Number.isFinite(rest?.reset) ? `REST: of ${rest.limit.toLocaleString()} an hour, resets at ${new Date(rest.reset).toLocaleTimeString()}` : '';
   showError(snapshot.error || snapshot.warning);
   const q = $('filter').value.trim().toLowerCase();
   const needsOnly = $('needsOnly').checked;
