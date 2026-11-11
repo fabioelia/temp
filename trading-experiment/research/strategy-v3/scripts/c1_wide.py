@@ -76,7 +76,12 @@ OVERLAP = [t for t in TOP100 if t in C1_25]
 FETCH = TOP100 + [t for t in C1_25 if t not in TOP100]  # + ADBE
 # Predecessor registrants (same business, same Yahoo ticker), C1's plus any the coverage check flags (reason given).
 EXTRA_CIKS = dict(ef.EXTRA_CIKS)
-EXTRA_CIKS.update({})
+EXTRA_CIKS.update({
+    # flagged by the coverage check (bars from 2005, first 2.02 years later); reorganisations onto a new holding CIK:
+    'DIS': [1001039],            # TWDC Enterprises 18 Corp, the Walt Disney Co registrant until the 2019 Fox deal
+    'BLK': [1364742],            # BlackRock Finance (BlackRock Inc. 2006-2024, before the 2024 GIP holdco); 2005-09/2006 stays a gap
+    'MRVL': [1058057],           # Marvell Technology Group Ltd (Bermuda) before the 2021 Delaware redomicile
+})
 YAHOO = ef.YAHOO.replace('period2=1793000000', 'period2=1794355200')  # 2026-11-11 00:00 UTC: last bar 2026-11-10
 REPRO_CUT = date(2026, 10, 23)
 EXPECT = cv.EXPECT

@@ -1042,3 +1042,13 @@ record since 11/02 (12 rounds, 0 trades from them); this saves cost without chan
 Chips are up pre-market (NVDA +4% despite a Baird downgrade, AMD +5%, AVGO +4%). ES=F 7,616.25 (+1.0%), NQ=F +1.9%; ^VIX 18.27; ^TNX 4.998; CL=F 87.20.
 No new Anthropic filing (S-1/A No. 2 of 11/10 already noted); no NVDA 8-K.
 **Plan unchanged:** the index core is held; no proposals; CSCO reports Thursday after the close (C1 check Friday).
+
+## 2026-11-11 (Wed) Owner: "Do we only [have] 1 thing to check for?"
+**Answer:** yes for trades (C1, with CSCO the only candidate this week), alongside the held index core and the daily checks. Strategy v3 was pre-registered
+and run the same day (research/strategy-v3/README.md):
+* V1, wider C1 universe: WEAK (the 76 new names alone show no edge; 2010-26 t 0.62).
+* V2, sector momentum: REJECTED.
+* V3, volatility-managed core: WEAK (better in both halves but t 1.36); on the Sunday list for a longer-sample retest.
+* V4, pre-FOMC drift: REJECTED (gone since 2010).
+Nothing is adopted.
+**Process note:** the V1 agent ran one read-only `git status` against its brief's no-git rule (as on 10/30). There was no effect; the brief still says no git.
