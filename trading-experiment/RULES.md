@@ -101,14 +101,19 @@ and no transfers. Ignore fills limit for the day you can do more if needed." "2k
   (T+1 settlement). The account is limited margin, so the PDT rule does apply (see above).
 * Trading days are real NYSE sessions only.
 * **Exits stay possible (2026-11-11, from the day-trader-skill review):**
-  * A sell of what we hold may go until the 15:58 flatten cutoff (buys stop at 15:50).
+  * In live mode, a sell of what we hold may be confirmed and gated until the 15:58 flatten cutoff (buys stop at 15:50).
   * It does not count against any daily fill cap.
+  * A sell never exceeds the holding minus other open sell tickets. `--pct` must be in (0, 100].
   * It still needs its written confirmation, and the no-shorting, same-day round-trip and resting-order guards still apply.
 * **A fill must match its ticket (2026-11-11):**
-  * `live.py record` refuses a quantity above the ticket's, an option buy costing more than its approved premium, or a dollar-sized stock buy more
-    than 0.5% over its approved dollars.
+  * `live.py record` refuses:
+    * a quantity or price of zero or less, or a quantity above the ticket's;
+    * an option buy costing more than its approved premium;
+    * a dollar-sized stock buy more than 0.5% away from its approved dollars;
+    * a price more than 2% (stock) or 10% (option) from the gate's limit or reference price.
+  * Pass `--ref-price` on every stock/ETF order.
   * A real broker mismatch is recorded with `--accept-mismatch "<why>"` (the ledger follows the broker) and logged in the journal.
-* **No minimum reward:risk rule.** R1 tested it and REJECTED it: a wider target for the same stop never raised the return. See
+* **No minimum reward:risk rule.** R1 tested it and REJECTED it: there is no evidence that a wider target for the same stop raises the return. See
   `research/strategy-v4/day-trader-skill-review.md`.
 
 ## Costs (all modeled; fills are charged both)

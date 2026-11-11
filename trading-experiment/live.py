@@ -39,7 +39,7 @@ LIVE_LEDGER, TICKETS, KILL = DATA / "live_ledger.csv", DATA / "live_tickets.csv"
 STATE = DATA / "live_state.json"
 LEDGER_COLS = ["id", "ts_et", "date", "ticker", "side", "qty", "avg_price", "notional", "fees", "order_id",
                "ticket", "broker_order_id", "note"]
-TICKET_COLS = ["ticket", "ts_et", "date", "order_id", "ticker", "side", "usd", "qty", "status", "reason"]
+TICKET_COLS = ["ticket", "ts_et", "date", "order_id", "ticker", "side", "usd", "qty", "status", "reason", "ref_px"]  # ref_px since 2026-11-11
 LIVE = T.CFG.get("live", {})
 
 
@@ -166,7 +166,7 @@ def cmd_gate(a):
         refuse(f"daily cap of {T.CFG['max_trades_per_day']} real fills reached")
     if tk in {r["ticker"] for r in todays} | {t["ticker"] for t in open_tickets}:
         refuse(f"{tk} already traded today (no same-day round trips or repeat fills)")
-    if side == "sell" and any(t["ticker"] == tk and t["status"] == "placed" and is_resting(t) for t in tickets()):
+    if side == "sell" and any(t["ticker"] == tk and t["status"] in ("approved", "placed") and is_resting(t) for t in tickets()):
         refuse(f"a resting GTC take-profit holds {tk}: cancel it at the broker (cancel_option_order) and `live.py fail` its ticket first")
     ref = a.ref_price
     usd = qty = None
@@ -216,7 +216,7 @@ def cmd_gate(a):
             refuse(f"loss budget left (${max(avail, 0):,.2f} above the floor) buys no contract at {a.limit}")
         usd = round(qty * a.limit * 100, 2)
         tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
-                          "side": side, "usd": f"{usd:.2f}", "qty": str(qty), "status": "approved", "reason": ""})
+                          "side": side, "usd": f"{usd:.2f}", "qty": str(qty), "status": "approved", "reason": "", "ref_px": a.limit})
         print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
                           "side": "buy_to_open", "contracts": qty, "order_type": "limit", "limit_price": a.limit, "premium_usd": usd,
                           "budget_left_after": round(avail - usd - qty * fee, 2), "stopped": halted}, indent=1))
@@ -244,6 +244,10 @@ def cmd_gate(a):
         held = st["pos"].get(tk, {"qty": 0.0})["qty"]
         if held <= 1e-9:
             refuse(f"the live ledger holds no {tk} to sell (no shorting)")
+        # 2026-11-11 red-team: a sell may never exceed what is held minus what other open sell tickets already cover
+        held -= sum(float(t["qty"] or 0) for t in tickets() if t["ticker"] == tk and t["side"] == "sell" and t["status"] in ("approved", "placed"))
+        if held <= 1e-9:
+            refuse(f"open sell tickets already cover all of the {tk} held (no shorting)")
         kind = o["size_type"]
         if opt:
             qty = held if (halted or kind == "all") else (min(int(float(o["size_value"])), held) if kind == "qty"
@@ -258,10 +262,13 @@ def cmd_gate(a):
             if not ref:
                 refuse("a dollar-sized sell needs --ref-price")
             qty = min(float(o["size_value"]) / ref, held)
-        qty = qty if opt else round(qty, 6)
+        qty = min(qty, held)
+        qty = min(int(qty), int(held)) if opt else round(qty, 6)
+        if qty <= 0:
+            refuse(f"the sell sizes to zero {tk} (held after open tickets: {held:g})")
     tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": o["id"], "ticker": tk,
                       "side": side, "usd": f"{usd:.2f}" if usd else "", "qty": f"{qty:.6f}" if qty else "",
-                      "status": "approved", "reason": ""})
+                      "status": "approved", "reason": "", "ref_px": a.limit or ref or ""})
     print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "order": o["id"], "ticker": tk,
                       "side": "sell_to_close" if opt else side, "order_type": "limit" if (opt and a.limit) else "market",
                       "limit_price": a.limit if opt else None, "notional_usd": usd,
@@ -333,7 +340,7 @@ def cmd_resting(a):
     if bought_today and now.time() < hhmm("16:00"):
         refuse(f"{tk} was bought today: place the take-profit after the 16:00 close so it cannot fill today (no same-day round trips)")
     tid = add_ticket({"ts_et": now.isoformat(timespec="seconds"), "date": day, "order_id": f"TP-{tk}", "ticker": tk, "side": "sell",
-                      "usd": "resting", "qty": str(int(a.qty)), "status": "approved", "reason": f"{RESTING} @ {a.limit}"})
+                      "usd": "resting", "qty": str(int(a.qty)), "status": "approved", "reason": f"{RESTING} @ {a.limit}", "ref_px": a.limit})
     print(json.dumps({"verdict": "APPROVED", "ticket": tid, "ref_id": ref_id(tid), "ticker": tk, "side": "sell_to_close",
                       "contracts": int(a.qty), "order_type": "limit", "limit_price": a.limit, "time_in_force": "gtc",
                       "avg_cost": round(avg, 4), "multiple": round(a.limit / avg, 3)}, indent=1))
@@ -361,6 +368,11 @@ def cmd_record(a):
                  "notional": round(a.qty * a.avg_price * T.mult(tk["ticker"]), 2), "fees": a.fees, "order_id": tk["order_id"], "ticket": a.ticket,
                  "broker_order_id": a.broker_order_id or "", "note": a.note or ""})
     T.write_csv(LIVE_LEDGER, LEDGER_COLS, rows)
+    left = float(tk["qty"]) - a.qty if (tk["qty"] and is_resting(tk)) else 0
+    if left > 1e-6:  # a resting GTC order that filled in part keeps resting for the rest (2026-11-11 red-team)
+        set_ticket(a.ticket, status="placed", qty=f"{left:g}", reason=f"{tk['reason']}; {a.qty:g} filled, {left:g} still resting")
+        print(f"recorded {rows[-1]['id']}: {tk['side']} {a.qty} {tk['ticker']} @ {a.avg_price}; {left:g} still resting on {a.ticket}")
+        return
     set_ticket(a.ticket, status="recorded")
     print(f"recorded {rows[-1]['id']}: {tk['side']} {a.qty} {tk['ticker']} @ {a.avg_price}")
 
@@ -369,13 +381,21 @@ def fill_mismatch(tk, qty, avg_price):
     """How a fill differs from what its ticket approved, or None. Adapted 2026-11-11 from the day-trader-skill review (its
     risk check fingerprints each approved order). Quantity may not exceed the ticket's; a buy's cost may not exceed the
     approved dollars (to the cent for option premium, which is qty x limit x 100; 0.5% for a dollar-sized stock buy)."""
+    if qty <= 0 or avg_price <= 0:
+        return "quantity and price must be above zero"
     if tk["qty"] and qty > float(tk["qty"]) + 1e-6:
         return f"quantity {qty:g} is above the approved {float(tk['qty']):g}"
+    opt = T.is_option(tk["ticker"])
     if tk["side"] == "buy" and tk["usd"] not in ("", "resting"):
         cost, ok = qty * avg_price * T.mult(tk["ticker"]), float(tk["usd"])
-        tol = 0.01 if T.is_option(tk["ticker"]) else max(0.02, 0.005 * ok)
-        if cost > ok + tol:
+        if cost > ok + (0.01 if opt else max(0.02, 0.005 * ok)):
             return f"cost ${cost:,.2f} is above the approved ${ok:,.2f}"
+        if not opt and not tk["qty"] and cost < ok * 0.995 - 0.02:  # a dollar-sized buy fills its dollars (a typo'd price shows here)
+            return f"cost ${cost:,.2f} is below the approved ${ok:,.2f} for a dollar-sized buy"
+    ref = float(tk.get("ref_px") or 0)
+    band = 0.10 if opt else 0.02  # the price may not sit far from the limit or reference price the gate saw (2026-11-11 red-team)
+    if ref and abs(avg_price / ref - 1) > band:
+        return f"price {avg_price:g} is more than {band:.0%} from the gate's {ref:g}"
     return None
 
 

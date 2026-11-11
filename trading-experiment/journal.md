@@ -1127,3 +1127,24 @@ no CSCO or NVDA 8-K in 2 days; no new ANT filing. No qualifying policy event wit
 **Proposals for Thu 11/12:** O020 (sell $50 VOO) and O021 (buy $50 GLDM, PR1) stand. No red-team is needed (under 20% of equity; the program itself was
 red-teamed today). CSCO's C1 proposal is written Thursday evening.
 **Dashboard (11/11):** summary (d641a278), equity (091ba42a), positions (7a729b95) and orders (fef536ea, now showing O020/O021) refreshed; trades unchanged; the old files were deleted.
+
+### 2026-11-11 (evening): review of jakeschincariol/day-trader-skill (owner: "Review and learn from this")
+The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-review.md`. The repo was read as data and none of its code ran against the account.
+
+* **Adopted**, red-team "adopt with fixes":
+  * Exits stay possible: in live mode, a sell may be confirmed and gated until 15:58 and skips any fill cap.
+  * `live.py record` checks each fill against its ticket: quantity, cost, and a price band around the gate's price.
+  * Option theses state the break-even and the drift-matched baseline.
+  * A 3%+ move with no story is journaled.
+* **The red-team found three older gate bugs, now fixed:**
+  * `--pct` above 100 oversold. Sells are now capped at the holding minus open sell tickets.
+  * An approved, unplaced resting order did not block other sells.
+  * A part-filled resting order was closed while the rest still rested.
+  * 95 tests pass.
+* **R1** (a reward:risk minimum adds no edge): pre-registered, and REJECTED.
+  * Run 1 was degenerate (an identity) and the test was amended before run 2.
+  * The red-team's robustness checks keep the verdict: there is no evidence that a wider target raises the return. Most of the target share above 1/(1+R) is drift.
+  * Provenance is disclosed: the row and the runs were committed together.
+* **Process lapse, owned:** commit 9ee339e put the rules live before the red-team was back. From now on, a rule lands only after its red-team.
+* **PDT:** FINRA RN 26-10 is verified only in part (finra.org is blocked here; each fact is graded in the memo). Robinhood's status is unknown, so the same-day guard stays. The allowance proposal stays on the 11/15 list.
+* **No orders changed.** O020/O021 (PR1) go through the gate at the 11/12 Run A, and the CSCO C1 proposal is written at the 11/12 Run B.

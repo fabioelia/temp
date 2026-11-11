@@ -153,6 +153,45 @@ class Live(unittest.TestCase):
         row = Path(self.dir, "data", "live_ledger.csv").read_text().strip().splitlines()[-1]
         self.assertIn("MISMATCH accepted", row)
 
+    def test_a_sell_never_exceeds_the_holding(self):  # 2026-11-11 red-team: --pct 150 was approved for 150% of the shares
+        self.buy_and_record("XLE", "350", 5.1, 68.5)
+        rc, out = self.run_cmd("tracker.py", "2026-10-20T14:50", "order", "add", "--ticker", "XLE", "--side", "sell", "--pct", "150",
+                               "--tier", "A", "--thesis", "t", "--confirm")
+        self.assertEqual((rc, "at most 100" in out), (1, True))
+        self.tracker("2026-10-20T14:50", "order", "add", "--ticker", "XLE", "--side", "sell", "--qty", "3", "--tier", "A", "--thesis", "t", "--confirm")
+        rc, out = self.gate("O002", "2026-10-20T14:55")
+        tid = json.loads(out)["ticket"]
+        self.run_cmd("live.py", "2026-10-20T14:56", "placed", "--ticket", tid, "--broker-order-id", "b1")  # placed, never recorded
+        self.confirmed("XLE", at="2026-10-21T14:50", side="sell")
+        rc, out = self.gate("O003", "2026-10-21T14:55")
+        self.assertEqual(rc, 0, out)
+        self.assertAlmostEqual(json.loads(out)["shares"], 2.1)  # 5.1 held minus the 3 still open at the broker
+        self.confirmed("XLE", at="2026-10-22T14:50", side="sell")
+        rc, out = self.gate("O004", "2026-10-22T14:55")
+        self.assertEqual((rc, "already cover" in out), (2, True))
+
+    def test_a_sell_may_be_confirmed_until_the_flatten_cutoff(self):  # 2026-11-11 red-team: 15:58 was only half true
+        self.buy_and_record("XLE", "350", 5.1, 68.5)
+        rc, out = self.run_cmd("tracker.py", "2026-10-20T15:54", "order", "add", "--ticker", "AAA", "--side", "buy", "--usd", "100",
+                               "--tier", "A", "--thesis", "t", "--confirm")
+        self.assertEqual((rc, "cutoff" in out), (1, True))  # buys still stop at 15:50
+        self.confirmed("XLE", at="2026-10-20T15:54", side="sell")
+        rc, out = self.gate("O002", "2026-10-20T15:56")
+        self.assertEqual(rc, 0, out)
+
+    def test_a_fill_must_sit_near_the_gate_price(self):
+        self.confirmed("XLE", "350")
+        tid = json.loads(self.gate("O001")[1])["ticket"]
+        for qty, px, why in (("0", "68.5", "above zero"), ("5.1", "686", "above the approved"), ("5.1", "6.85", "below the approved")):
+            rc, out = self.run_cmd("live.py", f"{MON}T14:57", "record", "--ticket", tid, "--qty", qty, "--avg-price", px)
+            self.assertEqual((rc, why in out), (1, True), out)
+        self.buy_and_record("XLE", "350", 5.1, 68.5, day="2026-10-20", order="O002")
+        self.confirmed("XLE", at="2026-10-21T14:50", side="sell")
+        rc, out = self.gate("O003", "2026-10-21T14:55", "--ref-price", "68.0")
+        tid = json.loads(out)["ticket"]
+        rc, out = self.run_cmd("live.py", "2026-10-21T14:57", "record", "--ticket", tid, "--qty", "5.1", "--avg-price", "680")
+        self.assertEqual((rc, "from the gate's 68" in out), (1, True))  # a sell at ten times the price would inflate realized P/L
+
     def test_stock_buy_is_capped_by_cash_after_a_realized_loss(self):  # 2026-11-08 fix: it used cap - deployed
         self.set_live(max_single_order_pct=1.0)
         self.buy_and_record("AAA", "600", 10, 60)                           # cost $600
@@ -382,6 +421,19 @@ class LiveResting(unittest.TestCase):
         tid = json.loads(out)["ticket"]
         rc, out = self.live("2026-10-20T14:45", "record", "--ticket", tid, "--qty", "2", "--avg-price", "5.63")
         self.assertEqual((rc, "quantity 2 is above the approved 1" in out), (1, True))
+
+    def test_an_approved_resting_order_blocks_sells_and_a_partial_fill_keeps_resting(self):
+        d = Path(self.dir, "data", "live_ledger.csv")
+        d.write_text(d.read_text().replace(f"{self.CALL},buy,1.000000,3.75,375.0", f"{self.CALL},buy,2.000000,3.75,750.0"))
+        rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "2", "--limit", "5.63", "--tick", "0.01")
+        tid = json.loads(out)["ticket"]  # approved, not yet placed
+        rc, out = self.live("2026-10-20T14:55", "gate", "--order", "O002", "--limit", "4.00", "--tick", "0.01")
+        self.assertEqual((rc, "cancel it at the broker" in out), (2, True))
+        self.live(f"{MON}T16:31", "placed", "--ticket", tid, "--broker-order-id", "gtc1")
+        rc, out = self.live("2026-10-21T14:45", "record", "--ticket", tid, "--qty", "1", "--avg-price", "5.63", "--date", "2026-10-20")
+        self.assertEqual((rc, "1 still resting" in out), (0, True), out)
+        rows = Path(self.dir, "data", "live_tickets.csv").read_text()
+        self.assertIn("placed", [r for r in rows.splitlines() if r.startswith(tid)][0])
 
     def test_a_fill_is_recorded_on_its_broker_date(self):
         rc, out = self.live(f"{MON}T16:30", "resting", "--ticker", self.CALL, "--qty", "1", "--limit", "5.63", "--tick", "0.01")

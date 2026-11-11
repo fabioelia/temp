@@ -247,16 +247,16 @@
  {
   "id": "R36",
   "group": "3. Account safety (AI)",
-  "rule": "Exits stay possible: a sell of what we hold may go until the 15:58 cutoff (buys stop at 15:50) and skips any daily fill cap. It still needs its written confirmation, and the no-shorting, same-day and resting-order guards still apply.",
+  "rule": "Exits stay possible: in live mode, a sell of what we hold may be confirmed and gated until the 15:58 cutoff (buys stop at 15:50) and skips any daily fill cap. A sell never exceeds the holding minus other open sell tickets. The no-shorting, same-day and resting-order guards still apply.",
   "status": "in force",
-  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py, tested"
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py, tested; red-team 11/11 adopt with fixes"
  },
  {
   "id": "R37",
   "group": "3. Account safety (AI)",
-  "rule": "A recorded fill must match its ticket: no quantity above the approved one, and no cost above the approved dollars. A real broker mismatch is recorded with a stated reason and journaled.",
+  "rule": "A recorded fill must match its ticket: no quantity above it, no cost above the approved dollars, and no price more than 2% (stock) or 10% (option) from the gate's price. A real broker mismatch is recorded with a stated reason and journaled.",
   "status": "in force",
-  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py record, tested"
+  "source": "Day-trader-skill review 11/11 (research/strategy-v4/day-trader-skill-review.md); enforced in live.py record, tested; red-team 11/11 adopt with fixes"
  },
  {
   "id": "R38",
@@ -268,9 +268,9 @@
  {
   "id": "R39",
   "group": "7. Evidence (AI)",
-  "rule": "No minimum reward:risk rule: a wider target for the same stop never raised the return (R1 REJECTED, SPY 1993-2026, both halves).",
+  "rule": "No minimum reward:risk rule: no evidence that a wider target for the same stop raises the return (R1 REJECTED, SPY 1993-2026, both halves, robustness checks included).",
   "status": "in force",
-  "source": "research/strategy-v4/r1-reward-risk.txt"
+  "source": "research/strategy-v4/r1-reward-risk.txt, r1-robustness.txt"
  },
  {
   "id": "R40",

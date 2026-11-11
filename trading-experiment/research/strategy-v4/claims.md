@@ -24,3 +24,12 @@ shares and no leverage.
 **R1 amendment (2026-11-11, written after the first run and before the second).** The first run was degenerate. "Enter at a close when flat" re-enters at every exit close, so the trades tile every session of the half. The excess then sums to −10 bps per trade by construction: the log returns telescope, and the result is an identity, not evidence. The output is kept in `r1-reward-risk.txt` as run 1.
 
 **The amended test:** enter only on scheduled closes every 21 sessions, skipping a date if the last trade is still open. Every other part of the test is unchanged: the same exits, the same excess, the same CONFIRMED bar. With gaps between trades, the excess is no longer an identity.
+
+**R1 provenance and robustness (2026-11-11, after the red-team).**
+- **Provenance.**
+  - This row and the amendment were written to the working tree before the runs. They were committed together with both outputs (9ee339e), so git does not prove that order.
+  - The 21-session spacing was chosen after seeing run 1.
+- **Robustness checks** (`scripts/r1_robustness.py`, `r1-robustness.txt`), not pre-registered:
+  - An iid shuffle with the same drift reproduces most of the target-first share above 1/(1+R), with an excess of about −10 bps for every R.
+  - With the same entry dates for every R, the excess rises with R in 1993-09 at k = 4% (t at most 0.2) and falls in 2010-26.
+- **Verdict.** REJECTED stands. The wording is "no evidence that a wider target raises the return", not "never".

@@ -49,7 +49,8 @@ python3 trading-experiment/live.py gate --order O003 --marks ...   # APPROVED ti
 python3 trading-experiment/live.py placed --ticket K001 --broker-order-id <id>
 #   confirm the execution with the connector's order status, then:
 python3 trading-experiment/live.py record --ticket K001 --qty <filled shares> --avg-price <avg fill> --fees <fees>
-# since 2026-11-11 record refuses a fill that exceeds its ticket (quantity, or cost above the approved dollars);
+# pass --ref-price (the live quote) on every stock/ETF gate call. Since 2026-11-11, record refuses a fill that does not match its ticket:
+# a quantity above it, a cost above the approved dollars, or a price more than 2% (stock) or 10% (option) from the gate's price;
 # a real broker mismatch: add --accept-mismatch "<why>" and log it in the journal
 #   anything unclear or failed:  live.py fail --ticket K001 --reason "..."   (never re-place without checking the broker's order history first)
 ```

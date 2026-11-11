@@ -212,7 +212,17 @@ def confirmed_for(o, day):
         return o["created"] < day
     if o.get("confirmed_on") != day or not o.get("confirmed_at"):
         return False
-    return datetime.fromisoformat(o["confirmed_at"]).time() <= CUTOFF
+    return datetime.fromisoformat(o["confirmed_at"]).time() <= cutoff_for(o["side"])
+
+
+def cutoff_for(side):
+    """Buys must be confirmed by the 15:50 closing-order cutoff. Since 2026-11-11 (day-trader-skill review, "getting out must
+    stay possible"), a sell in live mode may be confirmed until the live flatten cutoff, so a late exit or a loss-limit flatten can go."""
+    live = CFG.get("live", {})
+    if side == "sell" and live.get("enabled"):
+        hh, mm = live.get("flatten_cutoff_et", "15:58").split(":")
+        return time(int(hh), int(mm))
+    return CUTOFF
 
 
 def order_state(o):
@@ -308,8 +318,10 @@ def cmd_order_add(a):
     if a.side == "buy" and not is_option(t) and wl is not None and t not in wl:
         # since 2026-11-11 stock/ETF buys are limited to the index core and registered probes (red-team MODIFY)
         sys.exit(f"{t} is not on config.strategy.stock_buy_whitelist {wl} (index core and registered probes only)")
+    if a.pct is not None and not 0 < a.pct <= 100:
+        sys.exit("--pct must be above 0 and at most 100 (a sell can never exceed the holding)")
     if a.confirm:
-        check_confirmable(now)
+        check_confirmable(now, a.side)
     gtd = d(a.gtd) if a.gtd else (now.date() if a.confirm else next_trading_day(created))
     o = {"id": next_id("O", orders), "created": created.isoformat(), "ticker": a.ticker.upper(),
          "side": a.side, "size_type": chosen[0][0], "size_value": chosen[0][1], "tier": a.tier,
@@ -348,23 +360,27 @@ def stamp_quote(o):
     print(f"  {o['ticker']} quote at confirmation: bid {q['bid']} / ask {q['ask']} (iv {q['iv']}, delta {q['delta']}, oi {q['oi']})")
 
 
-def check_confirmable(now):
+def check_confirmable(now, side="buy"):
     if not is_trading_day(now.date()):
         sys.exit(f"{now.date()} is not a trading day; nothing can be confirmed for a close")
-    if now.time() > CUTOFF:
-        sys.exit(f"it is {now:%H:%M} ET, after the {CUTOFF:%H:%M} ET cutoff: this order cannot fill at today's close. "
+    cut = cutoff_for(side)
+    if now.time() > cut:
+        sys.exit(f"it is {now:%H:%M} ET, after the {cut:%H:%M} ET cutoff for a {side}: this order cannot fill today. "
                  f"Leave it as a proposal for the next session")
 
 
 def cmd_order_confirm(a):
     now = now_et()
-    check_confirmable(now)
+    check_confirmable(now, "sell")  # the trading-day check and the latest cutoff; each order's own side is checked below
     rows = read_csv(ORDERS)
     targets = [r for r in rows if r["status"] == "pending" and not r.get("auto")
                and (a.all or r["id"] in a.ids) and r["created"] <= now.date().isoformat() <= r["gtd"]]
     missing = set(a.ids) - {r["id"] for r in targets}
     if missing and not a.all:
         sys.exit(f"cannot confirm {sorted(missing)}: not pending, not valid today ({now.date()}), or automatic")
+    late = [r["id"] for r in targets if now.time() > cutoff_for(r["side"])]
+    if late:
+        sys.exit(f"it is {now:%H:%M} ET, after the {CUTOFF:%H:%M} ET buy cutoff: {late} cannot fill today. Leave them as proposals")
     for r in targets:
         stamp_quote(r)
         r["confirmed_on"], r["confirmed_at"] = now.date().isoformat(), now.isoformat(timespec="minutes")
