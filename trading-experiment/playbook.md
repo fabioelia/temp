@@ -315,6 +315,13 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     11/12 close (about 90.76 at 98.65); RV20 rose to 44.2%, so the put fits only at IV of about 37.5-43%.
   - **Update, Tue 11/10:** the hot CPI (0.4% headline, 0.3% core) left the core held (no rule acts on it). No Wednesday proposals. CSCO's line is about 90.30
     at 98.15; the put fits only at IV of 36-42%. ANT's S-1/A No. 2 assumes $74.00 with a $26B private placement (Google, NVIDIA $10B each); A1 stays REJECTED.
+  - **Update, Wed 11/11:** decision night. PR1 goes ahead Thursday (O020 VOO -$50, then O021 GLDM $50). CSCO line 92.70 at the 11/12 close of 100.76;
+    one 12/18 put fits only at IV of about 34-36% at -8% (49% tonight), and every band spread fails 5% tonight: stand down if the in-band IV is above
+    about 45%. **W0 (policy-event watch) for the Senate energy permitting bill** (data centers pay their own transmission; final passage votes "next week",
+    Reuters 11/11): the losers basket is MSFT 6.10, AMZN 4.10, GOOGL/GOOG 4.69, META 2.18, ORCL 0.36, EQIX 0.16, DLR 0.10, IRM 0.05 = 17.7% of SPY (SSGA
+    11/10; the cost is about $5.5B a year, small against the weight). The vote days plus 2 sessions are W2-flag days and decision nights. The FOMC is on
+    Dec 9 (25 bp priced, about 13% odds of 50 bp); its W0 is due at the 11/24 Run B. PR3's first event is CRM (buy 11/23); its bands are committed at the
+    11/15 review.
   - **Watch:** CPI Tue 11/10 (not a reason to delay); NVDA's board probe of its CEO (Axios, DW, 11/8; no 8-K yet); NVDA earnings 11/17 after the close
     (C1 shadow only; the reserve could not fund it after a CSCO trade); the ANT IPO pricing (guard: no AMZN or GOOGL adds). No SPY shares or options before 12/06.
 
@@ -388,6 +395,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-11 (Run B): the first W0 basket (Senate permitting bill, losers 17.7% of SPY); PR3's buy date fixed to match the tested script.
 * 2026-11-11 (owner's delegation; red-team MODIFY): the probe program (PR1 gold live, PR3 earnings run-up event-driven, PR2/PV3/PV1 paper; a -$50
   program stop; the whitelist and an 8-ticker limit in code), the policy-event watch (W0, W1, W2-as-flag, W4) and the nightly mechanical check replacing the
   daily persona round, which now runs only on decision nights. Strategy v3 and v4 verdicts were added to the evidence list.

@@ -1112,3 +1112,18 @@ buy-and-hold $1,981.60** (SPY 759.81). Since 11/07 real P/L is +$8.75. `validate
 **Nightly mechanical check (step 1c):** reconciled; kill switch absent; equity above the $1,000 alert; the probe stop is not applicable (no live probe yet);
 no CSCO or NVDA 8-K in 2 days; no new ANT filing. No qualifying policy event within 10 sessions (the next FOMC is about 23 sessions away).
 **Decision night** (the CSCO C1 reaction day Fri is within 2 sessions; the PR1 entry is Thu), so the four personas fired (brief research/2026-11-11/brief.md).
+**Personas (research/2026-11-11/): no trade for Thursday; nothing stops PR1.**
+* **macro:** GLDM 78.81 (two sources, no data error, no halt); gold and the dollar are a headwind, not a gate. Correction to my post-close line above (the
+  journal is append-only): the FOMC is Dec 9, **19 sessions** away, not 23; its W0 is due at the Tue 11/24 Run B. ^TNX for 11/11 is not a cash close
+  (the bond market was closed). **First W0 basket:** the Senate energy permitting bill (data centers pay their own transmission; final votes next week;
+  a 73-25 procedural vote on 11/9). The losers are 17.7% of SPY (MSFT, AMZN, GOOGL, META, ORCL, EQIX, DLR, IRM). MSFT, AMZN and GOOGL are Anthropic-linked,
+  disclosed. There is no Polymarket market on it (W1).
+* **momentum:** W2 not flagged today (XLK +3.2%, SOXX +6.0% vs SPY +1.3%). QQQ is back above its 200-day. The SPY 11/30 750C shadow is +23.6%.
+* **catalyst:** CSCO reports Thu 11/12 after the close (Robinhood, Cisco newsroom). Line 92.70; IV cap about 57.9%; ask at most 2.65 (the SGOV cap).
+  **PR3 candidates:** CRM (buy Mon 11/23, sell 12/2), AVGO (buy 12/1; Anthropic-linked, disclosed), COST (buy 12/2); ADBE, ORCL and MU are skipped by the
+  tiebreak or the two-name limit. The buy date is fixed to match t1_earnings_shares.py (7 sessions before the reaction day). PR3's bands are committed at
+  the 11/15 review.
+* **options-vol:** a CSCO put fits only at IV of about 34-36% at -8% (49% tonight; nothing fits above about 45%); every band spread fails 5% tonight.
+**Proposals for Thu 11/12:** O020 (sell $50 VOO) and O021 (buy $50 GLDM, PR1) stand. No red-team is needed (under 20% of equity; the program itself was
+red-teamed today). CSCO's C1 proposal is written Thursday evening.
+**Dashboard (11/11):** summary (d641a278), equity (091ba42a), positions (7a729b95) and orders (fef536ea, now showing O020/O021) refreshed; trades unchanged; the old files were deleted.
