@@ -1105,3 +1105,10 @@ to apply ... land updating your logic") once the T2-T5 tests and a red-team fini
 * **Scheduled tasks:** Run A and Run B prompts updated; the dashboard rules list updated (35 rules).
 **Not adopted:** T4, T5, V2, V4, V1 as a live rule, factor ETFs, buybacks, S&P additions, CPI straddles, volatility half-sizing of the core.
 **Proposals for Thu 11/12:** O020, sell $50 of VOO (funding; VOO above cost); O021, buy $50 of GLDM (PR1), after O020 fills.
+
+## 2026-11-11 (Wed) Post-close (Run B, 17:14 EST)
+**Booked:** no fills. **Real $1,393.59** at the close (VOO 698.35, SGOV 100.52; Robinhood $1,393.00; reconciled; cash $19.82). **Paper $1,378.49.** **SPY
+buy-and-hold $1,981.60** (SPY 759.81). Since 11/07 real P/L is +$8.75. `validate` OK; `live.py check` OK.
+**Nightly mechanical check (step 1c):** reconciled; kill switch absent; equity above the $1,000 alert; the probe stop is not applicable (no live probe yet);
+no CSCO or NVDA 8-K in 2 days; no new ANT filing. No qualifying policy event within 10 sessions (the next FOMC is about 23 sessions away).
+**Decision night** (the CSCO C1 reaction day Fri is within 2 sessions; the PR1 entry is Thu), so the four personas fired (brief research/2026-11-11/brief.md).

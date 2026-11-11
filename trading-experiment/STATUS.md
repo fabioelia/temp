@@ -1,23 +1,24 @@
-# Paper-trading scoreboard (as of 2026-11-10)
+# Paper-trading scoreboard (as of 2026-11-11)
 
 > The paper ledger: the shadow model of the real account (live mode is on; real fills are in data/live_ledger.csv). Paper fills are modeled at the close with slippage and fees (see RULES.md).
 
-**Equity $1,364.45** | P/L -$635.55 (-31.78%) since the start | objective: make money (no date or amount target since 2026-11-07)
+**Equity $1,378.49** | P/L -$621.51 (-31.08%) since the start | objective: make money (no date or amount target since 2026-11-07)
 - Cash $3.84 | realized -$631.16 | fees paid $0.18 | slippage cost $49.68
-- SPY buy-and-hold with same $: $1,955.81
+- SPY buy-and-hold with same $: $1,981.60
 - No end date (the owner retired it on 2026-11-07)
-- Est. after-tax equity if liquidated (memo, 24% on gains): $1,364.45
+- Est. after-tax equity if liquidated (memo, 24% on gains): $1,378.49
 
 ## Positions
 
 | Ticker | Qty | Avg cost | Last | Value | Unreal. | Stop | Target |
 |---|---|---|---|---|---|---|---|
-| SGOV | 2.6354 | 100.55 | 100.53 | $264.94 | -$0.06 (-0.02%) |  |  |
-| VOO | 1.5891 | 692.22 | 689.50 | $1,095.67 | -$4.33 (-0.39%) |  |  |
+| SGOV | 2.6354 | 100.55 | 100.52 | $264.91 | -$0.09 (-0.03%) |  |  |
+| VOO | 1.5891 | 692.22 | 698.35 | $1,109.74 | $9.74 (+0.89%) |  |  |
 
 ## Pending orders (fill at next close)
 
-_None._
+- O020 sell VOO usd=50.0 stop= target= :: Probe program funding (adopted 11/11, red-team MODIFY): trim $50 of VOO to fund PR1 (gold probe). VOO is above its 692.87 cost (699.06 at 11/11 14:43), so a small short-term gain and no wash sale. The core is about 72% VOO after the trim; SGOV stays whole for C1. Not a timing decision.
+- O021 buy GLDM usd=50.0 stop= target= :: PR1 gold probe (data/probes.csv): a plumbing test, not edge evidence (the second stated exception, RULES.md). Evidence: T3 WEAK (80/20 SPY/GLD Sharpe higher in both halves; drawdown not smaller after 2015; research/strategy-v4/t2-t5.md). Size $50 (about 3.6% of equity), fractional, the only gold holding, benchmarked against SGOV. Bands committed before the order (probe-bands-pr1.txt): kill at a checkpoint below -$4.91 (week 4, 12/9), -$6.38 (week 8, 1/6), -$7.41 (week 12, 2/3); retire by week 24 (4/28). Who is on the other side: gold sellers and the opportunity cost of T-bills. Bought after the VOO trim fills. Exits: only the kill rules, the program's -$50 stop, or retirement.
 
 ## Stats
 

@@ -1,11 +1,11 @@
 {
-  "asof": "2026-11-10",
+  "asof": "2026-11-11",
   "start_cash": 2000.0,
   "goal": null,
   "end_date": null,
-  "equity": 1364.45,
-  "pnl": -635.55,
-  "pnl_pct": -0.31777500000000003,
+  "equity": 1378.49,
+  "pnl": -621.51,
+  "pnl_pct": -0.310755,
   "cash": 3.8400000000001455,
   "fees": 0.18000000000000002,
   "slippage": 49.681961581500055,
@@ -13,7 +13,7 @@
   "progress_to_goal": null,
   "trading_days_left": null,
   "required_daily_return": null,
-  "bench_value": 1955.81,
+  "bench_value": 1981.6,
   "benchmark": "SPY",
   "series": [
     {
@@ -105,6 +105,11 @@
       "date": "2026-11-10",
       "equity": 1364.45,
       "bench": 1955.81
+    },
+    {
+      "date": "2026-11-11",
+      "equity": 1378.49,
+      "bench": 1981.6
     }
   ],
   "positions": [
@@ -112,11 +117,11 @@
       "ticker": "SGOV",
       "qty": 2.6354,
       "avg_cost": 100.554,
-      "last": 100.53,
-      "last_date": "2026-11-10",
-      "value": 264.94,
-      "unrealized": -0.06,
-      "unrealized_pct": -0.0002,
+      "last": 100.52,
+      "last_date": "2026-11-11",
+      "value": 264.91,
+      "unrealized": -0.09,
+      "unrealized_pct": -0.0003,
       "stop": null,
       "target": null,
       "opened": "2026-11-09"
@@ -125,17 +130,74 @@
       "ticker": "VOO",
       "qty": 1.589085,
       "avg_cost": 692.2222,
-      "last": 689.5,
-      "last_date": "2026-11-10",
-      "value": 1095.67,
-      "unrealized": -4.33,
-      "unrealized_pct": -0.0039,
+      "last": 698.35,
+      "last_date": "2026-11-11",
+      "value": 1109.74,
+      "unrealized": 9.74,
+      "unrealized_pct": 0.0089,
       "stop": null,
       "target": null,
       "opened": "2026-11-09"
     }
   ],
-  "pending_orders": [],
+  "pending_orders": [
+    {
+      "id": "O020",
+      "created": "2026-11-11",
+      "ticker": "VOO",
+      "side": "sell",
+      "size_type": "usd",
+      "size_value": "50.0",
+      "tier": "A",
+      "max_price": "",
+      "min_price": "",
+      "stop": "",
+      "target": "",
+      "stop_pct": "",
+      "target_pct": "",
+      "priority": "1",
+      "gtd": "2026-11-12",
+      "status": "pending",
+      "filled_date": "",
+      "reason": "",
+      "thesis": "Probe program funding (adopted 11/11, red-team MODIFY): trim $50 of VOO to fund PR1 (gold probe). VOO is above its 692.87 cost (699.06 at 11/11 14:43), so a small short-term gain and no wash sale. The core is about 72% VOO after the trim; SGOV stays whole for C1. Not a timing decision.",
+      "auto": "",
+      "confirmed_on": "",
+      "confirmed_at": "",
+      "q_bid": "",
+      "q_ask": "",
+      "q_time": "",
+      "q_source": ""
+    },
+    {
+      "id": "O021",
+      "created": "2026-11-11",
+      "ticker": "GLDM",
+      "side": "buy",
+      "size_type": "usd",
+      "size_value": "50.0",
+      "tier": "A",
+      "max_price": "",
+      "min_price": "",
+      "stop": "",
+      "target": "",
+      "stop_pct": "",
+      "target_pct": "",
+      "priority": "5",
+      "gtd": "2026-11-12",
+      "status": "pending",
+      "filled_date": "",
+      "reason": "",
+      "thesis": "PR1 gold probe (data/probes.csv): a plumbing test, not edge evidence (the second stated exception, RULES.md). Evidence: T3 WEAK (80/20 SPY/GLD Sharpe higher in both halves; drawdown not smaller after 2015; research/strategy-v4/t2-t5.md). Size $50 (about 3.6% of equity), fractional, the only gold holding, benchmarked against SGOV. Bands committed before the order (probe-bands-pr1.txt): kill at a checkpoint below -$4.91 (week 4, 12/9), -$6.38 (week 8, 1/6), -$7.41 (week 12, 2/3); retire by week 24 (4/28). Who is on the other side: gold sellers and the opportunity cost of T-bills. Bought after the VOO trim fills. Exits: only the kill rules, the program's -$50 stop, or retirement.",
+      "auto": "",
+      "confirmed_on": "",
+      "confirmed_at": "",
+      "q_bid": "",
+      "q_ask": "",
+      "q_time": "",
+      "q_source": ""
+    }
+  ],
   "recent_orders": [
     {
       "id": "O008",
@@ -592,5 +654,5 @@
     "total_fills": 6,
     "verified_fills": 6
   },
-  "est_after_tax_equity": 1364.45
+  "est_after_tax_equity": 1378.49
 }

@@ -1,19 +1,5 @@
 [
  {
-  "id": "O013",
-  "created": "2026-11-03",
-  "side": "buy",
-  "ticker": "SPY261130C00768000",
-  "size": "1 sh",
-  "stop": "-50% of fill",
-  "target": "",
-  "max_price": 8.5,
-  "status": "cancelled",
-  "state": "Proposal, not yet confirmed",
-  "reason": "Replaced by O014 at the 11/4 14:44 check: after SPY +1.8% (767.84) the 768C reference was at delta 0.54, outside the 0.35-0.40 band. Per its thesis, Run A takes the in-band contract nearest delta 0.375 that passes every gate: SPY 12/04 780C (Robinhood delta 0.369, OI 2149).",
-  "thesis": "Goal-budget bet (playbook, pre-registered 11/02 under the owner's autonomy grant). NOT AN EDGE: a choice of variance toward the owner's goals ($2,200 and beat SPY); model EV is flat. Wed 11/4 14:43 check only. Contract: 1 SPY call, 11/30 or 12/04 expiry, delta 0.35-0.40, OI >= 1000, spread <= 5%, ask <= 8.50 (premium <= $850); 768C is tonight's reference (Cboe 11/3 close 7.24/7.41, delta 0.36, OI 1084, IV 14.7%) and Run A takes the in-band contract that passes every gate at the live quote, nearest delta 0.375. Confirm only if all hold: research/2026-11-02/scripts/goal_odds.py at the live quote with the -50% stop gives P($2,200) >= 35% and EV >= 0.93 per $ (11/3 dry run: 46.8%, 1.013); no market-wide halt or circuit-breaker day (S&P 500 Level 1 = 7,039.10); a fresh risk red-team at 14:43 does not reject it (buy >= 20% of equity). Macro (research/2026-11-03/macro.md): midterms as priced (House D 97-98%, Senate D 86-89% at 00:03 UTC), no rate/credit/VIX gate (scripts/macro_gate_test.py). Exits: sell at the first 14:43 check with equity >= $2,200 (resting GTC at that call price if >= 1.4x cost, placed in Run B after the fill); -50% stop at a 14:43 check; otherwise sell at the 11/18 14:43 check. No widening of any gate."
- },
- {
   "id": "O014",
   "created": "2026-11-04",
   "side": "buy",
@@ -96,5 +82,33 @@
   "state": "Confirmed 2026-11-09 14:45 ET",
   "reason": "",
   "thesis": "Index core reserve (adopted 11/08): about 20% of equity in SGOV (0-3 month T-bills, about 3.6-4.0% a year, worst drawdown -0.03%; strategy v2 S3 WEAK, closest version). It is the dry powder for CONFIRMED option setups (one C1 contract: full Kelly about $235 at most) so VOO is never sold to fund options. Size $265; about $19.82 stays in cash as a buffer (the ledger counts $0.02 more than the broker). Placed after VOO shows filled. Same execution checks as VOO. Exits: sold only to fund a CONFIRMED setup, on a rule change or at the owner's request."
+ },
+ {
+  "id": "O020",
+  "created": "2026-11-11",
+  "side": "sell",
+  "ticker": "VOO",
+  "size": "$50",
+  "stop": "",
+  "target": "",
+  "max_price": null,
+  "status": "pending",
+  "state": "Proposal, not yet confirmed",
+  "reason": "",
+  "thesis": "Probe program funding (adopted 11/11, red-team MODIFY): trim $50 of VOO to fund PR1 (gold probe). VOO is above its 692.87 cost (699.06 at 11/11 14:43), so a small short-term gain and no wash sale. The core is about 72% VOO after the trim; SGOV stays whole for C1. Not a timing decision."
+ },
+ {
+  "id": "O021",
+  "created": "2026-11-11",
+  "side": "buy",
+  "ticker": "GLDM",
+  "size": "$50",
+  "stop": "",
+  "target": "",
+  "max_price": null,
+  "status": "pending",
+  "state": "Proposal, not yet confirmed",
+  "reason": "",
+  "thesis": "PR1 gold probe (data/probes.csv): a plumbing test, not edge evidence (the second stated exception, RULES.md). Evidence: T3 WEAK (80/20 SPY/GLD Sharpe higher in both halves; drawdown not smaller after 2015; research/strategy-v4/t2-t5.md). Size $50 (about 3.6% of equity), fractional, the only gold holding, benchmarked against SGOV. Bands committed before the order (probe-bands-pr1.txt): kill at a checkpoint below -$4.91 (week 4, 12/9), -$6.38 (week 8, 1/6), -$7.41 (week 12, 2/3); retire by week 24 (4/28). Who is on the other side: gold sellers and the opportunity cost of T-bills. Bought after the VOO trim fills. Exits: only the kill rules, the program's -$50 stop, or retirement."
  }
 ]

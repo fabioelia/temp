@@ -106,5 +106,11 @@
   "equity": 1364.45,
   "benchmark": 1955.81,
   "pace": null
+ },
+ {
+  "date": "2026-11-11",
+  "equity": 1378.49,
+  "benchmark": 1981.6,
+  "pace": null
  }
 ]
