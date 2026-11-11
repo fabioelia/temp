@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PR Radar settings</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+    <style>
+      main { max-width: 860px; padding: 16px; }
+      section { margin-bottom: 20px; }
+      textarea { width: 100%; min-height: 60vh; font: 12px/1.45 ui-monospace, Menlo, monospace; padding: 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); }
+      input[type='password'] { width: 100%; max-width: 480px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); }
+      .row { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+      #status { white-space: pre-wrap; }
+      #status.bad { color: var(--alert); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>PR Radar settings</h1>
+      <section>
+        <h2>GitHub token</h2>
+        <p class="muted">
+          Stored only in this browser profile (chrome.storage.local). Read-only use needs a classic token with
+          <code>repo</code>, or a fine-grained one with Pull requests, Issues, Checks and Metadata read on your repos.
+          The action buttons also need Pull requests + Issues write, and Actions write for re-running a job.
+        </p>
+        <div class="row">
+          <input id="token" type="password" placeholder="ghp_… or github_pat_…" autocomplete="off" />
+          <button id="test">Test</button>
+        </div>
+      </section>
+      <section>
+        <h2>Config (JSON)</h2>
+        <p class="muted">Queries, labels, checks, extractors and actions. Field reference: the comments on DEFAULT_CONFIG in lib.js, or the README.</p>
+        <textarea id="config" spellcheck="false"></textarea>
+        <div class="row">
+          <button id="save">Save</button>
+          <button id="reset">Reset to defaults</button>
+          <span id="status" class="muted"></span>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

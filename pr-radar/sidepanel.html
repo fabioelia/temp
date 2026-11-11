@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>PR Radar</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <header>
+      <strong>PR Radar</strong>
+      <span id="updated" class="muted"></span>
+      <span class="spacer"></span>
+      <button id="refresh" title="Refresh now">↻</button>
+      <button id="settings" title="Settings">⚙</button>
+    </header>
+    <div class="controls">
+      <input id="filter" type="search" placeholder="Filter by title, #number, label, author…" />
+      <label><input id="needsOnly" type="checkbox" /> Needs me</label>
+    </div>
+    <div id="error" class="error" hidden></div>
+    <main id="list"></main>
+    <script type="module" src="sidepanel.js"></script>
+  </body>
+</html>
