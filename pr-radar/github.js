@@ -95,9 +95,13 @@ export async function diagnose(token, repo) {
       const s = await gh(token, `/repos/${repo}/commits/${sha}/status`);
       return `${s.total_count} on #${pr.number}`;
     });
-    await probe('Check runs', 'Checks: read. Fine-grained tokens may not offer it; use a classic token with repo', async () => {
+    await probe('Check runs', "Checks: read, which fine-grained tokens can't have. Not required: the panel reads Actions jobs instead (next row)", async () => {
       const c = await gh(token, `/repos/${repo}/commits/${sha}/check-runs?per_page=1`);
       return `${c.total_count} on #${pr.number}`;
+    });
+    await probe('Actions jobs', 'Actions: read', async () => {
+      const r = await gh(token, `/repos/${repo}/actions/runs?head_sha=${sha}&per_page=1`);
+      return `${r.total_count} workflow runs on #${pr.number}`;
     });
   }
   await probe('Panel query', '', async () => {
