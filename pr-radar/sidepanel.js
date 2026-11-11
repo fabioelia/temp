@@ -135,7 +135,7 @@ async function loadChecks(row) {
   checksCache.set(row.key, { at, data: hit?.data, loading: true });
   const { token } = await chrome.storage.local.get('token');
   try {
-    checksCache.set(row.key, { at, data: await prChecks(token, row.id) });
+    checksCache.set(row.key, { at, data: await prChecks(token, row) });
   } catch (e) {
     checksCache.set(row.key, { at, data: hit?.data, error: e.message });
   }
@@ -202,6 +202,7 @@ function details(row) {
     return pane;
   }
   if (data.warning) pane.append(h('div', { class: 'reasons' }, data.warning));
+  if (data.note) pane.append(h('div', { class: 'muted' }, data.note));
   const by = Object.groupBy(data.checks, (c) => (['fail', 'cancelled'].includes(c.state) ? 'bad' : c.state === 'pending' ? 'running' : 'rest'));
   const count = (k) => by[k]?.length || 0;
   pane.append(

@@ -1,9 +1,26 @@
-import { DRAFT_MUTATIONS, gh, graphql } from './github.js';
-import { QUERY, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
+import { DRAFT_MUTATIONS, actionsContexts, gh, graphql } from './github.js';
+import { QUERY, checksHidden, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
 
 async function settings() {
   const { config, token } = await chrome.storage.local.get(['config', 'token']);
   return { config: mergeConfig(config), token };
+}
+
+const CHECK_FIELDS = ['commits', 'statusCheckRollup', 'contexts'];
+const touchesChecks = (e) => e.path?.some((p) => CHECK_FIELDS.includes(p));
+
+// Runs `fn` over `items` with at most `limit` in flight, keeping order.
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++;
+      out[i] = await fn(items[i]);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return out;
 }
 
 async function refresh() {
@@ -16,25 +33,41 @@ async function refresh() {
   const { snapshot: prev } = await chrome.storage.local.get('snapshot');
   try {
     const seen = new Set();
-    const rows = [];
     const sections = [];
     let rate = null;
     const errors = [];
+    const pending = [];
     for (const { title, q } of config.queries) {
-      const { data, errors: partial } = await graphql(token, QUERY, { q, n: 50 });
-      errors.push(...(partial || []));
+      const { data, errors: partial = [] } = await graphql(token, QUERY, { q, n: 50 });
       rate = data.rateLimit;
+      const blocked = new Set(partial.filter(touchesChecks).map((e) => e.path[2]));
+      // The Actions fallback replaces exactly the fields these errors are about.
+      errors.push(...(config.checksSource === 'checks' ? partial : partial.filter((e) => !touchesChecks(e))));
       const keys = [];
-      for (const node of data.search.nodes) {
-        if (!node?.number) continue;
-        const row = normalize(node, config);
-        if (seen.has(row.key)) continue;
-        seen.add(row.key);
-        rows.push(row);
-        keys.push(row.key);
-      }
+      data.search.nodes.forEach((node, i) => {
+        if (!node?.number) return;
+        const key = `${node.repository.nameWithOwner}#${node.number}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        pending.push({ node, hidden: blocked.has(i) || checksHidden(node) });
+        keys.push(key);
+      });
       sections.push({ title, keys });
     }
+    const viaActions = (p) => config.checksSource === 'actions' || (config.checksSource !== 'checks' && p.hidden);
+    const actionErrors = new Set();
+    const rows = await mapLimit(pending, 6, async (p) => {
+      if (viaActions(p)) {
+        try {
+          const contexts = await actionsContexts(token, p.node.repository.nameWithOwner, p.node.headRefOid);
+          return { ...normalize(p.node, config, contexts), checksFrom: 'actions' };
+        } catch (e) {
+          actionErrors.add(`Actions API: ${e.message}`);
+        }
+      }
+      return { ...normalize(p.node, config), checksFrom: 'checks' };
+    });
+    if (actionErrors.size) errors.push(...[...actionErrors].map((message) => ({ message })));
     for (const e of diff(prev?.rows, rows, config)) {
       chrome.notifications.create(e.url, { type: 'basic', iconUrl: 'icon.png', title: e.title, message: e.message });
     }

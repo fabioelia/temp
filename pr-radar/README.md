@@ -16,8 +16,8 @@ A Chrome side panel for keeping track of many open PRs and the Claude sessions b
 1. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and pick this `pr-radar` folder.
 2. Click the PR Radar icon to open the side panel, then ⚙ for settings.
 3. Paste a GitHub token and click **Test**:
-   - **Classic token (recommended):** the `repo` scope covers reading and every button. If the org uses SAML single sign-on, click **Configure SSO** next to the token and authorize the org.
-   - **Fine-grained token:** set **Resource owner** to the org (a token covers one owner, so "All repositories" under your personal account doesn't reach org repos). Repository permissions start at "No access", so set Pull requests, Issues, Contents and Commit statuses to read, plus Checks if listed. Contents is what lets it read a PR's commits, and with them its checks. For the buttons, set Pull requests and Issues to write, and Actions to write for re-runs. The org may need to approve the token. Fine-grained tokens may still be refused check runs; if the panel says it can't read `statusCheckRollup`, use a classic token.
+   - **Fine-grained token:** set **Resource owner** to the org. A token covers one owner, so make one per org you track. Under Repository permissions set Pull requests, Issues, Contents, Commit statuses and Actions to read. For the buttons, set Pull requests and Issues to write, and Actions to write for re-runs. The org may need to approve the token. GitHub doesn't let fine-grained tokens call the Checks API, so the panel reads checks from the **Actions API** instead (see below).
+   - **Classic token:** the `repo` scope covers every repo you can reach and every check. If an org uses SAML single sign-on, click **Configure SSO** next to the token and authorize that org.
    - **Test** lists the repos the token can see. Pick one and click **Check access** for a read-only check of each permission the panel uses.
    - If a permission is missing, the panel still shows what it could read and names each blocked field.
 4. Save. The first poll runs right away, then every `pollMinutes` minutes.
@@ -33,6 +33,7 @@ The JSON fields:
 | Key | What it does |
 |---|---|
 | `pollMinutes` | Poll interval (minimum 0.5). Each query is one GraphQL call; GitHub allows 5,000 points an hour. |
+| `checksSource` | `auto` (default), `checks` or `actions`. See **Where checks come from** below. |
 | `queries[]` | `{title, q}`: GitHub search syntax, one panel section each. A PR in several shows under the first. |
 | `labels[]` | `{name, kind, notify}`: `kind` is `alert` (counts as "needs you"), `ok`, `pending` or `info`. Labels not listed stay hidden unless `showOtherLabels` is true. |
 | `checks[]` | `{label, match, notify, showTitle, alertTitle}`: `match` is a regex on the check name. If one name has several runs, the newest one that wasn't skipped counts. `showTitle` shows the check's output title; `alertTitle` is a regex on that title that counts as "needs you". |
@@ -49,6 +50,12 @@ Examples:
 ```json
 { "name": "Jira", "source": "body", "regex": "\\[(NP-\\d+)\\]", "kind": "text" }
 ```
+
+## Where checks come from
+
+With a classic token, checks come from GitHub's Checks API inside the main GraphQL query. A fine-grained token can't call that API (GitHub lists it as a fine-grained token limitation), and gets `null` back for each check run. In `auto` mode the panel then reads the PR's head commit from the **Actions API**: one call for its workflow runs, then one per run that wasn't fully skipped for its jobs. Every Actions job is also a check run with the same name, so configured check names match either way, and the jobs API adds the name of the failed step. Repeat requests carry the last ETag, and GitHub doesn't count the resulting 304s against the hourly limit, so polling stays cheap while nothing changes.
+
+What the Actions API can't see: check runs that aren't Actions jobs, such as `review/gate` and the summary `CodeQL` check, and failure annotations. The **AI verdict** extractor reads the same verdict `review/gate` reports, from the AI review ledger comment, so it works with either token.
 
 ## What it doesn't do, and why
 

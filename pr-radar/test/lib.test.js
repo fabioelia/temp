@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, actionButton, allChecks, diff, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, actionButton, allChecks, checksHidden, diff, flattenContexts, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -191,7 +191,7 @@ test('allChecks lists every check once, failures first, with job ids and annotat
     checkSuite: { workflowRun: { workflow: { name: 'PR' } } },
     annotations: { nodes: [null, { path: 'apps/x.py', message: 'AssertionError', annotationLevel: 'FAILURE', location: { start: { line: 12 } } }] },
   });
-  const checks = allChecks(pr({ commits: { nodes: [{ commit: { statusCheckRollup: { contexts: { nodes: [...pr().commits.nodes[0].commit.statusCheckRollup.contexts.nodes, failing] } } } }] } }));
+  const checks = allChecks(flattenContexts(pr({ commits: { nodes: [{ commit: { statusCheckRollup: { contexts: { nodes: [...pr().commits.nodes[0].commit.statusCheckRollup.contexts.nodes, failing] } } } }] } })));
   assert.deepEqual(checks.map((c) => `${c.state}:${c.name}`), [
     'fail:ci / Backend Test',
     'fail:CI Success',
@@ -224,4 +224,20 @@ test('check names round-trip through the form and patterns stay patterns', () =>
   assert.equal(nameToRegex('/^ci .*Test$/'), '^ci .*Test$');
   assert.equal(regexToName('^ci .*Test$'), '/^ci .*Test$/');
   assert.deepEqual(cfg.checks.map((c) => regexToName(c.match)), ['CI Success', 'preview / Build, deploy, comment', 'playwright / Resolve Playwright gate status', 'qa-test', 'review/gate']);
+});
+
+test('checksHidden spots nulled check runs; the AI verdict reads the last ledger cycle and alerts on block', () => {
+  assert.equal(checksHidden(pr()), false);
+  assert.equal(checksHidden(pr({ commits: { nodes: [{ commit: { statusCheckRollup: { contexts: { nodes: [null] } } } }] } })), true);
+  const ledger = '## AI Review\n<!-- cursor-review-ledger -->\n<!-- ledger-state v1 {"v":1,"cycle":2,"findings":[],"cycles":[{"n":1,"verdict":"clean"},{"n":2,"verdict":"block"}]} -->';
+  const row = normalize(pr({ labels: { nodes: [] }, commits: { nodes: [] }, comments: { nodes: [] }, reviews: { nodes: [{ body: ledger, url: 'r' }] } }), cfg);
+  assert.deepEqual(row.extracted['AI verdict'], ['⛔ Not recommended']);
+  assert.deepEqual(row.attention, ['AI verdict: ⛔ Not recommended']);
+});
+
+test('normalize takes substitute contexts (Actions jobs) when given', () => {
+  const contexts = [{ name: 'CI Success', state: 'fail', title: 'Failed at: Run tests', url: 'https://github.com/o/r/actions/runs/1/job/2', at: '2026-11-11T00:00:00Z' }];
+  const row = normalize(pr(), cfg, contexts);
+  assert.equal(row.checks[0].state, 'fail');
+  assert.equal(row.checks[1].state, 'missing');
 });

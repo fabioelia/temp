@@ -4,6 +4,11 @@
 
 export const DEFAULT_CONFIG = {
   pollMinutes: 2,
+  // Where check results come from. checks: GitHub's Checks API (classic
+  // token). actions: the Actions jobs API, which fine-grained tokens can
+  // read but which only knows Actions jobs. auto: Checks API, falling back
+  // to Actions for any PR whose check runs come back hidden.
+  checksSource: 'auto',
   // GitHub search syntax. Each query is one section in the panel; a PR that
   // matches several shows once, under the first.
   queries: [
@@ -38,6 +43,8 @@ export const DEFAULT_CONFIG = {
   // all: collect every match (else the newest one). kind: link | text.
   // artifacts: regex on artifact names; clicking the chip downloads the
   // matching artifacts of the Actions run linked from the same text.
+  // show: {raw: display} renames values. alert: regex on the shown value
+  // that puts the PR in "needs you".
   // Raw bodies are never stored, only what these extract, so keep them off
   // secrets (the preview block in a Newton PR body carries an MCP token).
   extractors: [
@@ -51,6 +58,19 @@ export const DEFAULT_CONFIG = {
       kind: 'text',
       notify: true,
       artifacts: '^qa-screenshots',
+    },
+    // The AI review ledger's state block records each cycle's verdict; the
+    // last one is the current review. Same source review/gate reads, so it
+    // works without the Checks API.
+    {
+      name: 'AI verdict',
+      source: 'all',
+      contains: '<!-- ledger-state v1',
+      regex: '"verdict":"(block|advisory|clean)"',
+      kind: 'text',
+      notify: true,
+      show: { block: '⛔ Not recommended', advisory: '🟡 Advisory', clean: '🟢 Clean' },
+      alert: '⛔',
     },
   ],
   // Buttons on each PR. type: addLabel | removeLabel | toggleLabel | markReady |
@@ -73,7 +93,7 @@ query Radar($q: String!, $n: Int!) {
   search(query: $q, type: ISSUE, first: $n) {
     nodes {
       ... on PullRequest {
-        id number title url isDraft state mergeable reviewDecision updatedAt body
+        id number title url isDraft state mergeable reviewDecision updatedAt body headRefOid
         author { login }
         repository { nameWithOwner }
         labels(first: 30) { nodes { name color } }
@@ -99,7 +119,7 @@ query Radar($q: String!, $n: Int!) {
   }
 }`;
 
-const CONCLUSION = {
+export const CONCLUSION = {
   SUCCESS: 'pass',
   FAILURE: 'fail',
   TIMED_OUT: 'fail',
@@ -153,8 +173,15 @@ export function flattenContexts(pr) {
 const STATE_ORDER = ['fail', 'cancelled', 'pending', 'neutral', 'pass', 'skipped'];
 
 // Every check on the head commit, one per name, failures first.
-export function allChecks(pr) {
-  const byName = Map.groupBy(flattenContexts(pr), (c) => c.name);
+// True when GitHub hid check runs from this token: it returns null in their
+// place (fine-grained tokens can't call the Checks API).
+export function checksHidden(pr) {
+  const head = nodes(pr.commits)[0];
+  return (head?.commit?.statusCheckRollup?.contexts?.nodes || []).some((n) => n === null);
+}
+
+export function allChecks(contexts) {
+  const byName = Map.groupBy(contexts, (c) => c.name);
   return [...byName.values()]
     .map(pickCheck)
     .map((c) => ({ ...c, jobId: c.url?.match(/\/job\/(\d+)/)?.[1] || '' }))
@@ -204,12 +231,14 @@ function extract(pr, ex) {
   // comment's "workflow run" footer), whose artifacts the chip downloads.
   // The footer comes last, so the last run link wins over any in the body.
   const run = ex.artifacts ? [...source.matchAll(/\/actions\/runs\/(\d+)/g)].pop()?.[1] || '' : '';
-  if (ex.all) return { values: [...new Set(found)], run };
-  return { values: found.length ? [found[found.length - 1]] : [], run };
+  const shown = found.map((v) => ex.show?.[v] ?? v);
+  if (ex.all) return { values: [...new Set(shown)], run };
+  return { values: shown.length ? [shown[shown.length - 1]] : [], run };
 }
 
-export function normalize(pr, config) {
-  const contexts = flattenContexts(pr);
+// `contexts` defaults to the check runs in the GraphQL response; the service
+// worker passes Actions jobs instead when those runs are hidden.
+export function normalize(pr, config, contexts = flattenContexts(pr)) {
   const labelCfg = Object.fromEntries(config.labels.map((l) => [l.name, l]));
   const labels = nodes(pr.labels)
     .filter((l) => labelCfg[l.name] || config.showOtherLabels)
@@ -231,6 +260,7 @@ export function normalize(pr, config) {
   const row = {
     key: `${pr.repository.nameWithOwner}#${pr.number}`,
     id: pr.id,
+    sha: pr.headRefOid || '',
     repo: pr.repository.nameWithOwner,
     number: pr.number,
     title: pr.title,
@@ -259,6 +289,10 @@ export function attention(row, config) {
     if (a.failedChecks && got.state === 'fail') reasons.push(`${c.label} failed`);
     if (c.alertTitle && got.title && new RegExp(c.alertTitle).test(got.title)) reasons.push(`${c.label}: ${got.title}`);
   });
+  for (const ex of config.extractors) {
+    if (!ex.alert) continue;
+    for (const v of row.extracted[ex.name] || []) if (new RegExp(ex.alert).test(v)) reasons.push(`${ex.name}: ${v}`);
+  }
   if (a.changesRequested && row.reviewDecision === 'CHANGES_REQUESTED') reasons.push('Changes requested');
   if (a.conflicts && row.mergeable === 'CONFLICTING') reasons.push('Merge conflict');
   return reasons;
@@ -386,6 +420,7 @@ export function validateConfig(cfg) {
   for (const k of ['queries', 'labels', 'checks', 'extractors', 'actions']) {
     if (!Array.isArray(cfg[k])) errors.push(`"${k}" must be an array`);
   }
+  if (cfg.checksSource && !['auto', 'checks', 'actions'].includes(cfg.checksSource)) errors.push(`checksSource must be auto, checks or actions`);
   for (const q of cfg.queries || []) if (!q.q?.trim()) errors.push(`search "${q.title || '(untitled)'}" has no GitHub search`);
   for (const l of cfg.labels || []) if (!l.name?.trim()) errors.push('a watched label has no name');
   for (const c of cfg.checks || []) {
@@ -399,6 +434,7 @@ export function validateConfig(cfg) {
   for (const ex of cfg.extractors || []) {
     try {
       new RegExp(ex.regex);
+      if (ex.alert) new RegExp(ex.alert);
     } catch (e) {
       errors.push(`extractor "${ex.name}": bad regex (${e.message})`);
     }

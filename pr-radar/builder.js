@@ -61,6 +61,7 @@ export const SECTIONS = [
       { k: 'all', label: 'Every match', type: 'checkbox' },
       { k: 'notify', label: 'Notify on change', type: 'checkbox' },
       { k: 'artifacts', label: 'Click downloads artifacts named', ph: '^qa-screenshots', optional: true },
+      { k: 'alert', label: 'Needs me if the value matches', ph: '⛔', optional: true },
     ],
     presets: [
       ...byTitle(D.extractors, 'name'),
@@ -138,6 +139,16 @@ export function renderBuilder(root, cfg, onChange) {
     h('div', { class: 'items' },
       h('label', { class: 'field' }, h('span', { class: 'muted' }, 'Refresh every (minutes)'),
         h('input', { type: 'number', min: '0.5', step: '0.5', value: String(cfg.pollMinutes ?? 2), oninput: (e) => ((cfg.pollMinutes = Number(e.target.value) || 2), changed()) })),
+      (() => {
+        const sel = h('select', {}, [
+          ['auto', 'Checks API, else Actions (automatic)'],
+          ['checks', 'Checks API only (classic token)'],
+          ['actions', 'Actions API only (fine-grained token)'],
+        ].map(([v, t]) => h('option', { value: v }, t)));
+        sel.value = cfg.checksSource || 'auto';
+        sel.addEventListener('change', () => ((cfg.checksSource = sel.value), changed()));
+        return h('label', { class: 'field' }, h('span', { class: 'muted' }, 'Read checks from'), sel);
+      })(),
       h('label', { class: 'cb' }, h('input', { type: 'checkbox', checked: !!cfg.showOtherLabels, onchange: (e) => ((cfg.showOtherLabels = e.target.checked), changed()) }), ' Show all labels, not only watched ones'),
       ...[['failedChecks', 'A watched check failed'], ['changesRequested', 'Changes requested'], ['conflicts', 'Merge conflict']].map(([k, t]) =>
         h('label', { class: 'cb' }, h('input', { type: 'checkbox', checked: !!cfg.attention[k], onchange: (e) => ((cfg.attention[k] = e.target.checked), changed()) }), ` Needs me: ${t}`),

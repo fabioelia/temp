@@ -1,19 +1,32 @@
 // GitHub API calls shared by the service worker and the settings page.
-import { QUERY, allChecks, flattenContexts, logTail, summarizeErrors } from './lib.js';
+import { CONCLUSION, QUERY, allChecks, checksHidden, flattenContexts, logTail, summarizeErrors } from './lib.js';
 
 const API = 'https://api.github.com';
 
+// GET responses kept with their ETag. Re-asking with If-None-Match gets a 304
+// when nothing changed, and GitHub doesn't count a 304 against the hourly
+// limit, which is what makes polling the Actions API for every PR affordable.
+// ponytail: in memory only, so a service-worker restart refetches once.
+const etags = new Map();
+
 export async function gh(token, path, { method = 'GET', body } = {}) {
+  const cached = method === 'GET' ? etags.get(path) : null;
   const res = await fetch(`${API}${path}`, {
     method,
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/vnd.github+json',
       'Content-Type': 'application/json',
+      ...(cached ? { 'If-None-Match': cached.etag } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
   });
+  if (res.status === 304 && cached) return cached.data;
   const data = res.status === 204 ? null : await res.json().catch(() => null);
+  if (res.ok && method === 'GET' && res.headers.get('etag')) {
+    if (etags.size > 3000) etags.clear();
+    etags.set(path, { etag: res.headers.get('etag'), data });
+  }
   if (!res.ok) throw new Error(`${method} ${path.split('?')[0]}: ${res.status} ${data?.message || ''}`.trim());
   // GraphQL answers 200 with partial data when the token can't read some
   // fields (a fine-grained token missing a permission); only fail outright
@@ -133,10 +146,46 @@ query Checks($id: ID!) {
   }
 }`;
 
-export async function prChecks(token, prId) {
-  const { data, errors } = await graphql(token, CHECKS_QUERY, { id: prId });
-  if (!data?.node) throw new Error(errors?.length ? summarizeErrors(errors) : 'PR not found');
-  return { checks: allChecks(data.node), warning: errors?.length ? summarizeErrors(errors) : '' };
+// The head commit's Actions jobs in the shape flattenContexts returns. Each
+// Actions job is also a check run with the same name, so configured check
+// names match either way. Fully skipped runs are not expanded: their jobs
+// would only add skipped entries.
+export async function actionsContexts(token, repo, sha) {
+  if (!sha) return [];
+  const { workflow_runs: runs } = await gh(token, `/repos/${repo}/actions/runs?head_sha=${sha}&per_page=100`);
+  const live = runs.filter((r) => r.conclusion !== 'skipped');
+  const perRun = await Promise.all(
+    live.map(async (run) => {
+      const { jobs } = await gh(token, `/repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`);
+      return jobs.map((j) => {
+        const failedStep = j.steps?.find((st) => st.conclusion === 'failure');
+        return {
+          name: j.name,
+          state: j.status !== 'completed' ? 'pending' : CONCLUSION[(j.conclusion || '').toUpperCase()] || 'neutral',
+          title: failedStep ? `Failed at: ${failedStep.name}` : '',
+          url: j.html_url,
+          at: j.started_at || '',
+          summary: '',
+          workflow: run.name,
+          annotations: [],
+        };
+      });
+    }),
+  );
+  return perRun.flat();
+}
+
+export async function prChecks(token, row) {
+  if (row.checksFrom !== 'actions') {
+    const { data, errors } = await graphql(token, CHECKS_QUERY, { id: row.id });
+    if (!data?.node) throw new Error(errors?.length ? summarizeErrors(errors) : 'PR not found');
+    if (!checksHidden(data.node)) return { checks: allChecks(flattenContexts(data.node)), warning: errors?.length ? summarizeErrors(errors) : '' };
+  }
+  return {
+    checks: allChecks(await actionsContexts(token, row.repo, row.sha)),
+    warning: '',
+    note: 'From the Actions API: Actions jobs only, no annotations. A classic token adds the rest.',
+  };
 }
 
 // The API answers with a redirect to a signed log URL on Azure blob storage,
