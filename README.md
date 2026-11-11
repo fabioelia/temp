@@ -14,3 +14,7 @@ Open the file in a modern browser (Chrome or Edge 113+ recommended for WebGPU). 
 ## pr-radar/
 
 A Chrome extension (side panel) that tracks your open PRs, their checks and labels, and the Claude sessions that link them. See [`pr-radar/README.md`](pr-radar/README.md).
+
+## pr-radar-mac/
+
+PR Radar as a macOS menu bar app (Electron): a menu bar icon with the "needs you" count and the extension's panel as a popover. See [`pr-radar-mac/README.md`](pr-radar-mac/README.md).
