@@ -1,4 +1,5 @@
-import { mergeConfig, rowsForUrl } from './lib.js';
+import { listLabels } from './github.js';
+import { actionButton, mergeConfig, rowsForUrl } from './lib.js';
 
 const ICON = { pass: '✅', fail: '❌', pending: '⏳', neutral: '➖', cancelled: '⊘', skipped: '⤼', missing: '·' };
 const $ = (id) => document.getElementById(id);
@@ -32,33 +33,35 @@ function send(msg) {
 }
 
 // Writes go to GitHub under your name, so every one takes a second click.
-function confirmButton(text, run) {
+// The armed state lives here, keyed by `id`, not on the button: a poll or a
+// refresh re-renders the panel between the two clicks, and a fresh button
+// must still remember the first one.
+let armed = { id: null, until: 0 };
+function confirmButton(text, run, id) {
   const btn = h('button', {}, text);
-  let armed = null;
+  const arm = (on) => {
+    btn.textContent = on ? `Confirm: ${text}?` : text;
+    btn.classList.toggle('confirm', on);
+  };
+  if (armed.id === id && Date.now() < armed.until) arm(true);
   btn.addEventListener('click', async () => {
-    if (!armed) {
-      btn.textContent = `Confirm: ${text}?`;
-      btn.classList.add('confirm');
-      armed = setTimeout(() => {
-        armed = null;
-        btn.textContent = text;
-        btn.classList.remove('confirm');
-      }, 4000);
+    if (armed.id !== id || Date.now() >= armed.until) {
+      armed = { id, until: Date.now() + 4000 };
+      arm(true);
+      setTimeout(() => armed.id === id && Date.now() >= armed.until && arm(false), 4100);
       return;
     }
-    clearTimeout(armed);
+    armed = { id: null, until: 0 };
     btn.disabled = true;
     btn.textContent = '…';
     try {
       await run();
       btn.textContent = '✓ done';
     } catch (e) {
-      btn.textContent = text;
-      btn.classList.remove('confirm');
+      arm(false);
       btn.disabled = false;
       showError(e.message);
     }
-    armed = null;
   });
   return btn;
 }
@@ -82,21 +85,25 @@ function card(row, current) {
       c.title ? h('span', { class: 't' }, c.title) : null,
     );
     if (c.state !== 'fail' || !/\/job\/\d+/.test(c.url)) return chip;
-    return h('span', { class: 'chip fail' }, chip, confirmButton('↻ re-run', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url })));
+    return h('span', { class: 'chip fail' }, chip, confirmButton('↻ re-run', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.label}`));
   });
   const labels = row.labels.map((l) => h('span', { class: `chip label ${l.kind}` }, l.name));
   const extracted = config.extractors.flatMap((ex) =>
     (row.extracted[ex.name] || []).map((v) =>
       ex.kind === 'link'
         ? link(v, h('span', { class: 'chip' }, v.includes('claude.ai/code/session_') ? shortSession(v) : `${ex.name} ↗`))
-        : h('span', { class: 'chip', title: v }, `${ex.name}: `, h('span', { class: 't' }, v)),
+        : row.artifactRuns?.[ex.name]
+          ? downloadChip(row, ex.name, v)
+          : h('span', { class: 'chip', title: v }, `${ex.name}: `, h('span', { class: 't' }, v)),
     ),
   );
+  const has = (label) => row.allLabels.includes(label);
   const actions = config.actions
     .filter((a) => !a.when || (a.when === 'draft') === row.isDraft)
-    .filter((a) => !(a.type === 'addLabel' && row.allLabels.includes(a.label)))
-    .filter((a) => !(a.type === 'removeLabel' && !row.allLabels.includes(a.label)))
-    .map((a) => confirmButton(a.title, () => send({ type: 'act', action: a, row })));
+    .map((a) => actionButton(a, has))
+    .filter(Boolean)
+    .map(({ title, action }) => confirmButton(title, () => send({ type: 'act', action, row }), `${row.key}|${title}`));
+  actions.push(h('button', { onclick: () => togglePicker(row) }, state.picker?.key === row.key ? '🏷 Hide labels' : '🏷 Labels…'));
 
   return h(
     'div',
@@ -113,13 +120,100 @@ function card(row, current) {
     row.attention.length ? h('div', { class: 'reasons' }, `⚑ ${row.attention.join(' · ')}`) : null,
     h('div', { class: 'chips' }, checks),
     labels.length || extracted.length ? h('div', { class: 'chips' }, labels, extracted) : null,
-    actions.length ? h('div', { class: 'actions' }, actions) : null,
+    h('div', { class: 'actions' }, actions),
+    state.picker?.key === row.key ? picker(row) : null,
   );
+}
+
+function downloadChip(row, name, value) {
+  const chip = h('button', { class: 'chip', title: `${value}\nClick to download this run's artifacts` }, `${name}: `, h('span', { class: 't' }, value), ' ⬇');
+  chip.addEventListener('click', async () => {
+    chip.disabled = true;
+    try {
+      await send({ type: 'download', row, extractor: name });
+    } catch (e) {
+      showError(e.message);
+    }
+    chip.disabled = false;
+  });
+  return chip;
+}
+
+// Repo label lists, fetched once per panel session.
+const labelCache = new Map();
+async function repoLabels(repo) {
+  if (!labelCache.has(repo)) {
+    const { token } = await chrome.storage.local.get('token');
+    labelCache.set(repo, listLabels(token, repo).catch((e) => (labelCache.delete(repo), Promise.reject(e))));
+  }
+  return labelCache.get(repo);
+}
+
+function togglePicker(row) {
+  state.picker = state.picker?.key === row.key ? null : { key: row.key, filter: '', add: new Set(), remove: new Set(), labels: null };
+  render();
+  if (state.picker) {
+    const p = state.picker;
+    repoLabels(row.repo)
+      .then((names) => {
+        p.labels = names;
+        render();
+      })
+      .catch((e) => showError(e.message));
+  }
+}
+
+function picker(row) {
+  const p = state.picker;
+  if (!p.labels) return h('div', { class: 'picker muted' }, 'Loading labels…');
+  const configured = state.config.labels.map((l) => l.name);
+  const isOn = (n) => (row.allLabels.includes(n) || p.add.has(n)) && !p.remove.has(n);
+  const rank = (n) => (row.allLabels.includes(n) ? 0 : configured.includes(n) ? 1 : 2);
+  const list = h('div', { class: 'picker-list' });
+  const fill = () => {
+    const f = p.filter.toLowerCase();
+    const names = p.labels.filter((n) => n.toLowerCase().includes(f)).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+    list.replaceChildren(
+      ...names.map((n) => {
+        const box = h('input', { type: 'checkbox' });
+        box.checked = isOn(n);
+        box.addEventListener('change', () => {
+          const was = row.allLabels.includes(n);
+          for (const set of [p.add, p.remove]) set.delete(n);
+          if (box.checked !== was) (box.checked ? p.add : p.remove).add(n);
+          apply.replaceWith((apply = applyButton()));
+        });
+        return h('label', {}, box, ` ${n}`);
+      }),
+    );
+  };
+  const applyButton = () =>
+    p.add.size || p.remove.size
+      ? confirmButton(`Apply ${[...[...p.add].map((n) => `+${n}`), ...[...p.remove].map((n) => `−${n}`)].join(' ')}`, async () => {
+          await send({ type: 'act', action: { type: 'setLabels', add: [...p.add], remove: [...p.remove] }, row });
+          state.picker = null;
+        }, `${row.key}|apply`)
+      : h('span', { class: 'muted' }, 'Tick or untick labels, then apply.');
+  let apply = applyButton();
+  const filter = h('input', { type: 'search', placeholder: 'Find a label…', value: p.filter });
+  filter.addEventListener('input', () => {
+    p.filter = filter.value;
+    fill();
+  });
+  fill();
+  return h('div', { class: 'picker' }, filter, list, h('div', { class: 'actions' }, apply));
 }
 
 function render() {
   const { snapshot, config } = state;
   if (!snapshot) return;
+  // A poll landing while you type in the label picker would rebuild it and
+  // drop focus; finish the render when focus leaves the picker.
+  if (document.activeElement?.closest?.('.picker')) {
+    state.renderPending = true;
+    return;
+  }
+  state.renderPending = false;
   $('updated').textContent = snapshot.fetchedAt ? `updated ${ago(snapshot.fetchedAt)}` : '';
   showError(snapshot.error || snapshot.warning);
   const q = $('filter').value.trim().toLowerCase();
@@ -160,6 +254,7 @@ async function trackTab() {
 $('refresh').addEventListener('click', () => send({ type: 'refresh' }).catch((e) => showError(e.message)));
 $('settings').addEventListener('click', () => chrome.runtime.openOptionsPage());
 $('filter').addEventListener('input', render);
+document.addEventListener('focusout', () => setTimeout(() => state.renderPending && render()));
 $('needsOnly').addEventListener('change', render);
 chrome.storage.onChanged.addListener((c) => (c.snapshot || c.config) && load());
 chrome.tabs.onActivated.addListener(trackTab);

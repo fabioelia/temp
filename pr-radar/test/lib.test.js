@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, diff, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, actionButton, diff, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -149,4 +149,24 @@ test('summarizeErrors collapses per-PR errors into one line per field', () => {
   assert.match(lines[1], /^Can't read comments on 3 PRs \(needs Issues \+ Pull requests read\)/);
   assert.equal(summarizeErrors([{ message: 'Bad credentials' }]), "Can't read query on 1 PR: Bad credentials");
   assert.match(summarizeErrors([{ message: 'x', path: ['search', 'nodes', 0, 'commits'] }]), /Can't read commits on 1 PR \(needs Contents: read/);
+});
+
+test('QA verdict records the run linked from the same comment, footer last', () => {
+  const body = '<!-- qa-tester:results -->\n> [!TIP]\n> **✅ 5 checks pass.**\nsee https://github.com/o/r/actions/runs/111 for the old run\n_[workflow run](https://github.com/o/r/actions/runs/222) · 2026-11-11_';
+  const row = normalize(pr({ comments: { nodes: [{ body, url: 'c' }] } }), cfg);
+  assert.deepEqual(row.extracted['QA verdict'], ['✅ 5 checks pass.']);
+  assert.equal(row.artifactRuns['QA verdict'], '222');
+  assert.equal(row.artifactRuns.Sessions, undefined, 'only extractors with `artifacts` record a run');
+});
+
+test('actionButton maps label actions to one setLabels write and hides no-ops', () => {
+  const on = (l) => l === 'skip-qa';
+  const off = () => false;
+  const toggle = { title: 'skip-qa', type: 'toggleLabel', label: 'skip-qa' };
+  assert.deepEqual(actionButton(toggle, off), { title: '+ skip-qa', action: { type: 'setLabels', add: ['skip-qa'] } });
+  assert.deepEqual(actionButton(toggle, on), { title: '− skip-qa', action: { type: 'setLabels', remove: ['skip-qa'] } });
+  assert.equal(actionButton({ title: 'x', type: 'addLabel', label: 'skip-qa' }, on), null);
+  assert.equal(actionButton({ title: 'x', type: 'removeLabel', label: 'skip-qa' }, off), null);
+  const close = { title: 'Close', type: 'close' };
+  assert.deepEqual(actionButton(close, off), { title: 'Close', action: close });
 });

@@ -7,7 +7,8 @@ A Chrome side panel for keeping track of many open PRs and the Claude sessions b
 - **Desktop notifications** when something you marked `notify` changes: a label is added, a check finishes, an extracted value changes, a draft is marked ready, or a PR leaves your list. Clicking one opens the PR.
 - **Follows your tabs**: on a PR page or a Claude session page, the panel highlights that PR.
 - **Badge on claude.ai**: on `claude.ai/code/session_…`, a small pill in the corner shows the PR(s) that link the session and their state. It reads only the page URL, never claude.ai's DOM.
-- **Actions**: add or remove a label (`qa-review`, `cursor-review`), mark a draft ready, re-run a failed Actions job. Every write takes two clicks.
+- **Actions**: request QA or AI review, toggle `skip-qa`, mark a draft ready or convert it back to draft, close the PR, re-run a failed Actions job. **🏷 Labels…** opens a picker with every label in the repo, so you can add or remove any of them at once. Every write takes two clicks.
+- **Artifacts**: clicking the QA verdict chip downloads that run's `qa-screenshots-pr<N>` artifact through your GitHub login in the browser. The artifact expires after 14 days.
 
 ## Install
 
@@ -32,8 +33,8 @@ The settings page holds the whole config as JSON, so you can copy it to someone 
 | `queries[]` | `{title, q}`: GitHub search syntax, one panel section each. A PR in several shows under the first. |
 | `labels[]` | `{name, kind, notify}`: `kind` is `alert` (counts as "needs you"), `ok`, `pending` or `info`. Labels not listed stay hidden unless `showOtherLabels` is true. |
 | `checks[]` | `{label, match, notify, showTitle, alertTitle}`: `match` is a regex on the check name. If one name has several runs, the newest one that wasn't skipped counts. `showTitle` shows the check's output title; `alertTitle` is a regex on that title that counts as "needs you". |
-| `extractors[]` | `{name, source, contains, regex, all, kind, notify}`: pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. |
-| `actions[]` | `{title, type, label, when}`: `type` is `addLabel`, `removeLabel` or `markReady`. `when` is `draft` or `ready`. A label button hides when the label is already there (or, for remove, when it isn't). |
+| `extractors[]` | `{name, source, contains, regex, all, kind, notify, artifacts}`: pulls values out of the PR body (`body`), comments and review bodies (`comments`), or both (`all`). `contains` limits it to texts holding a marker. It takes capture group 1 if there is one, else the whole match. `all: true` keeps every match, otherwise the newest. `kind` is `link` or `text`. `artifacts` is a regex on artifact names: the chip then downloads the matching artifacts of the Actions run linked from the same text (the last `/actions/runs/<id>` link in it). |
+| `actions[]` | `{title, type, label, when}`: `type` is `addLabel`, `removeLabel`, `toggleLabel`, `markReady`, `convertToDraft` or `close`. `when` is `draft` or `ready`. An add button hides when the label is already there, and a remove button when it isn't; a toggle shows `+` or `−`. |
 | `attention` | `{failedChecks, changesRequested, conflicts}`: other things that count as "needs you". |
 
 Examples:

@@ -36,6 +36,8 @@ export const DEFAULT_CONFIG = {
   // source: body | comments | all. contains: only read texts holding this
   // marker. regex: capture group 1 if present, else the whole match.
   // all: collect every match (else the newest one). kind: link | text.
+  // artifacts: regex on artifact names; clicking the chip downloads the
+  // matching artifacts of the Actions run linked from the same text.
   // Raw bodies are never stored, only what these extract, so keep them off
   // secrets (the preview block in a Newton PR body carries an MCP token).
   extractors: [
@@ -48,14 +50,19 @@ export const DEFAULT_CONFIG = {
       regex: '> \\[!(?:CAUTION|WARNING|TIP)\\]\\s*\\r?\\n> \\*\\*(.+?)\\*\\*',
       kind: 'text',
       notify: true,
+      artifacts: '^qa-screenshots',
     },
   ],
-  // Buttons on each PR. type: addLabel | removeLabel | markReady.
+  // Buttons on each PR. type: addLabel | removeLabel | toggleLabel | markReady |
+  // convertToDraft | close.
   // when: draft | ready (omit for always). Writes need a token with write access.
   actions: [
     { title: 'Request QA', type: 'addLabel', label: 'qa-review', when: 'ready' },
     { title: 'Request AI review', type: 'addLabel', label: 'cursor-review' },
     { title: 'Mark ready', type: 'markReady', when: 'draft' },
+    { title: 'Convert to draft', type: 'convertToDraft', when: 'ready' },
+    { title: 'Close PR', type: 'close' },
+    { title: 'skip-qa', type: 'toggleLabel', label: 'skip-qa' },
   ],
   attention: { failedChecks: true, changesRequested: true, conflicts: true },
 };
@@ -146,11 +153,19 @@ function texts(pr, source, contains) {
 function extract(pr, ex) {
   const re = new RegExp(ex.regex, 'g');
   const found = [];
+  let source = '';
   for (const t of texts(pr, ex.source || 'all', ex.contains)) {
-    for (const m of t.matchAll(re)) found.push((m[1] ?? m[0]).trim());
+    for (const m of t.matchAll(re)) {
+      found.push((m[1] ?? m[0]).trim());
+      source = t;
+    }
   }
-  if (ex.all) return [...new Set(found)];
-  return found.length ? [found[found.length - 1]] : [];
+  // The Actions run linked from the text the newest value came from (the QA
+  // comment's "workflow run" footer), whose artifacts the chip downloads.
+  // The footer comes last, so the last run link wins over any in the body.
+  const run = ex.artifacts ? [...source.matchAll(/\/actions\/runs\/(\d+)/g)].pop()?.[1] || '' : '';
+  if (ex.all) return { values: [...new Set(found)], run };
+  return { values: found.length ? [found[found.length - 1]] : [], run };
 }
 
 export function normalize(pr, config) {
@@ -170,7 +185,9 @@ export function normalize(pr, config) {
       url: hit?.url || '',
     };
   });
-  const extracted = Object.fromEntries(config.extractors.map((ex) => [ex.name, extract(pr, ex)]));
+  const results = config.extractors.map((ex) => [ex.name, extract(pr, ex)]);
+  const extracted = Object.fromEntries(results.map(([n, r]) => [n, r.values]));
+  const artifactRuns = Object.fromEntries(results.filter(([, r]) => r.run).map(([n, r]) => [n, r.run]));
   const row = {
     key: `${pr.repository.nameWithOwner}#${pr.number}`,
     id: pr.id,
@@ -187,6 +204,7 @@ export function normalize(pr, config) {
     allLabels: (pr.labels?.nodes || []).map((l) => l.name),
     checks,
     extracted,
+    artifactRuns,
   };
   row.attention = attention(row, config);
   return row;
@@ -293,6 +311,18 @@ export function rowsForUrl(rows, url, config) {
   );
 }
 
+// Turns a configured action into {title, action}; label actions become one
+// setLabels write, and null hides a button whose label is already in the
+// state it would set.
+export function actionButton(a, has) {
+  if (!a.type.endsWith('Label')) return { title: a.title, action: a };
+  const adding = a.type === 'addLabel' || (a.type === 'toggleLabel' && !has(a.label));
+  if (a.type === 'addLabel' && has(a.label)) return null;
+  if (a.type === 'removeLabel' && !has(a.label)) return null;
+  const title = a.type === 'toggleLabel' ? `${adding ? '+' : '−'} ${a.title}` : a.title;
+  return { title, action: { type: 'setLabels', [adding ? 'add' : 'remove']: [a.label] } };
+}
+
 export function validateConfig(cfg) {
   const errors = [];
   for (const k of ['queries', 'labels', 'checks', 'extractors', 'actions']) {
@@ -313,7 +343,7 @@ export function validateConfig(cfg) {
     }
   }
   for (const a of cfg.actions || []) {
-    if (!['addLabel', 'removeLabel', 'markReady'].includes(a.type)) errors.push(`action "${a.title}": unknown type ${a.type}`);
+    if (!['addLabel', 'removeLabel', 'toggleLabel', 'markReady', 'convertToDraft', 'close'].includes(a.type)) errors.push(`action "${a.title}": unknown type ${a.type}`);
   }
   return errors;
 }

@@ -22,6 +22,11 @@ export async function gh(token, path, { method = 'GET', body } = {}) {
   return data;
 }
 
+export const DRAFT_MUTATIONS = {
+  markReady: 'mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { clientMutationId } }',
+  convertToDraft: 'mutation($id: ID!) { convertPullRequestToDraft(input: {pullRequestId: $id}) { clientMutationId } }',
+};
+
 export const graphql = (token, query, variables) => gh(token, '/graphql', { method: 'POST', body: { query, variables } });
 
 // Classic tokens report their scopes in a header; fine-grained ones don't.
@@ -88,4 +93,15 @@ export async function diagnose(token, repo) {
     return 'every field readable';
   });
   return results;
+}
+
+// ponytail: stops at 300 labels.
+export async function listLabels(token, repo) {
+  const names = [];
+  for (let page = 1; page <= 3; page++) {
+    const batch = await gh(token, `/repos/${repo}/labels?per_page=100&page=${page}`);
+    names.push(...batch.map((l) => l.name));
+    if (batch.length < 100) break;
+  }
+  return names;
 }

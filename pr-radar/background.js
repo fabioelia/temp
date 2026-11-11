@@ -1,4 +1,4 @@
-import { gh, graphql } from './github.js';
+import { DRAFT_MUTATIONS, gh, graphql } from './github.js';
 import { QUERY, diff, mergeConfig, normalize, rowsForUrl, summarizeErrors } from './lib.js';
 
 async function settings() {
@@ -54,17 +54,36 @@ async function act({ action, row, jobUrl }) {
   const { token } = await settings();
   const [owner, repo] = row.repo.split('/');
   const issue = `/repos/${owner}/${repo}/issues/${row.number}`;
-  if (action.type === 'addLabel') await gh(token, `${issue}/labels`, { method: 'POST', body: { labels: [action.label] } });
-  else if (action.type === 'removeLabel') await gh(token, `${issue}/labels/${encodeURIComponent(action.label)}`, { method: 'DELETE' });
-  else if (action.type === 'markReady') {
-    const { errors } = await graphql(token, 'mutation($id: ID!) { markPullRequestReadyForReview(input: {pullRequestId: $id}) { clientMutationId } }', { id: row.id });
+  if (action.type === 'setLabels') {
+    if (action.add?.length) await gh(token, `${issue}/labels`, { method: 'POST', body: { labels: action.add } });
+    for (const name of action.remove || []) await gh(token, `${issue}/labels/${encodeURIComponent(name)}`, { method: 'DELETE' });
+  } else if (DRAFT_MUTATIONS[action.type]) {
+    const { errors } = await graphql(token, DRAFT_MUTATIONS[action.type], { id: row.id });
     if (errors?.length) throw new Error(summarizeErrors(errors));
-  }
-  else if (action.type === 'rerunJob') {
+  } else if (action.type === 'close') {
+    await gh(token, `/repos/${owner}/${repo}/pulls/${row.number}`, { method: 'PATCH', body: { state: 'closed' } });
+  } else if (action.type === 'rerunJob') {
     const job = jobUrl.match(/\/job\/(\d+)/)?.[1];
     if (!job) throw new Error('Not an Actions job, so it cannot be re-run from here.');
     await gh(token, `/repos/${owner}/${repo}/actions/jobs/${job}/rerun`, { method: 'POST' });
   } else throw new Error(`Unknown action ${action.type}`);
+}
+
+// Downloads through github.com's own artifact link rather than the API's
+// signed-URL redirect: the browser's GitHub login authorizes it, so the token
+// only needs Actions read to list the run's artifacts.
+async function download({ row, extractor }) {
+  const { config, token } = await settings();
+  const ex = config.extractors.find((e) => e.name === extractor);
+  const run = row.artifactRuns?.[extractor];
+  if (!ex?.artifacts || !run) throw new Error(`No Actions run linked from ${extractor}.`);
+  const { artifacts } = await gh(token, `/repos/${row.repo}/actions/runs/${run}/artifacts?per_page=100`);
+  const re = new RegExp(ex.artifacts);
+  const hits = artifacts.filter((a) => re.test(a.name));
+  const live = hits.filter((a) => !a.expired);
+  if (!live.length) throw new Error(hits.length ? 'That artifact has expired.' : `Run ${run} has no artifact matching ${ex.artifacts}.`);
+  for (const a of live) await chrome.downloads.download({ url: `https://github.com/${row.repo}/actions/runs/${run}/artifacts/${a.id}`, filename: `${a.name}.zip` });
+  return live.length;
 }
 
 async function schedule() {
@@ -103,7 +122,7 @@ chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
     match(msg.url).then((rows) => reply({ ok: true, rows }));
     return true;
   }
-  const run = msg.type === 'refresh' ? refresh() : msg.type === 'act' ? act(msg).then(refresh) : null;
+  const run = msg.type === 'refresh' ? refresh() : msg.type === 'act' ? act(msg).then(refresh) : msg.type === 'download' ? download(msg) : null;
   if (!run) return false;
   run.then(() => reply({ ok: true })).catch((e) => reply({ ok: false, error: String(e.message || e) }));
   return true;

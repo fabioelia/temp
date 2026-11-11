@@ -62,3 +62,8 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: 
 .label.pending { border-color: var(--pending); color: var(--pending); }
 .actions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .actions button { font-size: 12px; }
+button.chip { cursor: pointer; }
+.picker { margin-top: 6px; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
+.picker input[type='search'] { width: 100%; padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.picker-list { max-height: 180px; overflow-y: auto; margin-top: 4px; display: flex; flex-direction: column; }
+.picker-list label { padding: 1px 0; font-size: 12px; }
