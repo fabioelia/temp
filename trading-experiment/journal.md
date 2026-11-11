@@ -1148,3 +1148,4 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
 * **Process lapse, owned:** commit 9ee339e put the rules live before the red-team was back. From now on, a rule lands only after its red-team.
 * **PDT:** FINRA RN 26-10 is verified only in part (finra.org is blocked here; each fact is graded in the memo). Robinhood's status is unknown, so the same-day guard stays. The allowance proposal stays on the 11/15 list.
 * **No orders changed.** O020/O021 (PR1) go through the gate at the 11/12 Run A, and the CSCO C1 proposal is written at the 11/12 Run B.
+**Dashboard (11/11, late):** the rules dataset now points at a8d92714 (v6, R36-R40). The old file was deleted.
