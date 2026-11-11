@@ -45,6 +45,15 @@ and no transfers. Ignore fills limit for the day you can do more if needed." "2k
   cells pass; the miss is t 1.98, a power issue), and the cited literature (Dimson-Marsh-Staunton; Vanguard 2012 on lump sum vs staging) supports a
   positive mean. Expect about +$100 a year on the account, not a monthly gain; a 2008 replay would cost about $610 on the core (about $890 if the reserve
   were also lost). That is the worst case in the sample, not the worst possible.
+* **The probe program (adopted 2026-11-11, owner's delegation; red-team MODIFY):** at most $200 at cost (now $50) carved from VOO, for small live probes of
+  ideas with a WEAK-or-better registered test. This is a **second stated exception** to "only CONFIRMED trades", labelled **plumbing tests, not edge
+  evidence**: probes test fills, costs, signal rates and discipline, while backtests decide edges. The registry is `data/probes.csv`. Rules:
+  - **Whitelist:** stock/ETF buys only for VOO, SGOV and active live probes (config `stock_buy_whitelist`, enforced by the tracker and the gate).
+  - **Bands first:** the P/L bands are committed before any order.
+  - **Kills:** checked only at weeks 4, 8 and 12.
+  - **Retirement:** every probe is retired by week 24.
+  - **Program stop:** a **program-wide -$50 stop** (realized plus unrealized across all live probes) pauses the program until the next Sunday vote.
+  - **Upgrades:** an upgrade means one new test on independent data, registered before week 4 and counted in the deflated-Sharpe register.
 * **Options:** long calls or puts only for CONFIRMED setups (C1 today), sized at most min(full Kelly at the contract's DTE on current equity, the SGOV
   reserve) (about $190-263 at IV = RV20; research/2026-11-08/scripts/ov_1108.py), funded from the SGOV reserve, never by selling VOO. No bet with EV below 1 unless the owner names a budget for it. Selling options to open stays off (P1 REJECTED, P2 WEAK
   and not adopted). The option rules below still apply to any option trade. Never sell an option to open, never multi-leg, never
@@ -116,7 +125,7 @@ convexity*: take the asymmetric shots, but cap the damage.
     `playbook.md`, the kill switch and the gate tickets.
   - The live loss-limit stop is set to the full $2,000, so it trips only if everything is lost. The owner can stop everything at any time with `KILL_SWITCH`.
 * **Exposure:** gross invested <= 100% of equity; a 3x ETF counts at 3x notional against the AI/semis theme cap.
-* **Concentration:** max 4 positions (VOO and SGOV count), no single name above 30% of equity at entry. (Clarified 11/04, after the goal-budget call was bought at 35% of equity:
+* **Concentration:** max 8 tickers since 2026-11-11 (core 2, probes 4, options 2; config `max_positions`, enforced by the gate; was 4), no single name above 30% of equity at entry. (Clarified 11/04, after the goal-budget call was bought at 35% of equity:
   for option premium, only the "Still in force" list above applies, which keeps the 4-position limit. The 30% single-name line is a stock-era limit and
   was superseded by the owner's 10/30 removal of the single-order cap. The gate's `max_single_order_pct` is 1.0. The ambiguity is logged in the journal.) **Theme caps (cost basis, incl. leverage): AI/semis <= 40%, energy <= 40%.**
 * **Risk per position to its closing stop:** <= 2% of equity core, <= 3% satellite (assume the realised loss is 1.5x planned, 2x for 3x ETFs).

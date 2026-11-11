@@ -173,6 +173,15 @@ def cmd_gate(a):
     strat = T.STRAT
     if side == "buy" and not opt and not strat.get("allow_stock_buys", True):
         refuse("stock/ETF buys are switched off (options-only strategy)")
+    wl = strat.get("stock_buy_whitelist")
+    if side == "buy" and not opt and wl is not None and tk not in wl:
+        refuse(f"{tk} is not on the stock/ETF whitelist {wl} (index core and registered probes only; 2026-11-11)")
+    max_pos = strat.get("max_positions")
+    if side == "buy" and max_pos and tk not in st["pos"]:
+        held_now = {t for t, p in st["pos"].items() if p.get("qty", 0) > 1e-9}
+        pending = {t["ticker"] for t in tickets() if t["status"] in ("approved", "placed") and t["side"] == "buy"}
+        if len(held_now | pending | {tk}) > max_pos:
+            refuse(f"position limit: {len(held_now | pending)} tickers held or pending; a new one would exceed {max_pos} (config.strategy.max_positions)")
     if opt and side == "buy":
         if halted:
             refuse(f"LOSS LIMIT hit (experiment down ${loss:,.2f}): no new buys")

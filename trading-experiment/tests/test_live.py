@@ -24,6 +24,8 @@ class Live(unittest.TestCase):
         c["live"]["loss_limit_usd"] = 500.0  # tests below assume the original $500 limit
         c["live"]["max_single_order_pct"] = 0.3  # and the original 30% single-order cap
         c["max_trades_per_day"] = 4  # the cap mechanism is tested at the original 4 a day (the owner removed the cap on 2026-11-07)
+        c["strategy"]["stock_buy_whitelist"] = None  # the stock-path tests use arbitrary tickers; the whitelist has its own test
+        c["strategy"]["max_positions"] = None
         p.write_text(json.dumps(c))
 
     def tearDown(self):
@@ -134,6 +136,24 @@ class Live(unittest.TestCase):
         rc, out = self.gate("O003", "2026-10-21T14:55")
         self.assertEqual(rc, 0, out)
         self.assertAlmostEqual(json.loads(out)["notional_usd"], 1700.0, places=2)
+
+    def test_whitelist_and_position_limit(self):  # 2026-11-11: index core and registered probes only; at most N tickers
+        p = Path(self.dir, "config.json")
+        c = json.loads(p.read_text())
+        c["strategy"]["stock_buy_whitelist"] = ["AAA", "BBB", "CCC"]
+        c["strategy"]["max_positions"] = 2
+        p.write_text(json.dumps(c))
+        self.buy_and_record("AAA", "100", 1, 100, order="O001")
+        self.buy_and_record("BBB", "100", 1, 100, day="2026-10-20", order="O002")
+        self.confirmed("CCC", "100", "2026-10-21T14:50")
+        rc, out = self.gate("O003", "2026-10-21T14:55")
+        self.assertEqual((rc, "position limit" in out), (2, True))
+        c["strategy"]["stock_buy_whitelist"] = ["AAA"]
+        p.write_text(json.dumps(c))
+        rc, out = self.run_cmd("tracker.py", "2026-10-21T14:51", "order", "add", "--ticker", "DDD", "--side", "buy", "--usd", "50",
+                               "--tier", "A", "--thesis", "t", "--confirm")
+        self.assertNotEqual(rc, 0)
+        self.assertIn("whitelist", out)
 
     def test_loss_limit_stops_buys_forces_flatten_then_kills(self):
         self.buy_and_record("XLE", "600", 10, 60)  # cost $600

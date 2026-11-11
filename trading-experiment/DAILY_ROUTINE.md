@@ -128,6 +128,11 @@ happens: nothing new fills.
 1b. **Live reconciliation (live mode only).** Compare broker positions with `data/live_ledger.csv`, run `live.py check --marks ...`, and report real P/L next to the paper P/L.
    Check every resting take-profit (`live.py status` lists them) with `get_option_orders`; a fill is recorded and mirrored as `LIVE_MODE.md` says. **After a buy filled
    today, place its resting GTC take-profit now** (`LIVE_MODE.md`, "Resting take-profit"; except C1 down-gap puts, which hold to session 5 with no take-profit, `playbook.md` Exits); this is the one real order Run B may place, and it only reduces risk.
+1c. **Nightly mechanical check (adopted 2026-11-11; it always runs).** Broker vs ledger, the kill switch, the $1,000 owner alert, and the probe program's
+   -$50 stop (`data/probes.csv`); earnings-date changes and 8-Ks for held names and the 25 C1 names; the W1 policy-odds and W4 futures flags; a W0
+   "who loses" basket when a qualifying policy event is within 10 sessions (playbook). **Step 2 runs only on decision nights:** a C1 reaction day, a PR3
+   entry or exit, an open-option or probe decision, or a qualifying policy event within 2 sessions, or an unscheduled shock. Otherwise the run journals
+   the check, refreshes the dashboard and stops.
 2. **Research round for tomorrow.** Wave 1, in parallel, in ONE message (fresh agents, so each brief is self-contained: the goal, the rules, the portfolio from `STATUS.md`, today's
    market recap, the next five trading days' calendar, and the persona). **The brief's market numbers come from `python3 trading-experiment/review.py snapshot --date D`, pasted
    fresh each night, never carried over from an earlier brief; oil and rate triggers name one of its series (W43 review).** Every brief also points to `research/strategy-review/README.md`: an edge figure needs a committed script or a cited study, and the
@@ -163,6 +168,10 @@ happens: nothing new fills.
 * **Weekly retrospective first** (owner's request 2026-10-23; section below), then re-plan with what it taught.
 * Re-plan the week; cancel stale proposals and write Monday's proposals (created on the Sunday date). Monday's Run A makes the real decision.
 * Update `playbook.md` with a dated changelog line. Do not re-trade history: the ledger is append-only; fixes go in the journal as dated notes.
+
+## Probe checkpoints (every Sunday review)
+* For each probe in `data/probes.csv`: P/L vs its benchmark and band, fill costs vs the model, signal rate, rule breaches; at a week 4/8/12 checkpoint
+  apply the kill rules; paper probes are marked from their signals. Retire any probe at week 24.
 
 ## Rule evolution (every Sunday review, and whenever a rule causes harm; owner 2026-11-07: "evolve the rules as we learn")
 * After the retrospective, list every rule that cost money, blocked a good trade, or rests on an untested assumption. For each, write a proposal

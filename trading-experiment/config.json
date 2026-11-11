@@ -107,7 +107,14 @@
       "min_multiple": 1.4,
       "plan": "one contract: all at +50%; two or more: half at +50%, the rest at +100% (rounded to the contract's tick)",
       "authorization": "2026-10-26, owner: 'Yes you decide on best option for the Robin Hood take profit tool' (asked whether to place a resting take-profit after each buy)."
-    }
+    },
+    "stock_buy_whitelist": [
+      "VOO",
+      "SGOV",
+      "GLDM"
+    ],
+    "max_positions": 8,
+    "probe_note": "2026-11-11 (owner's delegation; red-team MODIFY): stock/ETF buys only for the index core (VOO, SGOV) and registered live probes (data/probes.csv); a PR3 earnings-probe name is added to the whitelist only while that probe is active. Position limit 8 tickers."
   },
   "research": {
     "sec_contact_email": ""

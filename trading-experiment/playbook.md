@@ -22,6 +22,29 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   before 12/06** (30 days after the 11/05 loss).
 * **Retired 2026-11-07:** the goal-budget variance bet (it existed only to chase the date target), the goal arithmetic below, and the daily fill cap.
 
+## Probe program, policy-event watch and research cadence (adopted 2026-11-11; research/strategy-v4/adoption-2026-11-11.md, red-team MODIFY)
+* **Probes (registry `data/probes.csv`):** plumbing tests, not edge evidence (the second stated exception).
+  - **PR1 gold (live):** $50 GLDM, funded by trimming $50 of VOO. Benchmarked against SGOV, with bands committed in `research/strategy-v4/probe-bands-pr1.txt`:
+    killed at a checkpoint below -$4.91 at week 4, -$6.38 at week 8 or -$7.41 at week 12. It is the only gold holding.
+  - **PR3 earnings run-up in shares (live, event-driven, WEAK):** $25 each in up to 2 of the 25 C1 names, from 7 sessions before earnings to the session
+    before the print; the tiebreak and the date re-check are in the registry; no stop. It starts with the next eligible event.
+  - **Paper:** PR2 (the non-equity trend sleeve), PV3 (the volatility-managed core), PV1 (C1 on 76 more names).
+  - **PR4:** open, only for a question paper cannot answer.
+  - **Program rules:** a -$50 program-wide stop pauses all probes until the Sunday vote; kills are checked at weeks 4, 8 and 12; every probe is retired by week
+    24; graduation needs CONFIRMED on independent data plus a deflated Sharpe of at least 0.95 across the register.
+* **Policy-event watch (logging, not a trading rule):** the qualifying events are federal elections; a bill touching AI, data centers, chips, energy or
+  tariffs passing a chamber; a major court ruling or executive order on those; and an FOMC decision with a change priced at 50% or more.
+  - **W0:** a "who loses" basket with index weights, written by Run B within 10 sessions of the event.
+  - **W1:** policy prediction markets added to `predmkt.py`'s watch list; a doubling, or a move of 10 points in 30 days, is flagged.
+  - **W2:** a divergence flag (SPY up while XLK lags 1 point, SOXX lags 2.5 points, or the basket is down 2%), logged only, because P1 failed out of sample.
+  - **W4:** NQ=F vs ES=F after an event that resolves after the close, recorded in Run 0, with a gap of 1 point or more flagged.
+* **Research cadence:** a nightly mechanical check in every Run B:
+  - broker-ledger reconciliation and the kill switch;
+  - earnings-date changes and 8-Ks for held names and C1 names;
+  - the W1/W4 flags and the probe stop.
+  The full persona round runs only when, within 2 sessions, there is a C1 reaction day, a PR3 entry or exit, an open-option or probe decision, or a
+  qualifying policy event; when an unscheduled shock hits (for example the 11/4 moratorium call); and always on Sunday.
+
 ## (Retired 2026-11-07) Stance: measured shots toward $2,200 (since 2026-10-24)
 * **The arithmetic.** From $1,917.92 (10/23) the $2,200 goal needs about +$282, +31% on the $918 budget: one shot that doubles on ~$300, or two that each make
   +50%. Beating SPY needs about +3.3% more than SPY makes from here. Judgment, not a backtest: perhaps 25-35% to reach $2,200, and better than even to finish ahead of
@@ -365,6 +388,9 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-11 (owner's delegation; red-team MODIFY): the probe program (PR1 gold live, PR3 earnings run-up event-driven, PR2/PV3/PV1 paper; a -$50
+  program stop; the whitelist and an 8-ticker limit in code), the policy-event watch (W0, W1, W2-as-flag, W4) and the nightly mechanical check replacing the
+  daily persona round, which now runs only on decision nights. Strategy v3 and v4 verdicts were added to the evidence list.
 * 2026-11-10: core held through the hot CPI; no Wednesday proposals; ANT S-1/A No. 2 noted (A1 unchanged).
 * 2026-11-09: the index core was bought (VOO $1,100, SGOV $265); no Tuesday proposals.
 * 2026-11-08 (Sunday rule-evolution vote, red-team MODIFY): the index core adopted (about 80% VOO, 20% SGOV; a stated exception, S1 WEAK); the regime gate,

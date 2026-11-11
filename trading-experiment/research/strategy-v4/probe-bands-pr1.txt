@@ -1,0 +1,4 @@
+GLD 2004-11-18 .. 2026-11-06: 5526 daily excess returns, mean 9.58%/yr, vol 18.3%
+week  4 (20 sessions): 2nd pct $-4.91  median $+0.21  98th pct $+5.80
+week  8 (40 sessions): 2nd pct $-6.38  median $+0.69  98th pct $+8.32
+week 12 (60 sessions): 2nd pct $-7.41  median $+1.00  98th pct $+10.73

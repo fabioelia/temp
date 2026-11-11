@@ -19,6 +19,7 @@ class Gate(unittest.TestCase):
         cfg = Path(self.dir, "config.json")  # these tests exercise the stock engine, so allow stock buys here
         c = json.loads(cfg.read_text())
         c["strategy"]["allow_stock_buys"] = True
+        c["strategy"]["stock_buy_whitelist"] = None  # the engine tests use arbitrary tickers; the whitelist is tested in test_live
         cfg.write_text(json.dumps(c))
 
     def tearDown(self):

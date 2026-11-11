@@ -1081,3 +1081,27 @@ the first probes would start Mon 11/16.
 **Positions:** the index core is held (no stop or take-profit by rule). Equity at live marks is $1,394.74 (above the $1,000 alert); `live.py check` OK.
 **Orders:** none pending, none added. The probe program and the policy-event watch are being decided under the owner's 11/11 delegation ("you decide what
 to apply ... land updating your logic") once the T2-T5 tests and a red-team finish. No probe is traded before that.
+
+## 2026-11-11 (Wed) Adopted under the owner's delegation ("you decide what to apply ... land updating your logic")
+**Tests (research/strategy-v4/):**
+* T1 earnings premium in shares: CONFIRMED vs SPY (+0.42%/event, t 4.20), WEAK vs random entry (t 1.68).
+* T2 non-equity trend: WEAK. T3 gold sleeve: WEAK.
+* T4/T5 (seasonality, momentum): not credible (survivorship; a worst-ranked placebo also beats SPY).
+* P1 divergence gate: failed out of sample (WEAK).
+**Fresh risk red-team: MODIFY on everything, all adopted as modified** (research/strategy-v4/adoption-2026-11-11.md, the red-team's notes in this entry):
+* **The probe program.** A second stated exception, "plumbing tests, not edge evidence"; a $200 cap at cost; a -$50 program-wide stop that pauses until
+  Sunday; kills only at weeks 4, 8 and 12; retirement by week 24; an upgrade means a new independent-data test registered before week 4; the bands are
+  committed before orders.
+  - PR1 gold: live, $50 GLDM vs SGOV; bands -4.91 / -6.38 / -7.41 (scripts/probe_bands.py).
+  - PR2 trend: paper only (rejected live).
+  - PR3 earnings run-up: WEAK, event-driven, no stop, with a tiebreak and a date re-check.
+  - PR4: open.
+  - Paper: PV3, PV1.
+  - Registry: data/probes.csv.
+* **Code:** config `stock_buy_whitelist` (VOO, SGOV, GLDM) and `max_positions` 8, enforced in tracker.py and live.py; a new test; 89 tests pass.
+* **The policy-event watch, as logging:** W0 a losers list; W1 policy odds; W2 a divergence flag only; W4 an event-night futures check; named qualifying
+  events.
+* **Cadence:** a nightly mechanical check (DAILY_ROUTINE step 1c); the persona round only on decision nights (and on unscheduled shocks), and every Sunday.
+* **Scheduled tasks:** Run A and Run B prompts updated; the dashboard rules list updated (35 rules).
+**Not adopted:** T4, T5, V2, V4, V1 as a live rule, factor ETFs, buybacks, S&P additions, CPI straddles, volatility half-sizing of the core.
+**Proposals for Thu 11/12:** O020, sell $50 of VOO (funding; VOO above cost); O021, buy $50 of GLDM (PR1), after O020 fills.

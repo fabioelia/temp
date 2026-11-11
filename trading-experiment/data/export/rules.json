@@ -51,9 +51,9 @@
  {
   "id": "R08",
   "group": "3. Account safety (AI)",
-  "rule": "At most 4 open positions (VOO and SGOV count); never average down.",
+  "rule": "At most 8 tickers (core 2, probes 4, options 2), enforced by the order gate; never average down.",
   "status": "in force",
-  "source": "RULES.md"
+  "source": "Adopted 11/11 (was 4)"
  },
  {
   "id": "R09",
@@ -99,111 +99,146 @@
  },
  {
   "id": "R15",
+  "group": "5. Sizing (AI)",
+  "status": "in force",
+  "source": "Adopted 11/11 (owner: \"a handful to be probing and testing with\"; red-team MODIFY)",
+  "rule": "Probe program: up to $200 at cost (now $50) carved from VOO for small live probes of ideas that at least weakly passed a registered test. They are plumbing tests (fills, costs, discipline), not proof of an edge. A -$50 loss across all probes pauses the program until the Sunday vote; every probe retires by week 24."
+ },
+ {
+  "id": "R16",
+  "group": "5. Sizing (AI)",
+  "status": "in force",
+  "source": "Adopted 11/11 (data/probes.csv)",
+  "rule": "Live probes: PR1 gold ($50 GLDM vs T-bills; killed at a checkpoint below -$4.91 / -$6.38 / -$7.41 at weeks 4 / 8 / 12). PR3 earnings run-up in shares ($25 each in up to 2 of the 25 names, from 7 sessions before earnings to the day before), starting with the next eligible event. Paper only: the trend sleeve, the volatility-managed core, C1 on 76 more names."
+ },
+ {
+  "id": "R17",
+  "group": "3. Account safety (AI)",
+  "status": "in force",
+  "source": "Adopted 11/11; enforced by tracker.py and live.py",
+  "rule": "Stock and ETF buys only from a whitelist: VOO, SGOV and the active live probes (now GLDM)."
+ },
+ {
+  "id": "R18",
   "group": "6. Contracts (AI)",
   "rule": "Options: open interest at least 1,000, spread at most 5% of the mid (10% for commodity or sector ETFs), delta 0.30-0.45 (never below 0.25), expiry 2-5 weeks, no entry within 3 days of expiry; sell at least one session before expiry.",
   "status": "in force",
   "source": "playbook.md (What to buy)"
  },
  {
-  "id": "R16",
+  "id": "R19",
   "group": "6. Contracts (AI)",
   "rule": "Event premium only at the print day's 14:43 decision, when the implied move is at most 0.9x recent reactions; sell the next day.",
   "status": "in force",
   "source": "Options-vol rule 10/18"
  },
  {
-  "id": "R17",
+  "id": "R20",
   "group": "7. Evidence (AI)",
   "rule": "An edge counts only if it comes from a committed script or a cited published study, tested before the decision; our own trades count only with their sample size.",
   "status": "in force",
   "source": "Strategy review 10/29; RULES.md (rule evolution)"
  },
  {
-  "id": "R18",
+  "id": "R21",
   "group": "7. Evidence (AI)",
   "rule": "Retired as tested and failed: the midterm rally, the Halloween effect, the turn of the month, RSI(2) dips, a follow-through day as an edge, \"IV is low\", the pre-earnings run-up through calls, FINRA short-volume spikes, Wikipedia attention, the put/call ratio, dip-buying calls after a -4% day, trend filters, the stock-era regime gate and staging, cash-secured puts at this size.",
   "status": "in force",
   "source": "Strategy reviews 10/29-10/30; strategy v2 11/07-11/08"
  },
  {
-  "id": "R19",
+  "id": "R22",
   "group": "7. Evidence (AI)",
   "rule": "Consensus check: if the idea is what any AI would suggest, it needs a measured edge.",
   "status": "in force",
   "source": "W43 review"
  },
  {
-  "id": "R20",
+  "id": "R23",
   "group": "8. Setups (AI)",
   "rule": "Earnings-drop put (C1): a large company down 8% or more vs its pre-earnings close at the reaction day's 14:43 check; 1 put at delta 0.30-0.45, IV at most 1.3x the pre-print 20-day realized vol, spread at most 5%, OI at least 1,000, expiry at least 14 days, sized by Kelly.",
   "status": "in force",
   "source": "W44 review 11/01"
  },
  {
-  "id": "R21",
+  "id": "R24",
   "group": "9. Exits (AI)",
   "rule": "The exit plan is written at entry. One contract sells all at +50%, two or more half at +50% and the rest at +100%, as a resting sell order at the broker; the stop moves to cost after a check at +40%.",
   "status": "in force",
   "source": "W43 review; 10/26 (resting orders)"
  },
  {
-  "id": "R22",
+  "id": "R25",
   "group": "9. Exits (AI)",
   "rule": "Option stops at the price where the thesis is wrong, with a -50% premium backstop, checked at 14:43 and, for non-C1 options, also mid-session (about 11:00 ET); a breached stop sells the same day.",
   "status": "in force",
   "source": "Rule-evolution vote 11/08 (the 11/05 stop gap cost about $190)"
  },
  {
-  "id": "R23",
+  "id": "R26",
   "group": "9. Exits (AI)",
   "rule": "Index core: no stop and no take-profit; sold only on a rule change, at the owner's request, or to rebalance. The owner is alerted if equity falls below $1,000; the -$2,000 loss stop trips only at $0.",
   "status": "in force",
   "source": "Rule-evolution vote 11/08"
  },
  {
-  "id": "R24",
+  "id": "R27",
   "group": "9. Exits (AI)",
   "rule": "Earnings-drop puts: hold 5 sessions with the -50% backstop; no take-profit.",
   "status": "in force",
   "source": "Strategy review exception 10/29"
  },
  {
-  "id": "R25",
+  "id": "R28",
   "group": "10. Process (AI)",
   "rule": "Evening and Sunday runs propose; the 14:43 run decides on fresh prices before 15:50 ET; anything unconfirmed does not fill. The pre-open run never confirms or places.",
   "status": "in force",
   "source": "RULES.md; DAILY_ROUTINE.md"
  },
  {
-  "id": "R26",
+  "id": "R29",
   "group": "10. Process (AI)",
   "rule": "Every brief and thesis names the day's driver and answers \"who loses from it, and how much of the underlying do they weigh?\"",
   "status": "in force",
   "source": "Rule-evolution vote 11/08 (10/26 and 11/04 driver misreads)"
  },
  {
-  "id": "R27",
+  "id": "R30",
+  "group": "10. Process (AI)",
+  "status": "in force",
+  "source": "Election post-mortem 11/11 (research/strategy-v4/election-postmortem.md)",
+  "rule": "Policy-event watch (logging): before an election, a major AI/chips/energy/tariff bill or ruling, or a contested Fed decision, write the \"who loses\" list with index weights; track policy betting odds; log rising-index/falling-sector days; check Nasdaq vs S&P futures after an evening event."
+ },
+ {
+  "id": "R31",
+  "group": "10. Process (AI)",
+  "status": "in force",
+  "source": "Adopted 11/11 (12 rounds with no trades)",
+  "rule": "Every evening: a mechanical check (broker vs ledger, kill switch, alerts, probe stop, earnings dates and filings, policy flags). The full research round runs only on decision nights (an earnings-drop day, a probe entry or exit, an open option, a policy event, an unscheduled shock) and on Sundays."
+ },
+ {
+  "id": "R32",
   "group": "10. Process (AI)",
   "rule": "Buys of 20% of equity or more (or a leveraged ETF) need a fresh risk red-team; every evening draft is red-teamed.",
   "status": "in force",
   "source": "DAILY_ROUTINE.md"
  },
  {
-  "id": "R28",
+  "id": "R33",
   "group": "10. Process (AI)",
   "rule": "Prices come from verified feeds or the broker's live quote, never typed in; the ledger and journal are append-only, with a reason and a price source for every order and fill.",
   "status": "in force",
   "source": "RULES.md (Integrity)"
  },
  {
-  "id": "R29",
+  "id": "R34",
   "group": "11. How rules change (AI)",
   "rule": "Any rule except the owner's limits can change: a proposal with evidence, a fresh red-team, adoption with a dated log entry (usually at the Sunday review), and this list updated the same day. A rule that keeps failing its own test is retired the same way.",
   "status": "in force",
   "source": "Owner 11/07: \"evolve the rules as we learn\"; RULES.md"
  },
  {
-  "id": "R30",
+  "id": "R35",
   "group": "12. Under test",
   "rule": "Allow up to 3 same-day exits in 5 business days for risk (the PDT limit) instead of refusing all same-day round trips.",
   "status": "under test",

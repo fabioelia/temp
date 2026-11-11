@@ -304,6 +304,10 @@ def cmd_order_add(a):
             sys.exit(f"{t} expires {occ_expiry(t)}: too close (min {STRAT.get('min_days_to_expiry', 3)} days)")
     if a.side == "buy" and not is_option(t) and not STRAT.get("allow_stock_buys", True):
         sys.exit("stock/ETF buys are switched off by config.strategy.allow_stock_buys (options-only strategy)")
+    wl = STRAT.get("stock_buy_whitelist")
+    if a.side == "buy" and not is_option(t) and wl is not None and t not in wl:
+        # since 2026-11-11 stock/ETF buys are limited to the index core and registered probes (red-team MODIFY)
+        sys.exit(f"{t} is not on config.strategy.stock_buy_whitelist {wl} (index core and registered probes only)")
     if a.confirm:
         check_confirmable(now)
     gtd = d(a.gtd) if a.gtd else (now.date() if a.confirm else next_trading_day(created))
