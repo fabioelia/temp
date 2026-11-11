@@ -17,6 +17,18 @@
       #probes { margin-top: 10px; border-collapse: collapse; font-size: 12px; }
       #probes td { padding: 4px 10px 4px 0; vertical-align: top; border-top: 1px solid var(--border); }
       #probes .bad { color: var(--alert); }
+      .tabs button.on { border-color: var(--accent); color: var(--accent); }
+      fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 12px 0; padding: 8px 12px 12px; }
+      legend { font-weight: 600; padding: 0 4px; }
+      fieldset > p { margin: 2px 0 8px; }
+      .item { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-top: 1px solid var(--border); }
+      .items { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end; flex: 1; }
+      .item-tools { display: flex; gap: 2px; }
+      .field { display: flex; flex-direction: column; gap: 2px; min-width: 140px; }
+      .field.wide { flex: 1; min-width: 260px; }
+      .field input, .field select { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--card); color: var(--fg); font: inherit; }
+      .cb { display: flex; align-items: center; gap: 2px; font-size: 12px; white-space: nowrap; }
+      .savebar { position: sticky; bottom: 0; background: var(--bg); padding: 8px 0; border-top: 1px solid var(--border); }
     </style>
   </head>
   <body>
@@ -45,10 +57,22 @@
         </div>
       </section>
       <section>
-        <h2>Config (JSON)</h2>
-        <p class="muted">Queries, labels, checks, extractors and actions. Field reference: the comments on DEFAULT_CONFIG in lib.js, or the README.</p>
-        <textarea id="config" spellcheck="false"></textarea>
+        <h2>What to track</h2>
         <div class="row">
+          <span class="muted">Suggestions from</span>
+          <select id="suggestRepo"><option value="">add a token first</option></select>
+          <button id="suggest">Load its labels and check names</button>
+          <span id="suggestStatus" class="muted"></span>
+        </div>
+        <div class="tabs row">
+          <button data-tab="form" class="on">Form</button>
+          <button data-tab="json">JSON</button>
+        </div>
+        <div id="form"></div>
+        <textarea id="config" spellcheck="false" hidden></textarea>
+        <datalist id="dl-labels"></datalist>
+        <datalist id="dl-checks"></datalist>
+        <div class="row savebar">
           <button id="save">Save</button>
           <button id="reset">Reset to defaults</button>
           <span id="status" class="muted"></span>

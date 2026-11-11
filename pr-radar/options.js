@@ -1,4 +1,5 @@
-import { diagnose, listRepos, whoami } from './github.js';
+import { fillSuggestions, renderBuilder } from './builder.js';
+import { checkNames, diagnose, listLabels, listRepos, whoami } from './github.js';
 import { DEFAULT_CONFIG, mergeConfig, validateConfig } from './lib.js';
 
 const $ = (id) => document.getElementById(id);
@@ -7,28 +8,74 @@ const status = (msg, bad = false) => {
   $('status').className = bad ? 'bad' : 'muted';
 };
 
-async function load() {
-  const { config, token } = await chrome.storage.local.get(['config', 'token']);
-  $('config').value = JSON.stringify(mergeConfig(config), null, 2);
-  $('token').value = token || '';
+// The form and the JSON tab edit the same object; whichever tab is open is
+// the source of truth when switching or saving.
+let cfg = structuredClone(DEFAULT_CONFIG);
+let tab = 'form';
+
+function show(next) {
+  cfg = next;
+  $('config').value = JSON.stringify(cfg, null, 2);
+  renderBuilder($('form'), cfg, () => ($('config').value = JSON.stringify(cfg, null, 2)));
 }
 
-$('save').addEventListener('click', async () => {
-  let cfg;
+// Pulls a JSON-tab edit into `cfg`; false (with the parse error shown) if it doesn't parse.
+function readJson() {
+  if (tab !== 'json') return true;
   try {
-    cfg = JSON.parse($('config').value);
+    cfg = mergeConfig(JSON.parse($('config').value));
+    return true;
   } catch (e) {
-    return status(`Not valid JSON: ${e.message}`, true);
+    status(`Not valid JSON: ${e.message}`, true);
+    return false;
   }
-  const errors = validateConfig(mergeConfig(cfg));
+}
+
+function setTab(next) {
+  if (!readJson()) return;
+  tab = next;
+  if (tab === 'form') show(cfg);
+  $('form').hidden = tab !== 'form';
+  $('config').hidden = tab !== 'json';
+  for (const b of document.querySelectorAll('.tabs button')) b.classList.toggle('on', b.dataset.tab === tab);
+}
+
+async function load() {
+  const { config, token } = await chrome.storage.local.get(['config', 'token']);
+  show(structuredClone(mergeConfig(config)));
+  $('token').value = token || '';
+  if (token) listRepos(token).then(fillRepos).catch(() => {});
+}
+
+function fillRepos(repos) {
+  for (const id of ['repo', 'suggestRepo']) $(id).replaceChildren(...repos.map((r) => new Option(r, r)));
+}
+
+for (const b of document.querySelectorAll('.tabs button')) b.addEventListener('click', () => setTab(b.dataset.tab));
+
+$('save').addEventListener('click', async () => {
+  if (!readJson()) return;
+  const errors = validateConfig(cfg);
   if (errors.length) return status(errors.join('\n'), true);
-  await chrome.storage.local.set({ config: cfg, token: $('token').value.trim() });
+  await chrome.storage.local.set({ config: cfg, token: token() });
   status('Saved. Refreshing…');
 });
 
 $('reset').addEventListener('click', () => {
-  $('config').value = JSON.stringify(DEFAULT_CONFIG, null, 2);
+  show(structuredClone(DEFAULT_CONFIG));
   status('Defaults loaded. Save to apply.');
+});
+
+$('suggest').addEventListener('click', async () => {
+  const repo = $('suggestRepo').value;
+  if (!repo) return;
+  $('suggestStatus').textContent = 'Loading…';
+  const [labels, checks] = await Promise.allSettled([listLabels(token(), repo), checkNames(token(), repo)]);
+  fillSuggestions(labels.value || [], checks.value || []);
+  $('suggestStatus').textContent = [
+    labels.value ? `${labels.value.length} labels` : `labels: ${labels.reason.message}`,
+    checks.value ? `${checks.value.length} check names` : `checks: ${checks.reason.message}`,
+  ].join(' · ') + ' — they now autocomplete in the form.';
 });
 
 const token = () => $('token').value.trim();
@@ -53,7 +100,7 @@ $('test').addEventListener('click', async () => {
       .join(' · ');
     $('repoList').querySelector('summary').textContent = 'Show repos';
     $('repoList').querySelector('ul').replaceChildren(...repos.map((r) => Object.assign(document.createElement('li'), { textContent: r })));
-    $('repo').replaceChildren(...repos.map((r) => new Option(r, r)));
+    fillRepos(repos);
     $('probes').replaceChildren();
     $('access').hidden = !repos.length;
     if (!repos.length) info.textContent += '. If this is a fine-grained token for an org, it may be waiting for the org to approve it.';

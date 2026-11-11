@@ -1,5 +1,5 @@
 // GitHub API calls shared by the service worker and the settings page.
-import { QUERY, summarizeErrors } from './lib.js';
+import { QUERY, allChecks, flattenContexts, logTail, summarizeErrors } from './lib.js';
 
 const API = 'https://api.github.com';
 
@@ -104,4 +104,52 @@ export async function listLabels(token, repo) {
     if (batch.length < 100) break;
   }
   return names;
+}
+
+export const CHECKS_QUERY = `
+query Checks($id: ID!) {
+  node(id: $id) {
+    ... on PullRequest {
+      commits(last: 1) {
+        nodes {
+          commit {
+            statusCheckRollup {
+              contexts(first: 100) {
+                nodes {
+                  __typename
+                  ... on CheckRun {
+                    name status conclusion title summary detailsUrl startedAt
+                    checkSuite { workflowRun { workflow { name } } }
+                    annotations(first: 5) { nodes { path message annotationLevel location { start { line } } } }
+                  }
+                  ... on StatusContext { context state description targetUrl createdAt }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+
+export async function prChecks(token, prId) {
+  const { data, errors } = await graphql(token, CHECKS_QUERY, { id: prId });
+  if (!data?.node) throw new Error(errors?.length ? summarizeErrors(errors) : 'PR not found');
+  return { checks: allChecks(data.node), warning: errors?.length ? summarizeErrors(errors) : '' };
+}
+
+// The API answers with a redirect to a signed log URL on Azure blob storage,
+// which is why manifest.json lists those hosts.
+export async function jobLog(token, repo, jobId) {
+  const res = await fetch(`${API}/repos/${repo}/actions/jobs/${jobId}/logs`, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) throw new Error(`Log unavailable: ${res.status}${res.status === 404 || res.status === 410 ? ' (expired or still running)' : ''}`);
+  return logTail(await res.text());
+}
+
+// Check names seen on a repo's recent PRs, for the settings form to suggest.
+export async function checkNames(token, repo) {
+  const { data } = await graphql(token, QUERY, { q: `repo:${repo} is:pr sort:updated-desc`, n: 10 });
+  const names = data.search.nodes.filter(Boolean).flatMap((pr) => flattenContexts(pr).map((c) => c.name));
+  return [...new Set(names)].sort();
 }

@@ -1,23 +1,10 @@
-import { listLabels } from './github.js';
+import { h } from './dom.js';
+import { jobLog, listLabels, prChecks } from './github.js';
 import { actionButton, mergeConfig, rowsForUrl } from './lib.js';
 
 const ICON = { pass: '✅', fail: '❌', pending: '⏳', neutral: '➖', cancelled: '⊘', skipped: '⤼', missing: '·' };
 const $ = (id) => document.getElementById(id);
-let state = { snapshot: null, config: mergeConfig(), currentUrl: '' };
-
-// textContent-only element builder: titles, labels and extracted values come
-// from PRs anyone can write, so nothing here ever goes through innerHTML.
-function h(tag, attrs = {}, ...children) {
-  const el = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) {
-    if (v === undefined || v === false) continue;
-    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
-    else if (k === 'class') el.className = v;
-    else el.setAttribute(k, v);
-  }
-  for (const c of children.flat()) if (c !== null && c !== undefined && c !== '') el.append(c);
-  return el;
-}
+let state = { snapshot: null, config: mergeConfig(), currentUrl: '', expanded: new Set() };
 
 const ago = (iso) => {
   const m = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -105,9 +92,13 @@ function card(row, current) {
     .map(({ title, action }) => confirmButton(title, () => send({ type: 'act', action, row }), `${row.key}|${title}`));
   actions.push(h('button', { onclick: () => togglePicker(row) }, state.picker?.key === row.key ? '🏷 Hide labels' : '🏷 Labels…'));
 
-  return h(
+  const el = h(
     'div',
-    { class: ['card', row.attention.length && 'needs', row.isDraft && 'draft', current && 'current'].filter(Boolean).join(' '), 'data-key': row.key },
+    {
+      class: ['card', row.attention.length && 'needs', row.isDraft && 'draft', current && 'current', state.expanded.has(row.key) && 'open'].filter(Boolean).join(' '),
+      'data-key': row.key,
+      title: 'Click for every check on this PR',
+    },
     h('div', { class: 'top' }, link(row.url, h('span', { class: 'num' }, `#${row.number}`)), h('span', { class: 'title', title: row.title }, row.title)),
     h(
       'div',
@@ -122,7 +113,110 @@ function card(row, current) {
     labels.length || extracted.length ? h('div', { class: 'chips' }, labels, extracted) : null,
     h('div', { class: 'actions' }, actions),
     state.picker?.key === row.key ? picker(row) : null,
+    state.expanded.has(row.key) ? details(row) : null,
   );
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('a, button, input, label, select, .picker, .details') || getSelection().toString()) return;
+    state.expanded.has(row.key) ? state.expanded.delete(row.key) : state.expanded.add(row.key);
+    render();
+  });
+  return el;
+}
+
+// Loaded on expand and again after each poll, since a poll means the checks
+// may have moved. Results live outside the DOM so re-renders keep them.
+const checksCache = new Map();
+const logCache = new Map();
+
+async function loadChecks(row) {
+  const at = state.snapshot.fetchedAt;
+  const hit = checksCache.get(row.key);
+  if (hit && hit.at === at) return;
+  checksCache.set(row.key, { at, data: hit?.data, loading: true });
+  const { token } = await chrome.storage.local.get('token');
+  try {
+    checksCache.set(row.key, { at, data: await prChecks(token, row.id) });
+  } catch (e) {
+    checksCache.set(row.key, { at, data: hit?.data, error: e.message });
+  }
+  render();
+}
+
+async function loadLog(row, jobId) {
+  logCache.set(jobId, { loading: true });
+  render();
+  const { token } = await chrome.storage.local.get('token');
+  try {
+    logCache.set(jobId, { data: await jobLog(token, row.repo, jobId) });
+  } catch (e) {
+    logCache.set(jobId, { error: e.message });
+  }
+  render();
+}
+
+function checkLine(c) {
+  return h('div', { class: 'check-line' }, `${ICON[c.state] || c.state} `, c.url ? link(c.url, c.name) : c.name, c.title ? h('span', { class: 'muted' }, ` · ${c.title}`) : null);
+}
+
+function failure(row, c) {
+  const log = c.jobId && logCache.get(c.jobId);
+  return h(
+    'div',
+    { class: 'failure' },
+    h('div', { class: 'check-line' }, `${ICON[c.state]} `, c.url ? link(c.url, c.name) : c.name, c.workflow ? h('span', { class: 'muted' }, ` · ${c.workflow}`) : null),
+    c.title ? h('div', { class: 'muted' }, c.title) : null,
+    c.annotations?.length
+      ? h(
+          'ul',
+          { class: 'annotations' },
+          c.annotations.map((a) => h('li', {}, h('span', { class: 'muted' }, `${a.path}${a.line ? `:${a.line}` : ''} `), a.message)),
+        )
+      : null,
+    c.summary ? h('div', { class: 'summary' }, c.summary.length > 600 ? `${c.summary.slice(0, 600)}…` : c.summary) : null,
+    h(
+      'div',
+      { class: 'actions' },
+      c.jobId && !log ? h('button', { onclick: () => loadLog(row, c.jobId) }, 'Show log tail') : null,
+      c.jobId ? confirmButton('↻ re-run job', () => send({ type: 'act', action: { type: 'rerunJob' }, row, jobUrl: c.url }), `${row.key}|rerun|${c.name}`) : null,
+    ),
+    log?.loading ? h('div', { class: 'muted' }, 'Loading log…') : null,
+    log?.error ? h('div', { class: 'reasons' }, log.error) : null,
+    log?.data?.errors.length ? h('pre', { class: 'log errors' }, log.data.errors.join('\n')) : null,
+    log?.data ? scrolledToEnd(h('pre', { class: 'log' }, log.data.tail)) : null,
+  );
+}
+
+function scrolledToEnd(el) {
+  requestAnimationFrame(() => (el.scrollTop = el.scrollHeight));
+  return el;
+}
+
+function details(row) {
+  const entry = checksCache.get(row.key);
+  if (!entry || entry.at !== state.snapshot.fetchedAt) loadChecks(row);
+  const pane = h('div', { class: 'details' });
+  if (entry?.error) pane.append(h('div', { class: 'reasons' }, entry.error));
+  const data = entry?.data;
+  if (!data) {
+    pane.append(h('div', { class: 'muted' }, 'Loading checks…'));
+    return pane;
+  }
+  if (data.warning) pane.append(h('div', { class: 'reasons' }, data.warning));
+  const by = Object.groupBy(data.checks, (c) => (['fail', 'cancelled'].includes(c.state) ? 'bad' : c.state === 'pending' ? 'running' : 'rest'));
+  const count = (k) => by[k]?.length || 0;
+  pane.append(
+    h(
+      'div',
+      { class: 'muted' },
+      `${count('bad')} failing · ${count('running')} running · ${count('rest')} other · `,
+      link(`${row.url}/checks`, 'checks tab'),
+    ),
+  );
+  for (const c of by.bad || []) pane.append(failure(row, c));
+  if (by.running) pane.append(h('div', { class: 'group' }, by.running.map(checkLine)));
+  if (by.rest) pane.append(h('details', {}, h('summary', {}, `${count('rest')} passed, skipped or neutral`), by.rest.map(checkLine)));
+  if (!data.checks.length) pane.append(h('div', { class: 'muted' }, 'No checks on the latest commit.'));
+  return pane;
 }
 
 function downloadChip(row, name, value) {

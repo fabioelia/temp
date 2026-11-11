@@ -3,6 +3,7 @@
 A Chrome side panel for keeping track of many open PRs and the Claude sessions behind them: CI and other checks, labels you care about, values pulled out of PR bodies and comments, and buttons for the actions you take most. It polls the GitHub API and nothing else; there is no server.
 
 - **Side panel**: one section per search query, "needs you" PRs first. Each PR shows the checks you picked, your labels, links to its Claude sessions and preview, and extracted text such as the QA verdict. Filter box and a "Needs me" toggle.
+- **Check details**: click a card's background to see every check on the latest commit, failures first. Each failure shows GitHub's annotations (file:line and message), the check's summary, a **Show log tail** button for Actions jobs (the failure lines plus the last 60 lines), and re-run.
 - **Toolbar badge**: how many PRs need you.
 - **Desktop notifications** when something you marked `notify` changes: a label is added, a check finishes, an extracted value changes, a draft is marked ready, or a PR leaves your list. Clicking one opens the PR.
 - **Follows your tabs**: on a PR page or a Claude session page, the panel highlights that PR.
@@ -25,7 +26,9 @@ The token is kept in `chrome.storage.local` for this browser profile only.
 
 ## Configure
 
-The settings page holds the whole config as JSON, so you can copy it to someone else or keep variants. **Reset to defaults** loads the preset in `lib.js` (`DEFAULT_CONFIG`), which is tuned for the Newton monorepo.
+The settings page has a **Form** tab and a **JSON** tab that edit the same config. In the form, every section has **+ Add**, ↑/↓ to reorder, ✕ to delete and a list of presets. Pick a repo under **Suggestions from** and click **Load its labels and check names**: the label and check-name fields then autocomplete from that repo. Check names are typed as plain names; write `/pattern/` for a regex. The JSON tab is there for copying a config to someone else or for anything the form doesn't cover. **Reset to defaults** loads the preset in `lib.js` (`DEFAULT_CONFIG`), which is tuned for the Newton monorepo.
+
+The JSON fields:
 
 | Key | What it does |
 |---|---|
@@ -67,6 +70,8 @@ runs the unit tests for `lib.js` (Node 20+, no dependencies). The other files ar
 | `lib.js` | Default config, GraphQL query, normalization, "needs you" rules, change detection, tab matching |
 | `github.js` | GitHub API calls and the token access check |
 | `background.js` | Polling, badge, notifications, write actions |
+| `builder.js` | The settings form, generated from its `SECTIONS` table |
+| `dom.js` | The text-only element helper both pages use |
 | `sidepanel.*` | The panel |
 | `options.*` | Token and JSON config editor |
 | `content.js` | The badge on claude.ai session pages |

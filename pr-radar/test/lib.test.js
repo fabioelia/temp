@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, actionButton, diff, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, actionButton, allChecks, diff, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -169,4 +169,59 @@ test('actionButton maps label actions to one setLabels write and hides no-ops', 
   assert.equal(actionButton({ title: 'x', type: 'removeLabel', label: 'skip-qa' }, off), null);
   const close = { title: 'Close', type: 'close' };
   assert.deepEqual(actionButton(close, off), { title: 'Close', action: close });
+});
+
+test('null nodes from a partial-permission response are skipped', () => {
+  const row = normalize(
+    pr({
+      labels: { nodes: [null, { name: 'skip-qa', color: 'ccc' }] },
+      comments: { nodes: [null] },
+      reviews: { nodes: [null] },
+      commits: { nodes: [null, { commit: { statusCheckRollup: { contexts: { nodes: [null, run('CI Success', 'COMPLETED', 'SUCCESS', '2026-11-11T18:00:00Z')] } } } }] },
+    }),
+    cfg,
+  );
+  assert.deepEqual(row.allLabels, ['skip-qa']);
+  assert.equal(row.checks[0].state, 'pass');
+});
+
+test('allChecks lists every check once, failures first, with job ids and annotations', () => {
+  const failing = run('ci / Backend Test', 'COMPLETED', 'FAILURE', '2026-11-11T18:05:00Z', {
+    summary: 'pytest failed',
+    checkSuite: { workflowRun: { workflow: { name: 'PR' } } },
+    annotations: { nodes: [null, { path: 'apps/x.py', message: 'AssertionError', annotationLevel: 'FAILURE', location: { start: { line: 12 } } }] },
+  });
+  const checks = allChecks(pr({ commits: { nodes: [{ commit: { statusCheckRollup: { contexts: { nodes: [...pr().commits.nodes[0].commit.statusCheckRollup.contexts.nodes, failing] } } } }] } }));
+  assert.deepEqual(checks.map((c) => `${c.state}:${c.name}`), [
+    'fail:ci / Backend Test',
+    'fail:CI Success',
+    'pending:preview / Build, deploy, comment',
+    'neutral:review/gate',
+    'pass:qa-test',
+  ]);
+  const backend = checks[0];
+  assert.equal(backend.jobId, '20261111180500');
+  assert.equal(backend.workflow, 'PR');
+  assert.deepEqual(backend.annotations, [{ level: 'FAILURE', path: 'apps/x.py', line: 12, message: 'AssertionError' }]);
+});
+
+test('logTail strips timestamps, pulls error lines and keeps the end', () => {
+  const text = ['2026-11-11T18:00:00.1234567Z setup', '2026-11-11T18:00:00.5Z FAILED tests/test_x.py::test_a - AssertionError: 403 != 200', '2026-11-11T18:00:01.1Z ##[error]Process completed with exit code 1.', ...Array.from({ length: 70 }, (_, i) => `2026-11-11T18:00:02.0Z line ${i}`), '', ''].join('\r\n');
+  const { errors, tail } = logTail(text);
+  assert.deepEqual(errors, ['FAILED tests/test_x.py::test_a - AssertionError: 403 != 200', 'Process completed with exit code 1.']);
+  const lines = tail.split('\n');
+  assert.equal(lines.length, 60);
+  assert.equal(lines.at(-1), 'line 69');
+});
+
+test('check names round-trip through the form and patterns stay patterns', () => {
+  for (const name of ['CI Success', 'preview / Build, deploy, comment', 'codeql / Analyze (python)', 'review/gate', 'a.b*c']) {
+    const re = nameToRegex(name);
+    assert.ok(new RegExp(re).test(name), re);
+    assert.ok(!new RegExp(re).test(`${name}x`), re);
+    assert.equal(regexToName(re), name);
+  }
+  assert.equal(nameToRegex('/^ci .*Test$/'), '^ci .*Test$');
+  assert.equal(regexToName('^ci .*Test$'), '/^ci .*Test$/');
+  assert.deepEqual(cfg.checks.map((c) => regexToName(c.match)), ['CI Success', 'preview / Build, deploy, comment', 'playwright / Resolve Playwright gate status', 'qa-test', 'review/gate']);
 });

@@ -116,9 +116,13 @@ export function mergeConfig(user) {
   return { ...DEFAULT_CONFIG, ...(user || {}) };
 }
 
-function flattenContexts(pr) {
-  const nodes = pr.commits?.nodes?.[0]?.commit?.statusCheckRollup?.contexts?.nodes || [];
-  return nodes.map((c) =>
+// A connection's nodes without the nulls GitHub puts in place of entries the
+// token may not read (a partial-permission response).
+export const nodes = (conn) => (conn?.nodes || []).filter(Boolean);
+
+export function flattenContexts(pr) {
+  const head = nodes(pr.commits)[0];
+  return nodes(head?.commit?.statusCheckRollup?.contexts).map((c) =>
     c.__typename === 'CheckRun'
       ? {
           name: c.name,
@@ -126,6 +130,15 @@ function flattenContexts(pr) {
           title: c.title || '',
           url: c.detailsUrl,
           at: c.startedAt || '',
+          // Only CHECKS_QUERY (the details pane) asks for these.
+          summary: c.summary || '',
+          workflow: c.checkSuite?.workflowRun?.workflow?.name || '',
+          annotations: nodes(c.annotations).map((a) => ({
+            level: a.annotationLevel,
+            path: a.path,
+            line: a.location?.start?.line,
+            message: a.message,
+          })),
         }
       : {
           name: c.context,
@@ -137,6 +150,33 @@ function flattenContexts(pr) {
   );
 }
 
+const STATE_ORDER = ['fail', 'cancelled', 'pending', 'neutral', 'pass', 'skipped'];
+
+// Every check on the head commit, one per name, failures first.
+export function allChecks(pr) {
+  const byName = Map.groupBy(flattenContexts(pr), (c) => c.name);
+  return [...byName.values()]
+    .map(pickCheck)
+    .map((c) => ({ ...c, jobId: c.url?.match(/\/job\/(\d+)/)?.[1] || '' }))
+    .sort((a, b) => STATE_ORDER.indexOf(a.state) - STATE_ORDER.indexOf(b.state) || a.name.localeCompare(b.name));
+}
+
+// The lines that name the failure and the last `n` lines of an Actions job
+// log, with the runner's timestamp prefix removed. ponytail: "names the
+// failure" is a heuristic (##[error], pytest FAILED/ERROR, "SomeError:"),
+// capped at 20 lines.
+export function logTail(text, n = 60) {
+  const lines = text.replace(/\r/g, '').split('\n').map((l) => l.replace(/^\d{4}-\d\d-\d\dT[\d:.]+Z /, ''));
+  while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+  return {
+    errors: lines
+      .filter((l) => /^##\[error\]|^(FAILED|ERROR) |\b[A-Z]\w*Error:/.test(l))
+      .map((l) => l.replace(/^##\[error\]/, ''))
+      .slice(0, 20),
+    tail: lines.slice(-n).join('\n'),
+  };
+}
+
 // A workflow re-triggered by a label event often re-reports the same job name
 // as skipped, so the newest non-skipped run wins; skipped only if all are.
 function pickCheck(runs) {
@@ -145,7 +185,7 @@ function pickCheck(runs) {
 }
 
 function texts(pr, source, contains) {
-  const comments = [...(pr.comments?.nodes || []), ...(pr.reviews?.nodes || [])].map((c) => c.body || '');
+  const comments = [...nodes(pr.comments), ...nodes(pr.reviews)].map((c) => c.body || '');
   const list = source === 'body' ? [pr.body || ''] : source === 'comments' ? comments : [pr.body || '', ...comments];
   return contains ? list.filter((t) => t.includes(contains)) : list;
 }
@@ -171,7 +211,7 @@ function extract(pr, ex) {
 export function normalize(pr, config) {
   const contexts = flattenContexts(pr);
   const labelCfg = Object.fromEntries(config.labels.map((l) => [l.name, l]));
-  const labels = (pr.labels?.nodes || [])
+  const labels = nodes(pr.labels)
     .filter((l) => labelCfg[l.name] || config.showOtherLabels)
     .map((l) => ({ name: l.name, color: l.color, kind: labelCfg[l.name]?.kind || 'info' }));
   const checks = config.checks.map((c) => {
@@ -201,7 +241,7 @@ export function normalize(pr, config) {
     reviewDecision: pr.reviewDecision,
     updatedAt: pr.updatedAt,
     labels,
-    allLabels: (pr.labels?.nodes || []).map((l) => l.name),
+    allLabels: nodes(pr.labels).map((l) => l.name),
     checks,
     extracted,
     artifactRuns,
@@ -323,12 +363,33 @@ export function actionButton(a, has) {
   return { title, action: { type: 'setLabels', [adding ? 'add' : 'remove']: [a.label] } };
 }
 
+const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// The settings form shows a check's `match` regex as the plain check name
+// when it is an exact-name match, and as /pattern/ otherwise.
+export function regexToName(re) {
+  const exact = re.match(/^\^(.*)\$$/);
+  if (exact) {
+    const name = exact[1].replace(/\\(.)/g, '$1');
+    if (escapeRe(name) === exact[1]) return name;
+  }
+  return `/${re}/`;
+}
+
+export function nameToRegex(text) {
+  const t = text.trim();
+  return t.length > 1 && t.startsWith('/') && t.endsWith('/') ? t.slice(1, -1) : `^${escapeRe(t)}$`;
+}
+
 export function validateConfig(cfg) {
   const errors = [];
   for (const k of ['queries', 'labels', 'checks', 'extractors', 'actions']) {
     if (!Array.isArray(cfg[k])) errors.push(`"${k}" must be an array`);
   }
+  for (const q of cfg.queries || []) if (!q.q?.trim()) errors.push(`search "${q.title || '(untitled)'}" has no GitHub search`);
+  for (const l of cfg.labels || []) if (!l.name?.trim()) errors.push('a watched label has no name');
   for (const c of cfg.checks || []) {
+    if (!c.match) errors.push(`check "${c.label || '(unnamed)'}" has no check name`);
     try {
       new RegExp(c.match);
     } catch (e) {

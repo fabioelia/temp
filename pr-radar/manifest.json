@@ -1,10 +1,16 @@
 {
   "manifest_version": 3,
   "name": "PR Radar",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Your open PRs, their checks, labels and linked Claude sessions in one side panel.",
   "permissions": ["storage", "alarms", "notifications", "sidePanel", "downloads"],
-  "host_permissions": ["https://api.github.com/*", "https://github.com/*", "https://claude.ai/*"],
+  "host_permissions": [
+    "https://api.github.com/*",
+    "https://github.com/*",
+    "https://claude.ai/*",
+    "https://*.blob.core.windows.net/*",
+    "https://*.actions.githubusercontent.com/*"
+  ],
   "background": { "service_worker": "background.js", "type": "module" },
   "action": { "default_title": "PR Radar", "default_icon": "icon.png" },
   "icons": { "128": "icon.png" },
