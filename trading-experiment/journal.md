@@ -1036,3 +1036,9 @@ record since 11/02 (12 rounds, 0 trades from them); this saves cost without chan
 * **options-vol:** D1 rules out other option buys; CSCO ceilings 2.62 at k 1.0, 1.86 at 1.1 (scripts/ov_run_1110.py, a wrapper around ov_1109.py).
 **Proposals for Wed 11/11: none** (no drafts, so no red-team). The core is held.
 **Dashboard (11/10):** summary (84b60000), equity (43a71475) and positions (61aa608a) refreshed; orders and trades unchanged; the old files were deleted.
+
+## 2026-11-11 (Wed, Veterans Day: stocks open, bonds closed) Pre-open (09:17 EST)
+**News:** CoreWeave beat and raised after Tuesday's close (+16% pre-market, "eases financing fears"; 24/7 Wall St., Motley Fool), reigniting the AI trade.
+Chips are up pre-market (NVDA +4% despite a Baird downgrade, AMD +5%, AVGO +4%). ES=F 7,616.25 (+1.0%), NQ=F +1.9%; ^VIX 18.27; ^TNX 4.998; CL=F 87.20.
+No new Anthropic filing (S-1/A No. 2 of 11/10 already noted); no NVDA 8-K.
+**Plan unchanged:** the index core is held; no proposals; CSCO reports Thursday after the close (C1 check Friday).
