@@ -6,24 +6,34 @@ const STATE_TEXT = { pass: 'passed', fail: 'failed', pending: 'running', neutral
 const $ = (id) => document.getElementById(id);
 let state = { snapshot: null, config: mergeConfig(), currentUrl: '', expanded: new Set(), needsOnly: false };
 
-// Collapsed sections are a per-viewer convenience, so localStorage is enough;
-// it can be unavailable, and the panel works the same without it.
-const collapsed = new Set(
-  (() => {
-    try {
-      return JSON.parse(localStorage.getItem('collapsed') || '[]');
-    } catch {
-      return [];
-    }
-  })(),
-);
-const saveCollapsed = () => {
+// Collapsed sections and cards are a per-viewer convenience, so
+// localStorage is enough; it can be unavailable, and the panel works the
+// same without it.
+function persistedSet(key) {
+  let initial = [];
   try {
-    localStorage.setItem('collapsed', JSON.stringify([...collapsed]));
+    initial = JSON.parse(localStorage.getItem(key) || '[]');
   } catch {
-    /* storage blocked: collapse just won't persist */
+    /* storage blocked: start empty */
   }
-};
+  const set = new Set(initial);
+  set.save = () => {
+    try {
+      localStorage.setItem(key, JSON.stringify([...set]));
+    } catch {
+      /* storage blocked: collapse just won't persist */
+    }
+  };
+  return set;
+}
+const collapsed = persistedSet('collapsed');
+const shutCards = persistedSet('collapsedCards');
+
+function setCardShut(keys, shut) {
+  for (const k of keys) shut ? shutCards.add(k) : shutCards.delete(k);
+  shutCards.save();
+  render();
+}
 
 const ago = (iso) => {
   const m = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -172,7 +182,35 @@ function playwrightBlock(name, r) {
   );
 }
 
+function cardClass(row, current, extra) {
+  const running = row.checks.some((c) => c.state === 'pending');
+  return ['card', extra, row.attention.length ? 'needs' : running ? 'running' : '', row.isDraft && 'draft', current && 'current'].filter(Boolean).join(' ');
+}
+
+// A collapsed card: one line with the title, number and a dot per check.
+function compactCard(row, current) {
+  const dots = row.checks.filter((c) => c.state !== 'missing').map((c) => h('span', { class: `dot ${c.state}`, title: `${c.label}: ${STATE_TEXT[c.state] || c.state}` }));
+  const el = h(
+    'article',
+    { class: cardClass(row, current, 'compact'), 'data-key': row.key, title: [row.title, ...row.attention].join('\n') },
+    h(
+      'div',
+      { class: 'card-head' },
+      link(row.url, { class: 'title' }, row.title),
+      dots.length ? h('span', { class: 'mini-dots' }, dots) : null,
+      h('span', { class: 'num' }, `#${row.number}`),
+      h('button', { class: 'ghost icon sm fold', title: 'Expand', 'aria-label': `Expand #${row.number}`, 'aria-expanded': 'false', onclick: () => setCardShut([row.key], false) }, icon('chevron', 14)),
+    ),
+  );
+  el.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    setCardShut([row.key], false);
+  });
+  return el;
+}
+
 function card(row, current) {
+  if (shutCards.has(row.key)) return compactCard(row, current);
   const config = profileFor(state.config, row.repo);
   const open = state.expanded.has(row.key);
   // A check with no data on this PR (a draft without a preview, a check
@@ -199,14 +237,19 @@ function card(row, current) {
     .map((a) => ({ a, b: actionButton(a, has) }))
     .filter(({ b }) => b)
     .map(({ a, b }) => confirmButton(b.title, () => send({ type: 'act', action: b.action, row }), `${row.key}|${b.title}`, a.type === 'close' ? 'ghost sm danger' : 'ghost sm'));
-  const running = row.checks.some((c) => c.state === 'pending');
   const el = h(
     'article',
     {
-      class: ['card', row.attention.length ? 'needs' : running ? 'running' : '', row.isDraft && 'draft', current && 'current', open && 'open'].filter(Boolean).join(' '),
+      class: cardClass(row, current, open && 'open'),
       'data-key': row.key,
     },
-    h('div', { class: 'card-head' }, link(row.url, { class: 'title', title: row.title }, row.title), h('span', { class: 'num' }, `#${row.number}`)),
+    h(
+      'div',
+      { class: 'card-head' },
+      link(row.url, { class: 'title', title: row.title }, row.title),
+      h('span', { class: 'num' }, `#${row.number}`),
+      h('button', { class: 'ghost icon sm fold', title: 'Collapse', 'aria-label': `Collapse #${row.number}`, 'aria-expanded': 'true', onclick: () => setCardShut([row.key], true) }, icon('chevron', 14)),
+    ),
     h(
       'div',
       { class: 'meta' },
@@ -480,21 +523,30 @@ function render() {
     // Needs-you first, then most recently active.
     rows.sort((a, b) => (b.attention.length > 0) - (a.attention.length > 0) || (a.updatedAt < b.updatedAt ? 1 : -1));
     const shut = collapsed.has(s.title);
+    const anyOpen = rows.some((r) => !shutCards.has(r.key));
     list.append(
       h(
-        'button',
-        {
-          class: `section-head${shut ? ' collapsed' : ''}`,
-          'aria-expanded': String(!shut),
-          onclick: () => {
-            shut ? collapsed.delete(s.title) : collapsed.add(s.title);
-            saveCollapsed();
-            render();
+        'div',
+        { class: `section-head${shut ? ' collapsed' : ''}` },
+        h(
+          'button',
+          {
+            class: 'section-toggle',
+            'aria-expanded': String(!shut),
+            title: shut ? 'Show this group' : 'Hide this group',
+            onclick: () => {
+              shut ? collapsed.delete(s.title) : collapsed.add(s.title);
+              collapsed.save();
+              render();
+            },
           },
-        },
-        icon('chevron', 12),
-        s.title,
-        h('span', { class: 'count' }, String(rows.length)),
+          icon('chevron', 12),
+          s.title,
+          h('span', { class: 'count' }, String(rows.length)),
+        ),
+        !shut && rows.length
+          ? h('button', { class: 'ghost sm', onclick: () => setCardShut(rows.map((r) => r.key), anyOpen) }, anyOpen ? 'Collapse all' : 'Expand all')
+          : null,
       ),
     );
     if (shut) continue;
@@ -511,6 +563,11 @@ function render() {
 async function load() {
   const { snapshot, config } = await chrome.storage.local.get(['snapshot', 'config']);
   state.snapshot = snapshot || { rows: [], sections: [], error: null };
+  const live = new Set(state.snapshot.rows.map((r) => r.key));
+  if (live.size && [...shutCards].some((k) => !live.has(k))) {
+    for (const k of shutCards) if (!live.has(k)) shutCards.delete(k);
+    shutCards.save();
+  }
   state.config = mergeConfig(config);
   render();
 }
