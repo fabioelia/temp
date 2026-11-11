@@ -345,7 +345,7 @@ export function diff(prev, next, config) {
 
 const FIELD_HINT = {
   commits: 'needs Contents: read on a fine-grained token',
-  statusCheckRollup: 'checks: needs Commit statuses + Checks read, which fine-grained tokens may not get, so use a classic token with repo',
+  statusCheckRollup: "fine-grained tokens can't read check runs; with checksSource auto the panel reads Actions jobs instead",
   comments: 'needs Issues + Pull requests read',
   reviews: 'needs Pull requests read',
   labels: 'needs Issues + Pull requests read',
