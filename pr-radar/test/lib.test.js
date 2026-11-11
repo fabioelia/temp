@@ -148,4 +148,5 @@ test('summarizeErrors collapses per-PR errors into one line per field', () => {
   assert.match(lines[0], /^Can't read statusCheckRollup on 3 PRs \(checks: .*classic token.*\): Resource not accessible/);
   assert.match(lines[1], /^Can't read comments on 3 PRs \(needs Issues \+ Pull requests read\)/);
   assert.equal(summarizeErrors([{ message: 'Bad credentials' }]), "Can't read query on 1 PR: Bad credentials");
+  assert.match(summarizeErrors([{ message: 'x', path: ['search', 'nodes', 0, 'commits'] }]), /Can't read commits on 1 PR \(needs Contents: read/);
 });

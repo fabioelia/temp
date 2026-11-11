@@ -252,6 +252,7 @@ export function diff(prev, next, config) {
 }
 
 const FIELD_HINT = {
+  commits: 'needs Contents: read on a fine-grained token',
   statusCheckRollup: 'checks: needs Commit statuses + Checks read, which fine-grained tokens may not get, so use a classic token with repo',
   comments: 'needs Issues + Pull requests read',
   reviews: 'needs Pull requests read',
