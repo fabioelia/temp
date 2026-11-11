@@ -1074,3 +1074,10 @@ not clear how the new idea concept works ... and the warnings signs of the elect
    - Honest limit: $50 probes test fills, costs and discipline, not the edge.
 **Next:** tests T1-T5 and P1 are pre-registered (strategy-v4/claims.md) and running. A risk red-team of the program follows; the Sunday 11/15 vote decides;
 the first probes would start Mon 11/16.
+
+## 2026-11-11 (Wed, Veterans Day; bonds closed) Pre-close (14:43 EST)
+**Driver:** the AI trade revived after CoreWeave's beat-and-raise (Oracle, chips up). SPY 760.47 (+1.4%), QQQ 692.24 (+2.6%), VOO 699.06 (+1.4%), SGOV
+100.53 (Yahoo live, single source). Who loses: none named for the index today; the bond market is closed.
+**Positions:** the index core is held (no stop or take-profit by rule). Equity at live marks is $1,394.74 (above the $1,000 alert); `live.py check` OK.
+**Orders:** none pending, none added. The probe program and the policy-event watch are being decided under the owner's 11/11 delegation ("you decide what
+to apply ... land updating your logic") once the T2-T5 tests and a red-team finish. No probe is traded before that.
