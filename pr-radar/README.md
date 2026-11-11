@@ -7,8 +7,9 @@ A Chrome side panel for keeping track of many open PRs and the Claude sessions b
 - **Check details**: click a card's background to see every check on the latest commit, failures first. Each failure shows GitHub's annotations (file:line and message), the check's summary, a **Log** button for Actions jobs (the 60 lines leading up to the first error, with error lines highlighted, rather than the post-job cleanup at the end), and re-run.
 - **Toolbar badge**: how many PRs need you.
 - **Desktop notifications** when something you marked `notify` changes: a label is added, a check finishes, an extracted value changes, a draft is marked ready, or a PR leaves your list. Clicking one opens the PR.
-- **Follows your tabs**: on a PR page or a Claude session page, the panel highlights that PR.
-- **Badge on claude.ai**: on `claude.ai/code/session_…`, a small pill in the corner shows the PR(s) that link the session and their state. It reads only the page URL, never claude.ai's DOM.
+- **Follows your tabs**: on a PR page or a Claude session page, the panel highlights that PR, and scrolls to it once when you switch to that tab (never again on refresh, so it won't fight you while you scroll).
+- **Reuses open tabs**: a PR link in the panel, the badge or a notification switches to a tab already showing that PR, or one of its pages such as Files, before opening a new one. Cmd/Ctrl/Shift/middle-click still open links the usual way.
+- **Badge on claude.ai**: on `claude.ai/code/session_…`, a small pill shows the PR(s) that link the session and their state. Drag it out of the way; the spot is remembered across pages. It reads only the page URL, never claude.ai's DOM.
 - **Actions**: the first two buttons in a repo's list show on the card; the rest and the label picker sit under **More**. Request QA or AI review, toggle `skip-qa`, mark a draft ready or convert it back to draft, close the PR, re-run a failed Actions job. **🏷 Labels…** opens a picker with every label in the repo, so you can add or remove any of them at once. Every write takes two clicks.
 - **Artifacts**: clicking the QA verdict chip downloads that run's `qa-screenshots-pr<N>` artifact through your GitHub login in the browser. The artifact expires after 14 days.
 

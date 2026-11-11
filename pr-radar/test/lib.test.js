@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DEFAULT_CONFIG as cfg, NEW_REPO_PROFILE, actionButton, mapLimit, mergeConfig, profileFor, scopedQuery, allChecks, checksHidden, diff, flattenContexts, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
+import { DEFAULT_CONFIG as cfg, NEW_REPO_PROFILE, actionButton, tabFor, mapLimit, mergeConfig, profileFor, scopedQuery, allChecks, checksHidden, diff, flattenContexts, logTail, nameToRegex, regexToName, normalize, rowsForUrl, summarizeErrors, validateConfig } from '../lib.js';
 
 const run = (name, status, conclusion, startedAt, extra = {}) => ({
   __typename: 'CheckRun',
@@ -297,4 +297,17 @@ test('mapLimit keeps order and never runs more than `limit` at once', async () =
   assert.deepEqual(out, [50, 10, 40, 20, 30]);
   assert.equal(peak, 2);
   assert.deepEqual(await mapLimit([], 3, async () => 1), []);
+});
+
+test('tabFor prefers the exact page, then a page under it, never a longer PR number', () => {
+  const pr = 'https://github.com/o/r/pull/49';
+  const tabs = [
+    { id: 1, url: 'https://github.com/o/r/pull/4977' },
+    { id: 2, url: 'https://github.com/o/r/pull/49/files?w=1' },
+    { id: 3, url: 'https://github.com/o/r/pull/49#issuecomment-1' },
+  ];
+  assert.equal(tabFor(tabs, pr).id, 3);
+  assert.equal(tabFor(tabs.slice(0, 2), pr).id, 2);
+  assert.equal(tabFor(tabs.slice(0, 1), pr), null);
+  assert.equal(tabFor([], pr), null);
 });

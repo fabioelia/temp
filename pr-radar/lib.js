@@ -559,7 +559,7 @@ export function summarizeErrors(errors) {
 
 // True when `url` is `base` or a page under it: a PR's /files tab matches
 // its PR, but .../pull/49 never matches .../pull/4977.
-function within(url, base) {
+export function within(url, base) {
   return url === base || (url.startsWith(base) && '/?#'.includes(url[base.length]));
 }
 
@@ -617,6 +617,14 @@ export async function mapLimit(items, limit, fn) {
   };
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
   return out;
+}
+
+// Which open tab to reuse for `url`: one showing exactly that page, else one
+// showing a page under it (a PR's Files or Checks tab), else none.
+export function tabFor(tabs, url) {
+  const base = url.split(/[?#]/)[0];
+  const page = (t) => (t.url || '').split(/[?#]/)[0];
+  return tabs.find((t) => page(t) === base) || tabs.find((t) => within(page(t), base)) || null;
 }
 
 export function validateConfig(cfg) {

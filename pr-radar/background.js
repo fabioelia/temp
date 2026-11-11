@@ -1,5 +1,5 @@
 import { DRAFT_MUTATIONS, actionsContexts, emptyActionsCache, gh, graphql, pruneActionsCache, restRate } from './github.js';
-import { QUERY, attention, checksHidden, diff, mapLimit, mergeConfig, normalize, profileFor, rowsForUrl, scopedQuery, summarizeErrors } from './lib.js';
+import { QUERY, attention, checksHidden, tabFor, diff, mapLimit, mergeConfig, normalize, profileFor, rowsForUrl, scopedQuery, summarizeErrors } from './lib.js';
 
 async function settings() {
   const { config, token } = await chrome.storage.local.get(['config', 'token']);
@@ -182,8 +182,24 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 chrome.runtime.onStartup.addListener(() => refresh());
 chrome.alarms.onAlarm.addListener((a) => a.name === 'poll' && onAlarm());
+// Switches to a tab already showing `url` (or a page under it) before
+// opening a new one. Tab URLs are only visible for hosts in
+// host_permissions, so a preview link always opens fresh.
+async function openTab(url) {
+  let tabs = [];
+  try {
+    tabs = await chrome.tabs.query({ url: `${url.split(/[?#]/)[0]}*` });
+  } catch {
+    // not a valid match pattern (an odd scheme or host): just open it
+  }
+  const hit = tabFor(tabs, url);
+  if (!hit) return chrome.tabs.create({ url });
+  await chrome.tabs.update(hit.id, { active: true });
+  await chrome.windows.update(hit.windowId, { focused: true });
+}
+
 chrome.notifications.onClicked.addListener((url) => {
-  chrome.tabs.create({ url });
+  openTab(url);
   chrome.notifications.clear(url);
 });
 chrome.storage.onChanged.addListener((changes) => {
@@ -197,6 +213,10 @@ async function match(url) {
 chrome.runtime.onMessage.addListener((msg, _sender, reply) => {
   if (msg.type === 'match') {
     match(msg.url).then((rows) => reply({ ok: true, rows }));
+    return true;
+  }
+  if (msg.type === 'open') {
+    openTab(msg.url).then(() => reply({ ok: true }), (e) => reply({ ok: false, error: String(e.message || e) }));
     return true;
   }
   const run = msg.type === 'refresh' ? refresh() : msg.type === 'act' ? act(msg).then(() => refresh()) : msg.type === 'download' ? download(msg) : null;

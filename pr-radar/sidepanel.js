@@ -501,7 +501,11 @@ function render() {
     if (!rows.length) list.append(h('div', { class: 'empty' }, state.needsOnly || q ? 'Nothing matches.' : 'No PRs here.'));
     for (const r of rows) list.append(card(r, current.has(r.key)));
   }
-  list.querySelector('.card.current')?.scrollIntoView({ block: 'nearest' });
+  // Scroll to the current page's PR once, when the tab changes to it, not on
+  // every render: polls re-render, and you may be scrolling elsewhere.
+  const target = [...current][0] || null;
+  if (target && target !== state.scrolledTo) list.querySelector('.card.current')?.scrollIntoView({ block: 'nearest' });
+  state.scrolledTo = target;
 }
 
 async function load() {
@@ -533,6 +537,14 @@ $('filter').addEventListener('input', render);
 $('needsOnly').addEventListener('click', () => {
   state.needsOnly = !state.needsOnly;
   render();
+});
+// Links switch to a tab already showing them rather than opening another.
+// A modified or middle click keeps the browser's own behavior.
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="http"]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  e.preventDefault();
+  send({ type: 'open', url: a.href }).catch((err) => showError(err.message));
 });
 document.addEventListener('click', (e) => {
   if (state.menu && !e.target.closest('.more')) {
