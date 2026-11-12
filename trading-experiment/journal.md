@@ -1195,3 +1195,52 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
 * **Registry:** PR1 is now `running` in `data/probes.csv`. Kill bands vs SGOV: week 4 −$4.91 (12/9), week 8 −$6.38, week 12 −$7.41.
 * **Docs:** `data/live_tools.md` now names GLDM (the config whitelist already had it).
 * **No red-team needed:** today's buys are 3.6% of equity, with no leveraged ETF.
+
+### 2026-11-12 Post-close (Run B, 17:14 ET; a decision night: CSCO C1 reaction day Fri)
+* **Market:** Nvidia's CEO resigned (8-K 5.02). NVDA ended −4.3% (166.19) after −13% at the open and took 0.28 points off SPY (−0.35%, 757.12); IWM −1.6%. A soft 30-year auction (5.441%, bid-to-cover 2.36) lifted ^TNX to 5.10. Gold −2.8% (GLDM 76.60), oil up on Hormuz tanker attacks (CL=F 88.70).
+* **Equity (closes):**
+  * **Real $1,389.81:** since the 10/19 start −$610.19 (−30.5%); since 11/07 +$4.97.
+  * **Paper $1,374.71:** −$625.29 (−31.3%); since 11/07 +$5.87.
+  * **SPY buy-and-hold from the start: $1,974.59** (−1.3%; +3.0% since 11/07).
+* **Filled today (Run A; confirmed because PR1's pre-registered start was today):**
+  * Real: VOO −0.071773 @ 696.53 and GLDM +0.65123 @ 76.78.
+  * Paper: T007 and T008, close-model fills at 695.65 and 76.64.
+* **Nightly check:**
+  * **Broker and kill switch:** reconciled at 14:46, with no orders since. Kill switch absent. Owner alert n/a (> $1,000).
+  * **Probes:** PR1 −$0.12 (the program stop is −$50).
+  * **8-Ks:**
+    * NVDA 5.02 (the CEO).
+    * CSCO 2.02 (results).
+    * META 8.01: EUR 9B of senior notes (2031-2065, 4.30-6.40%), AI capex financed with debt.
+  * **Earnings dates unchanged:** NVDA 11/17 pm, WMT 11/19 am, CRM 12/2 pm (PR3: buy 11/23, sell 12/2).
+  * **W1:**
+    * No market prices the permitting bill's final Senate passage. Kalshi's "becomes law before 2027" trades about 52%, thin.
+    * Dec 9 FOMC hike odds are 96-98% (Kalshi, Polymarket, ZQ).
+  * **Other flags:**
+    * W2 n/a (SPY down; XLK +0.02, SOXX +0.09 vs SPY).
+    * W4 n/a.
+    * No move without a story.
+  * **Data note:** Cboe's chain showed a CSCO extended-hours price of 109.81, while Robinhood showed 101.44 at 22:25 UTC. The Cboe print is treated as bad.
+* **Agents:**
+  * **Catalyst:** CSCO beat and raised (FY27 $74.8-75.8B), but its Q2 guide is below Q1 and gross margin fell to 65.6% from 68.1%. That is the case for a down gap, while after hours it was roughly flat. 12 of 87 past prints gapped −8% or worse. Insiders: only routine 10b5-1 sales.
+  * **Options-vol:**
+    * RV20 44.89%, IV cap 58.35%.
+    * Only the 12/18 expiry has OI ≥ 1,000, and every spread is over 5% tonight (stale).
+    * The ask ceiling is 2.65 at IV ≤ 44.7% and 1.77 at 50%. A put fits only at about 38.5-44% IV after an 8-12% gap.
+  * **Macro:** the driver is long-end yields, not December (already priced). No market gate exists for C1. No trade.
+  * **Momentum:** **the line must be 93.84, not 93.85** (93.85 is a −7.9992% gap). W2 n/a. No trade.
+  * **Risk: MODIFY**, applied:
+    * IV gate 58.35%.
+    * The limit comes from the higher-IV row.
+    * 82.5P added as an alternate.
+    * The k 0.84 R1 pair removed (it is in no output).
+    * CSCO is 0.60% of SPY (not my unsourced 0.3%).
+    * SGOV is sold only after the put passes every gate.
+* **Proposals for Fri 11/13:**
+  * **O025:** 1 CSCO 12/18 put if CSCO ≤ 93.84 at 14:43, with gates as written.
+  * **O024:** sell SGOV to fund it, only after O025 passes its gates.
+  * O022 and O023 were cancelled (replaced). If CSCO is above the line, both are cancelled.
+* **Lessons:**
+  * Round a trigger line toward the rule, never to the nearest cent. The playbook's C1 rule now says so.
+  * No number goes into a thesis without a source; the red-team caught "about 0.3% of SPY".
+**Dashboard (11/12):** summary (7885b633), equity (88cb0a0d), positions (83d7b302), orders (e152ce18, showing O024/O025) and trades (53c185d3) refreshed; the old files were deleted.

@@ -125,6 +125,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
   - **No market gates** (^VIX, ^TNX, HY OAS), **provisional**: the tested sample had none, so this matches the test. But the VIX split is underpowered
     (p 0.61), and the stock edge sits at VIX <= 22 (t 3.0 vs 0.3). ^TNX and HY OAS were never tested. Revisit with more data.
   - Exit as below.
+  - **The line (clarified 2026-11-12, momentum's catch):** 0.92 x the pre-earnings close, rounded DOWN to the cent, so the trigger is a gap of
+    8% or more as tested (11/12: 0.92 x 102.01 = 93.8492, so the line is 93.84; 93.85 would fire at -7.9992%). Not a rule change.
   - **C1 expiry (chair's ruling, 2026-11-01):** at least 14 calendar days at entry (the 5-session hold leaves a week of buffer), so an 11/20 put
     qualifies for an 11/5 entry.
 * **Exception, C1 down-gap puts (2026-10-29):** they use the exit the strategy review confirmed: hold to session 5 (time exit at that day's 14:43 check),
@@ -322,6 +324,11 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     11/10; the cost is about $5.5B a year, small against the weight). The vote days plus 2 sessions are W2-flag days and decision nights. The FOMC is on
     Dec 9 (25 bp priced, about 13% odds of 50 bp); its W0 is due at the 11/24 Run B. PR3's first event is CRM (buy 11/23); its bands are committed at the
     11/15 review.
+  - **Update, Thu 11/12:** PR1 is running (0.65123 GLDM @ 76.78, funded by 0.071773 VOO @ 696.53). NVDA's CEO resigned (8-K 5.02); NVDA closed -4.3%.
+    CSCO closed 102.01, then beat and raised (8-K 2.02; FY27 guide raised, Q2 guide below Q1, gross margin 65.6% vs 68.1%), roughly flat after hours.
+    **Fri 11/13 C1 (O025, red-team MODIFY):** fire only at CSCO <= 93.84 (rounded down); 1 x the cheapest in-band 12/18 put (90P illustrative;
+    92.5/87.5/85/82.5P pre-cleared); IV <= 58.35%; limit from the ceiling table at the live IV (2.65 at <= 44.7%, 1.77 at 50%); funded by O024 (SGOV,
+    sold only after the put passes every gate, min(cost + $1, the holding)). It fits only at IV of about 38.5-44% after an 8-12% gap.
   - **Watch:** CPI Tue 11/10 (not a reason to delay); NVDA's board probe of its CEO (Axios, DW, 11/8; no 8-K yet); NVDA earnings 11/17 after the close
     (C1 shadow only; the reserve could not fund it after a CSCO trade); the ANT IPO pricing (guard: no AMZN or GOOGL adds). No SPY shares or options before 12/06.
 
@@ -395,6 +402,7 @@ below ~230bp or CRWV yield below 12%; a capex raise from Meta/MSFT/GOOGL that th
 4. Which committee member's option ideas earn their keep? Score them weekly.
 
 ## Changelog
+* 2026-11-12 (Run B, decision night): PR1 started; the CSCO C1 proposal O025 + funding O024 (red-team MODIFY); the C1 line is rounded down to the cent (momentum caught 93.85 vs 93.8492).
 * 2026-11-11 (owner: "Review and learn from this" day-trader-skill repo): exits keep the 15:58 cutoff and skip the fill cap; `record` checks a fill against its ticket; option theses state the break-even and the drift-matched baseline; a move with no story is journaled. R1 (a reward:risk minimum) was REJECTED, so no such rule. The FINRA PDT change was verified only in part, and the same-day guard stays until 11/15. The red-team said "adopt with fixes". It also found three older gate bugs, now fixed: a `--pct` above 100 oversold; an approved, unplaced resting order did not block other sells; a part-filled resting order was closed. Memo: `research/strategy-v4/day-trader-skill-review.md`.
 * 2026-11-11 (Run B): the first W0 basket (Senate permitting bill, losers 17.7% of SPY); PR3's buy date fixed to match the tested script.
 * 2026-11-11 (owner's delegation; red-team MODIFY): the probe program (PR1 gold live, PR3 earnings run-up event-driven, PR2/PV3/PV1 paper; a -$50
