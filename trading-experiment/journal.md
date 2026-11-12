@@ -1149,3 +1149,23 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
 * **PDT:** FINRA RN 26-10 is verified only in part (finra.org is blocked here; each fact is graded in the memo). Robinhood's status is unknown, so the same-day guard stays. The allowance proposal stays on the 11/15 list.
 * **No orders changed.** O020/O021 (PR1) go through the gate at the 11/12 Run A, and the CSCO C1 proposal is written at the 11/12 Run B.
 **Dashboard (11/11, late):** the rules dataset now points at a8d92714 (v6, R36-R40). The old file was deleted.
+
+### 2026-11-12 Pre-open (Run 0, 09:17 ET)
+* **Driver: Nvidia's CEO resigned.**
+  * Primary source: NVDA's 8-K, Item 5.02, filed 11/12. The board accepted Jen-Hsun Huang's resignation as CEO and director, effective 11/11. CFO Colette Kress is interim CEO and Harvey Jones is chair.
+  * The press reports an alleged affair with a suspected spy and national-security concerns (NYT, PBS, Politico; headlines only, not read).
+  * Pre-market: NVDA 152.06 (−12.5% vs 173.73), QQQ −1.4%, VOO 693.41 (−0.7%).
+  * Who loses: NVDA is SPY's largest weight, so the index core takes most of this through VOO, and AI-capex names trade lower with it.
+  * NVIDIA is a $10B private-placement investor in the Anthropic IPO (S-1/A No. 2). That link is disclosed and has no bearing on any order.
+* **Macro:**
+  * Gold is −2% (GLDM 77.19 vs 78.81), as the dollar sits at a 19-month high and December hike bets rose after the hot October CPI.
+  * The 10-year is back above 5%.
+  * Oil is mixed under 93 (Hormuz still closed by Iran's terms; tanker incidents; OPEC+ output restored).
+* **Filings:**
+  * Anthropic (CIK 2130357) filed 4 FWPs: Australian, Japanese, EEA and UK offering documents. The Japanese one shows a $3.0-3.5B tranche and "the issue price ... will be amended". No new US price range.
+  * No 8-K or Form 4 for CSCO or GLDM.
+* **Plan unchanged:**
+  * O020 (sell $50 VOO) and O021 (buy $50 GLDM, PR1) stand for the 14:43 gate. A probe's start date is not a timing call, so a −2% gold morning does not move it.
+  * The VOO sliver is still above its 692.87 cost pre-market.
+  * CSCO reports tonight (pre-market 100.20). Its C1 line is set from today's close at Run B.
+  * The core has no stops. Nothing was cancelled, added or confirmed.
