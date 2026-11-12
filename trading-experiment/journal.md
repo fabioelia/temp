@@ -1169,3 +1169,29 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
   * The VOO sliver is still above its 692.87 cost pre-market.
   * CSCO reports tonight (pre-market 100.20). Its C1 line is set from today's close at Run B.
   * The core has no stops. Nothing was cancelled, added or confirmed.
+
+### 2026-11-12 Pre-close (Run A, 14:43 ET)
+* **Driver:** Nvidia's CEO resigned (8-K Item 5.02).
+  * NVDA 164.04 (−5.6%, recovered from −12.5% pre-market). SPY 757.89 (−0.25%), QQQ −0.35%, VOO 696.70 (−0.24%).
+  * Who loses: NVDA holders; VOO holds it at index weight.
+  * Gold −2.5% (GLDM 76.81) as the dollar and hike bets rose. CSCO +2.3% (103.04) into tonight's print.
+  * Robinhood quotes, seconds old.
+* **Positions:**
+  * VOO and SGOV: the core, no stops, hold.
+  * No option is open, so there is no mid-session stop task.
+  * Idea watch: no trigger due today. The next is CSCO at Fri 11/13 14:43 and NVDA's shadow at 11/18.
+* **O020 confirmed** (sell $50 VOO, to fund PR1):
+  * Still above cost, so the gain is small and there is no wash sale.
+  * Gate K011: 0.071773 sh at ref 696.64.
+  * **Filled 0.071773 VOO @ 696.5301 at 19:44:59 UTC**, no fees.
+* **O021 confirmed** (buy $50 GLDM, PR1):
+  * Re-judged as new: a plumbing probe with a pre-registered start date. A −2.5% gold day is not a reason to move a probe's start (no timing rules).
+  * Gate K012: $50, ref 76.81.
+  * **Filled 0.65123 GLDM @ 76.7777 at 19:45:19 UTC**, no fees.
+  * `record`'s new fill check passed on both tickets.
+* **Robinhood reconciled:**
+  * VOO 1.515826 (avg 692.87), SGOV 2.636818, GLDM 0.65123; cash $19.81; account $1,390.81. No margin used.
+  * The SGOV C1 reserve is untouched.
+* **Registry:** PR1 is now `running` in `data/probes.csv`. Kill bands vs SGOV: week 4 −$4.91 (12/9), week 8 −$6.38, week 12 −$7.41.
+* **Docs:** `data/live_tools.md` now names GLDM (the config whitelist already had it).
+* **No red-team needed:** today's buys are 3.6% of equity, with no leveraged ETF.
