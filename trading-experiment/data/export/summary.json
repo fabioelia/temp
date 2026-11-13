@@ -1,0 +1,26 @@
+[
+ {
+  "asof": "2026-11-13",
+  "equity": 1370.88,
+  "pnl": -629.12,
+  "pnl_pct": -0.3146,
+  "goal": null,
+  "end_date": null,
+  "progress_to_goal": null,
+  "cash": 3.83,
+  "fees": 0.2,
+  "slippage": 49.73,
+  "realized": -630.92,
+  "benchmark_value": 1967.42,
+  "benchmark_pnl_pct": -0.0163,
+  "trading_days_left": null,
+  "required_daily_return": null,
+  "fills": 8,
+  "verified_fills": 8,
+  "closed_trades": 3,
+  "win_rate": 0.3333,
+  "payoff": 0.0,
+  "max_drawdown": -0.367,
+  "after_tax_equity": 1370.88
+ }
+]

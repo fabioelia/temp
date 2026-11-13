@@ -1,0 +1,128 @@
+[
+ {
+  "date": "2026-10-16",
+  "equity": 2000.0,
+  "benchmark": 2000.0,
+  "pace": null
+ },
+ {
+  "date": "2026-10-19",
+  "equity": 1995.96,
+  "benchmark": 1999.0,
+  "pace": null
+ },
+ {
+  "date": "2026-10-20",
+  "equity": 2049.46,
+  "benchmark": 2005.7,
+  "pace": null
+ },
+ {
+  "date": "2026-10-21",
+  "equity": 2155.46,
+  "benchmark": 2016.24,
+  "pace": null
+ },
+ {
+  "date": "2026-10-22",
+  "equity": 1919.92,
+  "benchmark": 1992.43,
+  "pace": null
+ },
+ {
+  "date": "2026-10-23",
+  "equity": 1919.92,
+  "benchmark": 1982.02,
+  "pace": null
+ },
+ {
+  "date": "2026-10-26",
+  "equity": 1919.92,
+  "benchmark": 1996.11,
+  "pace": null
+ },
+ {
+  "date": "2026-10-27",
+  "equity": 1919.92,
+  "benchmark": 2007.29,
+  "pace": null
+ },
+ {
+  "date": "2026-10-28",
+  "equity": 1919.92,
+  "benchmark": 2014.21,
+  "pace": null
+ },
+ {
+  "date": "2026-10-29",
+  "equity": 1919.92,
+  "benchmark": 2006.51,
+  "pace": null
+ },
+ {
+  "date": "2026-10-30",
+  "equity": 1919.92,
+  "benchmark": 1970.94,
+  "pace": null
+ },
+ {
+  "date": "2026-11-02",
+  "equity": 1919.92,
+  "benchmark": 1961.5,
+  "pace": null
+ },
+ {
+  "date": "2026-11-03",
+  "equity": 1919.92,
+  "benchmark": 1967.37,
+  "pace": null
+ },
+ {
+  "date": "2026-11-04",
+  "equity": 1906.88,
+  "benchmark": 1999.86,
+  "pace": null
+ },
+ {
+  "date": "2026-11-05",
+  "equity": 1368.84,
+  "benchmark": 1911.68,
+  "pace": null
+ },
+ {
+  "date": "2026-11-06",
+  "equity": 1368.84,
+  "benchmark": 1917.66,
+  "pace": null
+ },
+ {
+  "date": "2026-11-09",
+  "equity": 1368.14,
+  "benchmark": 1963.04,
+  "pace": null
+ },
+ {
+  "date": "2026-11-10",
+  "equity": 1364.45,
+  "benchmark": 1955.81,
+  "pace": null
+ },
+ {
+  "date": "2026-11-11",
+  "equity": 1378.49,
+  "benchmark": 1981.6,
+  "pace": null
+ },
+ {
+  "date": "2026-11-12",
+  "equity": 1374.71,
+  "benchmark": 1974.59,
+  "pace": null
+ },
+ {
+  "date": "2026-11-13",
+  "equity": 1370.88,
+  "benchmark": 1967.42,
+  "pace": null
+ }
+]

@@ -1,0 +1,3 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-09,macro,SPY261204P00720000,4.47,"Cboe delayed chain 14:47 ET (bid 4.43); trigger ask <= 10.72 at the Mon 14:43 check fired; shadow only, not taken (no edge)"
+2026-11-09,momentum,SPY261130C00750000,13.36,"Cboe delayed chain 14:47 ET (bid 13.28); trigger SPY >= 730.59 fired (SPY 753.97 Yahoo live); shadow only, not taken (no edge)"

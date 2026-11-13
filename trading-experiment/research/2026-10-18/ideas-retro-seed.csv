@@ -1,0 +1,16 @@
+date,persona,contract,ref_ask,ref_source,trigger,confidence
+2026-10-18,historian,SPY261120C00785000,4.40,Cboe 10/16 close,Mon 10/19 if SPY 752-772 and VIX 17-24,5
+2026-10-18,flows,SPY261120C00785000,4.40,Cboe 10/16 close,flush (SPY<=748 VIX>=24) or reclaim (SPY>=773 VIX<=18),5
+2026-10-18,options-vol,MSFT261120C00580000,4.55,Cboe 10/16 close,10/28 after the press conference,4
+2026-10-18,semis-ai,NVDA261120C00230000,4.60,Cboe=Robinhood 10/16 close,from 10/22 if LRCX/META hold; out by 11/17,6
+2026-10-18,semis-ai,AVGO261120C00370000,3.70,Cboe 10/16 close,before the 10/29 close if GOOGL holds capex,5
+2026-10-18,contrarian,IWM261120C00275000,4.74,Cboe 10/16 close,Mon 10/19 if SPY>=748 and IWM<=274,4
+2026-10-18,contrarian,USO261120C00180000,4.05,Cboe 10/16 close,on escalation,3
+2026-10-18,momentum,QQQ261120C00760000,2.34,Cboe 10/16 close,on a Nasdaq follow-through day,5
+2026-10-18,momentum,COP261120C00150000,4.60,Cboe 10/16 close,Mon-Wed if COP 146.60-148.70 on volume,4
+2026-10-18,macro,TLT261120C00082000,0.69,Cboe 10/16 close,10y<=5.05% and Brent<110,5
+2026-10-18,energy,USO261120P00145000,2.80,Cboe 10/16 close,11/2 pre-close if Brent>=100 and no deal priced,4
+2026-10-19,chair,SPY261120C00790000,3.67,Robinhood live 10/19 14:44,taken 10/19 (shot 1),
+2026-10-22,macro,TLT261120C00083000,0.76,Robinhood=Cboe 10/22 close,10/23 if TLT>=81.74 and 10y<=4.96% (risk-modified),5
+2026-10-23,macro,USO261120C00200000,2.99,Cboe 10/23 close,Mon 10/26 if BZZ26>=115 and USO>=169.53,3
+2026-10-23,momentum,XLE261120C00070000,2.15,Cboe 10/23 close,Mon 10/26 on conditions,4

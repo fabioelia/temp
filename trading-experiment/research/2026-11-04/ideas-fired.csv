@@ -1,0 +1,5 @@
+date,persona,contract,ask_at_trigger,source
+2026-11-04,options-vol,SPY261130C00768000,11.74,"Cboe delayed chain 14:46 ET (bid 11.69; delta 0.54, out of the 0.35-0.40 band after SPY +1.8%): the goal-budget trigger fired on the in-band 12/04 780C instead; reference row for the shadow book"
+2026-11-04,macro,SPY261130C00768000,11.74,"Same reference contract as options-vol (Cboe 14:46 ET); taken as SPY261204C00780000"
+2026-11-04,momentum,SPY261130C00768000,11.74,"Same reference contract (Cboe 14:46 ET); tape check: SPY +1.8%, ^VIX 16.79, no block"
+2026-11-04,goal-budget,SPY261204C00780000,6.73,"Robinhood get_option_quotes 19:45:14 UTC (bid 6.70, delta 0.369, IV 12.3%, OI 2149); the in-band contract nearest delta 0.375 that passed every gate"

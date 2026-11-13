@@ -1,0 +1,41 @@
+[
+ {
+  "ticker": "GLDM",
+  "qty": 0.652284,
+  "avg_cost": 76.6536,
+  "last": 76.7,
+  "last_date": "2026-11-13",
+  "value": 50.03,
+  "unrealized": 0.03,
+  "unrealized_pct": 0.0006,
+  "stop": null,
+  "target": null,
+  "opened": "2026-11-12"
+ },
+ {
+  "ticker": "SGOV",
+  "qty": 2.6354,
+  "avg_cost": 100.554,
+  "last": 100.56,
+  "last_date": "2026-11-13",
+  "value": 265.02,
+  "unrealized": 0.02,
+  "unrealized_pct": 0.0001,
+  "stop": null,
+  "target": null,
+  "opened": "2026-11-09"
+ },
+ {
+  "ticker": "VOO",
+  "qty": 1.51721,
+  "avg_cost": 692.2222,
+  "last": 693.38,
+  "last_date": "2026-11-13",
+  "value": 1052.0,
+  "unrealized": 1.76,
+  "unrealized_pct": 0.0017,
+  "stop": null,
+  "target": null,
+  "opened": "2026-11-09"
+ }
+]
