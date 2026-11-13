@@ -1257,3 +1257,14 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
   * GLDM 76.68 (+0.1%), SGOV 100.56.
 * **Filings:** Anthropic has no new filing since the 11/12 FWPs.
 * **Plan unchanged.** Nothing was confirmed or cancelled.
+
+### 2026-11-13 Pre-close (Run A, 14:44 ET)
+* **C1 did not fire.** CSCO was 95.595 at the 14:44 check (Robinhood last trade 19:44:11 UTC; Yahoo 95.59): −6.29% vs the 102.01 pre-earnings close, above the 93.84 line.
+  * Cancelled O025 (the put) and O024 (its SGOV funding), with no widening, per the thesis.
+  * This is the second C1 near miss after QCOM on 11/5: both opened weak, then the 14:43 rule judged the move.
+* **Positions:**
+  * VOO 692.22 (−0.5%) and SGOV 100.56: the core, held, no stops.
+  * GLDM 76.64 (+0.05%): PR1, no stop; kills only at the checkpoints (12/9 first).
+  * No option is open.
+* **Idea watch:** no trigger due today. The next is NVDA's C1 shadow at Wed 11/18 14:43, after the 11/17 pm print.
+* **Nothing confirmed; no real orders today.**
