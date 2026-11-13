@@ -1,19 +1,5 @@
 [
  {
-  "id": "O017",
-  "created": "2026-11-05",
-  "side": "sell",
-  "ticker": "SPY261204C00780000",
-  "size": "entire position",
-  "stop": "",
-  "target": "",
-  "max_price": null,
-  "status": "filled",
-  "state": "Confirmed 2026-11-05 14:44 ET",
-  "reason": "",
-  "thesis": "Stop exit (playbook Open shots, Shot 2 b): the -50% stop at a 14:43 check. Live Robinhood bid 1.43 / ask 1.49 at 19:44 UTC, at or below 3.39 (half of the 6.79 fill). SPY 738.70 (-3.7%) in an AI-stock rout (Reuters, Bloomberg; ^VIX 26.32, +58%). Pre-registered; no discretion. The resting 9.62 GTC (K007) was cancelled first."
- },
- {
   "id": "O018",
   "created": "2026-11-08",
   "side": "buy",
@@ -106,9 +92,9 @@
   "stop": "",
   "target": "",
   "max_price": null,
-  "status": "pending",
+  "status": "cancelled",
   "state": "Proposal, not yet confirmed",
-  "reason": "",
+  "reason": "Funding for O025 only; O025 did not fire, so SGOV stays whole as the C1 reserve",
   "thesis": "C1 funding for O025 only (red-team MODIFY). Confirm and sell ONLY after O025's put has passed every C1 gate on live quotes at the Fri 11/13 14:43 check; size min(the put's cost x 100 + $1, the whole SGOV holding), dollar-sized with --ref-price from the live quote; Run A re-adds it at that size. If the put then fails to fill, keep the cash and rebuy SGOV Monday (no same-day round trip). SGOV is the C1 reserve by rule; never sell VOO to fund options. SGOV bought 11/09."
  },
  {
@@ -120,9 +106,9 @@
   "stop": "-50% of fill",
   "target": "",
   "max_price": 2.65,
-  "status": "pending",
+  "status": "cancelled",
   "state": "Proposal, not yet confirmed",
-  "reason": "",
+  "reason": "C1 did not fire: CSCO 95.595 at the 14:44 ET check (Robinhood last 19:44:11 UTC; Yahoo 95.59), above the 93.84 line (-6.29% vs 102.01, not -8%). No widening, per the thesis",
   "thesis": "C1 (CONFIRMED; playbook final rule; risk red-team MODIFY applied). FIRE only if CSCO's last trade at the Fri 11/13 14:43 check is <= 93.84 (0.92 x the 11/12 pre-earnings close 102.01 = 93.8492, rounded down). Contract: the cheapest 12/18 put (35 DTE; weeklies fail OI) with live delta 0.30-0.45; the 90P is illustrative at the line, and the 92.5P/87.5P/85P/82.5P are pre-cleared alternates if their live delta is in band (cheapest wins). Gates: quoted IV <= 58.35% (1.3 x RV20 44.89%, 10/15-11/12); spread <= 5% of mid; OI >= 1,000; ask x 100 + fees <= min(full Kelly at 35 DTE on $1,389.81, SGOV $265.08). Limit = the ceiling at the chosen strike's live IV, using the HIGHER-IV row when between rows (ov_1108.py q1 via research/2026-11-12/scripts/ov_run_1112.py): <=44.7% 2.65; 45% 2.61; 47.5% 2.19; 50% 1.77; 52.5% 1.32; 55% 0.83; 57.5% 0.35; >=59.3% none. Size: 1 contract (Kelly and the reserve cover exactly one). Two numbers (R1): break-even win probability 35.4% vs estimated 44.0% at k 1.0, and 38.4% vs 38.9% at k 1.3; drift baseline: holding the stock over the same 216 five-session C1 windows returned -0.54% (SPY +0.26%), so the put's edge is not drift. Exit: hold to session 5 (Fri 11/20 14:43 time exit), -50% premium backstop, no take-profit, no resting GTC, no market gates. Who loses if it fires: CSCO holders; CSCO is 0.60% of SPY (SSGA holdings 11/11), held by VOO at index weight. Consensus: buying puts after a big drop is not the generic AI call; edge from C1 n 216 (research/strategy-review). Not Anthropic-linked."
  }
 ]

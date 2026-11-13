@@ -1,25 +1,24 @@
-# Paper-trading scoreboard (as of 2026-11-12)
+# Paper-trading scoreboard (as of 2026-11-13)
 
 > The paper ledger: the shadow model of the real account (live mode is on; real fills are in data/live_ledger.csv). Paper fills are modeled at the close with slippage and fees (see RULES.md).
 
-**Equity $1,374.71** | P/L -$625.29 (-31.26%) since the start | objective: make money (no date or amount target since 2026-11-07)
+**Equity $1,370.88** | P/L -$629.12 (-31.46%) since the start | objective: make money (no date or amount target since 2026-11-07)
 - Cash $3.83 | realized -$630.92 | fees paid $0.20 | slippage cost $49.73
-- SPY buy-and-hold with same $: $1,974.59
+- SPY buy-and-hold with same $: $1,967.42
 - No end date (the owner retired it on 2026-11-07)
-- Est. after-tax equity if liquidated (memo, 24% on gains): $1,374.71
+- Est. after-tax equity if liquidated (memo, 24% on gains): $1,370.88
 
 ## Positions
 
 | Ticker | Qty | Avg cost | Last | Value | Unreal. | Stop | Target |
 |---|---|---|---|---|---|---|---|
-| GLDM | 0.6523 | 76.65 | 76.60 | $49.96 | -$0.03 (-0.07%) |  |  |
-| SGOV | 2.6354 | 100.55 | 100.53 | $264.94 | -$0.06 (-0.02%) |  |  |
-| VOO | 1.5172 | 692.22 | 696.00 | $1,055.98 | $5.73 (+0.55%) |  |  |
+| GLDM | 0.6523 | 76.65 | 76.70 | $50.03 | $0.03 (+0.06%) |  |  |
+| SGOV | 2.6354 | 100.55 | 100.56 | $265.02 | $0.02 (+0.01%) |  |  |
+| VOO | 1.5172 | 692.22 | 693.38 | $1,052.00 | $1.76 (+0.17%) |  |  |
 
 ## Pending orders (fill at next close)
 
-- O024 sell SGOV usd=265.0 stop= target= :: C1 funding for O025 only (red-team MODIFY). Confirm and sell ONLY after O025's put has passed every C1 gate on live quotes at the Fri 11/13 14:43 check; size min(the put's cost x 100 + $1, the whole SGOV holding), dollar-sized with --ref-price from the live quote; Run A re-adds it at that size. If the put then fails to fill, keep the cash and rebuy SGOV Monday (no same-day round trip). SGOV is the C1 reserve by rule; never sell VOO to fund options. SGOV bought 11/09.
-- O025 buy CSCO261218P00090000 qty=1.0 stop=50.0% target= :: C1 (CONFIRMED; playbook final rule; risk red-team MODIFY applied). FIRE only if CSCO's last trade at the Fri 11/13 14:43 check is <= 93.84 (0.92 x the 11/12 pre-earnings close 102.01 = 93.8492, rounded down). Contract: the cheapest 12/18 put (35 DTE; weeklies fail OI) with live delta 0.30-0.45; the 90P is illustrative at the line, and the 92.5P/87.5P/85P/82.5P are pre-cleared alternates if their live delta is in band (cheapest wins). Gates: quoted IV <= 58.35% (1.3 x RV20 44.89%, 10/15-11/12); spread <= 5% of mid; OI >= 1,000; ask x 100 + fees <= min(full Kelly at 35 DTE on $1,389.81, SGOV $265.08). Limit = the ceiling at the chosen strike's live IV, using the HIGHER-IV row when between rows (ov_1108.py q1 via research/2026-11-12/scripts/ov_run_1112.py): <=44.7% 2.65; 45% 2.61; 47.5% 2.19; 50% 1.77; 52.5% 1.32; 55% 0.83; 57.5% 0.35; >=59.3% none. Size: 1 contract (Kelly and the reserve cover exactly one). Two numbers (R1): break-even win probability 35.4% vs estimated 44.0% at k 1.0, and 38.4% vs 38.9% at k 1.3; drift baseline: holding the stock over the same 216 five-session C1 windows returned -0.54% (SPY +0.26%), so the put's edge is not drift. Exit: hold to session 5 (Fri 11/20 14:43 time exit), -50% premium backstop, no take-profit, no resting GTC, no market gates. Who loses if it fires: CSCO holders; CSCO is 0.60% of SPY (SSGA holdings 11/11), held by VOO at index weight. Consensus: buying puts after a big drop is not the generic AI call; edge from C1 n 216 (research/strategy-review). Not Anthropic-linked.
+_None._
 
 ## Stats
 

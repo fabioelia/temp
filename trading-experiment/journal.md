@@ -1268,3 +1268,30 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
   * No option is open.
 * **Idea watch:** no trigger due today. The next is NVDA's C1 shadow at Wed 11/18 14:43, after the 11/17 pm print.
 * **Nothing confirmed; no real orders today.**
+
+### 2026-11-13 Post-close (Run B, 17:16 ET; not a decision night)
+* **Market:** day 2 after Nvidia's CEO exit. NVDA 162.85 (−2.0%), QQQ 679.89 (−1.2%), SPY 754.37 (−0.4%, after −0.9% intraday). CSCO 95.64 (−6.2%) after its beat-and-raise ("growth may have peaked", Citi via 24/7 Wall St).
+* **Equity (closes):**
+  * **Real $1,385.98:** since the 10/19 start −$614.02 (−30.7%); since 11/07 +$1.14.
+  * **Paper $1,370.88:** −$629.12 (−31.5%); since 11/07 +$2.04.
+  * **SPY buy-and-hold $1,967.42** (−1.6%; +2.6% since 11/07).
+* **Fills:** no orders filled. The C1 check did not fire at 14:44, so O024/O025 were cancelled.
+* **Nightly check:**
+  * **Broker and ledger:** Robinhood VOO 1.515826, SGOV 2.636818, GLDM 0.65123, cash $19.81, matching the ledger ($1,383.10 with after-hours marks).
+  * **Safety:** kill switch absent; owner alert n/a.
+  * **Probes:** PR1 −$0.05 (the program stop is −$50).
+  * **8-Ks (C1 names, 1 day):**
+    * QCOM 1.01/8.01 on 11/13: a registered notes offering (underwriting agreement 11/9).
+    * The 11/12 filings are already logged (META, NVDA, CSCO).
+    * This makes a third AI-era debt raise this week, after Meta's EUR 9B. It is context for the AI-credit thesis, not a trading rule.
+  * **Earnings dates:** unchanged since last night (NVDA 11/17 pm, WMT 11/19 am, CRM 12/2 pm).
+  * **W1/W2/W4:** W1 unchanged; W2 n/a (SPY down); W4 n/a.
+  * **Permitting bill:** "U.S. Senate plans vote" (WyomingNews 11/13), date not stated. Sunday's review fixes the vote dates and the W0/W2 windows.
+  * **Move with no story:** none.
+* **Decision night? No.**
+  * No C1 reaction day falls within 2 sessions (NVDA's is Wed 11/18, session 3).
+  * There is no PR3 action, no open option and no probe decision.
+  * The permitting vote date is unconfirmed, and the watch is logging-only.
+  * The full round runs at Sunday's review (Run C, 11/15).
+* **Proposals for Mon 11/16:** none. The Sunday review writes Monday's.
+**Dashboard (11/13):** summary (fd436fa4), equity (fc3e077e), positions (ecbd160f) and orders (30321c27) refreshed; trades unchanged (53c185d3); the old files were deleted.

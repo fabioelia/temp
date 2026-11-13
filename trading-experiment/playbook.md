@@ -329,6 +329,8 @@ Version 2.1, 2026-10-18 (v2 2026-10-17; budget raised to $1,000 on 2026-10-18; S
     **Fri 11/13 C1 (O025, red-team MODIFY):** fire only at CSCO <= 93.84 (rounded down); 1 x the cheapest in-band 12/18 put (90P illustrative;
     92.5/87.5/85/82.5P pre-cleared); IV <= 58.35%; limit from the ceiling table at the live IV (2.65 at <= 44.7%, 1.77 at 50%); funded by O024 (SGOV,
     sold only after the put passes every gate, min(cost + $1, the holding)). It fits only at IV of about 38.5-44% after an 8-12% gap.
+  - **Update, Fri 11/13:** CSCO's C1 did not fire (95.595 at 14:44, −6.3% against the 93.84 line); O024/O025 cancelled; SGOV stays whole. Next: the Sunday
+    11/15 review (PR3 bands for CRM, the PDT allowance proposal, the V3 retest, and the permitting-vote timing for W0/W2), then NVDA's C1 shadow on Wed 11/18.
   - **Watch:** CPI Tue 11/10 (not a reason to delay); NVDA's board probe of its CEO (Axios, DW, 11/8; no 8-K yet); NVDA earnings 11/17 after the close
     (C1 shadow only; the reserve could not fund it after a CSCO trade); the ANT IPO pricing (guard: no AMZN or GOOGL adds). No SPY shares or options before 12/06.
 
