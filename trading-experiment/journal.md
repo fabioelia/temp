@@ -1244,3 +1244,16 @@ The owner asked for this review. Memo: `research/strategy-v4/day-trader-skill-re
   * Round a trigger line toward the rule, never to the nearest cent. The playbook's C1 rule now says so.
   * No number goes into a thesis without a source; the red-team caught "about 0.3% of SPY".
 **Dashboard (11/12):** summary (7885b633), equity (88cb0a0d), positions (83d7b302), orders (e152ce18, showing O024/O025) and trades (53c185d3) refreshed; the old files were deleted.
+
+### 2026-11-13 Pre-open (Run 0; the trigger fired late, at 10:36 ET, after the open)
+* **CSCO:** 96.33 (−5.6% vs 102.01, Robinhood 15:36 UTC), so it is 2.6% above the 93.84 C1 line.
+  * Headlines: Barron's "falls after earnings beat fails to ease long-term concerns"; 24/7 Wall St "slides 5% … as Citi says growth may have peaked"; Truist cut its price target to $127; Morningstar raised its fair value.
+  * No new 8-K.
+  * **O025 and O024 stand for the 14:43 check, unchanged.** The fire/no-fire decision is the last trade at 14:43 itself (QCOM 11/5 lesson).
+* **Tape:**
+  * SPY 749.97 (−0.9%), VOO 689.34 (−1.0%).
+  * NVDA 159.45 (−4.1%, day 2 after the CEO exit); AI names lower (AMD, CoreWeave, SanDisk headlines).
+  * October PPI is read as cooler than expected by some outlets, while others report a 4-year high. Hike pricing persists.
+  * GLDM 76.68 (+0.1%), SGOV 100.56.
+* **Filings:** Anthropic has no new filing since the 11/12 FWPs.
+* **Plan unchanged.** Nothing was confirmed or cancelled.
