@@ -1,5 +1,9 @@
 # temp
 
+## caliper/
+
+A browser CAD tool for 3D-printable parts: sketch, extrude, fillet, shell, pattern, and export STL or STEP, with a Claude assistant that edits the same parametric timeline you do. The geometry kernel is OpenCascade running as WebAssembly in a worker. See [caliper/README.md](caliper/README.md) to run it (`npm install && npm run dev`).
+
 ## speaker-transcriber.html
 
 A single self-contained HTML page that transcribes audio or video **in the browser** and tags every line with the voice that said it.

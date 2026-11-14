@@ -1,0 +1,28 @@
+{
+  "name": "caliper",
+  "version": "1.0.0",
+  "description": "Browser CAD for 3D-printable parts, with a Claude assistant",
+  "scripts": {
+    "test": "node scripts/test-kernel.mjs",
+    "dev": "node scripts/prepare-kernel.mjs && vite",
+    "build": "node scripts/prepare-kernel.mjs && vite build",
+    "preview": "vite preview",
+    "artifact": "npm run build && node scripts/make-artifact.mjs",
+    "test:e2e": "node scripts/e2e.cjs && node scripts/e2e-assistant.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "replicad": "^1.2.1",
+    "replicad-opencascadejs": "^1.2.1",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "dejavu-fonts-ttf": "^2.37.3",
+    "vite": "^8.3.8",
+    "vite-plugin-singlefile": "^2.3.4"
+  },
+  "type": "module"
+}
